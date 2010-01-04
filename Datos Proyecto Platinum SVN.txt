@@ -1,0 +1,4 @@
+Proyectourl	:	https://code.google.com/p/platinumsys/
+user.		:	mrjara
+pass.		:	YA7RF2ah5Pr2
+url		:	https://platinumsys.googlecode.com/svn/trunk
