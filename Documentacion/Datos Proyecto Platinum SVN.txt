@@ -1,4 +1,4 @@
-Probando Update
+Probando Update desde Palermo
 Proyectourl	:	https://code.google.com/p/platinumsys/
 user.		:	mrjara
 pass.		:	YA7RF2ah5Pr2
