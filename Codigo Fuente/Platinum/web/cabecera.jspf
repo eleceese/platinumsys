@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Document   : cabecera
+    Created on : Jul 30, 2008, 5:17:09 PM
+    Author     : mrjara
+-->
+<div style="height: 165px; width: 100%; -rave-layout: grid" xmlns:f="http://java.sun.com/jsf/core" xmlns:webuijsf="http://www.sun.com/webui/webuijsf">
+    <f:subview id="cabecera">
+        <!-- Masthead with Attributes -->
+        <webuijsf:masthead binding="#{cabecera.masthead}" brandImageDescription="Sistema de Gestión" dateTime="true" id="masthead"
+            productImageDescription="Descripcion" productImageURL="/resources/Images/logo_platinum.jpg" roleInfo="Administrador Del Sistema"
+            roleInfoLabel="Rol:" serverInfo="Desarrollo" style="height: 142px" userInfo="Fernando Boy">
+            <!-- Utility Bar Facets -->
+            <f:facet name="consoleLink">
+                <webuijsf:hyperlink id="hyp1" immediate="true" text="Acerca de la Aplicación"/>
+            </f:facet>
+            <f:facet name="versionLink">
+                <webuijsf:hyperlink id="hyp2" immediate="true"
+                    onClick="javascript: var versionWin = window.open('/example/faces/masthead/Version.jsp', 'VersionWindow','scrollbars,resizable,                                     width=650,height=500,top='+((screen.height - (screen.height/1.618)) - (500/2))+',left='+((screen.width-650)/2) ); versionWin.focus();                                     if(window.focus){versionWin.focus();} "
+                    text="Versión" toolTip="#{msgs.masthead_versionLink}"/>
+            </f:facet>
+            <f:facet name="logoutLink">
+                <webuijsf:hyperlink id="hyp3" immediate="true" text="Salir" toolTip="#{msgs.masthead_logoutLink}" url="/faces/login.jsp"/>
+            </f:facet>
+            <f:facet name="cambiarPassLink">
+                <webuijsf:hyperlink id="hyp4" immediate="true" text="Cambiar Password" toolTip="#{msgs.masthead_logoutLink}" url="/faces/login.jsp"/>
+            </f:facet>
+            <f:facet name="helpLink">
+                <webuijsf:hyperlink id="hyp5" immediate="true" text="Ayuda"/>
+            </f:facet>
+        </webuijsf:masthead>
+        <!-- PageTitle... -->
+        <webuijsf:contentPageTitle binding="#{cabecera.pageTitle}" helpText="#{SessionBean1.detallePagina}" id="pageTitle"
+            style="border-color: rgb(204, 204, 204) rgb(204, 204, 204) rgb(204, 204, 204) rgb(204, 204, 204); font-size: 14px; height: 22px; margin-left: 11%; left: 166px; top: 144px; position: absolute; text-align: left; width: 750px; -rave-layout: grid" title="#{SessionBean1.tituloPagina}"/>
+        <webuijsf:markup styleClass="#{themeStyles.CONTENT_MARGIN}" tag="div"/>
+        <br/>
+    </f:subview>
+</div>
