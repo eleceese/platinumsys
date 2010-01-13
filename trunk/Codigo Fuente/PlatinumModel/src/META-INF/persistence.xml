@@ -10,6 +10,51 @@
     <class>py.com.platinum.entity.UnidadMedida</class>
     <class>py.com.platinum.entity.TipoProducto</class>
     <class>py.com.platinum.entity.Cargo</class>
+    <class>py.com.platinum.entity.MovimientoCajaDetalle</class>
+    <class>py.com.platinum.entity.SolicitudInterna</class>
+    <class>py.com.platinum.entity.PedidoDetalle</class>
+    <class>py.com.platinum.entity.EntradaSalidaCabecera</class>
+    <class>py.com.platinum.entity.ProduccionDiaria</class>
+    <class>py.com.platinum.entity.PedidoCabecera</class>
+    <class>py.com.platinum.entity.HistoricoPrecio</class>
+    <class>py.com.platinum.entity.Tarea</class>
+    <class>py.com.platinum.entity.HistoricoCosto</class>
+    <class>py.com.platinum.entity.EntradaSalidaDetalle</class>
+    <class>py.com.platinum.entity.Existencia</class>
+    <class>py.com.platinum.entity.FacturaCompraCab</class>
+    <class>py.com.platinum.entity.OrdenTrabajo</class>
+    <class>py.com.platinum.entity.Banco</class>
+    <class>py.com.platinum.entity.FormaPago</class>
+    <class>py.com.platinum.entity.Comision</class>
+    <class>py.com.platinum.entity.Caja</class>
+    <class>py.com.platinum.entity.FacturaCompraDet</class>
+    <class>py.com.platinum.entity.ComisionMensCab</class>
+    <class>py.com.platinum.entity.ComisionMensDet</class>
+    <class>py.com.platinum.entity.Deposito</class>
+    <class>py.com.platinum.entity.FacturaDetalle</class>
+    <class>py.com.platinum.entity.Perdida</class>
+    <class>py.com.platinum.entity.FacturaCabecera</class>
+    <class>py.com.platinum.entity.NotaCreditoCliCabecera</class>
+    <class>py.com.platinum.entity.NotaCreditoProvCab</class>
+    <class>py.com.platinum.entity.OrdenTrabajoDetalle</class>
+    <class>py.com.platinum.entity.SaldoCliente</class>
+    <class>py.com.platinum.entity.InventarioCabecera</class>
+    <class>py.com.platinum.entity.InventarioDetalle</class>
+    <class>py.com.platinum.entity.ReciboCabecera</class>
+    <class>py.com.platinum.entity.TareaFormula</class>
+    <class>py.com.platinum.entity.MovimientoCajaCabecera</class>
+    <class>py.com.platinum.entity.Cliente</class>
+    <class>py.com.platinum.entity.TareaAsignada</class>
+    <class>py.com.platinum.entity.ReciboDetalle</class>
+    <class>py.com.platinum.entity.CostosFijos</class>
+    <class>py.com.platinum.entity.FormulaDetalle</class>
+    <class>py.com.platinum.entity.Gasto</class>
+    <class>py.com.platinum.entity.Proveedor</class>
+    <class>py.com.platinum.entity.FormulaCabecera</class>
+    <class>py.com.platinum.entity.HabilitacionCaja</class>
+    <class>py.com.platinum.entity.NotaCreditoCliDetalle</class>
+    <class>py.com.platinum.entity.NotaCreditoProvDet</class>
+    <class>py.com.platinum.entity.RecursoAsignado</class>
     <properties>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
       <property name="hibernate.connection.username" value="platinum"/>

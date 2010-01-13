@@ -1,0 +1,204 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package py.com.platinum.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+/**
+ *
+ * @author Martin
+ */
+@Entity
+@Table(name = "FACTURA_COMPRA_DET")
+@NamedQueries({@NamedQuery(name = "FacturaCompraDet.findAll", query = "SELECT f FROM FacturaCompraDet f"), @NamedQuery(name = "FacturaCompraDet.findByCodFacComDet", query = "SELECT f FROM FacturaCompraDet f WHERE f.codFacComDet = :codFacComDet"), @NamedQuery(name = "FacturaCompraDet.findByPrecioUni", query = "SELECT f FROM FacturaCompraDet f WHERE f.precioUni = :precioUni"), @NamedQuery(name = "FacturaCompraDet.findByCantidad", query = "SELECT f FROM FacturaCompraDet f WHERE f.cantidad = :cantidad"), @NamedQuery(name = "FacturaCompraDet.findByTotal", query = "SELECT f FROM FacturaCompraDet f WHERE f.total = :total"), @NamedQuery(name = "FacturaCompraDet.findBySubTotal", query = "SELECT f FROM FacturaCompraDet f WHERE f.subTotal = :subTotal"), @NamedQuery(name = "FacturaCompraDet.findByMontoIva", query = "SELECT f FROM FacturaCompraDet f WHERE f.montoIva = :montoIva"), @NamedQuery(name = "FacturaCompraDet.findByUsuarioAlta", query = "SELECT f FROM FacturaCompraDet f WHERE f.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "FacturaCompraDet.findByUsuarioModif", query = "SELECT f FROM FacturaCompraDet f WHERE f.usuarioModif = :usuarioModif"), @NamedQuery(name = "FacturaCompraDet.findByFechaAlta", query = "SELECT f FROM FacturaCompraDet f WHERE f.fechaAlta = :fechaAlta"), @NamedQuery(name = "FacturaCompraDet.findByFechaModif", query = "SELECT f FROM FacturaCompraDet f WHERE f.fechaModif = :fechaModif")})
+public class FacturaCompraDet implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @Column(name = "COD_FAC_COM_DET")
+    private Long codFacComDet;
+    @Basic(optional = false)
+    @Column(name = "PRECIO_UNI")
+    private long precioUni;
+    @Basic(optional = false)
+    @Column(name = "CANTIDAD")
+    private long cantidad;
+    @Basic(optional = false)
+    @Column(name = "TOTAL")
+    private long total;
+    @Basic(optional = false)
+    @Column(name = "SUB_TOTAL")
+    private long subTotal;
+    @Basic(optional = false)
+    @Column(name = "MONTO_IVA")
+    private long montoIva;
+    @Column(name = "USUARIO_ALTA")
+    private String usuarioAlta;
+    @Column(name = "USUARIO_MODIF")
+    private String usuarioModif;
+    @Column(name = "FECHA_ALTA")
+    @Temporal(TemporalType.DATE)
+    private Date fechaAlta;
+    @Column(name = "FECHA_MODIF")
+    @Temporal(TemporalType.DATE)
+    private Date fechaModif;
+    @JoinColumn(name = "COD_FAC_COM_CAB", referencedColumnName = "COD_FAC_COM_CAB")
+    @ManyToOne(optional = false)
+    private FacturaCompraCab codFacComCab;
+    @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
+    @ManyToOne(optional = false)
+    private Producto codProducto;
+
+    public FacturaCompraDet() {
+    }
+
+    public FacturaCompraDet(Long codFacComDet) {
+        this.codFacComDet = codFacComDet;
+    }
+
+    public FacturaCompraDet(Long codFacComDet, long precioUni, long cantidad, long total, long subTotal, long montoIva) {
+        this.codFacComDet = codFacComDet;
+        this.precioUni = precioUni;
+        this.cantidad = cantidad;
+        this.total = total;
+        this.subTotal = subTotal;
+        this.montoIva = montoIva;
+    }
+
+    public Long getCodFacComDet() {
+        return codFacComDet;
+    }
+
+    public void setCodFacComDet(Long codFacComDet) {
+        this.codFacComDet = codFacComDet;
+    }
+
+    public long getPrecioUni() {
+        return precioUni;
+    }
+
+    public void setPrecioUni(long precioUni) {
+        this.precioUni = precioUni;
+    }
+
+    public long getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(long cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public long getTotal() {
+        return total;
+    }
+
+    public void setTotal(long total) {
+        this.total = total;
+    }
+
+    public long getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(long subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public long getMontoIva() {
+        return montoIva;
+    }
+
+    public void setMontoIva(long montoIva) {
+        this.montoIva = montoIva;
+    }
+
+    public String getUsuarioAlta() {
+        return usuarioAlta;
+    }
+
+    public void setUsuarioAlta(String usuarioAlta) {
+        this.usuarioAlta = usuarioAlta;
+    }
+
+    public String getUsuarioModif() {
+        return usuarioModif;
+    }
+
+    public void setUsuarioModif(String usuarioModif) {
+        this.usuarioModif = usuarioModif;
+    }
+
+    public Date getFechaAlta() {
+        return fechaAlta;
+    }
+
+    public void setFechaAlta(Date fechaAlta) {
+        this.fechaAlta = fechaAlta;
+    }
+
+    public Date getFechaModif() {
+        return fechaModif;
+    }
+
+    public void setFechaModif(Date fechaModif) {
+        this.fechaModif = fechaModif;
+    }
+
+    public FacturaCompraCab getCodFacComCab() {
+        return codFacComCab;
+    }
+
+    public void setCodFacComCab(FacturaCompraCab codFacComCab) {
+        this.codFacComCab = codFacComCab;
+    }
+
+    public Producto getCodProducto() {
+        return codProducto;
+    }
+
+    public void setCodProducto(Producto codProducto) {
+        this.codProducto = codProducto;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (codFacComDet != null ? codFacComDet.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof FacturaCompraDet)) {
+            return false;
+        }
+        FacturaCompraDet other = (FacturaCompraDet) object;
+        if ((this.codFacComDet == null && other.codFacComDet != null) || (this.codFacComDet != null && !this.codFacComDet.equals(other.codFacComDet))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "py.com.platinum.entity.FacturaCompraDet[codFacComDet=" + codFacComDet + "]";
+    }
+
+}
