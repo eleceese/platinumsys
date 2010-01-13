@@ -1,0 +1,227 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package py.com.platinum.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+/**
+ *
+ * @author Martin
+ */
+@Entity
+@Table(name = "ENTRADA_SALIDA_CABECERA")
+@NamedQueries({@NamedQuery(name = "EntradaSalidaCabecera.findAll", query = "SELECT e FROM EntradaSalidaCabecera e"), @NamedQuery(name = "EntradaSalidaCabecera.findByCodEntradaSalida", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.codEntradaSalida = :codEntradaSalida"), @NamedQuery(name = "EntradaSalidaCabecera.findByCodOrdenTrabajo", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.codOrdenTrabajo = :codOrdenTrabajo"), @NamedQuery(name = "EntradaSalidaCabecera.findByFechaEntradaSalida", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.fechaEntradaSalida = :fechaEntradaSalida"), @NamedQuery(name = "EntradaSalidaCabecera.findByHoraEntradaSalida", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.horaEntradaSalida = :horaEntradaSalida"), @NamedQuery(name = "EntradaSalidaCabecera.findByObservacion", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.observacion = :observacion"), @NamedQuery(name = "EntradaSalidaCabecera.findByUsuarioAlta", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "EntradaSalidaCabecera.findByUsuarioModif", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.usuarioModif = :usuarioModif"), @NamedQuery(name = "EntradaSalidaCabecera.findByFechaAlta", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.fechaAlta = :fechaAlta"), @NamedQuery(name = "EntradaSalidaCabecera.findByFechaModif", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.fechaModif = :fechaModif")})
+public class EntradaSalidaCabecera implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @Column(name = "COD_ENTRADA_SALIDA")
+    private Long codEntradaSalida;
+    @Column(name = "COD_ORDEN_TRABAJO")
+    private Long codOrdenTrabajo;
+    @Column(name = "FECHA_ENTRADA_SALIDA")
+    @Temporal(TemporalType.DATE)
+    private Date fechaEntradaSalida;
+    @Column(name = "HORA_ENTRADA_SALIDA")
+    @Temporal(TemporalType.DATE)
+    private Date horaEntradaSalida;
+    @Column(name = "OBSERVACION")
+    private String observacion;
+    @Column(name = "USUARIO_ALTA")
+    private String usuarioAlta;
+    @Column(name = "USUARIO_MODIF")
+    private String usuarioModif;
+    @Column(name = "FECHA_ALTA")
+    @Temporal(TemporalType.DATE)
+    private Date fechaAlta;
+    @Column(name = "FECHA_MODIF")
+    @Temporal(TemporalType.DATE)
+    private Date fechaModif;
+    @JoinColumn(name = "COD_DEPOSITO", referencedColumnName = "COD_DEPOSITO")
+    @ManyToOne(optional = false)
+    private Deposito codDeposito;
+    @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
+    @ManyToOne(optional = false)
+    private Empleado codEmpleado;
+    @JoinColumn(name = "COD_ENCARGADO", referencedColumnName = "COD_EMPLEADO")
+    @ManyToOne(optional = false)
+    private Empleado codEncargado;
+    @JoinColumn(name = "COD_SOLICITUD", referencedColumnName = "COD_SOLICITUD")
+    @ManyToOne
+    private SolicitudInterna codSolicitud;
+    @OneToMany(mappedBy = "codEntSal")
+    private List<FacturaCompraCab> facturaCompraCabCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codEntradaSalida")
+    private List<EntradaSalidaDetalle> entradaSalidaDetalleCollection;
+
+    public EntradaSalidaCabecera() {
+    }
+
+    public EntradaSalidaCabecera(Long codEntradaSalida) {
+        this.codEntradaSalida = codEntradaSalida;
+    }
+
+    public Long getCodEntradaSalida() {
+        return codEntradaSalida;
+    }
+
+    public void setCodEntradaSalida(Long codEntradaSalida) {
+        this.codEntradaSalida = codEntradaSalida;
+    }
+
+    public Long getCodOrdenTrabajo() {
+        return codOrdenTrabajo;
+    }
+
+    public void setCodOrdenTrabajo(Long codOrdenTrabajo) {
+        this.codOrdenTrabajo = codOrdenTrabajo;
+    }
+
+    public Date getFechaEntradaSalida() {
+        return fechaEntradaSalida;
+    }
+
+    public void setFechaEntradaSalida(Date fechaEntradaSalida) {
+        this.fechaEntradaSalida = fechaEntradaSalida;
+    }
+
+    public Date getHoraEntradaSalida() {
+        return horaEntradaSalida;
+    }
+
+    public void setHoraEntradaSalida(Date horaEntradaSalida) {
+        this.horaEntradaSalida = horaEntradaSalida;
+    }
+
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
+
+    public String getUsuarioAlta() {
+        return usuarioAlta;
+    }
+
+    public void setUsuarioAlta(String usuarioAlta) {
+        this.usuarioAlta = usuarioAlta;
+    }
+
+    public String getUsuarioModif() {
+        return usuarioModif;
+    }
+
+    public void setUsuarioModif(String usuarioModif) {
+        this.usuarioModif = usuarioModif;
+    }
+
+    public Date getFechaAlta() {
+        return fechaAlta;
+    }
+
+    public void setFechaAlta(Date fechaAlta) {
+        this.fechaAlta = fechaAlta;
+    }
+
+    public Date getFechaModif() {
+        return fechaModif;
+    }
+
+    public void setFechaModif(Date fechaModif) {
+        this.fechaModif = fechaModif;
+    }
+
+    public Deposito getCodDeposito() {
+        return codDeposito;
+    }
+
+    public void setCodDeposito(Deposito codDeposito) {
+        this.codDeposito = codDeposito;
+    }
+
+    public Empleado getCodEmpleado() {
+        return codEmpleado;
+    }
+
+    public void setCodEmpleado(Empleado codEmpleado) {
+        this.codEmpleado = codEmpleado;
+    }
+
+    public Empleado getCodEncargado() {
+        return codEncargado;
+    }
+
+    public void setCodEncargado(Empleado codEncargado) {
+        this.codEncargado = codEncargado;
+    }
+
+    public SolicitudInterna getCodSolicitud() {
+        return codSolicitud;
+    }
+
+    public void setCodSolicitud(SolicitudInterna codSolicitud) {
+        this.codSolicitud = codSolicitud;
+    }
+
+    public List<FacturaCompraCab> getFacturaCompraCabCollection() {
+        return facturaCompraCabCollection;
+    }
+
+    public void setFacturaCompraCabCollection(List<FacturaCompraCab> facturaCompraCabCollection) {
+        this.facturaCompraCabCollection = facturaCompraCabCollection;
+    }
+
+    public List<EntradaSalidaDetalle> getEntradaSalidaDetalleCollection() {
+        return entradaSalidaDetalleCollection;
+    }
+
+    public void setEntradaSalidaDetalleCollection(List<EntradaSalidaDetalle> entradaSalidaDetalleCollection) {
+        this.entradaSalidaDetalleCollection = entradaSalidaDetalleCollection;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (codEntradaSalida != null ? codEntradaSalida.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof EntradaSalidaCabecera)) {
+            return false;
+        }
+        EntradaSalidaCabecera other = (EntradaSalidaCabecera) object;
+        if ((this.codEntradaSalida == null && other.codEntradaSalida != null) || (this.codEntradaSalida != null && !this.codEntradaSalida.equals(other.codEntradaSalida))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "py.com.platinum.entity.EntradaSalidaCabecera[codEntradaSalida=" + codEntradaSalida + "]";
+    }
+
+}
