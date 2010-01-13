@@ -530,11 +530,11 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.PlatinumModel.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.PlatinumModel.jar" todir="${dist.ear.dir}"/>
         <copyfiles files="${reference.Utils.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.Utils.jar" todir="${dist.ear.dir}"/>
         <copyfiles files="${libs.toplink.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.toplink.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${file.reference.ojdbc14.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.file.reference.ojdbc14.jar" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.OralceJdbc.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.OralceJdbc.classpath" todir="${dist.ear.dir}"/>
         <copyfiles files="${libs.exceptionhandler-runtime.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${manifest.libs.jsf12-support.classpath} ${manifest.libs.woodstock-components.classpath} ${manifest.libs.woodstock-theme-default.classpath} ${manifest.file.reference.webui-jsf-suntheme_es.jar} ${manifest.reference.PlatinumModel.jar} ${manifest.reference.Utils.jar} ${manifest.libs.toplink.classpath} ${manifest.file.reference.ojdbc14.jar} "/>
+            <attribute name="Class-Path" value="${manifest.libs.jsf12-support.classpath} ${manifest.libs.woodstock-components.classpath} ${manifest.libs.woodstock-theme-default.classpath} ${manifest.file.reference.webui-jsf-suntheme_es.jar} ${manifest.reference.PlatinumModel.jar} ${manifest.reference.Utils.jar} ${manifest.libs.toplink.classpath} ${manifest.libs.OralceJdbc.classpath} "/>
         </manifest>
     </target>
     <target depends="init" name="library-inclusion-in-archive" unless="dist.ear.dir">
@@ -545,7 +545,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.PlatinumModel.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.Utils.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.toplink.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copyfiles files="${file.reference.ojdbc14.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${libs.OralceJdbc.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.exceptionhandler-runtime.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
     </target>
     <target depends="init,compile,compile-jsps,-pre-dist,library-inclusion-in-manifest" name="do-ear-dist">
