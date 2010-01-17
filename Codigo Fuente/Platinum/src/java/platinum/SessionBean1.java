@@ -11,11 +11,13 @@ import javax.faces.FacesException;
 import py.com.platinum.controller.MarcaController;
 import py.com.platinum.controller.PresentacionController;
 import py.com.platinum.controller.ProductoController;
+import py.com.platinum.controller.TareaController;
 import py.com.platinum.controller.TipoProductoController;
 import py.com.platinum.controller.UnidadMedidaController;
 import py.com.platinum.entity.Marca;
 import py.com.platinum.entity.Presentacion;
 import py.com.platinum.entity.Producto;
+import py.com.platinum.entity.Tarea;
 import py.com.platinum.entity.TipoProducto;
 import py.com.platinum.entity.UnidadMedida;
 
@@ -183,10 +185,6 @@ public class SessionBean1 extends AbstractSessionBean {
         listaProductos = (Producto[]) productoController.getAll("descripcion").toArray(new Producto[0]);
                 
     }
-
-
-
-
 ////// CARGA DE COMBO BOX MARCAS
 //////     import com.sun.webui.jsf.model.Option;
     
@@ -343,11 +341,51 @@ public class SessionBean1 extends AbstractSessionBean {
         return id;
     }
 
+    /// Se define esta variable ID para hacer la busqueda del objeto a actualizar en la actualizacion de los abm
     public void setId(Long id) {
         this.id = id;
     }
     
 
 ////// FIN CARGA DE COMBO BOX PresentacionS
+
+    ////// CARGA DE COMBO BOX Tareas
+//////     import com.sun.webui.jsf.model.Option;
+
+    Tarea[] listaTareas;
+    Option[] listaTareasOp;
+
+    public Option[] getListaTareasOp() {
+        return listaUnidadMedidasOp;
+    }
+
+    public void setListaTareasOp(Option[] listaTareasOp) {
+        this.listaTareasOp = listaTareasOp;
+    }
+
+    public Tarea[] getListaTareas() {
+        return listaTareas;
+    }
+
+    public void setListaTareas(Tarea[] listaTareas) {
+        this.listaTareas = listaTareas;
+    }
+
+    public void cargarListaTodosTareas(){
+        TareaController TareaController = new TareaController();
+        listaTareas = (Tarea[])TareaController.getAll("nombreTarea").toArray(new Tarea[0]);
+        listaTareasOp = new Option [listaTareas.length];
+        Option option;
+        for (int i = 0; i < listaTareas.length; i++) {
+            Tarea tp = listaTareas[i];
+            option = new Option();
+            option.setLabel(tp.getNombreTarea());
+            option.setValue(tp.getCodTarea().toString());
+            listaTareasOp[i] = option;
+        }
+    }
+////// FIN CARGA DE COMBO BOX Tareas
+
+
 
 }

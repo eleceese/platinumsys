@@ -872,8 +872,7 @@ public class ABMProductos extends AbstractPageBean {
         return null;
     }
 
-    public void uiFechaAlta_validate(FacesContext context, UIComponent component, Object value) {
-    }
+   
 
    
 
