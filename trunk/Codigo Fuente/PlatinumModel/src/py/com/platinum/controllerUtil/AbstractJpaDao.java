@@ -7,6 +7,10 @@ import javax.persistence.EntityTransaction;
 
 public abstract class AbstractJpaDao<T> {
 
+
+
+
+
     protected EntityManagerFactory emf;
 
     public AbstractJpaDao() {

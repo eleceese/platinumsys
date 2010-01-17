@@ -12,10 +12,13 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,11 +28,12 @@ import javax.persistence.TemporalType;
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="PRODUCTO_SEQUENCE", sequenceName="SQ_TAREA", initialValue=1, allocationSize=1)
 @Table(name = "TAREA")
-@NamedQueries({@NamedQuery(name = "Tarea.findAll", query = "SELECT t FROM Tarea t"), @NamedQuery(name = "Tarea.findByCodTarea", query = "SELECT t FROM Tarea t WHERE t.codTarea = :codTarea"), @NamedQuery(name = "Tarea.findByNombreTarea", query = "SELECT t FROM Tarea t WHERE t.nombreTarea = :nombreTarea"), @NamedQuery(name = "Tarea.findByUsuarioAlta", query = "SELECT t FROM Tarea t WHERE t.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "Tarea.findByUsuarioModif", query = "SELECT t FROM Tarea t WHERE t.usuarioModif = :usuarioModif"), @NamedQuery(name = "Tarea.findByFechaAlta", query = "SELECT t FROM Tarea t WHERE t.fechaAlta = :fechaAlta"), @NamedQuery(name = "Tarea.findByFechaModif", query = "SELECT t FROM Tarea t WHERE t.fechaModif = :fechaModif")})
 public class Tarea implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PRODUCTO_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_TAREA")
     private Long codTarea;
@@ -149,7 +153,7 @@ public class Tarea implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.Tarea[codTarea=" + codTarea + "]";
+        return nombreTarea;
     }
 
 }
