@@ -8,6 +8,8 @@ import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.PageAlert;
 import com.sun.webui.jsf.component.StaticText;
+import com.sun.webui.jsf.component.Table;
+import com.sun.webui.jsf.component.TableRowGroup;
 import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
@@ -16,6 +18,8 @@ import javax.faces.component.html.HtmlPanelGrid;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
+import py.com.platinum.controller.TareaController;
+import py.com.platinum.entity.Tarea;
 
 
 
@@ -42,15 +46,6 @@ public class ABMTareas extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-    }
-    private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
-
-    public DefaultTableDataProvider getDefaultTableDataProvider() {
-        return defaultTableDataProvider;
-    }
-
-    public void setDefaultTableDataProvider(DefaultTableDataProvider dtdp) {
-        this.defaultTableDataProvider = dtdp;
     }
     private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
 
@@ -150,6 +145,42 @@ public class ABMTareas extends AbstractPageBean {
 
     public void setPageAlert1(PageAlert pa) {
         this.pageAlert1 = pa;
+    }
+    private Table tableTareas = new Table();
+
+    public Table getTableTareas() {
+        return tableTareas;
+    }
+
+    public void setTableTareas(Table t) {
+        this.tableTareas = t;
+    }
+    private TableRowGroup tareasRW = new TableRowGroup();
+
+    public TableRowGroup getTareasRW() {
+        return tareasRW;
+    }
+
+    public void setTareasRW(TableRowGroup trg) {
+        this.tareasRW = trg;
+    }
+    private TextField uiCodigoFil = new TextField();
+
+    public TextField getUiCodigoFil() {
+        return uiCodigoFil;
+    }
+
+    public void setUiCodigoFil(TextField tf) {
+        this.uiCodigoFil = tf;
+    }
+    private TextField uiNombreFil = new TextField();
+
+    public TextField getUiNombreFil() {
+        return uiNombreFil;
+    }
+
+    public void setUiNombreFil(TextField tf) {
+        this.uiNombreFil = tf;
     }
 
     // </editor-fold>
@@ -267,6 +298,31 @@ public class ABMTareas extends AbstractPageBean {
             this.datosTareas.setRendered(false);
 
         }
+buscar_action2();
+    }
+
+
+     private String buscar_action2() {
+
+        Tarea[] listaTareas;
+        TareaController tareaController = new TareaController();
+
+        String pCodigo=null, pNombre=null;
+
+        if (this.uiCodigoFil.getText()!=null) {
+            pCodigo = this.uiCodigoFil.getText().toString();
+        }
+
+        if (this.uiNombreFil.getText()!=null) {
+            pNombre = this.uiNombreFil.getText().toString();
+        }
+
+        listaTareas = (Tarea[]) tareaController.getAllFiltered
+                                        (pCodigo,
+                                         pNombre).toArray(new Tarea[0]);
+
+        getSessionBean1().setListaTareas(listaTareas);
+        return null;
 
     }
 

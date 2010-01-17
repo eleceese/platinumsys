@@ -25,28 +25,27 @@
                             <h:panelGrid binding="#{ABMTareas.gridPanelBuscar}" columns="2" id="gridPanelBuscar" style="height: 72px" width="455">
                                 <h:panelGrid columns="2" id="gridPanelCodigo" style="height:30px; width: 60%">
                                     <webuijsf:label id="codigo" text="Codigo"/>
-                                    <webuijsf:textField id="codigo1" text="codigo"/>
+                                    <webuijsf:textField binding="#{ABMTareas.uiCodigoFil}" id="uiCodigoFil" text="codigo"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="2" id="gridPanelNombre" style="height: 30px" width="261">
                                     <webuijsf:label id="labelNombreTarea" text="Nombre Tarea"/>
-                                    <webuijsf:textField id="nombre" text="Nombre Tarea"/>
+                                    <webuijsf:textField binding="#{ABMTareas.uiNombreFil}" id="uiNombreFil" text="Nombre Tarea"/>
                                 </h:panelGrid>
                                 <webuijsf:button id="buscar" text="Buscar"/>
                                 <webuijsf:button id="todos" text="Todos"/>
                             </h:panelGrid>
                             <h:panelGrid binding="#{ABMTareas.gridPanelTabla}" id="gridPanelTabla" style="height: 154px" width="935">
-                                <webuijsf:table augmentTitle="false" id="tableCargo" paginateButton="true" paginationControls="true"
-                                    sortPanelToggleButton="true" title="Cargos" width="695">
-                                    <webuijsf:tableRowGroup emptyDataMsg="No se encontraron registros..." id="marcas" rows="15"
-                                        sourceData="#{ABMTareas.defaultTableDataProvider}" sourceVar="currentRow">
-                                        <webuijsf:tableColumn align="center" id="select" width="10">
-                                            <webuijsf:radioButton id="radioButton2" label=""/>
+                                <webuijsf:table augmentTitle="false" binding="#{ABMTareas.tableTareas}" id="tableTareas" title="Tareas" width="695">
+                                    <webuijsf:tableRowGroup binding="#{ABMTareas.tareasRW}" emptyDataMsg="No se encontraron registros..." id="tareasRW" rows="5"
+                                        sourceData="#{SessionBean1.listaTareas}" sourceVar="currentRow">
+                                        <webuijsf:tableColumn align="center" id="tableColumn3" width="65">
+                                            <webuijsf:radioButton id="radioButton1" label=""/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Id" id="id" width="100">
-                                            <webuijsf:staticText id="staticText4" text="12312313"/>
+                                        <webuijsf:tableColumn headerText="Codigo" id="tableColumn1" sort="codTarea">
+                                            <webuijsf:staticText id="staticText1" text="#{currentRow.value['codTarea']}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Nombre Tarea" id="cargo" width="400">
-                                            <webuijsf:staticText id="cargo1" text="Nombre Tarea"/>
+                                        <webuijsf:tableColumn headerText="Descripcion" id="tableColumn2" sort="nombreTarea">
+                                            <webuijsf:staticText id="staticText2" text="#{currentRow.value['nombreTarea']}"/>
                                         </webuijsf:tableColumn>
                                     </webuijsf:tableRowGroup>
                                 </webuijsf:table>

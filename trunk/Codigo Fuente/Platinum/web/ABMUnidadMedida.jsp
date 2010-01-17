@@ -11,6 +11,27 @@
             <webuijsf:html id="html1">
                 <webuijsf:head id="head1">
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
+                    <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
+                    <script>
+                        function initAllRows() {
+                            var table = document.getElementById("form1:tableUnidadMedida");
+                            table.initAllRows();}
+                    </script>
+                    <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
+                    <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
+                    <script>
+                        var delSelect;
+                        function confirmar() {
+                            if (delSelect!=null){
+                                if(!confirm("¿Está seguro de eliminar la Unidad de Medida Seleccionada?")) {
+                                    return false;
+                                }else{
+                                    return true;
+                                }
+                            }
+                        }
+                    </script>
+                    <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                 </webuijsf:head>
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
@@ -25,28 +46,30 @@
                             <h:panelGrid binding="#{ABMUnidadMedida.gridPanelBuscar}" columns="2" id="gridPanelBuscar" style="height: 72px" width="407">
                                 <h:panelGrid columns="2" id="gridPanelCodigo" style="height:30px; width: 60%">
                                     <webuijsf:label id="codigo" text="Codigo"/>
-                                    <webuijsf:textField id="codigo1" text="codigo"/>
+                                    <webuijsf:textField binding="#{ABMUnidadMedida.uiCodigoFil}" id="uiCodigoFil"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="2" id="gridPanelUnidadMedida" style="height: 30px" width="263">
                                     <webuijsf:label id="unidadMedida1" text="Unidad de Medida"/>
-                                    <webuijsf:textField id="unidadMedida2" text="Unidad de Medida"/>
+                                    <webuijsf:textField binding="#{ABMUnidadMedida.uiUnidadMedidaFil}" id="uiUnidadMedidaFil"/>
                                 </h:panelGrid>
                                 <webuijsf:button id="buscar" text="Buscar"/>
-                                <webuijsf:button id="todos" text="Todos"/>
+                                <webuijsf:button actionExpression="#{ABMUnidadMedida.todos_action}" id="todos" text="Todos"/>
                             </h:panelGrid>
                             <h:panelGrid binding="#{ABMUnidadMedida.gridPanelTabla}" id="gridPanelTabla" style="height: 154px" width="935">
-                                <webuijsf:table augmentTitle="false" id="tableUnidadMedida" paginateButton="true" paginationControls="true"
-                                    sortPanelToggleButton="true" title="Unidades de Medida" width="551">
-                                    <webuijsf:tableRowGroup emptyDataMsg="No se encontraron registros..." id="unidadMedida" rows="5"
-                                        sourceData="#{ABMUnidadMedida.defaultTableDataProvider}" sourceVar="currentRow">
-                                        <webuijsf:tableColumn align="center" id="select" width="17">
-                                            <webuijsf:radioButton id="radioButton2" label=""/>
+                                <webuijsf:table augmentTitle="false" binding="#{ABMUnidadMedida.tableUnidadMedida}" id="tableUnidadMedida" paginateButton="true"
+                                    paginationControls="true" title="Unidades de Medida" width="551">
+                                    <webuijsf:tableRowGroup binding="#{ABMUnidadMedida.unidadMedida}" emptyDataMsg="No se encontraron registros..."
+                                        id="unidadMedida" rows="10" selected="#{ABMUnidadMedida.selectedState}" sourceData="#{SessionBean1.listaUnidadMedidas}" sourceVar="currentRow">
+                                        <webuijsf:tableColumn align="center" binding="#{ABMUnidadMedida.uiRadioColum}" id="uiRadioColum"
+                                            onClick="setTimeout('initAllRows()', 0)" selectId="#{ABMUnidadMedida.radioButton1.id}" valign="top">
+                                            <webuijsf:radioButton binding="#{ABMUnidadMedida.radioButton1}" id="radioButton1" label=""
+                                                name="#{ABMUnidadMedida.radioButton1.id}" onClick="delSelect='ok'" selected="#{ABMUnidadMedida.selected}" selectedValue="#{ABMUnidadMedida.selectedValue}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Codigo" id="codigo3" width="30">
-                                            <webuijsf:staticText id="staticText4" text="12312313"/>
+                                        <webuijsf:tableColumn headerText="Codigo" id="tableColumn1" sort="codUnidadMedida">
+                                            <webuijsf:staticText id="staticText1" text="#{currentRow.value['codUnidadMedida']}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Unidad de Medida" id="unidadMedida3" width="400">
-                                            <webuijsf:staticText id="staticText5" text="Unidad Unidad Unidad"/>
+                                        <webuijsf:tableColumn headerText="Unidad de Medida" id="tableColumn2" sort="descripcion" width="328">
+                                            <webuijsf:staticText id="staticText2" text="#{currentRow.value['descripcion']}"/>
                                         </webuijsf:tableColumn>
                                     </webuijsf:tableRowGroup>
                                 </webuijsf:table>
@@ -54,27 +77,24 @@
                             <h:panelGrid binding="#{ABMUnidadMedida.gridPanelBotones}" columns="3" id="gridPanelBotones" style="height: 24px; width: 150px">
                                 <webuijsf:button actionExpression="#{ABMUnidadMedida.nuevo_action}" id="nuevo" text="Nuevo"/>
                                 <webuijsf:button actionExpression="#{ABMUnidadMedida.editar_action}" id="editar" text="Editar"/>
-                                <webuijsf:button actionExpression="#{ABMUnidadMedida.eliminar_action}" id="eliminar" text="Eliminar"/>
+                                <webuijsf:button actionExpression="#{ABMUnidadMedida.eliminar_action}" binding="#{ABMUnidadMedida.eliminar}" id="eliminar"
+                                    onClick="javascript:return confirmar()" text="Eliminar"/>
                             </h:panelGrid>
                             <webuijsf:staticText binding="#{ABMUnidadMedida.datosUnidadMedida}" id="datosUnidadMedida"
                                 style="color: #000099; font-family: Arial,Helvetica,sans-serif; font-size: 14px; font-weight: bold" text="Datos Unidad de Medida"/>
                             <br/>
                             <h:panelGrid binding="#{ABMUnidadMedida.gridPanelAddUpdate}" columns="2" id="gridPanelAddUpdate" style="height: 100%" width="839">
-                                <webuijsf:label id="labelcodigo" text="Codigo"/>
-                                <h:panelGrid columns="2" id="gridPanel1" style="height: 100%" width="575">
-                                    <webuijsf:textField binding="#{ABMUnidadMedida.codigo2}" columns="50" id="codigo2" text="Codigo"/>
-                                    <webuijsf:message for="codigo2" id="message1" showDetail="false" showSummary="true"/>
-                                </h:panelGrid>
                                 <webuijsf:label id="labelUnidad" text="Unidad de Medida"/>
-                                <h:panelGrid columns="2" id="gridPanelTipo1" style="height: 100%" width="575">
-                                    <webuijsf:textField binding="#{ABMUnidadMedida.unidad}" columns="50" id="unidad" text="Unidad de Medida"/>
-                                    <webuijsf:message for="unidad" id="message3" showDetail="false" showSummary="true"/>
+                                <h:panelGrid columns="2" id="gridPanelTipo1" style="height: 72px" width="577">
+                                    <webuijsf:textField binding="#{ABMUnidadMedida.uiUnidadMedida}" columns="50" id="uiUnidadMedida"/>
+                                    <webuijsf:message for="uiUnidadMedida" id="message3" showDetail="false" showSummary="true"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                             <h:panelGrid binding="#{ABMUnidadMedida.buttonsPanelAddUpdate}" columns="2" id="buttonsPanelAddUpdate" style="height: 100%" width="191">
                                 <webuijsf:button actionExpression="#{ABMUnidadMedida.cancelar_action}" id="cancelar" text="Cancelar"/>
-                                <webuijsf:button actionExpression="#{ABMUnidadMedida.button2_action}" binding="#{ABMUnidadMedida.button2}" id="button2" text="Guardar"/>
-                                <webuijsf:button binding="#{ABMUnidadMedida.button3}" id="button3" text="Guardar"/>
+                                <webuijsf:button actionExpression="#{ABMUnidadMedida.buttonGuardarNuevo_action}" binding="#{ABMUnidadMedida.buttonGuardarNuevo}"
+                                    id="buttonGuardarNuevo" text="Guardar"/>
+                                <webuijsf:button actionExpression="#{ABMUnidadMedida.buttonGuardarEdicion1_action}" id="buttonGuardarEdicion1" text="Guardar"/>
                             </h:panelGrid>
                         </h:panelGrid>
                     </webuijsf:form>

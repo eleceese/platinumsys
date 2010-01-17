@@ -4,18 +4,29 @@
  */
 package platinum;
 
+import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
+import com.sun.webui.jsf.component.Checkbox;
 import com.sun.webui.jsf.component.PageAlert;
+import com.sun.webui.jsf.component.RadioButton;
 import com.sun.webui.jsf.component.StaticText;
+import com.sun.webui.jsf.component.Table;
+import com.sun.webui.jsf.component.TableColumn;
+import com.sun.webui.jsf.component.TableRowGroup;
 import com.sun.webui.jsf.component.TextField;
+import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
+import javax.faces.event.ValueChangeEvent;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
+import py.com.platinum.controller.TipoProductoController;
+import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.TipoProducto;
 
 
 
@@ -42,15 +53,6 @@ public class ABMTipoProductos extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-    }
-    private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
-
-    public DefaultTableDataProvider getDefaultTableDataProvider() {
-        return defaultTableDataProvider;
-    }
-
-    public void setDefaultTableDataProvider(DefaultTableDataProvider dtdp) {
-        this.defaultTableDataProvider = dtdp;
     }
     private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
 
@@ -106,41 +108,32 @@ public class ABMTipoProductos extends AbstractPageBean {
     public void setButtonsPanelAddUpdate(HtmlPanelGrid hpg) {
         this.buttonsPanelAddUpdate = hpg;
     }
-    private Button button3 = new Button();
+    private Button buttonGuardarEdicion = new Button();
 
-    public Button getButton3() {
-        return button3;
+    public Button getButtonGuardarEdicion() {
+        return buttonGuardarEdicion;
     }
 
-    public void setButton3(Button b) {
-        this.button3 = b;
+    public void setButtonGuardarEdicion(Button b) {
+        this.buttonGuardarEdicion = b;
     }
-    private Button button2 = new Button();
+    private Button buttonGuardarNuevo = new Button();
 
-    public Button getButton2() {
-        return button2;
-    }
-
-    public void setButton2(Button b) {
-        this.button2 = b;
-    }
-    private TextField codigo2 = new TextField();
-
-    public TextField getCodigo2() {
-        return codigo2;
+    public Button getButtonGuardarNuevo() {
+        return buttonGuardarNuevo;
     }
 
-    public void setCodigo2(TextField tf) {
-        this.codigo2 = tf;
+    public void setButtonGuardarNuevo(Button b) {
+        this.buttonGuardarNuevo = b;
     }
-    private TextField tipo2 = new TextField();
+    private TextField uiTipo = new TextField();
 
-    public TextField getTipo2() {
-        return tipo2;
+    public TextField getUiTipo() {
+        return uiTipo;
     }
 
-    public void setTipo2(TextField tf) {
-        this.tipo2 = tf;
+    public void setUiTipo(TextField tf) {
+        this.uiTipo = tf;
     }
     private PageAlert pageAlert1 = new PageAlert();
 
@@ -150,6 +143,69 @@ public class ABMTipoProductos extends AbstractPageBean {
 
     public void setPageAlert1(PageAlert pa) {
         this.pageAlert1 = pa;
+    }
+    private TextField uiCodigoFil = new TextField();
+
+    public TextField getUiCodigoFil() {
+        return uiCodigoFil;
+    }
+
+    public void setUiCodigoFil(TextField tf) {
+        this.uiCodigoFil = tf;
+    }
+    private TextField uiTipoFIl = new TextField();
+
+    public TextField getUiTipoFIl() {
+        return uiTipoFIl;
+    }
+
+    public void setUiTipoFIl(TextField tf) {
+        this.uiTipoFIl = tf;
+    }
+    private TableColumn tableColumnRadio = new TableColumn();
+
+    public TableColumn getTableColumnRadio() {
+        return tableColumnRadio;
+    }
+
+    public void setTableColumnRadio(TableColumn tc) {
+        this.tableColumnRadio = tc;
+    }
+    private RadioButton radioButton1 = new RadioButton();
+
+    public RadioButton getRadioButton1() {
+        return radioButton1;
+    }
+
+    public void setRadioButton1(RadioButton rb) {
+        this.radioButton1 = rb;
+    }
+    private Table tableTipo = new Table();
+
+    public Table getTableTipo() {
+        return tableTipo;
+    }
+
+    public void setTableTipo(Table t) {
+        this.tableTipo = t;
+    }
+    private Checkbox uiExistChek = new Checkbox();
+
+    public Checkbox getUiExistChek() {
+        return uiExistChek;
+    }
+
+    public void setUiExistChek(Checkbox c) {
+        this.uiExistChek = c;
+    }
+    private TableRowGroup uiTablaTipos = new TableRowGroup();
+
+    public TableRowGroup getUiTablaTipos() {
+        return uiTablaTipos;
+    }
+
+    public void setUiTablaTipos(TableRowGroup trg) {
+        this.uiTablaTipos = trg;
     }
 
     // </editor-fold>
@@ -233,6 +289,7 @@ public class ABMTipoProductos extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosTipo.setRendered(true);
+            limpiarCamposNew();
 
 
         } else if (updateRequest) {
@@ -244,6 +301,7 @@ public class ABMTipoProductos extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosTipo.setRendered(true);
+            cargarCamposUpdate();
 
         } else if (errorValidacion) {
             
@@ -267,6 +325,36 @@ public class ABMTipoProductos extends AbstractPageBean {
             this.datosTipo.setRendered(false);
 
         }
+    buscar_action2();
+    }
+
+ public void limpiarCamposNew(){
+
+            this.uiTipo.setText("");
+            this.uiExistChek.setSelected(false);
+
+    }
+
+  public void cargarCamposUpdate(){
+
+         if (getUiTablaTipos().getSelectedRowsCount() > 0){
+          RowKey[] selectedRowKeys = getUiTablaTipos().getSelectedRowKeys();
+          TipoProducto[] tipoProductos = getSessionBean1().getListaTipoProductos();
+          int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+          TipoProducto tipoProducto = tipoProductos[rowId];
+      
+
+         //// CARGAMOS EN UNA VARIABLE ID EL CODIGO DEL TIPO RECUPERADO DESDE LA GRILLA PARA
+          /// LUEGO HACER LA BUSQUEDA DEL OBJETO POR ID
+          getSessionBean1().setId(tipoProducto.getCodTipoProducto());
+         //// CARGA DE CAMPOS DE LA PAGINA
+         this.uiTipo.setText(tipoProducto.getDescripcion());
+             if (tipoProducto.getTareas().equals("S")) {
+                    this.uiExistChek.setSelected(true);
+             } else {
+             this.uiExistChek.setSelected(false);
+             }
+         }
 
     }
 
@@ -314,8 +402,10 @@ public class ABMTipoProductos extends AbstractPageBean {
 
         // case name where null will return to the same page.
         this.addRequest=true;
-        this.button2.setRendered(true);
-        this.button3.setRendered(false);
+        this.pageAlert1.setRendered(false);
+
+        this.buttonGuardarNuevo.setRendered(true);
+        this.buttonGuardarEdicion.setRendered(false);
         return null;
     }
 
@@ -323,8 +413,8 @@ public class ABMTipoProductos extends AbstractPageBean {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         this.updateRequest=true;
-        this.button3.setRendered(true);
-        this.button2.setRendered(false);
+        this.buttonGuardarEdicion.setRendered(true);
+        this.buttonGuardarNuevo.setRendered(false);
         return null;
 
     }
@@ -333,6 +423,28 @@ public class ABMTipoProductos extends AbstractPageBean {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
 
+        if (getUiTablaTipos().getSelectedRowsCount() > 0){
+          RowKey[] selectedRowKeys = getUiTablaTipos().getSelectedRowKeys();
+          TipoProducto[] tiposProducto = getSessionBean1().getListaTipoProductos();
+          int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+          TipoProducto tipoProducto = tiposProducto[rowId];
+          // Remove the Entity from the database using UserController
+          TipoProductoController tipoProductoController = new TipoProductoController();
+          ControllerResult controllerResult = tipoProductoController.delete(tipoProducto);
+
+            if (controllerResult.getCodRetorno() ==-1) {
+                this.pageAlert1.setType("error");
+
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(controllerResult.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+         }
+            
         return null;
     }
 
@@ -345,25 +457,176 @@ public class ABMTipoProductos extends AbstractPageBean {
         return null;
     }
 
-    public String button2_action() {
+    public String buttonGuardarNuevo_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
-        this.addRequest=false;
-        this.updateRequest=false;
+        validarCampos();
 
-        info(this.codigo2, "Favor ingresar Nombre, Campo Obligatorio");
-        info(this.tipo2, "Favor ingresar Apellido, Campo Obligatorio");
-        this.errorValidacion=true;
-                      
+        if (! errorValidacion){
+            TipoProducto tipoProducto = new TipoProducto();
+            tipoProducto.setDescripcion(this.uiTipo.getText().toString());
 
-            this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Error en la Validacion de los Campos, favor verificar y volver a intentar");
-            this.pageAlert1.setSummary("");
-            this.pageAlert1.setDetail("");
-            this.pageAlert1.setRendered(true);
+//                        producto.setFechaAlta(this.uiFechaAlta.getSelectedDate());
+            if (this.uiExistChek.isChecked()) {
+                    tipoProducto.setTareas("S");
+            } else {
+                    tipoProducto.setTareas("N");
+            }
+            TipoProductoController tipoProductoController = new TipoProductoController();
 
+            ControllerResult controllerResult = new ControllerResult();
+            controllerResult = tipoProductoController.create(tipoProducto);
+
+
+             if (controllerResult.getCodRetorno() ==-1) {
+                    this.pageAlert1.setType("error");
+                    this.errorValidacion=true;
+                } else {
+                    this.pageAlert1.setType("information");
+                }
+
+                this.pageAlert1.setTitle(controllerResult.getMsg());
+                this.pageAlert1.setSummary("");
+                this.pageAlert1.setDetail("");
+                this.pageAlert1.setRendered(true);
+
+
+        }
+        return null;
+    }
+
+public void validarCampos() {
+    errorValidacion = false;
+   
+
+            if (this.uiTipo.getText() == null ||
+                this.uiTipo.getText().toString() == null ||
+                this.uiTipo.getText().toString().equals("")){
+                   errorValidacion = true;
+                   this.info(uiTipo, "La Descripcion no puede ser nula");
+            } else if (new TipoProductoController().existe(this.uiTipo.getText().toString()))  {
+                         errorValidacion = true;
+                          this.info(uiTipo, "El tipo de producto ya Existe");
+            }
+   
+}
+
+    private String buscar_action2() {
+
+        TipoProducto[] listaTiposProducto;
+        TipoProductoController tipoProductoController = new TipoProductoController();
+
+        String pCodigo=null, pDesc=null;
+
+        if (this.uiCodigoFil.getText()!=null) {
+            pDesc = this.uiCodigoFil.getText().toString();
+        }
+
+        if (this.uiTipoFIl.getText()!=null) {
+            pDesc = this.uiTipoFIl.getText().toString();
+        }
+
+        listaTiposProducto = (TipoProducto[])  tipoProductoController.getAllFiltered
+                                        (pCodigo,
+                                         pDesc).toArray(new TipoProducto[0]);
+
+        getSessionBean1().setListaTipoProductos(listaTiposProducto);
+        return null;
+
+    }
+
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+    public String buscar_action() {
+        this.pageAlert1.setRendered(false);
+        return null;
+    }
+
+    public String todos_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        this.pageAlert1.setRendered(false);
+        getSessionBean1().cargarListaTodosTipoProductos();
+        this.uiCodigoFil.setText("");
+        this.uiTipoFIl.setText("");
+        return null;
+    }
+
+ ///// CODIGO PARA RADIO BUTTON DE LA GRILLA DE BUSQUEDA
+   private TableSelectPhaseListener tablePhaseListener =
+                                  new TableSelectPhaseListener();
+
+    public void setSelected(Object object) {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        if (rowKey != null) {
+            tablePhaseListener.setSelected(rowKey, object);
+        }
+    }
+
+    public Object getSelected(){
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.getSelected(rowKey);
+
+    }
+
+    public Object getSelectedValue() {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return (rowKey != null) ? rowKey.getRowId() : null;
+
+    }
+
+    public boolean getSelectedState() {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.isSelected(rowKey);
+    }
+
+    public String buttonGuardarEdicion_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        updateRequest = true;
+         validarCampos();
+         
+        if (! errorValidacion){
+
+
+          TipoProducto tipoProducto = new TipoProductoController().findById(getSessionBean1().getId());
+
+                            tipoProducto.setDescripcion(this.uiTipo.getText().toString());
+
+                            if (this.uiExistChek.isChecked()) {
+                                tipoProducto.setTareas("S");
+                            } else {
+                                tipoProducto.setTareas("N");
+                            }
+                            
+                            TipoProductoController tipoProductoController = new TipoProductoController();
+
+                            ControllerResult controllerResult = new ControllerResult();
+                            controllerResult = tipoProductoController.update(tipoProducto);
+
+
+                             if (controllerResult.getCodRetorno() ==-1) {
+                                    this.pageAlert1.setType("error");
+                                    this.errorValidacion=true;
+                                } else {
+                                    updateRequest = false;
+                                    this.pageAlert1.setType("information");
+                                }
+
+                                this.pageAlert1.setTitle(controllerResult.getMsg());
+                                this.pageAlert1.setSummary("");
+                                this.pageAlert1.setDetail("");
+                                this.pageAlert1.setRendered(true);
+        }
 
         return null;
     }
+
+
+
+   ///// FIN CODIGO PARA RADIO BUTTON DE LA GRILLA DE BUSQUEDA
+
+
+
 }
 
