@@ -8,12 +8,14 @@ package platinum;
 import com.sun.rave.web.ui.appbase.AbstractSessionBean;
 import com.sun.webui.jsf.model.Option;
 import javax.faces.FacesException;
+import py.com.platinum.controller.DepositoController;
 import py.com.platinum.controller.MarcaController;
 import py.com.platinum.controller.PresentacionController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.TareaController;
 import py.com.platinum.controller.TipoProductoController;
 import py.com.platinum.controller.UnidadMedidaController;
+import py.com.platinum.entity.Deposito;
 import py.com.platinum.entity.Marca;
 import py.com.platinum.entity.Presentacion;
 import py.com.platinum.entity.Producto;
@@ -372,8 +374,8 @@ public class SessionBean1 extends AbstractSessionBean {
     }
 
     public void cargarListaTodosTareas(){
-        TareaController TareaController = new TareaController();
-        listaTareas = (Tarea[])TareaController.getAll("nombreTarea").toArray(new Tarea[0]);
+        TareaController tareaController = new TareaController();
+        listaTareas = (Tarea[])tareaController.getAll("nombreTarea").toArray(new Tarea[0]);
         listaTareasOp = new Option [listaTareas.length];
         Option option;
         for (int i = 0; i < listaTareas.length; i++) {
@@ -385,6 +387,44 @@ public class SessionBean1 extends AbstractSessionBean {
         }
     }
 ////// FIN CARGA DE COMBO BOX Tareas
+
+        ////// CARGA DE COMBO BOX Depositos
+//////     import com.sun.webui.jsf.model.Option;
+
+    Deposito[] listaDepositos;
+    Option[] listaDepositosOp;
+
+    public Option[] getListaDepositosOp() {
+        return listaUnidadMedidasOp;
+    }
+
+    public void setListaDepositosOp(Option[] listaDepositosOp) {
+        this.listaDepositosOp = listaDepositosOp;
+    }
+
+    public Deposito[] getListaDepositos() {
+        return listaDepositos;
+    }
+
+    public void setListaDepositos(Deposito[] listaDepositos) {
+        this.listaDepositos = listaDepositos;
+    }
+
+    public void cargarListaTodosDepositos(){
+        DepositoController depositoController = new DepositoController();
+        listaDepositos = (Deposito[])depositoController.getAll("nombre").toArray(new Deposito[0]);
+        listaDepositosOp = new Option [listaDepositos.length];
+        Option option;
+        for (int i = 0; i < listaDepositos.length; i++) {
+            Deposito tp = listaDepositos[i];
+            option = new Option();
+            option.setLabel(tp.getNombre());
+            option.setValue(tp.getCodDeposito().toString());
+            listaDepositosOp[i] = option;
+        }
+    }
+////// FIN CARGA DE COMBO BOX Depositos
+
 
 
 

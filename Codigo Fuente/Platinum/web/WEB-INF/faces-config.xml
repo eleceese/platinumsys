@@ -181,4 +181,14 @@
         <managed-bean-class>platinum.LSTRanking</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMDeposito</managed-bean-name>
+        <managed-bean-class>platinum.ABMDeposito</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMMovimientoCaja</managed-bean-name>
+        <managed-bean-class>platinum.ABMMovimientoCaja</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 </faces-config>

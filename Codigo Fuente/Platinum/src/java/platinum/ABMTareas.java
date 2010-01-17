@@ -4,21 +4,27 @@
  */
 package platinum;
 
+import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.PageAlert;
+import com.sun.webui.jsf.component.RadioButton;
 import com.sun.webui.jsf.component.StaticText;
 import com.sun.webui.jsf.component.Table;
+import com.sun.webui.jsf.component.TableColumn;
 import com.sun.webui.jsf.component.TableRowGroup;
 import com.sun.webui.jsf.component.TextField;
+import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
+import javax.faces.event.ValueChangeEvent;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
 import py.com.platinum.controller.TareaController;
+import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.Tarea;
 
 
@@ -101,41 +107,32 @@ public class ABMTareas extends AbstractPageBean {
     public void setButtonsPanelAddUpdate(HtmlPanelGrid hpg) {
         this.buttonsPanelAddUpdate = hpg;
     }
-    private Button button3 = new Button();
+    private Button buttonGuardarEdicion = new Button();
 
-    public Button getButton3() {
-        return button3;
+    public Button getButtonGuardarEdicion() {
+        return buttonGuardarEdicion;
     }
 
-    public void setButton3(Button b) {
-        this.button3 = b;
+    public void setButtonGuardarEdicion(Button b) {
+        this.buttonGuardarEdicion = b;
     }
-    private Button button2 = new Button();
+    private Button buttonGuardarNuevo = new Button();
 
-    public Button getButton2() {
-        return button2;
-    }
-
-    public void setButton2(Button b) {
-        this.button2 = b;
-    }
-    private TextField codigo2 = new TextField();
-
-    public TextField getCodigo2() {
-        return codigo2;
+    public Button getButtonGuardarNuevo() {
+        return buttonGuardarNuevo;
     }
 
-    public void setCodigo2(TextField tf) {
-        this.codigo2 = tf;
+    public void setButtonGuardarNuevo(Button b) {
+        this.buttonGuardarNuevo = b;
     }
-    private TextField tarea = new TextField();
+    private TextField uiTarea = new TextField();
 
-    public TextField getTarea() {
-        return tarea;
+    public TextField getUiTarea() {
+        return uiTarea;
     }
 
-    public void setTarea(TextField tf) {
-        this.tarea = tf;
+    public void setUiTarea(TextField tf) {
+        this.uiTarea = tf;
     }
     private PageAlert pageAlert1 = new PageAlert();
 
@@ -181,6 +178,24 @@ public class ABMTareas extends AbstractPageBean {
 
     public void setUiNombreFil(TextField tf) {
         this.uiNombreFil = tf;
+    }
+    private RadioButton radioButton1 = new RadioButton();
+
+    public RadioButton getRadioButton1() {
+        return radioButton1;
+    }
+
+    public void setRadioButton1(RadioButton rb) {
+        this.radioButton1 = rb;
+    }
+    private TableColumn tableColumn3 = new TableColumn();
+
+    public TableColumn getTableColumn3() {
+        return tableColumn3;
+    }
+
+    public void setTableColumn3(TableColumn tc) {
+        this.tableColumn3 = tc;
     }
 
     // </editor-fold>
@@ -264,6 +279,7 @@ public class ABMTareas extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosTareas.setRendered(true);
+             limpiarCamposNew();
 
 
         } else if (updateRequest) {
@@ -275,6 +291,7 @@ public class ABMTareas extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosTareas.setRendered(true);
+            cargarCamposUpdate();
 
         } else if (errorValidacion) {
             
@@ -301,6 +318,30 @@ public class ABMTareas extends AbstractPageBean {
 buscar_action2();
     }
 
+    public void cargarCamposUpdate(){
+
+         if (getTareasRW().getSelectedRowsCount() > 0){
+          RowKey[] selectedRowKeys = getTareasRW().getSelectedRowKeys();
+          Tarea[] tareas = getSessionBean1().getListaTareas();
+          int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+          Tarea tarea = tareas[rowId];
+
+
+         //// CARGAMOS EN UNA VARIABLE ID EL CODIGO DEL TIPO RECUPERADO DESDE LA GRILLA PARA
+          /// LUEGO HACER LA BUSQUEDA DEL OBJETO POR ID
+          getSessionBean1().setId(tarea.getCodTarea());
+         //// CARGA DE CAMPOS DE LA PAGINA
+         this.uiTarea.setText(tarea.getNombreTarea());
+
+         }
+    }
+
+public void limpiarCamposNew(){
+
+            this.uiTarea.setText("");
+            
+
+    }
 
      private String buscar_action2() {
 
@@ -370,8 +411,10 @@ buscar_action2();
 
         // case name where null will return to the same page.
         this.addRequest=true;
-        this.button2.setRendered(true);
-        this.button3.setRendered(false);
+        this.pageAlert1.setRendered(false);
+
+        this.buttonGuardarNuevo.setRendered(true);
+        this.buttonGuardarEdicion.setRendered(false);
         return null;
     }
 
@@ -379,8 +422,8 @@ buscar_action2();
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         this.updateRequest=true;
-        this.button3.setRendered(true);
-        this.button2.setRendered(false);
+        this.buttonGuardarEdicion.setRendered(true);
+        this.buttonGuardarNuevo.setRendered(false);
         return null;
 
     }
@@ -389,6 +432,27 @@ buscar_action2();
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
 
+         if (getTareasRW().getSelectedRowsCount() > 0){
+          RowKey[] selectedRowKeys = getTareasRW().getSelectedRowKeys();
+          Tarea[] tareas = getSessionBean1().getListaTareas();
+          int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+          Tarea tarea = tareas[rowId];
+          // Remove the Entity from the database using UserController
+          TareaController tareaController = new TareaController();
+          ControllerResult controllerResult = tareaController.delete(tarea);
+
+            if (controllerResult.getCodRetorno() ==-1) {
+                this.pageAlert1.setType("error");
+
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(controllerResult.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+         }
         return null;
     }
 
@@ -401,25 +465,135 @@ buscar_action2();
         return null;
     }
 
-    public String button2_action() {
+    public String buttonGuardarNuevo_action() {
+        validarCampos();
+
+        if (! errorValidacion){
+            Tarea tarea = new Tarea();
+            tarea.setNombreTarea(this.uiTarea.getText().toString());
+
+//                        producto.setFechaAlta(this.uiFechaAlta.getSelectedDate());
+
+            TareaController tareaController = new TareaController();
+
+            ControllerResult controllerResult = new ControllerResult();
+            controllerResult = tareaController.create(tarea);
+
+
+             if (controllerResult.getCodRetorno() ==-1) {
+                    this.pageAlert1.setType("error");
+                    this.errorValidacion=true;
+                } else {
+                    this.pageAlert1.setType("information");
+                }
+
+                this.pageAlert1.setTitle(controllerResult.getMsg());
+                this.pageAlert1.setSummary("");
+                this.pageAlert1.setDetail("");
+                this.pageAlert1.setRendered(true);
+
+        }
+        return null;
+    }
+
+public void validarCampos() {
+    errorValidacion = false;
+            if (this.uiTarea.getText() == null ||
+                this.uiTarea.getText().toString() == null ||
+                this.uiTarea.getText().toString().equals("")){
+                   errorValidacion = true;
+                   this.info(uiTarea, "El nombre de Tarea no puede ser nula");
+            } else if (new TareaController().existe(this.uiTarea.getText().toString()))  {
+                         errorValidacion = true;
+                          this.info(uiTarea, "La tarea ya Existe");
+            }
+
+}
+
+    public String buscar_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
-        this.addRequest=false;
-        this.updateRequest=false;
+        this.pageAlert1.setRendered(false);
+        return null;
+    }
 
-        info(this.codigo2, "Favor ingresar Nombre, Campo Obligatorio");
-        info(this.tarea, "Favor ingresar Apellido, Campo Obligatorio");
-        this.errorValidacion=true;
-                      
+private TableSelectPhaseListener tablePhaseListener =
+                                  new TableSelectPhaseListener();
 
-            this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Error en la Validacion de los Campos, favor verificar y volver a intentar");
-            this.pageAlert1.setSummary("");
-            this.pageAlert1.setDetail("");
-            this.pageAlert1.setRendered(true);
+    public void setSelected(Object object) {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        if (rowKey != null) {
+            tablePhaseListener.setSelected(rowKey, object);
+        }
+    }
 
+    public Object getSelected(){
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.getSelected(rowKey);
+
+    }
+
+    public Object getSelectedValue() {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return (rowKey != null) ? rowKey.getRowId() : null;
+
+    }
+
+    public boolean getSelectedState() {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.isSelected(rowKey);
+    }
+
+    public String todos_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        this.pageAlert1.setRendered(false);
+//        getSessionBean1().cargarListaTodosTipoProductos();
+        this.uiCodigoFil.setText("");
+        this.uiNombreFil.setText("");
+
+        return null;
+    }
+
+    public String buttonGuardarEdicion_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+         updateRequest = true;
+         validarCampos();
+
+        if (! errorValidacion){
+
+
+          Tarea tarea = new TareaController().findById(getSessionBean1().getId());
+
+                            tarea.setNombreTarea(this.uiTarea.getText().toString());
+
+
+                            TareaController tareaController = new TareaController();
+
+                            ControllerResult controllerResult = new ControllerResult();
+                            controllerResult = tareaController.update(tarea);
+
+
+                             if (controllerResult.getCodRetorno() ==-1) {
+                                    this.pageAlert1.setType("error");
+                                    this.errorValidacion=true;
+                                } else {
+                                    updateRequest = false;
+                                    this.pageAlert1.setType("information");
+                                }
+
+                                this.pageAlert1.setTitle(controllerResult.getMsg());
+                                this.pageAlert1.setSummary("");
+                                this.pageAlert1.setDetail("");
+                                this.pageAlert1.setRendered(true);
+        }
 
         return null;
     }
 }
+
+
+
+
 

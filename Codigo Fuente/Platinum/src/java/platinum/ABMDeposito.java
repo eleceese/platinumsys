@@ -7,6 +7,7 @@ package platinum;
 import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
+import com.sun.webui.jsf.component.Calendar;
 import com.sun.webui.jsf.component.Checkbox;
 import com.sun.webui.jsf.component.PageAlert;
 import com.sun.webui.jsf.component.RadioButton;
@@ -18,20 +19,16 @@ import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.util.Date;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.event.ValueChangeEvent;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
-import py.com.platinum.controller.TipoProductoController;
+import py.com.platinum.controller.DepositoController;
 import py.com.platinum.controllerUtil.ControllerResult;
-import py.com.platinum.entity.TipoProducto;
-
-
-
-
-
+import py.com.platinum.entity.Deposito;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -44,7 +41,7 @@ import py.com.platinum.entity.TipoProducto;
  * @version Created on Oct 18, 2009, 8:11:57 PM
  * @author FerBoy
  */
-public class ABMTipoProductos extends AbstractPageBean {
+public class ABMDeposito extends AbstractPageBean {
     // <editor-fold defaultstate="collapsed" desc="Managed Component Definition">
 
     /**
@@ -81,14 +78,14 @@ public class ABMTipoProductos extends AbstractPageBean {
     public void setGridPanelBotones(HtmlPanelGrid hpg) {
         this.gridPanelBotones = hpg;
     }
-    private StaticText datosTipo = new StaticText();
+    private StaticText datosDeposito = new StaticText();
 
-    public StaticText getDatosTipo() {
-        return datosTipo;
+    public StaticText getDatosDeposito() {
+        return datosDeposito;
     }
 
-    public void setDatosTipo(StaticText st) {
-        this.datosTipo = st;
+    public void setDatosDeposito(StaticText st) {
+        this.datosDeposito = st;
     }
     private HtmlPanelGrid gridPanelAddUpdate = new HtmlPanelGrid();
 
@@ -126,14 +123,14 @@ public class ABMTipoProductos extends AbstractPageBean {
     public void setButtonGuardarNuevo(Button b) {
         this.buttonGuardarNuevo = b;
     }
-    private TextField uiTipo = new TextField();
+    private TextField uiNombreDeposito = new TextField();
 
-    public TextField getUiTipo() {
-        return uiTipo;
+    public TextField getUiNombreDeposito() {
+        return uiNombreDeposito;
     }
 
-    public void setUiTipo(TextField tf) {
-        this.uiTipo = tf;
+    public void setUiNombreDeposito(TextField tf) {
+        this.uiNombreDeposito = tf;
     }
     private PageAlert pageAlert1 = new PageAlert();
 
@@ -153,23 +150,50 @@ public class ABMTipoProductos extends AbstractPageBean {
     public void setUiCodigoFil(TextField tf) {
         this.uiCodigoFil = tf;
     }
-    private TextField uiTipoFIl = new TextField();
+    private TextField uiNombreFIl = new TextField();
 
-    public TextField getUiTipoFIl() {
-        return uiTipoFIl;
+    public TextField getUiNombreFIl() {
+        return uiNombreFIl;
     }
 
-    public void setUiTipoFIl(TextField tf) {
-        this.uiTipoFIl = tf;
+    public void setUiNombreFIl(TextField tf) {
+        this.uiNombreFIl = tf;
     }
-    private TableColumn tableColumnRadio = new TableColumn();
+    private Table tableDepositos = new Table();
 
-    public TableColumn getTableColumnRadio() {
-        return tableColumnRadio;
+    public Table getTableDepositos() {
+        return tableDepositos;
     }
 
-    public void setTableColumnRadio(TableColumn tc) {
-        this.tableColumnRadio = tc;
+    public void setTableDepositos(Table t) {
+        this.tableDepositos = t;
+    }
+    private Checkbox uiActivoChek = new Checkbox();
+
+    public Checkbox getUiActivoChek() {
+        return uiActivoChek;
+    }
+
+    public void setUiActivoChek(Checkbox c) {
+        this.uiActivoChek = c;
+    }
+    private TableRowGroup uiTablaDepositos = new TableRowGroup();
+
+    public TableRowGroup getUiTablaDepositos() {
+        return uiTablaDepositos;
+    }
+
+    public void setUiTablaDepositos(TableRowGroup trg) {
+        this.uiTablaDepositos = trg;
+    }
+    private Calendar uiFechaAltaCalendar = new Calendar();
+
+    public Calendar getUiFechaAltaCalendar() {
+        return uiFechaAltaCalendar;
+    }
+
+    public void setUiFechaAltaCalendar(Calendar c) {
+        this.uiFechaAltaCalendar = c;
     }
     private RadioButton radioButton1 = new RadioButton();
 
@@ -180,39 +204,30 @@ public class ABMTipoProductos extends AbstractPageBean {
     public void setRadioButton1(RadioButton rb) {
         this.radioButton1 = rb;
     }
-    private Table tableTipo = new Table();
+    private TableColumn tableColumn3 = new TableColumn();
 
-    public Table getTableTipo() {
-        return tableTipo;
+    public TableColumn getTableColumn3() {
+        return tableColumn3;
     }
 
-    public void setTableTipo(Table t) {
-        this.tableTipo = t;
+    public void setTableColumn3(TableColumn tc) {
+        this.tableColumn3 = tc;
     }
-    private Checkbox uiExistChek = new Checkbox();
+    private HtmlPanelGrid gridPanelDeposito1 = new HtmlPanelGrid();
 
-    public Checkbox getUiExistChek() {
-        return uiExistChek;
-    }
-
-    public void setUiExistChek(Checkbox c) {
-        this.uiExistChek = c;
-    }
-    private TableRowGroup uiTablaTipos = new TableRowGroup();
-
-    public TableRowGroup getUiTablaTipos() {
-        return uiTablaTipos;
+    public HtmlPanelGrid getGridPanelDeposito1() {
+        return gridPanelDeposito1;
     }
 
-    public void setUiTablaTipos(TableRowGroup trg) {
-        this.uiTablaTipos = trg;
+    public void setGridPanelDeposito1(HtmlPanelGrid hpg) {
+        this.gridPanelDeposito1 = hpg;
     }
 
     // </editor-fold>
     /**
      * <p>Construct a new Page bean instance.</p>
      */
-    public ABMTipoProductos() {
+    public ABMDeposito() {
     }
 
     /**
@@ -250,7 +265,7 @@ public class ABMTipoProductos extends AbstractPageBean {
     // *after* managed components are initialized
     // TODO - add your own initialization code here
 
-    getSessionBean1().setTituloPagina("Registro de tipos de Producto");
+    getSessionBean1().setTituloPagina("Registro de Depositos");
     getSessionBean1().setDetallePagina("Seleccione el registro Deseado");
 
 
@@ -285,10 +300,10 @@ public class ABMTipoProductos extends AbstractPageBean {
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
-            this.datosTipo.setRendered(false);
+            this.datosDeposito.setRendered(false);
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
-            this.datosTipo.setRendered(true);
+            this.datosDeposito.setRendered(true);
             limpiarCamposNew();
 
 
@@ -297,10 +312,10 @@ public class ABMTipoProductos extends AbstractPageBean {
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
-            this.datosTipo.setRendered(false);
+            this.datosDeposito.setRendered(false);
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
-            this.datosTipo.setRendered(true);
+            this.datosDeposito.setRendered(true);
             cargarCamposUpdate();
 
         } else if (errorValidacion) {
@@ -308,10 +323,10 @@ public class ABMTipoProductos extends AbstractPageBean {
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(true);
             this.gridPanelBotones.setRendered(true);
-            this.datosTipo.setRendered(true);
+            this.datosDeposito.setRendered(true);
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
-            this.datosTipo.setRendered(true);
+            this.datosDeposito.setRendered(true);
 
 
         } else {
@@ -319,10 +334,10 @@ public class ABMTipoProductos extends AbstractPageBean {
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(true);
             this.gridPanelBotones.setRendered(true);
-            this.datosTipo.setRendered(true);
+            this.datosDeposito.setRendered(true);
             this.gridPanelAddUpdate.setRendered(false);
             this.buttonsPanelAddUpdate.setRendered(false);
-            this.datosTipo.setRendered(false);
+            this.datosDeposito.setRendered(false);
 
         }
     buscar_action2();
@@ -330,42 +345,38 @@ public class ABMTipoProductos extends AbstractPageBean {
 
  public void limpiarCamposNew(){
 
-            this.uiTipo.setText("");
-            this.uiExistChek.setSelected(false);
-
+            this.uiNombreDeposito.setText("");
+            this.uiFechaAltaCalendar.setSelectedDate(new Date());
+            this.uiActivoChek.setSelected(false);
     }
 
   public void cargarCamposUpdate(){
 
-         if (getUiTablaTipos().getSelectedRowsCount() > 0){
-          RowKey[] selectedRowKeys = getUiTablaTipos().getSelectedRowKeys();
-          TipoProducto[] tipoProductos = getSessionBean1().getListaTipoProductos();
+         if (getUiTablaDepositos().getSelectedRowsCount() > 0){
+          RowKey[] selectedRowKeys = getUiTablaDepositos().getSelectedRowKeys();
+          Deposito[] depositos = getSessionBean1().getListaDepositos();
           int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
-          TipoProducto tipoProducto = tipoProductos[rowId];
+          Deposito deposito = depositos[rowId];
       
 
          //// CARGAMOS EN UNA VARIABLE ID EL CODIGO DEL TIPO RECUPERADO DESDE LA GRILLA PARA
           /// LUEGO HACER LA BUSQUEDA DEL OBJETO POR ID
-          getSessionBean1().setId(tipoProducto.getCodTipoProducto());
+          getSessionBean1().setId(deposito.getCodDeposito());
          //// CARGA DE CAMPOS DE LA PAGINA
-         this.uiTipo.setText(tipoProducto.getDescripcion());
-             if (tipoProducto.getTareas().equals("S")) {
-                    this.uiExistChek.setSelected(true);
-             } else {
-             this.uiExistChek.setSelected(false);
-             }
+         this.uiNombreDeposito.setText(deposito.getNombre());
+         this.uiFechaAltaCalendar.setSelectedDate(deposito.getFechaAlta());
+
+         if (deposito.getEstado().equals("ABIERTO")) {
+                this.uiActivoChek.setSelected(true);
+            } else {
+                this.uiActivoChek.setSelected(false);
+            }
+
+
+
          }
-
-    }
-
-    /**
-     * <p>Callback method that is called after rendering is completed for
-     * this request, if <code>init()</code> was called (regardless of whether
-     * or not this was the page that was actually rendered).  Customize this
-     * method to release resources acquired in the <code>init()</code>,
-     * <code>preprocess()</code>, or <code>prerender()</code> methods (or
-     * acquired during execution of an event handler).</p>
-     */
+}
+    
     @Override
     public void destroy() {
     }
@@ -413,24 +424,24 @@ public class ABMTipoProductos extends AbstractPageBean {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         this.updateRequest=true;
+        this.pageAlert1.setRendered(false);
         this.buttonGuardarEdicion.setRendered(true);
         this.buttonGuardarNuevo.setRendered(false);
         return null;
-
     }
 
     public String eliminar_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
 
-        if (getUiTablaTipos().getSelectedRowsCount() > 0){
-          RowKey[] selectedRowKeys = getUiTablaTipos().getSelectedRowKeys();
-          TipoProducto[] tiposProducto = getSessionBean1().getListaTipoProductos();
+        if (getUiTablaDepositos().getSelectedRowsCount() > 0){
+          RowKey[] selectedRowKeys = getUiTablaDepositos().getSelectedRowKeys();
+          Deposito[] depositos = getSessionBean1().getListaDepositos();
           int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
-          TipoProducto tipoProducto = tiposProducto[rowId];
+          Deposito deposito = depositos[rowId];
           // Remove the Entity from the database using UserController
-          TipoProductoController tipoProductoController = new TipoProductoController();
-          ControllerResult controllerResult = tipoProductoController.delete(tipoProducto);
+          DepositoController depositoController = new DepositoController();
+          ControllerResult controllerResult = depositoController.delete(deposito);
 
             if (controllerResult.getCodRetorno() ==-1) {
                 this.pageAlert1.setType("error");
@@ -444,8 +455,7 @@ public class ABMTipoProductos extends AbstractPageBean {
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
          }
-            
-        return null;
+             return null;
     }
 
     public String cancelar_action() {
@@ -453,7 +463,6 @@ public class ABMTipoProductos extends AbstractPageBean {
         // case name where null will return to the same page.
         this.addRequest=false;
         this.updateRequest=false;
-
         return null;
     }
 
@@ -463,22 +472,21 @@ public class ABMTipoProductos extends AbstractPageBean {
         validarCampos();
 
         if (! errorValidacion){
-            TipoProducto tipoProducto = new TipoProducto();
-            tipoProducto.setDescripcion(this.uiTipo.getText().toString());
+            Deposito deposito = new Deposito();
+            deposito.setNombre(this.uiNombreDeposito.getText().toString());
+            deposito.setFechaAlta(this.uiFechaAltaCalendar.getSelectedDate());
 
-//                        producto.setFechaAlta(this.uiFechaAlta.getSelectedDate());
-            if (this.uiExistChek.isChecked()) {
-                    tipoProducto.setTareas("S");
+            if (this.uiActivoChek.isChecked()) {
+                    deposito.setEstado("ABIERTO");
             } else {
-                    tipoProducto.setTareas("N");
+                    deposito.setEstado("CERRADO");
             }
-            TipoProductoController tipoProductoController = new TipoProductoController();
+            DepositoController depositoController = new DepositoController();
 
             ControllerResult controllerResult = new ControllerResult();
-            controllerResult = tipoProductoController.create(tipoProducto);
+            controllerResult = depositoController.create(deposito);
 
-
-             if (controllerResult.getCodRetorno() ==-1) {
+            if (controllerResult.getCodRetorno() ==-1) {
                     this.pageAlert1.setType("error");
                     this.errorValidacion=true;
                 } else {
@@ -497,44 +505,39 @@ public class ABMTipoProductos extends AbstractPageBean {
 
 public void validarCampos() {
     errorValidacion = false;
-   
-
-            if (this.uiTipo.getText() == null ||
-                this.uiTipo.getText().toString() == null ||
-                this.uiTipo.getText().toString().equals("")){
+            if (this.uiNombreDeposito.getText() == null ||
+                this.uiNombreDeposito.getText().toString() == null ||
+                this.uiNombreDeposito.getText().toString().equals("")){
                    errorValidacion = true;
-                   this.info(uiTipo, "La Descripcion no puede ser nula");
-            } else if (new TipoProductoController().existe(this.uiTipo.getText().toString()))  {
-                         errorValidacion = true;
-                          this.info(uiTipo, "El tipo de producto ya Existe");
+                   this.info(uiNombreDeposito, "El nombre no puede ser nulo");
             }
-   
+//            else if (new DepositoController().existe(this.uiNombreDeposito.getText().toString()))  {
+//                         errorValidacion = true;
+//                          this.info(uiNombreDeposito, "El nombre de Deposito ya existe");
+//            }
 }
-
     private String buscar_action2() {
 
-        TipoProducto[] listaTiposProducto;
-        TipoProductoController tipoProductoController = new TipoProductoController();
+        Deposito[] listaDepositos;
+        DepositoController depositoController = new DepositoController();
 
-        String pCodigo=null, pDesc=null;
+        String pCodigo=null, pNombre=null;
 
         if (this.uiCodigoFil.getText()!=null) {
-            pDesc = this.uiCodigoFil.getText().toString();
+            pCodigo = this.uiCodigoFil.getText().toString();
         }
 
-        if (this.uiTipoFIl.getText()!=null) {
-            pDesc = this.uiTipoFIl.getText().toString();
+        if (this.uiNombreFIl.getText()!=null) {
+            pNombre = this.uiNombreFIl.getText().toString();
         }
 
-        listaTiposProducto = (TipoProducto[])  tipoProductoController.getAllFiltered
+        listaDepositos = (Deposito[])  depositoController.getAllFiltered
                                         (pCodigo,
-                                         pDesc).toArray(new TipoProducto[0]);
+                                         pNombre).toArray(new Deposito[0]);
 
-        getSessionBean1().setListaTipoProductos(listaTiposProducto);
+        getSessionBean1().setListaDepositos(listaDepositos);
         return null;
-
     }
-
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
     public String buscar_action() {
@@ -546,9 +549,10 @@ public void validarCampos() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         this.pageAlert1.setRendered(false);
-        getSessionBean1().cargarListaTodosTipoProductos();
+//        getSessionBean1().cargarListaTodosDepositos();
         this.uiCodigoFil.setText("");
-        this.uiTipoFIl.setText("");
+        this.uiNombreFIl.setText("");
+        this.uiFechaAltaCalendar.setSelectedDate(new Date());
         return null;
     }
 
@@ -587,25 +591,25 @@ public void validarCampos() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         updateRequest = true;
-         validarCampos();
+        validarCampos();
          
         if (! errorValidacion){
 
+          Deposito deposito = new DepositoController().findById(getSessionBean1().getId());
 
-          TipoProducto tipoProducto = new TipoProductoController().findById(getSessionBean1().getId());
+                            deposito.setNombre(this.uiNombreDeposito.getText().toString());
+                            deposito.setFechaAlta(this.uiFechaAltaCalendar.getSelectedDate());
 
-                            tipoProducto.setDescripcion(this.uiTipo.getText().toString());
-
-                            if (this.uiExistChek.isChecked()) {
-                                tipoProducto.setTareas("S");
+                            if (this.uiActivoChek.isChecked()) {
+                                deposito.setEstado("ABIERTO");
                             } else {
-                                tipoProducto.setTareas("N");
+                                deposito.setEstado("CERRADO");
                             }
                             
-                            TipoProductoController tipoProductoController = new TipoProductoController();
+                            DepositoController depositoController = new DepositoController();
 
                             ControllerResult controllerResult = new ControllerResult();
-                            controllerResult = tipoProductoController.update(tipoProducto);
+                            controllerResult = depositoController.update(deposito);
 
 
                              if (controllerResult.getCodRetorno() ==-1) {
@@ -624,10 +628,5 @@ public void validarCampos() {
 
         return null;
     }
-
-
-
-
-
 }
 
