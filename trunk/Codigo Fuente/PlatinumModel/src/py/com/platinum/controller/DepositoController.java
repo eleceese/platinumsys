@@ -9,40 +9,24 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
-import py.com.platinum.entity.Tarea;
+import py.com.platinum.entity.Deposito;
 
 /**
  *
  * @author FerBoy
  */
-public class TareaController extends AbstractJpaDao<Tarea> {
+public class DepositoController extends AbstractJpaDao<Deposito> {
 
-    public TareaController() {
-        super();
-    }
+    public boolean existe(String nombre){
 
-
-
-    @Override
-    public Tarea findById(Long id) {
-                return (Tarea) this.findById(Tarea.class, id);
-    }
-
-       @Override
-    public List<Tarea> getAll(String orderBy) {
-        return this.getAll(Tarea.class, orderBy);
-     }
-
-        public boolean existe(String nombre){
-
-        String SQL = "SELECT o FROM Tarea o WHERE UPPER(o.nombreTarea) = UPPER(:nombre)";
+        String SQL = "SELECT o FROM Deposito o WHERE o.nombre = :nombre";
 
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
 
         q.setParameter("nombre", nombre);
 
-        List<Tarea> entities = q.getResultList();
+        List<Deposito> entities = q.getResultList();
         em.close();
 
         if (entities.size() > 0){
@@ -52,16 +36,32 @@ public class TareaController extends AbstractJpaDao<Tarea> {
 
     }
 
-        public List<Tarea> getAllFiltered(String codigo, String nombre) {
+
+    public DepositoController() {
+        super();
+    }
+
+
+    @Override
+    public Deposito findById(Long id) {
+                return (Deposito) this.findById(Deposito.class, id);
+    }
+
+    @Override
+    public List<Deposito> getAll(String orderBy) {
+        return this.getAll(Deposito.class, orderBy);
+     }
+
+    public List<Deposito> getAllFiltered(String codigo, String nombre) {
         //emf.createEntityManager Levanta el contexto del JPA
-        String SQL = "SELECT o FROM Tarea o WHERE o.codTarea = o.codTarea";
+        String SQL = "SELECT o FROM Deposito o WHERE o.codDeposito = o.codDeposito";
 
         if (codigo != null && !codigo.equals("")) {
-            SQL = SQL + " and UPPER(o.codTarea) = upper(:codigo)";
+            SQL = SQL + " and UPPER(o.codDeposito) = upper(:codigo)";
         }
 
         if (nombre != null && !nombre.equals("")) {
-            SQL = SQL + " and UPPER(o.nombreTarea) like upper(:nombre)";
+            SQL = SQL + " and UPPER(o.nombre) like upper(:nombre)";
         }
 
 
@@ -76,10 +76,12 @@ public class TareaController extends AbstractJpaDao<Tarea> {
             q.setParameter("nombre", "%"+nombre+"%");
         }
 
-        List<Tarea> entities = q.getResultList();
+        List<Deposito> entities = q.getResultList();
         em.close();
 
         return entities;
 
       }
+
+
 }

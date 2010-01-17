@@ -6,17 +6,20 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,17 +29,21 @@ import javax.persistence.TemporalType;
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="DEPOSITO_SEQUENCE", sequenceName="SQ_DEPOSITO", initialValue=1, allocationSize=1)
 @Table(name = "DEPOSITO")
 @NamedQueries({@NamedQuery(name = "Deposito.findAll", query = "SELECT d FROM Deposito d"), @NamedQuery(name = "Deposito.findByCodDeposito", query = "SELECT d FROM Deposito d WHERE d.codDeposito = :codDeposito"), @NamedQuery(name = "Deposito.findByNombre", query = "SELECT d FROM Deposito d WHERE d.nombre = :nombre"), @NamedQuery(name = "Deposito.findByUsuarioAlta", query = "SELECT d FROM Deposito d WHERE d.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "Deposito.findByUsuarioModif", query = "SELECT d FROM Deposito d WHERE d.usuarioModif = :usuarioModif"), @NamedQuery(name = "Deposito.findByFechaAlta", query = "SELECT d FROM Deposito d WHERE d.fechaAlta = :fechaAlta"), @NamedQuery(name = "Deposito.findByFechaModif", query = "SELECT d FROM Deposito d WHERE d.fechaModif = :fechaModif")})
 public class Deposito implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="DEPOSITO_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_DEPOSITO")
-    private BigDecimal codDeposito;
+    private Long codDeposito;
     @Basic(optional = false)
     @Column(name = "NOMBRE")
     private String nombre;
+    @Column(name = "ESTADO")
+    private String estado;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -57,20 +64,20 @@ public class Deposito implements Serializable {
     public Deposito() {
     }
 
-    public Deposito(BigDecimal codDeposito) {
+    public Deposito(Long codDeposito) {
         this.codDeposito = codDeposito;
     }
 
-    public Deposito(BigDecimal codDeposito, String nombre) {
+    public Deposito(Long codDeposito, String nombre) {
         this.codDeposito = codDeposito;
         this.nombre = nombre;
     }
 
-    public BigDecimal getCodDeposito() {
+    public Long getCodDeposito() {
         return codDeposito;
     }
 
-    public void setCodDeposito(BigDecimal codDeposito) {
+    public void setCodDeposito(Long codDeposito) {
         this.codDeposito = codDeposito;
     }
 
@@ -108,6 +115,14 @@ public class Deposito implements Serializable {
 
     public Date getFechaModif() {
         return fechaModif;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public void setFechaModif(Date fechaModif) {
@@ -160,7 +175,7 @@ public class Deposito implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.Deposito[codDeposito=" + codDeposito + "]";
+        return nombre;
     }
 
 }
