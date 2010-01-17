@@ -44,7 +44,7 @@ import py.com.platinum.entity.TipoProducto;
  * @version Created on Oct 18, 2009, 8:11:57 PM
  * @author FerBoy
  */
-public class ABMTipoProductos extends AbstractPageBean {
+public class ABMTipoProductos_2 extends AbstractPageBean {
     // <editor-fold defaultstate="collapsed" desc="Managed Component Definition">
 
     /**
@@ -212,7 +212,7 @@ public class ABMTipoProductos extends AbstractPageBean {
     /**
      * <p>Construct a new Page bean instance.</p>
      */
-    public ABMTipoProductos() {
+    public ABMTipoProductos_2() {
     }
 
     /**

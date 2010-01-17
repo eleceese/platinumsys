@@ -60,6 +60,8 @@
                 
             </webuijsf:accordionTab>
             <webuijsf:accordionTab id="tab5" title="Stock">
+                <webuijsf:hyperlink id="depositos" target="rightFrame" text="Depositos" url="/faces/ABMDeposito.jsp"/>
+                <br/>
                 <webuijsf:hyperlink id="movimientos" target="rightFrame" text="Movimientos Deposito" url="/faces/RegistroMovDeposito.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="inventarios" target="rightFrame" text="Apertura Inventario" url="/faces/RegistroDeInventario.jsp"/>
