@@ -200,7 +200,7 @@ public class Producto implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.Producto[codProducto=" + codProducto + "]";
+        return descripcion;
     }
 
 }

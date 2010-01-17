@@ -99,13 +99,13 @@ public class ProductoController extends AbstractJpaDao <Producto> {
 
       }
 
-public static void main (String[] v) {
-        ProductoController productoController = new ProductoController();
-        Producto producto = new Producto();
-        producto = productoController.findById(Long.valueOf("1000"));
-        System.out.println(producto.getDescripcion());
-        productoController.delete(producto);
-        };
+//public static void main (String[] v) {
+//        ProductoController productoController = new ProductoController();
+//        Producto producto = new Producto();
+//        producto = productoController.findById(Long.valueOf("1000"));
+//        System.out.println(producto.getDescripcion());
+//        productoController.delete(producto);
+//        };
 
 
 
