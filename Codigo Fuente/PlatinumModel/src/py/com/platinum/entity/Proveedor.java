@@ -13,10 +13,13 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,14 +29,16 @@ import javax.persistence.TemporalType;
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="PROVEEDOR_SEQUENCE", sequenceName="SQ_PROVEEDOR", initialValue=1, allocationSize=1)
 @Table(name = "PROVEEDOR")
 @NamedQueries({@NamedQuery(name = "Proveedor.findAll", query = "SELECT p FROM Proveedor p"), @NamedQuery(name = "Proveedor.findByCodProveedor", query = "SELECT p FROM Proveedor p WHERE p.codProveedor = :codProveedor"), @NamedQuery(name = "Proveedor.findByNombreProveedor", query = "SELECT p FROM Proveedor p WHERE p.nombreProveedor = :nombreProveedor"), @NamedQuery(name = "Proveedor.findByRucProveedor", query = "SELECT p FROM Proveedor p WHERE p.rucProveedor = :rucProveedor"), @NamedQuery(name = "Proveedor.findByTelefono1Proveedor", query = "SELECT p FROM Proveedor p WHERE p.telefono1Proveedor = :telefono1Proveedor"), @NamedQuery(name = "Proveedor.findByTelefono2Proveedor", query = "SELECT p FROM Proveedor p WHERE p.telefono2Proveedor = :telefono2Proveedor"), @NamedQuery(name = "Proveedor.findByDireccionProveedor", query = "SELECT p FROM Proveedor p WHERE p.direccionProveedor = :direccionProveedor"), @NamedQuery(name = "Proveedor.findByMailProveedor", query = "SELECT p FROM Proveedor p WHERE p.mailProveedor = :mailProveedor"), @NamedQuery(name = "Proveedor.findByContactoProveedor", query = "SELECT p FROM Proveedor p WHERE p.contactoProveedor = :contactoProveedor"), @NamedQuery(name = "Proveedor.findByEstadoProveedor", query = "SELECT p FROM Proveedor p WHERE p.estadoProveedor = :estadoProveedor"), @NamedQuery(name = "Proveedor.findByUsuarioAlta", query = "SELECT p FROM Proveedor p WHERE p.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "Proveedor.findByUsuarioModif", query = "SELECT p FROM Proveedor p WHERE p.usuarioModif = :usuarioModif"), @NamedQuery(name = "Proveedor.findByFechaAlta", query = "SELECT p FROM Proveedor p WHERE p.fechaAlta = :fechaAlta"), @NamedQuery(name = "Proveedor.findByFechaModif", query = "SELECT p FROM Proveedor p WHERE p.fechaModif = :fechaModif")})
 public class Proveedor implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PROVEEDOR_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_PROVEEDOR")
-    private BigDecimal codProveedor;
+    private Long codProveedor;
     @Basic(optional = false)
     @Column(name = "NOMBRE_PROVEEDOR")
     private String nombreProveedor;
@@ -69,20 +74,20 @@ public class Proveedor implements Serializable {
     public Proveedor() {
     }
 
-    public Proveedor(BigDecimal codProveedor) {
+    public Proveedor(Long codProveedor) {
         this.codProveedor = codProveedor;
     }
 
-    public Proveedor(BigDecimal codProveedor, String nombreProveedor) {
+    public Proveedor(Long codProveedor, String nombreProveedor) {
         this.codProveedor = codProveedor;
         this.nombreProveedor = nombreProveedor;
     }
 
-    public BigDecimal getCodProveedor() {
+    public Long getCodProveedor() {
         return codProveedor;
     }
 
-    public void setCodProveedor(BigDecimal codProveedor) {
+    public void setCodProveedor(Long codProveedor) {
         this.codProveedor = codProveedor;
     }
 
@@ -220,7 +225,7 @@ public class Proveedor implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.Proveedor[codProveedor=" + codProveedor + "]";
+        return nombreProveedor;
     }
 
 }
