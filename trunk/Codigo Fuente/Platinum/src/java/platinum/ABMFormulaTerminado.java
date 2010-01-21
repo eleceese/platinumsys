@@ -18,6 +18,8 @@ import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
+import py.com.platinum.controller.FormulaCabeceraController;
+import py.com.platinum.entity.FormulaCabecera;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -52,14 +54,14 @@ public class ABMFormulaTerminado extends AbstractPageBean {
     public void setMainContainer(HtmlPanelGrid hpg) {
         this.mainContainer = hpg;
     }
-    private TableRowGroup tableRowGroup1 = new TableRowGroup();
+    private TableRowGroup formulasRW = new TableRowGroup();
 
-    public TableRowGroup getTableRowGroup1() {
-        return tableRowGroup1;
+    public TableRowGroup getFormulasRW() {
+        return formulasRW;
     }
 
-    public void setTableRowGroup1(TableRowGroup trg) {
-        this.tableRowGroup1 = trg;
+    public void setFormulasRW(TableRowGroup trg) {
+        this.formulasRW = trg;
     }
     private Button addButton = new Button();
 
@@ -151,23 +153,23 @@ public class ABMFormulaTerminado extends AbstractPageBean {
     public void setPageAlert1(PageAlert pa) {
         this.pageAlert1 = pa;
     }
-    private TextField userNameFiltro = new TextField();
+    private TextField uiCodigoFil = new TextField();
 
-    public TextField getUserNameFiltro() {
-        return userNameFiltro;
+    public TextField getUiCodigoFil() {
+        return uiCodigoFil;
     }
 
-    public void setUserNameFiltro(TextField tf) {
-        this.userNameFiltro = tf;
+    public void setUiCodigoFil(TextField tf) {
+        this.uiCodigoFil = tf;
     }
-    private TextField emailAddressFiltro = new TextField();
+    private TextField uiProductoFil = new TextField();
 
-    public TextField getEmailAddressFiltro() {
-        return emailAddressFiltro;
+    public TextField getUiProductoFil() {
+        return uiProductoFil;
     }
 
-    public void setEmailAddressFiltro(TextField tf) {
-        this.emailAddressFiltro = tf;
+    public void setUiProductoFil(TextField tf) {
+        this.uiProductoFil = tf;
     }
     private Button buscarButton = new Button();
 
@@ -205,14 +207,14 @@ public class ABMFormulaTerminado extends AbstractPageBean {
     public void setDropDown1DefaultOptions(SingleSelectOptionsList ssol) {
         this.dropDown1DefaultOptions = ssol;
     }
-    private Table table1 = new Table();
+    private Table tablaFormulas = new Table();
 
-    public Table getTable1() {
-        return table1;
+    public Table getTablaFormulas() {
+        return tablaFormulas;
     }
 
-    public void setTable1(Table t) {
-        this.table1 = t;
+    public void setTablaFormulas(Table t) {
+        this.tablaFormulas = t;
     }
     private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
 
@@ -231,6 +233,33 @@ public class ABMFormulaTerminado extends AbstractPageBean {
 
     public void setButtonPanel(HtmlPanelGrid hpg) {
         this.buttonPanel = hpg;
+    }
+    private TextField uiDescripcionFil = new TextField();
+
+    public TextField getUiDescripcionFil() {
+        return uiDescripcionFil;
+    }
+
+    public void setUiDescripcionFil(TextField tf) {
+        this.uiDescripcionFil = tf;
+    }
+    private RadioButton radioButton1 = new RadioButton();
+
+    public RadioButton getRadioButton1() {
+        return radioButton1;
+    }
+
+    public void setRadioButton1(RadioButton rb) {
+        this.radioButton1 = rb;
+    }
+    private TableColumn tableColumn12 = new TableColumn();
+
+    public TableColumn getTableColumn12() {
+        return tableColumn12;
+    }
+
+    public void setTableColumn12(TableColumn tc) {
+        this.tableColumn12 = tc;
     }
 
     // </editor-fold>
@@ -303,21 +332,25 @@ public class ABMFormulaTerminado extends AbstractPageBean {
         cancelButton.setRendered(true);
         if (addRequest) {
             gridPanelBuscar.setRendered(false);
-            table1.setRendered(false);
+            tablaFormulas.setRendered(false);
             buttonPanel.setRendered(false);
             addUpdatePanel.setRendered(true);
             addRecordButton.setRendered(true);
             updateRecordButton.setRendered(false);
             userNameField.setText("");
             emailAddressField.setText("");
+//            limpiarCamposNew();
+
+
         } else if (updateRequest) {
             //if (getTableRowGroup1().getSelectedRowsCount() > 0) {
                 gridPanelBuscar.setRendered(false);
-                table1.setRendered(false);
+                tablaFormulas.setRendered(false);
                 buttonPanel.setRendered(false);
                 addUpdatePanel.setRendered(true);
                 addRecordButton.setRendered(false);
                 updateRecordButton.setRendered(true);
+//                   cargarCamposUpdate();
             //}
         } else if(errorValidacion){
             addUpdatePanel.setRendered(true);
@@ -325,11 +358,48 @@ public class ABMFormulaTerminado extends AbstractPageBean {
             getSessionBean1().setTituloPagina("Fórmulas de Producción");
             getSessionBean1().setDetallePagina("Productos Terminados");
             gridPanelBuscar.setRendered(true);
-            table1.setRendered(true);
+            tablaFormulas.setRendered(true);
             buttonPanel.setRendered(true);
             addUpdatePanel.setRendered(false);
         }
         // Refresh the users data array in the session bean to to show
+    buscar_action2();
+    }
+
+    private String buscar_action2() {
+
+        FormulaCabecera[] listaFormulaCabeceras;
+        FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
+
+        String pCodigo=null, pDescripcion=null, pCodigoProducto=null;
+
+        if (this.uiCodigoFil.getText()!=null) {
+            pCodigo = this.uiCodigoFil.getText().toString();
+        }
+
+        if (this.uiProductoFil.getText()!=null) {
+            pCodigoProducto = this.uiProductoFil.getText().toString();
+        }
+
+        if (this.uiDescripcionFil.getText()!=null) {
+            pDescripcion= this.uiDescripcionFil.getText().toString();
+        }
+
+        listaFormulaCabeceras = (FormulaCabecera[]) formulaCabeceraController.getAllFiltered
+                                        (pCodigo,
+                                         pDescripcion,
+                                         pCodigoProducto).toArray(new FormulaCabecera[0]);
+
+        getSessionBean1().setListaFormulaCabeceras(listaFormulaCabeceras);
+        return null;
+
+    }
+
+     public String buscar_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        this.pageAlert1.setRendered(false);
+        return null;
     }
 
     /**
@@ -362,12 +432,7 @@ public class ABMFormulaTerminado extends AbstractPageBean {
         return (ApplicationBean1) getBean("ApplicationBean1");
     }
 
-    /**
-     * <p>Return a reference to the scoped data bean.</p>
-     *
-     * @return reference to the scoped data bean
-     */
-    protected SessionBean1 getSessionBean1() {
+      protected SessionBean1 getSessionBean1() {
         return (SessionBean1) getBean("SessionBean1");
     }
     private TableSelectPhaseListener tablePhaseListener =
@@ -496,5 +561,12 @@ public class ABMFormulaTerminado extends AbstractPageBean {
         //result
         return r;
     }
+
+
+
+
+
 }
+
+
 

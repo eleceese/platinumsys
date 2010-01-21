@@ -7,9 +7,8 @@
 <div style="height: 400px; width: 200px; -rave-layout: grid" xmlns:f="http://java.sun.com/jsf/core" xmlns:webuijsf="http://www.sun.com/webui/webuijsf">
     <f:subview id="Menu">
         <webuijsf:accordion id="acc1" style="left: 0px; top: 144px; position: absolute; width: 200px" toggleControls="true">
-
             <webuijsf:accordionTab id="tab1" title="Mantenimiento">
-            <webuijsf:hyperlink id="hyper7" target="rightFrame" text="Empleados" url="/faces/ABMEmpleados.jsp"/>
+                <webuijsf:hyperlink id="hyper7" target="rightFrame" text="Empleados" url="/faces/ABMEmpleados.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="hyper8" target="rightFrame" text="Solicitudes" url="/faces/ABMClientes.jsp"/>
                 <br/>
@@ -22,7 +21,6 @@
                 <webuijsf:hyperlink id="comisiones" target="rightFrame" text="Comisiones" url="/faces/ABMComisiones.jsp"/>
                 <br/>
             </webuijsf:accordionTab>
-       
             <webuijsf:accordionTab id="tab2" title="Compras">
                 <webuijsf:hyperlink id="abmMarcas" text="Marcas" url="/faces/ABMMarcas.jsp"/>
                 <br/>
@@ -57,7 +55,6 @@
                 <br/>
                 <webuijsf:hyperlink id="unidadMedida" target="rightFrame" text="Unidades de Medida" url="/faces/ABMUnidadMedida.jsp"/>
                 <br/>
-                
             </webuijsf:accordionTab>
             <webuijsf:accordionTab id="tab5" title="Stock">
                 <webuijsf:hyperlink id="depositos" target="rightFrame" text="Depositos" url="/faces/ABMDeposito.jsp"/>

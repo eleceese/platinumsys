@@ -4,20 +4,34 @@
  */
 package platinum;
 
+import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
-import com.sun.webui.jsf.component.DropDown;
+import com.sun.webui.jsf.component.Calendar;
+import com.sun.webui.jsf.component.Checkbox;
 import com.sun.webui.jsf.component.PageAlert;
+import com.sun.webui.jsf.component.RadioButton;
 import com.sun.webui.jsf.component.StaticText;
+import com.sun.webui.jsf.component.Table;
+import com.sun.webui.jsf.component.TableColumn;
+import com.sun.webui.jsf.component.TableRowGroup;
+import com.sun.webui.jsf.component.TextArea;
 import com.sun.webui.jsf.component.TextField;
+import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.util.Date;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.event.ValueChangeEvent;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
+import py.com.platinum.controller.ProveedorController;
+import py.com.platinum.controller.TipoProductoController;
+import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Proveedor;
+import py.com.platinum.entity.TipoProducto;
 
 
 
@@ -44,15 +58,6 @@ public class ABMProveedores extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-    }
-    private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
-
-    public DefaultTableDataProvider getDefaultTableDataProvider() {
-        return defaultTableDataProvider;
-    }
-
-    public void setDefaultTableDataProvider(DefaultTableDataProvider dtdp) {
-        this.defaultTableDataProvider = dtdp;
     }
     private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
 
@@ -81,14 +86,14 @@ public class ABMProveedores extends AbstractPageBean {
     public void setGridPanelBotones(HtmlPanelGrid hpg) {
         this.gridPanelBotones = hpg;
     }
-    private StaticText datosProveedores = new StaticText();
+    private StaticText datosProveedor = new StaticText();
 
-    public StaticText getDatosProveedores() {
-        return datosProveedores;
+    public StaticText getDatosProveedor() {
+        return datosProveedor;
     }
 
-    public void setDatosProveedores(StaticText st) {
-        this.datosProveedores = st;
+    public void setDatosProveedor(StaticText st) {
+        this.datosProveedor = st;
     }
     private HtmlPanelGrid gridPanelAddUpdate = new HtmlPanelGrid();
 
@@ -108,32 +113,23 @@ public class ABMProveedores extends AbstractPageBean {
     public void setButtonsPanelAddUpdate(HtmlPanelGrid hpg) {
         this.buttonsPanelAddUpdate = hpg;
     }
-    private Button button3 = new Button();
+    private Button buttonGuardarEdicion = new Button();
 
-    public Button getButton3() {
-        return button3;
+    public Button getButtonGuardarEdicion() {
+        return buttonGuardarEdicion;
     }
 
-    public void setButton3(Button b) {
-        this.button3 = b;
+    public void setButtonGuardarEdicion(Button b) {
+        this.buttonGuardarEdicion = b;
     }
-    private Button button2 = new Button();
+    private Button buttonGuardarNuevo = new Button();
 
-    public Button getButton2() {
-        return button2;
-    }
-
-    public void setButton2(Button b) {
-        this.button2 = b;
-    }
-    private TextField nombre3 = new TextField();
-
-    public TextField getNombre3() {
-        return nombre3;
+    public Button getButtonGuardarNuevo() {
+        return buttonGuardarNuevo;
     }
 
-    public void setNombre3(TextField tf) {
-        this.nombre3 = tf;
+    public void setButtonGuardarNuevo(Button b) {
+        this.buttonGuardarNuevo = b;
     }
     private PageAlert pageAlert1 = new PageAlert();
 
@@ -144,14 +140,149 @@ public class ABMProveedores extends AbstractPageBean {
     public void setPageAlert1(PageAlert pa) {
         this.pageAlert1 = pa;
     }
-    private TextField ruc2 = new TextField();
+    private TextField uiNombreFil = new TextField();
 
-    public TextField getRuc2() {
-        return ruc2;
+    public TextField getUiNombreFil() {
+        return uiNombreFil;
     }
 
-    public void setRuc2(TextField tf) {
-        this.ruc2 = tf;
+    public void setUiNombreFil(TextField tf) {
+        this.uiNombreFil = tf;
+    }
+    private Table tableProveedores = new Table();
+
+    public Table getTableProveedores() {
+        return tableProveedores;
+    }
+
+    public void setTableProveedores(Table t) {
+        this.tableProveedores = t;
+    }
+    private TableRowGroup uiTablaProveedoresRW = new TableRowGroup();
+
+    public TableRowGroup getUiTablaProveedoresRW() {
+        return uiTablaProveedoresRW;
+    }
+
+    public void setUiTablaProveedoresRW(TableRowGroup trg) {
+        this.uiTablaProveedoresRW = trg;
+    }
+    private TextField uiRucFil = new TextField();
+
+    public TextField getUiRucFil() {
+        return uiRucFil;
+    }
+
+    public void setUiRucFil(TextField tf) {
+        this.uiRucFil = tf;
+    }
+    private TextField uiDireccionFil = new TextField();
+
+    public TextField getUiDireccionFil() {
+        return uiDireccionFil;
+    }
+
+    public void setUiDireccionFil(TextField tf) {
+        this.uiDireccionFil = tf;
+    }
+    private TextField uiNombre = new TextField();
+
+    public TextField getUiNombre() {
+        return uiNombre;
+    }
+
+    public void setUiNombre(TextField tf) {
+        this.uiNombre = tf;
+    }
+    private TextField uiRuc = new TextField();
+
+    public TextField getUiRuc() {
+        return uiRuc;
+    }
+
+    public void setUiRuc(TextField tf) {
+        this.uiRuc = tf;
+    }
+    private TextArea uiDireccion = new TextArea();
+
+    public TextArea getUiDireccion() {
+        return uiDireccion;
+    }
+
+    public void setUiDireccion(TextArea ta) {
+        this.uiDireccion = ta;
+    }
+    private TextField uiTelefono = new TextField();
+
+    public TextField getUiTelefono() {
+        return uiTelefono;
+    }
+
+    public void setUiTelefono(TextField tf) {
+        this.uiTelefono = tf;
+    }
+    private TextField uiTelefono2 = new TextField();
+
+    public TextField getUiTelefono2() {
+        return uiTelefono2;
+    }
+
+    public void setUiTelefono2(TextField tf) {
+        this.uiTelefono2 = tf;
+    }
+    private TextField uiContacto = new TextField();
+
+    public TextField getUiContacto() {
+        return uiContacto;
+    }
+
+    public void setUiContacto(TextField tf) {
+        this.uiContacto = tf;
+    }
+    private TextField uiMail = new TextField();
+
+    public TextField getUiMail() {
+        return uiMail;
+    }
+
+    public void setUiMail(TextField tf) {
+        this.uiMail = tf;
+    }
+    private TextField uiCiudad1 = new TextField();
+
+    public TextField getUiCiudad1() {
+        return uiCiudad1;
+    }
+
+    public void setUiCiudad1(TextField tf) {
+        this.uiCiudad1 = tf;
+    }
+    private Calendar uiFechaAlta = new Calendar();
+
+    public Calendar getUiFechaAlta() {
+        return uiFechaAlta;
+    }
+
+    public void setUiFechaAlta(Calendar c) {
+        this.uiFechaAlta = c;
+    }
+    private RadioButton radioButton1 = new RadioButton();
+
+    public RadioButton getRadioButton1() {
+        return radioButton1;
+    }
+
+    public void setRadioButton1(RadioButton rb) {
+        this.radioButton1 = rb;
+    }
+    private TableColumn tableColumn6 = new TableColumn();
+
+    public TableColumn getTableColumn6() {
+        return tableColumn6;
+    }
+
+    public void setTableColumn6(TableColumn tc) {
+        this.tableColumn6 = tc;
     }
 
     // </editor-fold>
@@ -197,7 +328,7 @@ public class ABMProveedores extends AbstractPageBean {
     // TODO - add your own initialization code here
 
     getSessionBean1().setTituloPagina("Registro de Proveedores");
-    getSessionBean1().setDetallePagina("Seleccione el Registro");
+    getSessionBean1().setDetallePagina("Seleccione el registro Deseado");
 
 
     }
@@ -228,49 +359,90 @@ public class ABMProveedores extends AbstractPageBean {
     public void prerender() {
 
         if (addRequest) {
-            this.gridPanelTabla.setRendered(false);
+            this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
-            this.datosProveedores.setRendered(false);
+            this.datosProveedor.setRendered(false);
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
-            this.datosProveedores.setRendered(true);
+            this.datosProveedor.setRendered(true);
+            limpiarCamposNew();
 
 
         } else if (updateRequest) {
 
-            this.gridPanelTabla.setRendered(false);
+            this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
-            this.datosProveedores.setRendered(false);
+            this.datosProveedor.setRendered(false);
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
-            this.datosProveedores.setRendered(true);
+            this.datosProveedor.setRendered(true);
+            cargarCamposUpdate();
 
         } else if (errorValidacion) {
             
-            this.gridPanelTabla.setRendered(false);
-            this.gridPanelBuscar.setRendered(false);
-            this.gridPanelBotones.setRendered(false);
-            this.datosProveedores.setRendered(false);
-            this.gridPanelAddUpdate.setRendered(true);
-            this.buttonsPanelAddUpdate.setRendered(true);
-            this.datosProveedores.setRendered(true);
-
-
-        } else {
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(true);
             this.gridPanelBotones.setRendered(true);
-            this.datosProveedores.setRendered(true);
+            this.datosProveedor.setRendered(true);
+            this.gridPanelAddUpdate.setRendered(true);
+            this.buttonsPanelAddUpdate.setRendered(true);
+            this.datosProveedor.setRendered(true);
+
+
+        } else {
+
+            this.gridPanelTabla.setRendered(true);
+            this.gridPanelBuscar.setRendered(true);
+            this.gridPanelBotones.setRendered(true);
+            this.datosProveedor.setRendered(true);
             this.gridPanelAddUpdate.setRendered(false);
             this.buttonsPanelAddUpdate.setRendered(false);
-            this.datosProveedores.setRendered(false);
+            this.datosProveedor.setRendered(false);
 
         }
+    buscar_action2();
+    }
+
+ public void limpiarCamposNew(){
+
+            this.uiNombre.setText("");
+            this.uiDireccion.setText("");
+            this.uiRuc.setText("");
+            this.uiContacto.setText("");
+            this.uiContacto.setText("");
+            this.uiTelefono.setText("");
+            this.uiTelefono2.setText("");
+            this.uiFechaAlta.setSelectedDate(new Date());
+            this.uiMail.setText("");
 
     }
 
+  public void cargarCamposUpdate(){
+
+         if (getUiTablaProveedoresRW().getSelectedRowsCount() > 0){
+          RowKey[] selectedRowKeys = getUiTablaProveedoresRW().getSelectedRowKeys();
+          Proveedor[] proveedores = getSessionBean1().getListaProveedores();
+          int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+          Proveedor proveedor = proveedores[rowId];
+      
+
+         //// CARGAMOS EN UNA VARIABLE ID EL CODIGO DEL TIPO RECUPERADO DESDE LA GRILLA PARA
+          /// LUEGO HACER LA BUSQUEDA DEL OBJETO POR ID
+          getSessionBean1().setId(proveedor.getCodProveedor());
+         //// CARGA DE CAMPOS DE LA PAGINA
+         this.uiNombre.setText(proveedor.getNombreProveedor().toString());
+         this.uiRuc.setText(proveedor.getRucProveedor().toString());
+         this.uiDireccion.setText(proveedor.getDireccionProveedor().toString());
+         this.uiContacto.setText(proveedor.getContactoProveedor().toString());
+         this.uiTelefono.setText(proveedor.getTelefono1Proveedor().toString());
+         this.uiTelefono2.setText(proveedor.getTelefono2Proveedor().toString());
+         this.uiMail.setText(proveedor.getMailProveedor().toString());
+         this.uiFechaAlta.setSelectedDate(proveedor.getFechaAlta());
+
+    }
+}
     /**
      * <p>Callback method that is called after rendering is completed for
      * this request, if <code>init()</code> was called (regardless of whether
@@ -315,17 +487,21 @@ public class ABMProveedores extends AbstractPageBean {
 
         // case name where null will return to the same page.
         this.addRequest=true;
-        this.button2.setRendered(true);
-        this.button3.setRendered(false);
+        this.pageAlert1.setRendered(false);
+
+        this.buttonGuardarNuevo.setRendered(true);
+        this.buttonGuardarEdicion.setRendered(false);
         return null;
     }
 
     public String editar_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
+        this.pageAlert1.setRendered(false);
         this.updateRequest=true;
-        this.button3.setRendered(true);
-        this.button2.setRendered(false);
+        this.buttonGuardarEdicion.setRendered(true);
+        this.buttonGuardarNuevo.setRendered(false);
+
         return null;
 
     }
@@ -334,6 +510,28 @@ public class ABMProveedores extends AbstractPageBean {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
 
+        if (getUiTablaProveedoresRW().getSelectedRowsCount() > 0){
+          RowKey[] selectedRowKeys = getUiTablaProveedoresRW().getSelectedRowKeys();
+          Proveedor[] proveedores = getSessionBean1().getListaProveedores();
+          int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+          Proveedor proveedor = proveedores[rowId];
+          // Remove the Entity from the database using UserController
+          ProveedorController proveedorController = new ProveedorController();
+          ControllerResult controllerResult = proveedorController.delete(proveedor);
+
+            if (controllerResult.getCodRetorno() ==-1) {
+                this.pageAlert1.setType("error");
+
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(controllerResult.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+         }
+            
         return null;
     }
 
@@ -346,29 +544,251 @@ public class ABMProveedores extends AbstractPageBean {
         return null;
     }
 
-    public String button2_action() {
+    public String buttonGuardarNuevo_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
-        this.addRequest=false;
-        this.updateRequest=false;
+        validarCampos();
 
-        info(this.nombre3, "Favor ingresar Nombre, Campo Obligatorio");
-        info(this.ruc2, "Favor ingresar Nombre, Campo Obligatorio");
+        if (! errorValidacion){
+            Proveedor proveedor = new Proveedor();
+            proveedor.setNombreProveedor(this.uiNombre.getText().toString());
+            proveedor.setRucProveedor(this.uiRuc.getText().toString());
+            proveedor.setDireccionProveedor(this.uiDireccion.getText().toString());
+            proveedor.setContactoProveedor(this.uiContacto.getText().toString());
+            proveedor.setTelefono1Proveedor(this.uiTelefono.getText().toString());
+            proveedor.setTelefono2Proveedor(this.uiTelefono2.getText().toString());
+            proveedor.setMailProveedor(this.uiMail.getText().toString());
+            proveedor.setFechaAlta(this.uiFechaAlta.getSelectedDate());
 
-        this.errorValidacion=true;
-                      
+            
+            
+            
+            ProveedorController proveedorController = new ProveedorController();
 
-            this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Error en la Validacion de los Campos, favor verificar y volver a intentar");
-            this.pageAlert1.setSummary("");
-            this.pageAlert1.setDetail("");
-            this.pageAlert1.setRendered(true);
+            ControllerResult controllerResult = new ControllerResult();
+            controllerResult = proveedorController.create(proveedor);
 
+
+             if (controllerResult.getCodRetorno() ==-1) {
+                    this.pageAlert1.setType("error");
+                    this.errorValidacion=true;
+                } else {
+                    this.pageAlert1.setType("information");
+                }
+
+                this.pageAlert1.setTitle(controllerResult.getMsg());
+                this.pageAlert1.setSummary("");
+                this.pageAlert1.setDetail("");
+                this.pageAlert1.setRendered(true);
+
+
+        }
+        return null;
+    }
+
+public void validarCampos() {
+    errorValidacion = false;
+    if (this.uiNombre.getText() == null ||
+        this.uiNombre.getText().toString() == null ||
+        this.uiNombre.getText().toString().equals("")){
+           errorValidacion = true;
+           this.info(uiNombre, "El nombre no puede ser nulo");}
+
+
+
+//            } else if (new TipoProductoController().existe(this.uiTipo.getText().toString()))  {
+//                         errorValidacion = true;
+//                          this.info(uiTipo, "El tipo de producto ya Existe");
+//
+   
+    if (this.uiRuc.getText() == null ||
+        this.uiRuc.getText().toString() == null ||
+        this.uiRuc.getText().toString().equals("")){
+           errorValidacion = true;
+           this.info(uiRuc, "El RUC no puede ser nulo");}
+
+    if (this.uiContacto.getText() == null ||
+        this.uiContacto.getText().toString() == null ||
+        this.uiContacto.getText().toString().equals("")){
+           errorValidacion = true;
+           this.info(uiContacto, "El Contacto no puede ser nulo");}
+
+
+    if (this.uiTelefono.getText() == null ||
+        this.uiTelefono.getText().toString() == null ||
+        this.uiTelefono.getText().toString().equals("")){
+           errorValidacion = true;
+           this.info(uiTelefono, "El Telefono no puede ser nulo");}
+
+}
+
+    private String buscar_action2() {
+
+        Proveedor[] listaProveedores;
+        ProveedorController proveedorController = new ProveedorController();
+
+        String pNombre=null,pRuc=null, pDireccion=null;
+
+        if (this.uiNombreFil.getText()!=null) {
+            pNombre = this.uiNombreFil.getText().toString();
+        }
+
+        if (this.uiRucFil.getText()!=null) {
+            pRuc = this.uiRucFil.getText().toString();
+        }
+        if (this.uiDireccionFil.getText()!=null) {
+            pDireccion = this.uiDireccionFil.getText().toString();
+        }
+
+        listaProveedores = (Proveedor[])  proveedorController.getAllFiltered
+                                        (pNombre,
+                                         pRuc,
+                                         pDireccion).toArray(new Proveedor[0]);
+
+        getSessionBean1().setListaProveedores(listaProveedores);
+        return null;
+
+    }
+
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+    public String buscar_action() {
+        this.pageAlert1.setRendered(false);
+        return null;
+    }
+
+    public String todos_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        this.pageAlert1.setRendered(false);
+        
+        this.uiNombreFil.setText("");
+        this.uiRucFil.setText("");
+        this.uiDireccionFil.setText("");
 
         return null;
     }
 
-    public void textArea1_processValueChange(ValueChangeEvent event) {
+ ///// CODIGO PARA RADIO BUTTON DE LA GRILLA DE BUSQUEDA
+
+    private TableSelectPhaseListener tablePhaseListener =
+                                  new TableSelectPhaseListener();
+
+    public void setSelected(Object object) {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        if (rowKey != null) {
+            tablePhaseListener.setSelected(rowKey, object);
+        }
     }
+
+    public Object getSelected(){
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.getSelected(rowKey);
+
+    }
+
+    public Object getSelectedValue() {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return (rowKey != null) ? rowKey.getRowId() : null;
+
+    }
+
+    public boolean getSelectedState() {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.isSelected(rowKey);
+    }
+
+    public String buttonGuardarEdicion_action() {
+        // TODO: Replace with your code
+
+         updateRequest = true;
+         validarCampos();
+
+        if (! errorValidacion){
+
+
+          Proveedor proveedor = new ProveedorController().findById(getSessionBean1().getId());
+
+                            proveedor.setNombreProveedor(this.uiNombre.getText().toString());
+                            proveedor.setRucProveedor(this.uiRuc.getText().toString());
+                            proveedor.setContactoProveedor(this.uiContacto.getText().toString());
+                            proveedor.setTelefono1Proveedor(this.uiTelefono.getText().toString());
+                            proveedor.setTelefono2Proveedor(this.uiTelefono2.getText().toString());
+                            proveedor.setDireccionProveedor(this.uiDireccion.getText().toString());
+                            proveedor.setMailProveedor(this.uiMail.getText().toString());
+                            proveedor.setFechaAlta(this.uiFechaAlta.getSelectedDate());
+
+
+
+                            ProveedorController proveedorController = new ProveedorController();
+
+                            ControllerResult controllerResult = new ControllerResult();
+                            controllerResult = proveedorController.update(proveedor);
+
+
+                             if (controllerResult.getCodRetorno() ==-1) {
+                                    this.pageAlert1.setType("error");
+                                    this.errorValidacion=true;
+                                } else {
+                                    updateRequest = false;
+                                    this.pageAlert1.setType("information");
+                                }
+
+                                this.pageAlert1.setTitle(controllerResult.getMsg());
+                                this.pageAlert1.setSummary("");
+                                this.pageAlert1.setDetail("");
+                                this.pageAlert1.setRendered(true);
+        }
+        return null;
+    }
+
+   ///// FIN CODIGO PARA RADIO BUTTON DE LA GRILLA DE BUSQUEDA
+
+//    public String buttonGuardarEdicion_action() {
+//        // TODO: Process the action. Return value is a navigation
+//        // case name where null will return to the same page.
+//        updateRequest = true;
+//         validarCampos();
+//
+//        if (! errorValidacion){
+//
+
+//          TipoProducto tipoProducto = new TipoProductoController().findById(getSessionBean1().getId());
+//
+//                            tipoProducto.setDescripcion(this.uiTipo.getText().toString());
+//
+//                            if (this.uiExistChek.isChecked()) {
+//                                tipoProducto.setTareas("S");
+//                            } else {
+//                                tipoProducto.setTareas("N");
+//                            }
+//
+//                            TipoProductoController tipoProductoController = new TipoProductoController();
+//
+//                            ControllerResult controllerResult = new ControllerResult();
+//                            controllerResult = tipoProductoController.update(tipoProducto);
+//
+//
+//                             if (controllerResult.getCodRetorno() ==-1) {
+//                                    this.pageAlert1.setType("error");
+//                                    this.errorValidacion=true;
+//                                } else {
+//                                    updateRequest = false;
+//                                    this.pageAlert1.setType("information");
+//                                }
+//
+//                                this.pageAlert1.setTitle(controllerResult.getMsg());
+//                                this.pageAlert1.setSummary("");
+//                                this.pageAlert1.setDetail("");
+////                                this.pageAlert1.setRendered(true);
+////        }
+//
+//        return null;
+//    }
+
+  
+
+
+
 }
 
