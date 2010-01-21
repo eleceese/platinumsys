@@ -10,6 +10,27 @@
         <webuijsf:page id="page1">
             <webuijsf:html id="html1">
                 <webuijsf:head id="head1">
+                    <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
+                    <script>
+                        function ABMProveedores() {
+                            var table = document.getElementById("form1:tablaFormulas");
+                            table.ABMProveedores();}
+                    </script>
+                    <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
+                    <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
+                    <script>
+                        var delSelect;
+                        function confirmar() {
+                            if (delSelect!=null){
+                                if(!confirm("¿Está seguro de eliminar el Registro?")) {
+                                    return false;
+                                }else{
+                                    return true;
+                                }
+                            }
+                        }
+                    </script>
+                    <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
                 </webuijsf:head>
                 <webuijsf:body id="body1" style="-rave-layout: grid">
@@ -22,14 +43,18 @@
                         </div>
                         <div>
                             <h:panelGrid binding="#{ABMFormulaTerminado.mainContainer}" id="mainContainer" style="height: 96px; left: 288px; top: 216px; position: absolute; width: 96px">
-                                <h:panelGrid binding="#{ABMFormulaTerminado.gridPanelBuscar}" columns="2" id="gridPanelBuscar">
-                                    <h:panelGrid columns="2" id="gridPanelUserFiltro">
-                                        <webuijsf:label id="label1Filtro" text="Formula"/>
-                                        <webuijsf:textField binding="#{ABMFormulaTerminado.userNameFiltro}" columns="20" id="userNameFiltro"/>
+                                <h:panelGrid binding="#{ABMFormulaTerminado.gridPanelBuscar}" columns="3" id="gridPanelBuscar">
+                                    <h:panelGrid columns="2" id="gridPanelCodigoFil">
+                                        <webuijsf:label id="label1Filtro" text="Codigo"/>
+                                        <webuijsf:textField binding="#{ABMFormulaTerminado.uiCodigoFil}" columns="20" id="uiCodigoFil"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanelEmailFiltro">
                                         <webuijsf:label id="label3Filtro" text="Producto"/>
-                                        <webuijsf:textField binding="#{ABMFormulaTerminado.emailAddressFiltro}" columns="30" id="emailAddressFiltro"/>
+                                        <webuijsf:textField binding="#{ABMFormulaTerminado.uiProductoFil}" columns="30" id="uiProductoFil"/>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2" id="gridPanelEmailFiltro1">
+                                        <webuijsf:label id="label3Filtro1" text="Descripcion"/>
+                                        <webuijsf:textField binding="#{ABMFormulaTerminado.uiDescripcionFil}" columns="30" id="uiDescripcionFil"/>
                                     </h:panelGrid>
                                     <webuijsf:button binding="#{ABMFormulaTerminado.buscarButton}" id="buscarButton" text="Buscar"/>
                                     <webuijsf:button binding="#{ABMFormulaTerminado.todosButton}" id="todosButton" text="Todos"/>
@@ -41,22 +66,28 @@
                                     table.ABMComprasProveedor();
                                 }
                                 </script>
-                                <webuijsf:table augmentTitle="false" binding="#{ABMFormulaTerminado.table1}" clearSortButton="true" id="table1"
-                                    paginateButton="true" paginationControls="true" sortPanelToggleButton="true" title="Fórmulas de Producción" width="600">
-                                    <webuijsf:tableRowGroup binding="#{ABMFormulaTerminado.tableRowGroup1}" emptyDataMsg="No se recupero ningun registro..."
-                                        id="tableRowGroup1" rows="10" selected="#{ABMFormulaTerminado.selectedState}"
-                                        sourceData="#{ABMFormulaTerminado.defaultTableDataProvider}" sourceVar="currentRow">
-                                        <webuijsf:tableColumn align="center" id="tableColumn5" spacerColumn="true" width="30">
-                                            <webuijsf:radioButton id="radioButton1" label=""/>
+                                <webuijsf:table augmentTitle="false" binding="#{ABMFormulaTerminado.tablaFormulas}" id="tablaFormulas" paginateButton="true"
+                                    paginationControls="true" title="Fórmulas de Producción" width="887">
+                                    <webuijsf:tableRowGroup binding="#{ABMFormulaTerminado.formulasRW}" emptyDataMsg="No se recupero ningun registro..."
+                                        id="formulasRW" onClick="javascript:return confirmar()" rows="20" selected="#{ABMFormulaTerminado.selectedState}"
+                                        sourceData="#{SessionBean1.listaFormulaCabeceras}" sourceVar="currentRow">
+                                        <webuijsf:tableColumn align="center" binding="#{ABMFormulaTerminado.tableColumn12}" id="tableColumn12"
+                                            onClick="setTimeout('initAllRows()', 0)" selectId="#{ABMFormulaTerminado.radioButton1.id}">
+                                            <webuijsf:radioButton binding="#{ABMFormulaTerminado.radioButton1}" id="radioButton1" label=""
+                                                name="#{ABMFormulaTerminado.radioButton1.id}" onClick="delSelect='ok'"
+                                                selected="#{ABMFormulaTerminado.selected}" selectedValue="#{ABMFormulaTerminado.selectedValue}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Código" id="tableColumn2" width="75">
-                                            <webuijsf:staticText id="staticText2" text="123"/>
+                                        <webuijsf:tableColumn headerText="CodFormula" id="tableColumn2" sort="codFormula" width="98">
+                                            <webuijsf:staticText id="staticText2" text="#{currentRow.value['codFormula']}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Fórmula" id="tableColumn3" width="425">
-                                            <webuijsf:staticText id="staticText3" text="Formula Tapa 20 Hojas"/>
+                                        <webuijsf:tableColumn headerText="Producto" id="tableColumn3" sort="codProducto">
+                                            <webuijsf:staticText id="staticText3" text="#{currentRow.value['codProducto']}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Estado" id="tableColumn4">
-                                            <webuijsf:staticText id="staticText4" text="Activo"/>
+                                        <webuijsf:tableColumn headerText="Cantidad" id="tableColumn4" sort="cantidad" width="97">
+                                            <webuijsf:staticText id="staticText4" text="#{currentRow.value['cantidad']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="Descripcion" id="tableColumn5" sort="descripcion" width="336">
+                                            <webuijsf:staticText id="staticText8" text="#{currentRow.value['descripcion']}"/>
                                         </webuijsf:tableColumn>
                                     </webuijsf:tableRowGroup>
                                 </webuijsf:table>
@@ -66,9 +97,9 @@
                                     <webuijsf:button actionExpression="#{ABMFormulaTerminado.updateButton_action}" binding="#{ABMFormulaTerminado.updateButton}"
                                         id="updateButton" text="Editar"/>
                                     <webuijsf:button actionExpression="#{ABMFormulaTerminado.deleteButton_action}" binding="#{ABMFormulaTerminado.deleteButton}"
-                                        id="deleteButton" text="Eliminar"/>
+                                        id="deleteButton" onClick="javascript:return confirmar()" text="Eliminar"/>
                                 </h:panelGrid>
-                                <h:panelGrid binding="#{ABMFormulaTerminado.addUpdatePanel}" columns="1" id="addUpdatePanel">
+                                <h:panelGrid binding="#{ABMFormulaTerminado.addUpdatePanel}" columns="1" id="addUpdatePanel" style="height: 524px">
                                     <h:panelGrid columns="2" id="sdsf">
                                         <webuijsf:hyperlink id="hyperlink1" onClick="doPopup('form1:txtCodCliente_field', 'form1:txtApellidoNombre_field')"
                                             target="popup" text="Producto" url="/faces/popupproductos.jsp"/>

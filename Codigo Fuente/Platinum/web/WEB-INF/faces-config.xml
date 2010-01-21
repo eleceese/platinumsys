@@ -82,8 +82,8 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>ABMProveedores</managed-bean-name>
-        <managed-bean-class>platinum.ABMProveedores</managed-bean-class>
+        <managed-bean-name>ABMProvs</managed-bean-name>
+        <managed-bean-class>platinum.ABMProvs</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
@@ -189,6 +189,21 @@
     <managed-bean>
         <managed-bean-name>ABMMovimientoCaja</managed-bean-name>
         <managed-bean-class>platinum.ABMMovimientoCaja</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMProveedores</managed-bean-name>
+        <managed-bean-class>platinum.ABMProveedores</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMFormulaTerminado</managed-bean-name>
+        <managed-bean-class>platinum.ABMFormulaTerminado</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMFormulaSemiTerminado</managed-bean-name>
+        <managed-bean-class>platinum.ABMFormulaSemiTerminado</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 </faces-config>
