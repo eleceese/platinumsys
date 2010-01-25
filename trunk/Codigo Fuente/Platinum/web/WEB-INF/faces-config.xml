@@ -42,18 +42,8 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>ABMCliente</managed-bean-name>
-        <managed-bean-class>platinum.ABMEmpleados</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
         <managed-bean-name>Nuevo</managed-bean-name>
         <managed-bean-class>platinum.Nuevo</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>ABMEmpleados</managed-bean-name>
-        <managed-bean-class>platinum.ABMEmpleados</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
@@ -180,6 +170,26 @@
         <managed-bean-name>LSTRanking</managed-bean-name>
         <managed-bean-class>platinum.LSTRanking</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupBancos</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupBancos</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupProductos</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupProductos</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMEmpleados</managed-bean-name>
+        <managed-bean-class>platinum.ABMEmpleados</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMComprasProveedor</managed-bean-name>
+        <managed-bean-class>platinum.ABMComprasProveedor</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
         <managed-bean-name>ABMDeposito</managed-bean-name>

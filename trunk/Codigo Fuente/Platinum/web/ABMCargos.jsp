@@ -11,6 +11,27 @@
             <webuijsf:html id="html1">
                 <webuijsf:head id="head1">
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
+                    <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
+                    <script>
+                        function initAllRows() {
+                            var table = document.getElementById("form1:table1");
+                            table.initAllRows();}
+                    </script>
+                    <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
+                    <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
+                    <script>
+                        var delSelect;
+                        function confirmar() {
+                            if (delSelect!=null){
+                                if(!confirm("¿Está seguro de eliminar el Registro seleccionado?")) {
+                                    return false;
+                                }else{
+                                    return true;
+                                }
+                            }
+                        }
+                    </script>
+                    <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                 </webuijsf:head>
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
@@ -25,28 +46,31 @@
                             <h:panelGrid binding="#{ABMCargos.gridPanelBuscar}" columns="2" id="gridPanelBuscar" style="height: 72px" width="455">
                                 <h:panelGrid columns="2" id="gridPanelCodigo" style="height:30px; width: 60%">
                                     <webuijsf:label id="codigo" text="Codigo"/>
-                                    <webuijsf:textField id="codigo1" text="codigo"/>
+                                    <webuijsf:textField binding="#{ABMCargos.uiTxtFilCodigo}" id="uiTxtFilCodigo"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="2" id="gridPanelNombre" style="height: 30px" width="261">
                                     <webuijsf:label id="labelNombreCargo" text="Nombre Cargo"/>
-                                    <webuijsf:textField id="nombre" text="Nombre Cargo"/>
+                                    <webuijsf:textField binding="#{ABMCargos.uiTxtFilDescripcion}" columns="45" id="uiTxtFilDescripcion"/>
                                 </h:panelGrid>
-                                <webuijsf:button id="buscar" text="Buscar"/>
-                                <webuijsf:button id="todos" text="Todos"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="2" id="gridPanelBtnBuscar" style="height: 100%" width="191">
+                                <webuijsf:button actionExpression="#{ABMCargos.uiBtnBuscar_action}" id="uiBtnBuscar" text="Buscar"/>
+                                <webuijsf:button actionExpression="#{ABMCargos.uiBtnTodos_action}" id="uiBtnTodos" text="Todos"/>
                             </h:panelGrid>
                             <h:panelGrid binding="#{ABMCargos.gridPanelTabla}" id="gridPanelTabla" style="height: 154px" width="935">
-                                <webuijsf:table augmentTitle="false" id="tableCargo" paginateButton="true" paginationControls="true"
-                                    sortPanelToggleButton="true" title="Cargos" width="695">
-                                    <webuijsf:tableRowGroup emptyDataMsg="No se encontraron registros..." id="marcas" rows="15"
-                                        sourceData="#{ABMCargos.defaultTableDataProvider}" sourceVar="currentRow">
-                                        <webuijsf:tableColumn id="select" width="10">
-                                            <webuijsf:radioButton id="radioButton2" label=""/>
+                                <webuijsf:table augmentTitle="false" binding="#{ABMCargos.table1}" id="table1" title="Cargos" width="695">
+                                    <webuijsf:tableRowGroup binding="#{ABMCargos.tableRowGroup1}" emptyDataMsg="No se encontraron registros..."
+                                                            id="tableRowGroup1" rows="5" selected="#{ABMCargos.selectedState}" sourceData="#{SessionBean1.listaCargo}" sourceVar="currentRow">
+                                        <webuijsf:tableColumn align="center" binding="#{ABMCargos.tableColumn3}" id="tableColumn3"
+                                                              onClick="setTimeout('initAllRows()',0)" selectId="#{ABMCargos.radioButton1.id}" width="40">
+                                            <webuijsf:radioButton binding="#{ABMCargos.radioButton1}" id="radioButton1" label=""
+                                                                  name="#{ABMCargos.radioButton1.id}" onClick="delSelect='ok'" selected="#{ABMCargos.selected}" selectedValue="#{ABMCargos.selectedValue}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Id" id="id" width="100">
-                                            <webuijsf:staticText id="staticText4" text="12312313"/>
+                                        <webuijsf:tableColumn headerText="Cargo" id="tableColumn1" sort="nombreCargo">
+                                            <webuijsf:staticText id="staticText1" text="#{currentRow.value['nombreCargo']}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Nombre Cargo" id="cargo" width="400">
-                                            <webuijsf:staticText id="cargo1" text="Nombre Cargo"/>
+                                        <webuijsf:tableColumn headerText="Codigo" id="tableColumn2" sort="codCargo" width="180">
+                                            <webuijsf:staticText id="staticText2" text="#{currentRow.value['codCargo']}"/>
                                         </webuijsf:tableColumn>
                                     </webuijsf:tableRowGroup>
                                 </webuijsf:table>
@@ -54,29 +78,26 @@
                             <h:panelGrid binding="#{ABMCargos.gridPanelBotones}" columns="3" id="gridPanelBotones" style="height: 24px; width: 150px">
                                 <webuijsf:button actionExpression="#{ABMCargos.nuevo_action}" id="nuevo" text="Nuevo"/>
                                 <webuijsf:button actionExpression="#{ABMCargos.editar_action}" id="editar" text="Editar"/>
-                                <webuijsf:button actionExpression="#{ABMCargos.eliminar_action}" id="eliminar" text="Eliminar"/>
+                                <webuijsf:button actionExpression="#{ABMCargos.eliminar_action}" id="eliminar" onClick="javascript:return confirmar()" text="Eliminar"/>
                             </h:panelGrid>
                             <br/>
                             <br/>
                             <webuijsf:staticText binding="#{ABMCargos.datosCargos}" id="datosCargos"
-                                style="color: #000099; font-family: Arial,Helvetica,sans-serif; font-size: 14px; font-weight: bold" text="Datos del Cargo"/>
+                                                 style="color: #000099; font-family: Arial,Helvetica,sans-serif; font-size: 14px; font-weight: bold" text="Datos del Cargo"/>
                             <br/>
                             <h:panelGrid binding="#{ABMCargos.gridPanelAddUpdate}" columns="2" id="gridPanelAddUpdate" style="height: 100%" width="839">
-                                <webuijsf:label id="labelcodigo" text="Codigo"/>
-                                <h:panelGrid columns="2" id="gridPanel1" style="height: 100%" width="575">
-                                    <webuijsf:textField binding="#{ABMCargos.codigo2}" columns="50" id="codigo2"/>
-                                    <webuijsf:message for="codigo2" id="message1" showDetail="false" showSummary="true"/>
-                                </h:panelGrid>
                                 <webuijsf:label id="labelCargo" text="Cargo"/>
                                 <h:panelGrid columns="2" id="gridPanelMarca" style="height: 100%" width="575">
-                                    <webuijsf:textField binding="#{ABMCargos.marca}" columns="50" id="marca"/>
-                                    <webuijsf:message for="marca" id="message3" showDetail="false" showSummary="true"/>
+                                    <webuijsf:textField binding="#{ABMCargos.uiTxtDescripcion}" columns="50" id="uiTxtDescripcion"/>
+                                    <webuijsf:message for="uiTxtDescripcion" id="message3" showDetail="false" showSummary="true"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                             <h:panelGrid binding="#{ABMCargos.buttonsPanelAddUpdate}" columns="2" id="buttonsPanelAddUpdate" style="height: 100%" width="191">
-                                <webuijsf:button actionExpression="#{ABMCargos.cancelar_action}" id="cancelar" text="Cancelar"/>
-                                <webuijsf:button actionExpression="#{ABMCargos.button2_action}" binding="#{ABMCargos.button2}" id="button2" text="Guardar"/>
-                                <webuijsf:button binding="#{ABMCargos.button3}" id="button3" text="Guardar"/>
+                                <webuijsf:button actionExpression="#{ABMCargos.uiBtnGuardarNuevo_action}" binding="#{ABMCargos.uiBtnGuardarNuevo}"
+                                                 id="uiBtnGuardarNuevo" text="Guardar"/>
+                                <webuijsf:button actionExpression="#{ABMCargos.uiBtnGuardarEditar_action}" binding="#{ABMCargos.uiBtnGuardarEditar}"
+                                                 id="uiBtnGuardarEditar" text="Guardar"/>
+                                <webuijsf:button actionExpression="#{ABMCargos.uiBtnCancelar_action}" id="uiBtnCancelar" text="Cancelar"/>
                             </h:panelGrid>
                         </h:panelGrid>
                     </webuijsf:form>
