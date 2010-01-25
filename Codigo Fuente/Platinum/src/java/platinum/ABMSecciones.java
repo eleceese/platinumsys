@@ -4,11 +4,17 @@
  */
 package platinum;
 
+import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.PageAlert;
+import com.sun.webui.jsf.component.RadioButton;
 import com.sun.webui.jsf.component.StaticText;
+import com.sun.webui.jsf.component.Table;
+import com.sun.webui.jsf.component.TableColumn;
+import com.sun.webui.jsf.component.TableRowGroup;
 import com.sun.webui.jsf.component.TextField;
+import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import javax.faces.FacesException;
@@ -16,11 +22,11 @@ import javax.faces.component.html.HtmlPanelGrid;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
-
-
-
-
-
+import py.com.platinum.controller.MarcaController;
+import py.com.platinum.controller.SeccionController;
+import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Marca;
+import py.com.platinum.entity.Seccion;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -42,15 +48,11 @@ public class ABMSecciones extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-    }
-    private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
-
-    public DefaultTableDataProvider getDefaultTableDataProvider() {
-        return defaultTableDataProvider;
-    }
-
-    public void setDefaultTableDataProvider(DefaultTableDataProvider dtdp) {
-        this.defaultTableDataProvider = dtdp;
+        radioButton1.setLabel(null);
+        radioButton2.setLabel(null);
+        radioButton3.setLabel(null);
+        radioButton4.setLabel(null);
+        radioButton5.setLabel(null);
     }
     private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
 
@@ -106,41 +108,32 @@ public class ABMSecciones extends AbstractPageBean {
     public void setButtonsPanelAddUpdate(HtmlPanelGrid hpg) {
         this.buttonsPanelAddUpdate = hpg;
     }
-    private Button button3 = new Button();
+    private Button uiBtnGuardarEditar = new Button();
 
-    public Button getButton3() {
-        return button3;
+    public Button getUiBtnGuardarEditar() {
+        return uiBtnGuardarEditar;
     }
 
-    public void setButton3(Button b) {
-        this.button3 = b;
+    public void setUiBtnGuardarEditar(Button b) {
+        this.uiBtnGuardarEditar = b;
     }
-    private Button button2 = new Button();
+    private Button uiBtnGuardarNuevo = new Button();
 
-    public Button getButton2() {
-        return button2;
-    }
-
-    public void setButton2(Button b) {
-        this.button2 = b;
-    }
-    private TextField codigo2 = new TextField();
-
-    public TextField getCodigo2() {
-        return codigo2;
+    public Button getUiBtnGuardarNuevo() {
+        return uiBtnGuardarNuevo;
     }
 
-    public void setCodigo2(TextField tf) {
-        this.codigo2 = tf;
+    public void setUiBtnGuardarNuevo(Button b) {
+        this.uiBtnGuardarNuevo = b;
     }
-    private TextField seccion2 = new TextField();
+    private TextField uiTxtDescripcion = new TextField();
 
-    public TextField getSeccion2() {
-        return seccion2;
+    public TextField getUiTxtDescripcion() {
+        return uiTxtDescripcion;
     }
 
-    public void setSeccion2(TextField tf) {
-        this.seccion2 = tf;
+    public void setUiTxtDescripcion(TextField tf) {
+        this.uiTxtDescripcion = tf;
     }
     private PageAlert pageAlert1 = new PageAlert();
 
@@ -150,6 +143,105 @@ public class ABMSecciones extends AbstractPageBean {
 
     public void setPageAlert1(PageAlert pa) {
         this.pageAlert1 = pa;
+    }
+    private RadioButton radioButton1 = new RadioButton();
+
+    public RadioButton getRadioButton1() {
+        return radioButton1;
+    }
+
+    public void setRadioButton1(RadioButton rb) {
+        this.radioButton1 = rb;
+    }
+    private RadioButton radioButton2 = new RadioButton();
+
+    public RadioButton getRadioButton2() {
+        return radioButton2;
+    }
+
+    public void setRadioButton2(RadioButton rb) {
+        this.radioButton2 = rb;
+    }
+    private RadioButton radioButton3 = new RadioButton();
+
+    public RadioButton getRadioButton3() {
+        return radioButton3;
+    }
+
+    public void setRadioButton3(RadioButton rb) {
+        this.radioButton3 = rb;
+    }
+    private RadioButton radioButton4 = new RadioButton();
+
+    public RadioButton getRadioButton4() {
+        return radioButton4;
+    }
+
+    public void setRadioButton4(RadioButton rb) {
+        this.radioButton4 = rb;
+    }
+    private RadioButton radioButton5 = new RadioButton();
+
+    public RadioButton getRadioButton5() {
+        return radioButton5;
+    }
+
+    public void setRadioButton5(RadioButton rb) {
+        this.radioButton5 = rb;
+    }
+    private TextField uiTxtFilCodigo = new TextField();
+
+    public TextField getUiTxtFilCodigo() {
+        return uiTxtFilCodigo;
+    }
+
+    public void setUiTxtFilCodigo(TextField tf) {
+        this.uiTxtFilCodigo = tf;
+    }
+    private TextField uiTxtFilDescripcion = new TextField();
+
+    public TextField getUiTxtFilDescripcion() {
+        return uiTxtFilDescripcion;
+    }
+
+    public void setUiTxtFilDescripcion(TextField tf) {
+        this.uiTxtFilDescripcion = tf;
+    }
+    private Table table1 = new Table();
+
+    public Table getTable1() {
+        return table1;
+    }
+
+    public void setTable1(Table t) {
+        this.table1 = t;
+    }
+    private TableRowGroup tableRowGroup1 = new TableRowGroup();
+
+    public TableRowGroup getTableRowGroup1() {
+        return tableRowGroup1;
+    }
+
+    public void setTableRowGroup1(TableRowGroup trg) {
+        this.tableRowGroup1 = trg;
+    }
+    private RadioButton radioButton7 = new RadioButton();
+
+    public RadioButton getRadioButton7() {
+        return radioButton7;
+    }
+
+    public void setRadioButton7(RadioButton rb) {
+        this.radioButton7 = rb;
+    }
+    private TableColumn tableColumn1 = new TableColumn();
+
+    public TableColumn getTableColumn1() {
+        return tableColumn1;
+    }
+
+    public void setTableColumn1(TableColumn tc) {
+        this.tableColumn1 = tc;
     }
 
     // </editor-fold>
@@ -189,13 +281,13 @@ public class ABMSecciones extends AbstractPageBean {
             throw e instanceof FacesException ? (FacesException) e : new FacesException(e);
         }
 
-    // </editor-fold>
-    // Perform application initialization that must complete
-    // *after* managed components are initialized
-    // TODO - add your own initialization code here
+        // </editor-fold>
+        // Perform application initialization that must complete
+        // *after* managed components are initialized
+        // TODO - add your own initialization code here
 
-    getSessionBean1().setTituloPagina("Registro de Secciones");
-    getSessionBean1().setDetallePagina("Seleccione el registro Deseado");
+        getSessionBean1().setTituloPagina("Registro de Secciones");
+        getSessionBean1().setDetallePagina("Seleccione el registro Deseado");
 
 
     }
@@ -233,10 +325,9 @@ public class ABMSecciones extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosSeccion.setRendered(true);
-
-
+            this.limpiarCampos();
         } else if (updateRequest) {
-
+            cargarCampos();
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
@@ -244,9 +335,7 @@ public class ABMSecciones extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosSeccion.setRendered(true);
-
         } else if (errorValidacion) {
-            
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(true);
             this.gridPanelBotones.setRendered(true);
@@ -254,10 +343,7 @@ public class ABMSecciones extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosSeccion.setRendered(true);
-
-
         } else {
-
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(true);
             this.gridPanelBotones.setRendered(true);
@@ -265,9 +351,36 @@ public class ABMSecciones extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(false);
             this.buttonsPanelAddUpdate.setRendered(false);
             this.datosSeccion.setRendered(false);
+        }
+        
+        //Actualizamos la lista
+        buscar();
+    }
 
+    /**
+     * Buscar los registros que cumplan con la condicion/s de busqueda
+     * y actualizar la lista de la session
+     */
+    public void buscar() {
+        //Verificamos el contenido de los campos de busqueda
+        SeccionController c = new SeccionController();
+        String pCod = null, pDesc = null;
+
+        //Codigo
+        if (this.uiTxtFilCodigo.getText() != null) {
+            pCod = this.uiTxtFilCodigo.getText().toString();
         }
 
+        //Descripcion
+        if (this.uiTxtFilDescripcion.getText() != null) {
+            pDesc = this.uiTxtFilDescripcion.getText().toString();
+        }
+
+        //Buscamos la lista de registros
+        Seccion[] l = (Seccion[]) c.getSeccions(pCod, pDesc).toArray(new Seccion[0]);
+
+        //Actualizamos la lista de empleados de la session
+        getSessionBean1().setListaSeccion(l);
     }
 
     /**
@@ -313,57 +426,238 @@ public class ABMSecciones extends AbstractPageBean {
         // TODO: Process the action. Return value is a navigation
 
         // case name where null will return to the same page.
-        this.addRequest=true;
-        this.button2.setRendered(true);
-        this.button3.setRendered(false);
+        this.addRequest = true;
+        this.uiBtnGuardarNuevo.setRendered(true);
+        this.uiBtnGuardarEditar.setRendered(false);
         return null;
     }
 
     public String editar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+            //Obtenemos la lista de
+            Seccion[] l = getSessionBean1().getListaSeccion();
+
+            //Posicion en la grilla del elemento seleccionado
+            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+
+            //Elemento seleccionado
+            Seccion e = l[rowId];
+
+            //Guardamos el id del Seccion en la session
+            getSessionBean1().setId(e.getCodSeccion());
+        }
         this.updateRequest=true;
-        this.button3.setRendered(true);
-        this.button2.setRendered(false);
+        this.uiBtnGuardarEditar.setRendered(true);
+        this.uiBtnGuardarNuevo.setRendered(false);
         return null;
 
     }
 
     public String eliminar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
 
-        return null;
-    }
+        // Si la cantidad de registros en la grilla es mayor a 0
+        // Eliminamos el elemento seleccionado
+        if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+            //Obtenemos la lista de
+            Seccion[] l = getSessionBean1().getListaSeccion();
 
-    public String cancelar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        this.addRequest=false;
-        this.updateRequest=false;
+            //Posicion en la grilla del elemento seleccionado
+            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
 
-        return null;
-    }
+            //Elemento seleccionado
+            Seccion e = l[rowId];
 
-    public String button2_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        this.addRequest=false;
-        this.updateRequest=false;
+            //Eliminados el registro
+            SeccionController controller = new SeccionController();
+            ControllerResult r = controller.delete(e);
 
-        info(this.codigo2, "Favor ingresar Nombre, Campo Obligatorio");
-        info(this.seccion2, "Favor ingresar Apellido, Campo Obligatorio");
-        this.errorValidacion=true;
-                      
+            //Mensaje
+            if (r.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+                this.pageAlert1.setTitle("Error al eliminar el Empleado");
+            } else {
+                this.pageAlert1.setType("information");
+                this.pageAlert1.setTitle("El Empleado se a Eliminado correctamente");
+            }
 
-            this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Error en la Validacion de los Campos, favor verificar y volver a intentar");
             this.pageAlert1.setSummary("");
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
+        }
 
+        //Result
+        return null;
+    }
+
+    public String uiBtnCancelar_action() {
+        this.addRequest = false;
+        this.updateRequest = false;
 
         return null;
+    }
+
+    public String uiBtnGuardarNuevo_action() {
+        // Apagamos la bandera de nuevo registro
+        this.addRequest = false;
+
+        //Validamos los campos
+        validarCampos();
+        Seccion r;
+
+        //Si no hay error de validacion insertamos el registro
+        if (!errorValidacion) {
+            //Nuevo Empleado
+            r = new Seccion();
+
+            //Set de los artributos
+            r.setNombreSeccion((String) uiTxtDescripcion.getText());
+
+            //Insertamos el nuevo registro
+            ControllerResult cr = new SeccionController().create(r);
+
+            //Verificamos el tipo de mensaje
+            if (cr.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(cr.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+        }
+
+        //result
+        return null;
+    }
+
+    public String uiBtnGuardarEditar_action() {
+        // Apagamos la bandera de nuevo registro
+        this.updateRequest = false;
+
+        //Obtenemos el registro seleccionado por medio
+        //del id almacenado en la session
+        Seccion r = new SeccionController().findById(getSessionBean1().getId());
+
+        //Validamos los campos
+        validarCampos();
+
+        //Si no hay error de validacion insertamos el registro
+        if (!errorValidacion) {
+            //Set de los artributos
+            r.setNombreSeccion((String) uiTxtDescripcion.getText());
+
+            //Insertamos el nuevo registro
+            ControllerResult cr = new SeccionController().update(r);
+
+            //Verificamos el tipo de mensaje
+            if (cr.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(cr.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+        }
+
+        return null;
+    }
+    private TableSelectPhaseListener tablePhaseListener =
+            new TableSelectPhaseListener();
+
+    public void setSelected(Object object) {
+        RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
+        if (rowKey != null) {
+            tablePhaseListener.setSelected(rowKey, object);
+        }
+    }
+
+    public Object getSelected() {
+        RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.getSelected(rowKey);
+
+    }
+
+    public Object getSelectedValue() {
+        RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
+        return (rowKey != null) ? rowKey.getRowId() : null;
+
+    }
+
+    public boolean getSelectedState() {
+        RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.isSelected(rowKey);
+    }
+
+    public String uiBtnBuscar_action() {
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        //Realizamos la busqueda
+        buscar();
+
+        //Result
+        return null;
+    }
+
+    public String uiBtnBuscarTodos_action() {
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        //Ceramos los campos de busqueda
+        this.uiTxtFilCodigo.setText(null);
+        this.uiTxtFilDescripcion.setText(null);
+
+        //Realizamos la busuqueda
+        buscar();
+
+        //Result
+        return null;
+    }
+
+    /**
+     * Limpiar campos
+     */
+    private void limpiarCampos() {
+        uiTxtDescripcion.setText(null);
+    }
+
+    /**
+     * Cargar campos, para la edicion del registro seleccionado
+     */
+    private void cargarCampos() {
+        //Obtenemos el registro seleccionado por medio
+        //del id almacenado en la session
+        Seccion e = new SeccionController().findById(getSessionBean1().getId());
+
+        uiTxtDescripcion.setText(e.getNombreSeccion());
+    }
+
+    /**
+     * Validar los campos de la entidad, para verificar si los datos ingresados
+     * por el usuario es correcto y si estan todos los campos obligatorios.
+     */
+    private void validarCampos() {
+        //Apagamos la bandera de error
+        this.errorValidacion = false;
+
+        //Descripcion
+        if (this.uiTxtDescripcion.getText() == null || this.uiTxtDescripcion.getText().equals("")) {
+            info(uiTxtDescripcion, "Descripcion de la Seccion obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }
+
     }
 }
 

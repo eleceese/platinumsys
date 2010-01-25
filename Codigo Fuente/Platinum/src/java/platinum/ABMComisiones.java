@@ -4,20 +4,33 @@
  */
 package platinum;
 
+import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
-import com.sun.webui.jsf.component.DropDown;
+import com.sun.webui.jsf.component.Calendar;
+import com.sun.webui.jsf.component.Checkbox;
 import com.sun.webui.jsf.component.PageAlert;
+import com.sun.webui.jsf.component.RadioButton;
 import com.sun.webui.jsf.component.StaticText;
+import com.sun.webui.jsf.component.TableColumn;
+import com.sun.webui.jsf.component.TableRowGroup;
 import com.sun.webui.jsf.component.TextField;
+import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
-import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.math.BigDecimal;
+import java.util.Date;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.event.ValueChangeEvent;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
+import py.com.platinum.controller.ComisionController;
+import py.com.platinum.controller.ProductoController;
+import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Comision;
+import py.com.platinum.entity.Producto;
+import py.com.platinum.utils.StringUtils;
 
 
 
@@ -44,15 +57,6 @@ public class ABMComisiones extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-    }
-    private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
-
-    public DefaultTableDataProvider getDefaultTableDataProvider() {
-        return defaultTableDataProvider;
-    }
-
-    public void setDefaultTableDataProvider(DefaultTableDataProvider dtdp) {
-        this.defaultTableDataProvider = dtdp;
     }
     private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
 
@@ -108,32 +112,32 @@ public class ABMComisiones extends AbstractPageBean {
     public void setButtonsPanelAddUpdate(HtmlPanelGrid hpg) {
         this.buttonsPanelAddUpdate = hpg;
     }
-    private Button button3 = new Button();
+    private Button uiBtnGuardarEditar = new Button();
 
-    public Button getButton3() {
-        return button3;
+    public Button getUiBtnGuardarEditar() {
+        return uiBtnGuardarEditar;
     }
 
-    public void setButton3(Button b) {
-        this.button3 = b;
+    public void setUiBtnGuardarEditar(Button b) {
+        this.uiBtnGuardarEditar = b;
     }
-    private Button button2 = new Button();
+    private Button uiBtnGuardarNuevo = new Button();
 
-    public Button getButton2() {
-        return button2;
-    }
-
-    public void setButton2(Button b) {
-        this.button2 = b;
-    }
-    private TextField producto3 = new TextField();
-
-    public TextField getProducto3() {
-        return producto3;
+    public Button getUiBtnGuardarNuevo() {
+        return uiBtnGuardarNuevo;
     }
 
-    public void setProducto3(TextField tf) {
-        this.producto3 = tf;
+    public void setUiBtnGuardarNuevo(Button b) {
+        this.uiBtnGuardarNuevo = b;
+    }
+    private TextField uiTxtProductoDescripcion = new TextField();
+
+    public TextField getUiTxtProductoDescripcion() {
+        return uiTxtProductoDescripcion;
+    }
+
+    public void setUiTxtProductoDescripcion(TextField tf) {
+        this.uiTxtProductoDescripcion = tf;
     }
     private PageAlert pageAlert1 = new PageAlert();
 
@@ -144,14 +148,113 @@ public class ABMComisiones extends AbstractPageBean {
     public void setPageAlert1(PageAlert pa) {
         this.pageAlert1 = pa;
     }
-    private TextField porcentaje2 = new TextField();
+    private TextField uiTxtPorcentaje = new TextField();
 
-    public TextField getPorcentaje2() {
-        return porcentaje2;
+    public TextField getUiTxtPorcentaje() {
+        return uiTxtPorcentaje;
     }
 
-    public void setPorcentaje2(TextField tf) {
-        this.porcentaje2 = tf;
+    public void setUiTxtPorcentaje(TextField tf) {
+        this.uiTxtPorcentaje = tf;
+    }
+    private TextField uiTxtFilProducto = new TextField();
+
+    public TextField getUiTxtFilProducto() {
+        return uiTxtFilProducto;
+    }
+
+    public void setUiTxtFilProducto(TextField tf) {
+        this.uiTxtFilProducto = tf;
+    }
+    private Calendar uiCalFilDesde = new Calendar();
+
+    public Calendar getUiCalFilDesde() {
+        return uiCalFilDesde;
+    }
+
+    public void setUiCalFilDesde(Calendar c) {
+        this.uiCalFilDesde = c;
+    }
+    private Calendar uiCalFilHasta = new Calendar();
+
+    public Calendar getUiCalFilHasta() {
+        return uiCalFilHasta;
+    }
+
+    public void setUiCalFilHasta(Calendar c) {
+        this.uiCalFilHasta = c;
+    }
+    private TableColumn tableColumn6 = new TableColumn();
+
+    public TableColumn getTableColumn6() {
+        return tableColumn6;
+    }
+
+    public void setTableColumn6(TableColumn tc) {
+        this.tableColumn6 = tc;
+    }
+    private RadioButton radioButton1 = new RadioButton();
+
+    public RadioButton getRadioButton1() {
+        return radioButton1;
+    }
+
+    public void setRadioButton1(RadioButton rb) {
+        this.radioButton1 = rb;
+    }
+    private TextField uiTxtCodProducto = new TextField();
+
+    public TextField getUiTxtCodProducto() {
+        return uiTxtCodProducto;
+    }
+
+    public void setUiTxtCodProducto(TextField tf) {
+        this.uiTxtCodProducto = tf;
+    }
+    private Calendar uiCalFechaInicial = new Calendar();
+
+    public Calendar getUiCalFechaInicial() {
+        return uiCalFechaInicial;
+    }
+
+    public void setUiCalFechaInicial(Calendar c) {
+        this.uiCalFechaInicial = c;
+    }
+    private Calendar uiCalFechaFin = new Calendar();
+
+    public Calendar getUiCalFechaFin() {
+        return uiCalFechaFin;
+    }
+
+    public void setUiCalFechaFin(Calendar c) {
+        this.uiCalFechaFin = c;
+    }
+    private TableRowGroup tableRowGroup1 = new TableRowGroup();
+
+    public TableRowGroup getTableRowGroup1() {
+        return tableRowGroup1;
+    }
+
+    public void setTableRowGroup1(TableRowGroup trg) {
+        this.tableRowGroup1 = trg;
+    }
+    private Checkbox uiChkEstado = new Checkbox();
+
+    public Checkbox getUiChkEstado() {
+        return uiChkEstado;
+    }
+
+    public void setUiChkEstado(Checkbox c) {
+        this.uiChkEstado = c;
+    }
+    private HtmlPanelGrid gridPanelBtnBuscar = new HtmlPanelGrid();
+
+    public HtmlPanelGrid getGridPanelBtnBuscar() {
+        return gridPanelBtnBuscar;
+    }
+
+    public void setGridPanelBtnBuscar(HtmlPanelGrid hpg) {
+        this.gridPanelBtnBuscar = hpg;
     }
 
     // </editor-fold>
@@ -235,10 +338,11 @@ public class ABMComisiones extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosComision.setRendered(true);
-
-
+            this.gridPanelBtnBuscar.setRendered(false);
+            this.limpiarCampos();
         } else if (updateRequest) {
-
+            cargarCampos();
+            this.gridPanelBtnBuscar.setRendered(false);
             this.gridPanelTabla.setRendered(false);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
@@ -246,19 +350,17 @@ public class ABMComisiones extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosComision.setRendered(true);
-
         } else if (errorValidacion) {
-            
             this.gridPanelTabla.setRendered(false);
+            this.gridPanelBtnBuscar.setRendered(false);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
             this.datosComision.setRendered(false);
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosComision.setRendered(true);
-
-
         } else {
+            this.gridPanelBtnBuscar.setRendered(true);
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(true);
             this.gridPanelBotones.setRendered(true);
@@ -266,7 +368,41 @@ public class ABMComisiones extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(false);
             this.buttonsPanelAddUpdate.setRendered(false);
             this.datosComision.setRendered(false);
+        }
 
+        //Actualizamos la lista
+        buscar();
+    }
+
+    /**
+     * Limpiar campos
+     */
+    private void limpiarCampos() {
+        uiTxtCodProducto.setText(null);
+        uiTxtProductoDescripcion.setText(null);
+        uiTxtPorcentaje.setText(null);
+        uiCalFechaInicial.setSelectedDate(null);
+        uiCalFechaFin.setSelectedDate(null);
+        uiChkEstado.setSelected("true");
+    }
+
+    /**
+     * Cargar campos, para la edicion del registro seleccionado
+     */
+    private void cargarCampos() {
+        //Obtenemos el registro seleccionado por medio
+        //del id almacenado en la session
+        Comision e = new ComisionController().findById(getSessionBean1().getId());
+
+        uiTxtCodProducto.setText(e.getCodProducto().getCodProducto());
+        uiTxtProductoDescripcion.setText(e.getCodProducto().getDescripcion());
+        uiCalFechaInicial.setSelectedDate(e.getFecInicial());
+        uiCalFechaFin.setSelectedDate(e.getFecFinal());
+
+        if (e.getEstado()!= null && e.getEstado().equals("A")) {
+            uiChkEstado.setSelected("true");
+        } else {
+            uiChkEstado.setSelected("false");
         }
 
     }
@@ -315,60 +451,297 @@ public class ABMComisiones extends AbstractPageBean {
 
         // case name where null will return to the same page.
         this.addRequest=true;
-        this.button2.setRendered(true);
-        this.button3.setRendered(false);
+        this.uiBtnGuardarNuevo.setRendered(true);
+        this.uiBtnGuardarEditar.setRendered(false);
         return null;
     }
 
     public String editar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+            //Obtenemos la lista de
+            Comision[] l = getSessionBean1().getListaComision();
+
+            //Posicion en la grilla del elemento seleccionado
+            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+
+            //Elemento seleccionado
+            Comision e = l[rowId];
+
+            //Guardamos el id del Comision en la session
+            getSessionBean1().setId(e.getCodComision());
+        }
         this.updateRequest=true;
-        this.button3.setRendered(true);
-        this.button2.setRendered(false);
+        this.uiBtnGuardarEditar.setRendered(true);
+        this.uiBtnGuardarNuevo.setRendered(false);
+
+        //Result
         return null;
 
     }
 
     public String eliminar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
 
+        // Si la cantidad de registros en la grilla es mayor a 0
+        // Eliminamos el elemento seleccionado
+        if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+            //Obtenemos la lista de
+            Comision[] l = getSessionBean1().getListaComision();
+
+            //Posicion en la grilla del elemento seleccionado
+            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+
+            //Elemento seleccionado
+            Comision e = l[rowId];
+
+            //Eliminados el registro
+            ComisionController controller = new ComisionController();
+            ControllerResult r = controller.delete(e);
+
+            //Mensaje
+            if (r.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+                this.pageAlert1.setTitle("Error al eliminar el Registro");
+            } else {
+                this.pageAlert1.setType("information");
+                this.pageAlert1.setTitle("El Registro se a Eliminado correctamente");
+            }
+
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+        }
+
+        //Result
         return null;
     }
 
     public String cancelar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
         this.addRequest=false;
         this.updateRequest=false;
 
         return null;
     }
 
-    public String button2_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        this.addRequest=false;
-        this.updateRequest=false;
+    public String uiBtnGuardarNuevo_action() {
+        // Apagamos la bandera de nuevo registro
+        this.addRequest = false;
 
-        info(this.producto3, "Favor ingresar Nombre, Campo Obligatorio");
-        info(this.porcentaje2, "Favor ingresar Nombre, Campo Obligatorio");
+        //Validamos los campos
+        validarCampos();
+        Comision r;
 
-        this.errorValidacion=true;
-                      
+        //Si no hay error de validacion insertamos el registro
+        if (!errorValidacion) {
+            //Nuevo
+            r = new Comision();
 
-            this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Error en la Validacion de los Campos, favor verificar y volver a intentar");
+            //Set de los artributos
+            r.setCodProducto(producto);
+            r.setPorcentaje(BigDecimal.valueOf(Double.valueOf(uiTxtPorcentaje.getText().toString())));
+            r.setFecInicial(uiCalFechaInicial.getSelectedDate());
+            r.setFecFinal(uiCalFechaFin.getSelectedDate());
+
+            //Estado
+            if (uiChkEstado.isChecked()) {
+                r.setEstado("A");
+            } else {
+                r.setEstado("I");
+            }
+
+            //Insertamos el nuevo registro
+            ControllerResult cr = new ComisionController().create(r);
+
+            //Verificamos el tipo de mensaje
+            if (cr.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(cr.getMsg());
             this.pageAlert1.setSummary("");
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
+        }
 
-
+        //result
         return null;
     }
 
-    public void textArea1_processValueChange(ValueChangeEvent event) {
+    private Producto producto;
+
+    /**
+     * Validar los campos de la entidad, para verificar si los datos ingresados
+     * por el usuario es correcto y si estan todos los campos obligatorios.
+     */
+    private void validarCampos() {
+        //Apagamos la bandera de error
+        this.errorValidacion = false;
+        producto = null;
+
+
+        //Producto
+        if (this.uiTxtCodProducto.getText() == null || this.uiTxtCodProducto.getText().equals("")) {
+            info(uiTxtCodProducto, "Producto de la Comision es obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }else{
+            producto = new ProductoController().findById(Long.parseLong(uiTxtCodProducto.getText().toString()));
+            if (producto == null) {
+                errorValidacion = true;
+                info(uiTxtCodProducto, "Producto ingresado no existe, verifique el codigo producto.");
+            }
+            
+        }
+
+        //Porcentaje
+        if (this.uiTxtPorcentaje.getText() == null || this.uiTxtPorcentaje.getText().equals("")) {
+            info(uiTxtPorcentaje, "Porcentaje de la Comision es obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }else {
+            String s = uiTxtCodProducto.getText().toString();
+            if (!StringUtils.esNumero(s) || !StringUtils.esNumeroDecimal(s)) {
+                errorValidacion = true;
+                info(uiTxtPorcentaje, "Valor incorrecto, debe ser un Numero");
+            }
+        }
+    }
+
+    public String uiBtnBuscar_action() {
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        //Realizamos la busqueda
+        buscar();
+
+        //Result
+        return null;
+    }
+
+    /**
+     * Buscar los registros que cumplan con la condicion/s de busqueda
+     * y actualizar la lista de la session
+     */
+    public void buscar() {
+        //Verificamos el contenido de los campos de busqueda
+        ComisionController c = new ComisionController();
+        String pProducto = null;
+        Date pFecDesde = null, pFecHasta = null;
+
+        //Producto
+        if (this.uiTxtFilProducto.getText() != null) {
+            pProducto = this.uiTxtFilProducto.getText().toString();
+        }
+
+        //Fecha desde
+        if (this.uiCalFilDesde.getSelectedDate() != null) {
+            pFecDesde = this.uiCalFilDesde.getSelectedDate();
+        }
+
+        //Fecha Hasta
+        if (this.uiCalFilHasta.getSelectedDate() != null) {
+            pFecHasta = this.uiCalFilHasta.getSelectedDate();
+        }
+
+        //Buscamos la lista de registros
+        Comision[] l = (Comision[]) c.getComisions(pProducto, pFecDesde, pFecHasta).toArray(new Comision[0]);
+
+        //Actualizamos la lista de empleados de la session
+        getSessionBean1().setListaComision(l);
+    }
+
+    public String uiBtnTodos_action() {
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        //Ceramos los campos de busqueda
+        this.uiTxtFilProducto.setText(null);
+        this.uiCalFilDesde.setText(null);
+        this.uiCalFilHasta.setText(null);
+
+        //Realizamos la busuqueda
+        buscar();
+
+        //Result
+        return null;
+    }
+
+    private TableSelectPhaseListener tablePhaseListener =
+                                  new TableSelectPhaseListener();
+
+    public void setSelected(Object object) {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        if (rowKey != null) {
+            tablePhaseListener.setSelected(rowKey, object);
+        }
+    }
+
+    public Object getSelected(){
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.getSelected(rowKey);
+
+    }
+
+    public Object getSelectedValue() {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return (rowKey != null) ? rowKey.getRowId() : null;
+
+    }
+
+    public boolean getSelectedState() {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.isSelected(rowKey);
+    }
+
+    public String uiBtnGuardarEditar_action() {
+        // Apagamos la bandera de nuevo registro
+        this.updateRequest = false;
+
+        //Obtenemos el registro seleccionado por medio
+        //del id almacenado en la session
+        Comision r = new ComisionController().findById(getSessionBean1().getId());
+
+        //Validamos los campos
+        validarCampos();
+
+        //Si no hay error de validacion insertamos el registro
+        if (!errorValidacion) {
+            //Set de los artributos
+            r.setCodProducto(producto);
+            r.setPorcentaje(BigDecimal.valueOf(Double.valueOf(uiTxtPorcentaje.getText().toString())));
+            r.setFecInicial(uiCalFechaInicial.getSelectedDate());
+            r.setFecFinal(uiCalFechaFin.getSelectedDate());
+
+            //Estado
+            if (uiChkEstado.isChecked()) {
+                r.setEstado("A");
+            } else {
+                r.setEstado("I");
+            }
+
+            //Insertamos el nuevo registro
+            ControllerResult cr = new ComisionController().update(r);
+
+            //Verificamos el tipo de mensaje
+            if (cr.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(cr.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+        }
+
+        return null;
     }
 }
 
