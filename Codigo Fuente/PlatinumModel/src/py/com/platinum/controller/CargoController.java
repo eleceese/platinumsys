@@ -9,27 +9,27 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
-import py.com.platinum.entity.Marca;
+import py.com.platinum.entity.Cargo;
 
 /**
  *
- * @author FerBoy
+ * @author Martin
  */
-public class MarcaController extends AbstractJpaDao<Marca> {
+public class CargoController extends AbstractJpaDao<Cargo> {
 
-    public MarcaController() {
+    public CargoController() {
         super();
     }
 
 
     @Override
-    public Marca findById(Long id) {
-                return (Marca) this.findById(Marca.class, id);
+    public Cargo findById(Long id) {
+                return (Cargo) this.findById(Cargo.class, id);
     }
 
        @Override
-    public List<Marca> getAll(String orderBy) {
-        return this.getAll(Marca.class, orderBy);
+    public List<Cargo> getAll(String orderBy) {
+        return this.getAll(Cargo.class, orderBy);
      }
 
 
@@ -39,18 +39,18 @@ public class MarcaController extends AbstractJpaDao<Marca> {
      * @param codigo
      * @param descripcion
      *
-     * @return lista de Marcas que cumplen con la condicion de busqueda
+     * @return lista de Cargos que cumplen con la condicion de busqueda
      */
-    public List<Marca> getMarcas(String codigo, String descripcion) {
+    public List<Cargo> getCargos(String codigo, String descripcion) {
         //Armamos el sql String
-        String SQL = "SELECT o FROM Marca o WHERE o.codMarca = o.codMarca";
+        String SQL = "SELECT o FROM Cargo o WHERE o.codCargo = o.codCargo";
 
         if (codigo != null && !codigo.equals("")) {
-            SQL = SQL + " and UPPER(o.codMarca) like UPPER(:codigo)";
+            SQL = SQL + " and UPPER(o.codCargo) like UPPER(:codigo)";
         }
 
         if (descripcion != null && !descripcion.equals("")) {
-            SQL = SQL + " and UPPER(o.nombreSeccion) like UPPER(:descripcion)";
+            SQL = SQL + " and UPPER(o.nombreCargo) like UPPER(:descripcion)";
         }
 
         EntityManager em = emf.createEntityManager();
@@ -66,7 +66,7 @@ public class MarcaController extends AbstractJpaDao<Marca> {
         }
 
         //Realizamos la busqueda
-        List<Marca> entities = q.getResultList();
+        List<Cargo> entities = q.getResultList();
         em.close();
 
         //retornamos la lista
@@ -74,4 +74,4 @@ public class MarcaController extends AbstractJpaDao<Marca> {
 
       }
 
-}
+}   
