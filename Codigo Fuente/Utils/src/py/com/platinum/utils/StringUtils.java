@@ -11,6 +11,7 @@ package py.com.platinum.utils;
  */
 public class StringUtils {
 
+
     public StringUtils() {
     }
 
@@ -105,7 +106,7 @@ public class StringUtils {
 
         //Convertir string a long.
         try {
-            aux = new Long(s);
+            aux = Long.parseLong(s);
         } catch (NumberFormatException e) {
             result = !result;
         }
@@ -139,5 +140,28 @@ public class StringUtils {
 
         //result
         return r;
+    }
+
+    /**
+     * Validar si un String es numero decimal.
+     *
+     * @param s
+     * @return true si es un numero.
+     * @autor Martin Jara
+     */
+    public static boolean esNumeroDecimal(String s) {
+        //Variables
+        double aux = 0;
+        boolean result = true;
+
+        //Convertir string a long.
+        try {
+            aux = Double.valueOf(s);
+        } catch (NumberFormatException e) {
+            result = !result;
+        }
+
+        //Result
+        return result;
     }
 }
