@@ -14,12 +14,15 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,14 +32,16 @@ import javax.persistence.TemporalType;
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="FORMULA_DETALLE_SEQUENCE", sequenceName="SQ_DETALLE_FORMULA", initialValue=1, allocationSize=1)
 @Table(name = "FORMULA_DETALLE")
 @NamedQueries({@NamedQuery(name = "FormulaDetalle.findAll", query = "SELECT f FROM FormulaDetalle f"), @NamedQuery(name = "FormulaDetalle.findByCodFormulaDetalle", query = "SELECT f FROM FormulaDetalle f WHERE f.codFormulaDetalle = :codFormulaDetalle"), @NamedQuery(name = "FormulaDetalle.findByCantidad", query = "SELECT f FROM FormulaDetalle f WHERE f.cantidad = :cantidad"), @NamedQuery(name = "FormulaDetalle.findByUsuarioAlta", query = "SELECT f FROM FormulaDetalle f WHERE f.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "FormulaDetalle.findByUsuarioModif", query = "SELECT f FROM FormulaDetalle f WHERE f.usuarioModif = :usuarioModif"), @NamedQuery(name = "FormulaDetalle.findByFechaAlta", query = "SELECT f FROM FormulaDetalle f WHERE f.fechaAlta = :fechaAlta"), @NamedQuery(name = "FormulaDetalle.findByFechaModif", query = "SELECT f FROM FormulaDetalle f WHERE f.fechaModif = :fechaModif")})
 public class FormulaDetalle implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="FORMULA_DETALLE_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_FORMULA_DETALLE")
-    private BigDecimal codFormulaDetalle;
+    private Long codFormulaDetalle;
     @Column(name = "CANTIDAD")
     private BigInteger cantidad;
     @Column(name = "USUARIO_ALTA")
@@ -61,15 +66,15 @@ public class FormulaDetalle implements Serializable {
     public FormulaDetalle() {
     }
 
-    public FormulaDetalle(BigDecimal codFormulaDetalle) {
+    public FormulaDetalle(Long codFormulaDetalle) {
         this.codFormulaDetalle = codFormulaDetalle;
     }
 
-    public BigDecimal getCodFormulaDetalle() {
+    public Long getCodFormulaDetalle() {
         return codFormulaDetalle;
     }
 
-    public void setCodFormulaDetalle(BigDecimal codFormulaDetalle) {
+    public void setCodFormulaDetalle(Long codFormulaDetalle) {
         this.codFormulaDetalle = codFormulaDetalle;
     }
 

@@ -14,12 +14,15 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,14 +32,16 @@ import javax.persistence.TemporalType;
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="FORMULA_CABECERA_SEQUENCE", sequenceName="SQ_CABECERA_FORMULA", initialValue=1, allocationSize=1)
 @Table(name = "FORMULA_CABECERA")
 @NamedQueries({@NamedQuery(name = "FormulaCabecera.findAll", query = "SELECT f FROM FormulaCabecera f"), @NamedQuery(name = "FormulaCabecera.findByCodFormula", query = "SELECT f FROM FormulaCabecera f WHERE f.codFormula = :codFormula"), @NamedQuery(name = "FormulaCabecera.findByCantidad", query = "SELECT f FROM FormulaCabecera f WHERE f.cantidad = :cantidad"), @NamedQuery(name = "FormulaCabecera.findByEstado", query = "SELECT f FROM FormulaCabecera f WHERE f.estado = :estado"), @NamedQuery(name = "FormulaCabecera.findByFecha", query = "SELECT f FROM FormulaCabecera f WHERE f.fecha = :fecha"), @NamedQuery(name = "FormulaCabecera.findByDescripcion", query = "SELECT f FROM FormulaCabecera f WHERE f.descripcion = :descripcion"), @NamedQuery(name = "FormulaCabecera.findByUsuarioAlta", query = "SELECT f FROM FormulaCabecera f WHERE f.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "FormulaCabecera.findByUsuarioModif", query = "SELECT f FROM FormulaCabecera f WHERE f.usuarioModif = :usuarioModif"), @NamedQuery(name = "FormulaCabecera.findByFechaAlta", query = "SELECT f FROM FormulaCabecera f WHERE f.fechaAlta = :fechaAlta"), @NamedQuery(name = "FormulaCabecera.findByFechaModif", query = "SELECT f FROM FormulaCabecera f WHERE f.fechaModif = :fechaModif")})
 public class FormulaCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="FORMULA_CABECERA_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_FORMULA")
-    private BigDecimal codFormula;
+    private Long codFormula;
     @Column(name = "CANTIDAD")
     private BigInteger cantidad;
     @Basic(optional = false)
@@ -66,20 +71,20 @@ public class FormulaCabecera implements Serializable {
     public FormulaCabecera() {
     }
 
-    public FormulaCabecera(BigDecimal codFormula) {
+    public FormulaCabecera(Long codFormula) {
         this.codFormula = codFormula;
     }
 
-    public FormulaCabecera(BigDecimal codFormula, String estado) {
+    public FormulaCabecera(Long codFormula, String estado) {
         this.codFormula = codFormula;
         this.estado = estado;
     }
 
-    public BigDecimal getCodFormula() {
+    public Long getCodFormula() {
         return codFormula;
     }
 
-    public void setCodFormula(BigDecimal codFormula) {
+    public void setCodFormula(Long codFormula) {
         this.codFormula = codFormula;
     }
 
@@ -185,7 +190,7 @@ public class FormulaCabecera implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.FormulaCabecera[codFormula=" + codFormula + "]";
+        return descripcion;
     }
 
 }
