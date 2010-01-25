@@ -4,18 +4,24 @@
  */
 package platinum;
 
+import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.PageAlert;
+import com.sun.webui.jsf.component.RadioButton;
 import com.sun.webui.jsf.component.StaticText;
+import com.sun.webui.jsf.component.TableColumn;
+import com.sun.webui.jsf.component.TableRowGroup;
 import com.sun.webui.jsf.component.TextField;
-import com.sun.webui.jsf.model.DefaultTableDataProvider;
-import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
+import py.com.platinum.controller.MarcaController;
+import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Marca;
 
 
 
@@ -42,15 +48,6 @@ public class ABMMarcas extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-    }
-    private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
-
-    public DefaultTableDataProvider getDefaultTableDataProvider() {
-        return defaultTableDataProvider;
-    }
-
-    public void setDefaultTableDataProvider(DefaultTableDataProvider dtdp) {
-        this.defaultTableDataProvider = dtdp;
     }
     private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
 
@@ -106,41 +103,32 @@ public class ABMMarcas extends AbstractPageBean {
     public void setButtonsPanelAddUpdate(HtmlPanelGrid hpg) {
         this.buttonsPanelAddUpdate = hpg;
     }
-    private Button button3 = new Button();
+    private Button uiBtnGuardarEditar = new Button();
 
-    public Button getButton3() {
-        return button3;
+    public Button getUiBtnGuardarEditar() {
+        return uiBtnGuardarEditar;
     }
 
-    public void setButton3(Button b) {
-        this.button3 = b;
+    public void setUiBtnGuardarEditar(Button b) {
+        this.uiBtnGuardarEditar = b;
     }
-    private Button button2 = new Button();
+    private Button uiBtnGuardarNuevo = new Button();
 
-    public Button getButton2() {
-        return button2;
-    }
-
-    public void setButton2(Button b) {
-        this.button2 = b;
-    }
-    private TextField codigo2 = new TextField();
-
-    public TextField getCodigo2() {
-        return codigo2;
+    public Button getUiBtnGuardarNuevo() {
+        return uiBtnGuardarNuevo;
     }
 
-    public void setCodigo2(TextField tf) {
-        this.codigo2 = tf;
+    public void setUiBtnGuardarNuevo(Button b) {
+        this.uiBtnGuardarNuevo = b;
     }
-    private TextField marca = new TextField();
+    private TextField uiTxtDescripcion = new TextField();
 
-    public TextField getMarca() {
-        return marca;
+    public TextField getUiTxtDescripcion() {
+        return uiTxtDescripcion;
     }
 
-    public void setMarca(TextField tf) {
-        this.marca = tf;
+    public void setUiTxtDescripcion(TextField tf) {
+        this.uiTxtDescripcion = tf;
     }
     private PageAlert pageAlert1 = new PageAlert();
 
@@ -150,6 +138,51 @@ public class ABMMarcas extends AbstractPageBean {
 
     public void setPageAlert1(PageAlert pa) {
         this.pageAlert1 = pa;
+    }
+    private TextField uiTxtFilCodigo = new TextField();
+
+    public TextField getUiTxtFilCodigo() {
+        return uiTxtFilCodigo;
+    }
+
+    public void setUiTxtFilCodigo(TextField tf) {
+        this.uiTxtFilCodigo = tf;
+    }
+    private TextField uiTxtFilDescripcion = new TextField();
+
+    public TextField getUiTxtFilDescripcion() {
+        return uiTxtFilDescripcion;
+    }
+
+    public void setUiTxtFilDescripcion(TextField tf) {
+        this.uiTxtFilDescripcion = tf;
+    }
+    private RadioButton radioButton1 = new RadioButton();
+
+    public RadioButton getRadioButton1() {
+        return radioButton1;
+    }
+
+    public void setRadioButton1(RadioButton rb) {
+        this.radioButton1 = rb;
+    }
+    private TableColumn tableColumn3 = new TableColumn();
+
+    public TableColumn getTableColumn3() {
+        return tableColumn3;
+    }
+
+    public void setTableColumn3(TableColumn tc) {
+        this.tableColumn3 = tc;
+    }
+    private TableRowGroup tableRowGroup1 = new TableRowGroup();
+
+    public TableRowGroup getTableRowGroup1() {
+        return tableRowGroup1;
+    }
+
+    public void setTableRowGroup1(TableRowGroup trg) {
+        this.tableRowGroup1 = trg;
     }
 
     // </editor-fold>
@@ -233,10 +266,10 @@ public class ABMMarcas extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosMarca.setRendered(true);
-
+            this.limpiarCampos();
 
         } else if (updateRequest) {
-
+            cargarCampos();
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
@@ -246,7 +279,6 @@ public class ABMMarcas extends AbstractPageBean {
             this.datosMarca.setRendered(true);
 
         } else if (errorValidacion) {
-            
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(true);
             this.gridPanelBotones.setRendered(true);
@@ -254,10 +286,7 @@ public class ABMMarcas extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosMarca.setRendered(true);
-
-
         } else {
-
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(true);
             this.gridPanelBotones.setRendered(true);
@@ -265,8 +294,9 @@ public class ABMMarcas extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(false);
             this.buttonsPanelAddUpdate.setRendered(false);
             this.datosMarca.setRendered(false);
-
         }
+        //Actualizamos la lista
+        buscar();
 
     }
 
@@ -314,56 +344,264 @@ public class ABMMarcas extends AbstractPageBean {
 
         // case name where null will return to the same page.
         this.addRequest=true;
-        this.button2.setRendered(true);
-        this.button3.setRendered(false);
+        this.uiBtnGuardarNuevo.setRendered(true);
+        this.uiBtnGuardarEditar.setRendered(false);
         return null;
     }
 
     public String editar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+            //Obtenemos la lista de
+            Marca[] l = getSessionBean1().getListaMarcas();
+
+            //Posicion en la grilla del elemento seleccionado
+            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+
+            //Elemento seleccionado
+            Marca e = l[rowId];
+
+            //Guardamos el id del Marca en la session
+            getSessionBean1().setId(e.getCodMarca());
+        }
         this.updateRequest=true;
-        this.button3.setRendered(true);
-        this.button2.setRendered(false);
+        this.uiBtnGuardarEditar.setRendered(true);
+        this.uiBtnGuardarNuevo.setRendered(false);
         return null;
 
     }
 
     public String eliminar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
 
-        return null;
-    }
+        // Si la cantidad de registros en la grilla es mayor a 0
+        // Eliminamos el elemento seleccionado
+        if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+            //Obtenemos la lista de
+            Marca[] l = getSessionBean1().getListaMarcas();
 
-    public String cancelar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        this.addRequest=false;
-        this.updateRequest=false;
+            //Posicion en la grilla del elemento seleccionado
+            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
 
-        return null;
-    }
+            //Elemento seleccionado
+            Marca e = l[rowId];
 
-    public String button2_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        this.addRequest=false;
-        this.updateRequest=false;
+            //Eliminados el registro
+            MarcaController controller = new MarcaController();
+            ControllerResult r = controller.delete(e);
 
-        info(this.codigo2, "Favor ingresar Nombre, Campo Obligatorio");
-        info(this.marca, "Favor ingresar Apellido, Campo Obligatorio");
-        this.errorValidacion=true;
-                      
+            //Mensaje
+            if (r.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+                this.pageAlert1.setTitle("Error al eliminar el Empleado");
+            } else {
+                this.pageAlert1.setType("information");
+                this.pageAlert1.setTitle("El Empleado se a Eliminado correctamente");
+            }
 
-            this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Error en la Validacion de los Campos, favor verificar y volver a intentar");
             this.pageAlert1.setSummary("");
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
+        }
 
+        //Result
+        return null;
+    }
+
+    public String uiBtnCancelar_action() {
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        this.addRequest = false;
+        this.updateRequest = false;
 
         return null;
+    }
+
+    public String uiBtnGuardarNuevo_action() {
+        // Apagamos la bandera de nuevo registro
+        this.addRequest = false;
+
+        //Validamos los campos
+        validarCampos();
+        Marca r;
+
+        //Si no hay error de validacion insertamos el registro
+        if (!errorValidacion) {
+            //Nuevo Empleado
+            r = new Marca();
+
+            //Set de los artributos
+            r.setNombre((String) uiTxtDescripcion.getText());
+
+            //Insertamos el nuevo registro
+            ControllerResult cr = new MarcaController().create(r);
+
+            //Verificamos el tipo de mensaje
+            if (cr.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(cr.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+        }
+
+        //result
+        return null;
+    }
+
+    public String uiBtnBuscar_action() {
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        //Realizamos la busqueda
+        buscar();
+
+        //Result
+        return null;
+    }
+
+     /**
+     * Buscar los registros que cumplan con la condicion/s de busqueda
+     * y actualizar la lista de la session
+     */
+    public void buscar() {
+        //Verificamos el contenido de los campos de busqueda
+        MarcaController c = new MarcaController();
+        String pCod = null, pDesc = null;
+
+        //Codigo
+        if (this.uiTxtFilCodigo.getText() != null) {
+            pCod = this.uiTxtFilCodigo.getText().toString();
+        }
+
+        //Descripcion
+        if (this.uiTxtFilDescripcion.getText() != null) {
+            pDesc = this.uiTxtFilDescripcion.getText().toString();
+        }
+
+        //Buscamos la lista de registros
+        Marca[] l = (Marca[]) c.getMarcas(pCod, pDesc).toArray(new Marca[0]);
+
+        //Actualizamos la lista de empleados de la session
+        getSessionBean1().setListaMarcas(l);
+    }
+
+    public String uiBtnBuscarTodos_action() {
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        //Ceramos los campos de busqueda
+        this.uiTxtFilCodigo.setText(null);
+        this.uiTxtFilDescripcion.setText(null);
+
+        //Realizamos la busuqueda
+        buscar();
+
+        //Result
+        return null;
+    }
+
+    /**
+     * Limpiar campos
+     */
+    private void limpiarCampos() {
+        uiTxtDescripcion.setText(null);
+    }
+
+    /**
+     * Validar los campos de la entidad, para verificar si los datos ingresados
+     * por el usuario es correcto y si estan todos los campos obligatorios.
+     */
+    private void validarCampos() {
+        //Apagamos la bandera de error
+        this.errorValidacion = false;
+
+        //Descripcion
+        if (this.uiTxtDescripcion.getText() == null || this.uiTxtDescripcion.getText().equals("")) {
+            info(uiTxtDescripcion, "Descripcion de la Marca obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }
+
+    }
+
+    public String uiBtnGuardarEditar_action() {
+        // Apagamos la bandera de nuevo registro
+        this.updateRequest = false;
+
+        //Obtenemos el registro seleccionado por medio
+        //del id almacenado en la session
+        Marca r = new MarcaController().findById(getSessionBean1().getId());
+
+        //Validamos los campos
+        validarCampos();
+
+        //Si no hay error de validacion insertamos el registro
+        if (!errorValidacion) {
+            //Set de los artributos
+            r.setNombre((String) uiTxtDescripcion.getText());
+
+            //Insertamos el nuevo registro
+            ControllerResult cr = new MarcaController().update(r);
+
+            //Verificamos el tipo de mensaje
+            if (cr.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(cr.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+        }
+
+        return null;
+    }
+
+    private void cargarCampos() {
+        //Obtenemos el registro seleccionado por medio
+        //del id almacenado en la session
+        Marca e = new MarcaController().findById(getSessionBean1().getId());
+
+        uiTxtDescripcion.setText(e.getNombre());
+    }
+
+    private TableSelectPhaseListener tablePhaseListener =
+                                  new TableSelectPhaseListener();
+
+    public void setSelected(Object object) {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        if (rowKey != null) {
+            tablePhaseListener.setSelected(rowKey, object);
+        }
+    }
+
+    public Object getSelected(){
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.getSelected(rowKey);
+
+    }
+
+    public Object getSelectedValue() {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return (rowKey != null) ? rowKey.getRowId() : null;
+
+    }
+
+    public boolean getSelectedState() {
+        RowKey rowKey = (RowKey)getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.isSelected(rowKey);
     }
 }
 

@@ -4,23 +4,28 @@
  */
 package platinum;
 
+import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.PageAlert;
+import com.sun.webui.jsf.component.RadioButton;
+import com.sun.webui.jsf.component.Script;
 import com.sun.webui.jsf.component.StaticText;
+import com.sun.webui.jsf.component.Table;
+import com.sun.webui.jsf.component.TableColumn;
+import com.sun.webui.jsf.component.TableRowGroup;
 import com.sun.webui.jsf.component.TextField;
-import com.sun.webui.jsf.model.DefaultTableDataProvider;
-import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
-
-
-
-
-
+import py.com.platinum.controller.BancoController;
+import py.com.platinum.controller.FormaPagoController;
+import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Banco;
+import py.com.platinum.entity.FormaPago;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -42,15 +47,6 @@ public class ABMFormaPagos extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-    }
-    private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
-
-    public DefaultTableDataProvider getDefaultTableDataProvider() {
-        return defaultTableDataProvider;
-    }
-
-    public void setDefaultTableDataProvider(DefaultTableDataProvider dtdp) {
-        this.defaultTableDataProvider = dtdp;
     }
     private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
 
@@ -106,41 +102,32 @@ public class ABMFormaPagos extends AbstractPageBean {
     public void setButtonsPanelAddUpdate(HtmlPanelGrid hpg) {
         this.buttonsPanelAddUpdate = hpg;
     }
-    private Button button3 = new Button();
+    private Button uiBtnGuardarEditar = new Button();
 
-    public Button getButton3() {
-        return button3;
+    public Button getUiBtnGuardarEditar() {
+        return uiBtnGuardarEditar;
     }
 
-    public void setButton3(Button b) {
-        this.button3 = b;
+    public void setUiBtnGuardarEditar(Button b) {
+        this.uiBtnGuardarEditar = b;
     }
-    private Button button2 = new Button();
+    private Button uiBtnGuardarNuevo = new Button();
 
-    public Button getButton2() {
-        return button2;
-    }
-
-    public void setButton2(Button b) {
-        this.button2 = b;
-    }
-    private TextField codigo2 = new TextField();
-
-    public TextField getCodigo2() {
-        return codigo2;
+    public Button getUiBtnGuardarNuevo() {
+        return uiBtnGuardarNuevo;
     }
 
-    public void setCodigo2(TextField tf) {
-        this.codigo2 = tf;
+    public void setUiBtnGuardarNuevo(Button b) {
+        this.uiBtnGuardarNuevo = b;
     }
-    private TextField descripcion = new TextField();
+    private TextField uiTxtDescripcion = new TextField();
 
-    public TextField getDescripcion() {
-        return descripcion;
+    public TextField getUiTxtDescripcion() {
+        return uiTxtDescripcion;
     }
 
-    public void setDescripcion(TextField tf) {
-        this.descripcion = tf;
+    public void setUiTxtDescripcion(TextField tf) {
+        this.uiTxtDescripcion = tf;
     }
     private PageAlert pageAlert1 = new PageAlert();
 
@@ -150,6 +137,78 @@ public class ABMFormaPagos extends AbstractPageBean {
 
     public void setPageAlert1(PageAlert pa) {
         this.pageAlert1 = pa;
+    }
+    private TextField uiTxtFilBanco = new TextField();
+
+    public TextField getUiTxtFilBanco() {
+        return uiTxtFilBanco;
+    }
+
+    public void setUiTxtFilBanco(TextField tf) {
+        this.uiTxtFilBanco = tf;
+    }
+    private TextField uiTxtFilDescripcion = new TextField();
+
+    public TextField getUiTxtFilDescripcion() {
+        return uiTxtFilDescripcion;
+    }
+
+    public void setUiTxtFilDescripcion(TextField tf) {
+        this.uiTxtFilDescripcion = tf;
+    }
+    private Table table1 = new Table();
+
+    public Table getTable1() {
+        return table1;
+    }
+
+    public void setTable1(Table t) {
+        this.table1 = t;
+    }
+    private TableRowGroup tableRowGroup1 = new TableRowGroup();
+
+    public TableRowGroup getTableRowGroup1() {
+        return tableRowGroup1;
+    }
+
+    public void setTableRowGroup1(TableRowGroup trg) {
+        this.tableRowGroup1 = trg;
+    }
+    private TableColumn tableColumn3 = new TableColumn();
+
+    public TableColumn getTableColumn3() {
+        return tableColumn3;
+    }
+
+    public void setTableColumn3(TableColumn tc) {
+        this.tableColumn3 = tc;
+    }
+    private RadioButton radioButton1 = new RadioButton();
+
+    public RadioButton getRadioButton1() {
+        return radioButton1;
+    }
+
+    public void setRadioButton1(RadioButton rb) {
+        this.radioButton1 = rb;
+    }
+    private TextField uiTxtCodigoBanco = new TextField();
+
+    public TextField getUiTxtCodigoBanco() {
+        return uiTxtCodigoBanco;
+    }
+
+    public void setUiTxtCodigoBanco(TextField tf) {
+        this.uiTxtCodigoBanco = tf;
+    }
+    private TextField uiTxtDescripcionBanco = new TextField();
+
+    public TextField getUiTxtDescripcionBanco() {
+        return uiTxtDescripcionBanco;
+    }
+
+    public void setUiTxtDescripcionBanco(TextField tf) {
+        this.uiTxtDescripcionBanco = tf;
     }
 
     // </editor-fold>
@@ -189,13 +248,13 @@ public class ABMFormaPagos extends AbstractPageBean {
             throw e instanceof FacesException ? (FacesException) e : new FacesException(e);
         }
 
-    // </editor-fold>
-    // Perform application initialization that must complete
-    // *after* managed components are initialized
-    // TODO - add your own initialization code here
+        // </editor-fold>
+        // Perform application initialization that must complete
+        // *after* managed components are initialized
+        // TODO - add your own initialization code here
 
-    getSessionBean1().setTituloPagina("Registro de formas de pago Cobranzas");
-    getSessionBean1().setDetallePagina("Seleccione el registro Deseado");
+        getSessionBean1().setTituloPagina("Registro de formas de pago Cobranzas");
+        getSessionBean1().setDetallePagina("Seleccione el registro Deseado");
 
 
     }
@@ -233,10 +292,9 @@ public class ABMFormaPagos extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosFormaPago.setRendered(true);
-
-
+            this.limpiarCampos();
         } else if (updateRequest) {
-
+            cargarCampos();
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
@@ -244,9 +302,7 @@ public class ABMFormaPagos extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosFormaPago.setRendered(true);
-
         } else if (errorValidacion) {
-            
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(true);
             this.gridPanelBotones.setRendered(true);
@@ -254,10 +310,7 @@ public class ABMFormaPagos extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosFormaPago.setRendered(true);
-
-
         } else {
-
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(true);
             this.gridPanelBotones.setRendered(true);
@@ -265,9 +318,10 @@ public class ABMFormaPagos extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(false);
             this.buttonsPanelAddUpdate.setRendered(false);
             this.datosFormaPago.setRendered(false);
-
         }
 
+        //Actualizamos la lista
+        buscar();
     }
 
     /**
@@ -313,57 +367,295 @@ public class ABMFormaPagos extends AbstractPageBean {
         // TODO: Process the action. Return value is a navigation
 
         // case name where null will return to the same page.
-        this.addRequest=true;
-        this.button2.setRendered(true);
-        this.button3.setRendered(false);
+        this.addRequest = true;
+        this.uiBtnGuardarNuevo.setRendered(true);
+        this.uiBtnGuardarEditar.setRendered(false);
         return null;
     }
 
     public String editar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        this.updateRequest=true;
-        this.button3.setRendered(true);
-        this.button2.setRendered(false);
-        return null;
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
 
+        if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+            //Obtenemos la lista de
+            FormaPago[] l = getSessionBean1().getListaFormaPago();
+
+            //Posicion en la grilla del elemento seleccionado
+            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+
+            //Elemento seleccionado
+            FormaPago e = l[rowId];
+
+            //Guardamos el id del FormaPago en la session
+            getSessionBean1().setId(e.getCodFormaPago());
+        }
+        this.updateRequest=true;
+        this.uiBtnGuardarEditar.setRendered(true);
+        this.uiBtnGuardarNuevo.setRendered(false);
+
+        //return
+        return null;
     }
 
     public String eliminar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
 
-        return null;
-    }
+        // Si la cantidad de registros en la grilla es mayor a 0
+        // Eliminamos el elemento seleccionado
+        if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+            //Obtenemos la lista de
+            FormaPago[] l = getSessionBean1().getListaFormaPago();
 
-    public String cancelar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        this.addRequest=false;
-        this.updateRequest=false;
+            //Posicion en la grilla del elemento seleccionado
+            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
 
-        return null;
-    }
+            //Elemento seleccionado
+            FormaPago e = l[rowId];
 
-    public String button2_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        this.addRequest=false;
-        this.updateRequest=false;
+            //Eliminados el registro
+            FormaPagoController controller = new FormaPagoController();
+            ControllerResult r = controller.delete(e);
 
-        info(this.codigo2, "Favor ingresar Nombre, Campo Obligatorio");
-        info(this.descripcion, "Favor ingresar Apellido, Campo Obligatorio");
-        this.errorValidacion=true;
-                      
+            //Mensaje
+            if (r.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+                this.pageAlert1.setTitle("Error al eliminar el Registro");
+            } else {
+                this.pageAlert1.setType("information");
+                this.pageAlert1.setTitle("El Registro se a Eliminado correctamente");
+            }
 
-            this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Error en la Validacion de los Campos, favor verificar y volver a intentar");
             this.pageAlert1.setSummary("");
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
+        }
 
+        //Result
+        return null;
+    }
+
+    public String uiBtnCancelar_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        this.addRequest = false;
+        this.updateRequest = false;
 
         return null;
     }
-}
 
+    public String uiBtnGuardarNuevo_action() {
+        // Apagamos la bandera de nuevo registro
+        this.addRequest = false;
+
+        //Validamos los campos
+        validarCampos();
+        FormaPago r;
+
+        //Si no hay error de validacion insertamos el registro
+        if (!errorValidacion) {
+            //Nuevo
+            r = new FormaPago();
+
+            //Set de los artributos
+            r.setNombreFormaPago((String) uiTxtDescripcion.getText());
+            r.setCodBanco(banco);
+
+            //Insertamos el nuevo registro
+            ControllerResult cr = new FormaPagoController().create(r);
+
+            //Verificamos el tipo de mensaje
+            if (cr.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(cr.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+        }
+
+        //result
+        return null;
+    }
+
+    private Banco banco;
+
+    /**
+     * Validar los campos de la entidad, para verificar si los datos ingresados
+     * por el usuario es correcto y si estan todos los campos obligatorios.
+     */
+    private void validarCampos() {
+        //Apagamos la bandera de error
+        this.errorValidacion = false;
+
+        //Descripcion
+        if (this.uiTxtDescripcion.getText() == null || this.uiTxtDescripcion.getText().equals("")) {
+            info(uiTxtDescripcion, "Descripcion de la Forma de Pago obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }
+
+        //Banco, validamos solo en caso de que se haya ingresado algun valor,
+        //el campo no es obligatorio
+
+        //Inicializamos
+        banco = null;
+        if (this.uiTxtCodigoBanco.getText() != null ) {
+            //Buscamos el Banco
+            banco = new BancoController().findById(Long.valueOf(uiTxtCodigoBanco.getText().toString()));
+
+            //Si no se encontro el banco
+            if (banco == null) {
+                info(uiTxtDescripcionBanco, "Banco incorrecto, verificar el codigo ingresado, ingrese un valor valido.");
+                errorValidacion = true;
+            }
+        }
+    }
+
+    public String uiBtnBuscar_action() {
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        //Realizamos la busqueda
+        buscar();
+
+        //Result
+        return null;
+    }
+
+    /**
+     * Buscar los registros que cumplan con la condicion/s de busqueda
+     * y actualizar la lista de la session
+     */
+    public void buscar() {
+        //Verificamos el contenido de los campos de busqueda
+        FormaPagoController c = new FormaPagoController();
+        String pBanco = null, pDesc = null;
+
+        //Codigo
+        if (this.uiTxtFilBanco.getText() != null) {
+            pBanco = this.uiTxtFilBanco.getText().toString();
+        }
+
+        //Descripcion
+        if (this.uiTxtFilDescripcion.getText() != null) {
+            pDesc = this.uiTxtFilDescripcion.getText().toString();
+        }
+
+        //Buscamos la lista de registros
+        FormaPago[] l = (FormaPago[]) c.getFormaPagos(pBanco, pDesc).toArray(new FormaPago[0]);
+
+        //Actualizamos la lista de empleados de la session
+        getSessionBean1().setListaFormaPago(l);
+    }
+
+    public String uiBtnTodos_action() {
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        //Ceramos los campos de busqueda
+        this.uiTxtFilBanco.setText(null);
+        this.uiTxtFilDescripcion.setText(null);
+
+        //Realizamos la busuqueda
+        buscar();
+
+        //Result
+        return null;
+    }
+
+    private TableSelectPhaseListener tablePhaseListener =
+            new TableSelectPhaseListener();
+
+    public void setSelected(Object object) {
+        RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
+        if (rowKey != null) {
+            tablePhaseListener.setSelected(rowKey, object);
+        }
+    }
+
+    public Object getSelected() {
+        RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.getSelected(rowKey);
+
+    }
+
+    public Object getSelectedValue() {
+        RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
+        return (rowKey != null) ? rowKey.getRowId() : null;
+
+    }
+
+    public boolean getSelectedState() {
+        RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.isSelected(rowKey);
+    }
+
+    public String uiBtnGuardarEditar_action() {
+        // Apagamos la bandera de nuevo registro
+        this.updateRequest = false;
+
+        //Obtenemos el registro seleccionado por medio
+        //del id almacenado en la session
+        FormaPago r = new FormaPagoController().findById(getSessionBean1().getId());
+
+        //Validamos los campos
+        validarCampos();
+
+        //Si no hay error de validacion insertamos el registro
+        if (!errorValidacion) {
+            //Set de los artributos
+            r.setNombreFormaPago((String) uiTxtDescripcion.getText());
+            r.setCodBanco(banco);
+            
+            //Insertamos el nuevo registro
+            ControllerResult cr = new FormaPagoController().update(r);
+
+            //Verificamos el tipo de mensaje
+            if (cr.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(cr.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+        }
+
+        //Result
+        return null;
+    }
+
+    /**
+     * Limpiar campos
+     */
+    private void limpiarCampos() {
+        uiTxtDescripcion.setText(null);
+        uiTxtCodigoBanco.setText(null);
+        uiTxtDescripcionBanco.setText(null);
+    }
+
+    /**
+     * Cargar campos, para la edicion del registro seleccionado
+     */
+    private void cargarCampos() {
+        //Obtenemos el registro seleccionado por medio
+        //del id almacenado en la session
+        FormaPago e = new FormaPagoController().findById(getSessionBean1().getId());
+        uiTxtDescripcion.setText(e.getNombreFormaPago());
+
+        //Banco
+        if (e.getCodBanco() != null) {
+            uiTxtCodigoBanco.setText(e.getCodBanco().getCodBanco().toString());
+            uiTxtDescripcionBanco.setText(e.getCodBanco().getNombreBanco());
+        }
+
+    }
+}
