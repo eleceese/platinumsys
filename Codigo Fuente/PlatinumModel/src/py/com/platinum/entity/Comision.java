@@ -11,11 +11,14 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,13 +29,14 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "COMISION")
-@NamedQueries({@NamedQuery(name = "Comision.findAll", query = "SELECT c FROM Comision c"), @NamedQuery(name = "Comision.findByCodComision", query = "SELECT c FROM Comision c WHERE c.codComision = :codComision"), @NamedQuery(name = "Comision.findByPorcentaje", query = "SELECT c FROM Comision c WHERE c.porcentaje = :porcentaje"), @NamedQuery(name = "Comision.findByFecInicial", query = "SELECT c FROM Comision c WHERE c.fecInicial = :fecInicial"), @NamedQuery(name = "Comision.findByFecFinal", query = "SELECT c FROM Comision c WHERE c.fecFinal = :fecFinal"), @NamedQuery(name = "Comision.findByEstado", query = "SELECT c FROM Comision c WHERE c.estado = :estado"), @NamedQuery(name = "Comision.findByUsuarioAlta", query = "SELECT c FROM Comision c WHERE c.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "Comision.findByUsuarioModif", query = "SELECT c FROM Comision c WHERE c.usuarioModif = :usuarioModif"), @NamedQuery(name = "Comision.findByFechaAlta", query = "SELECT c FROM Comision c WHERE c.fechaAlta = :fechaAlta"), @NamedQuery(name = "Comision.findByFechaModif", query = "SELECT c FROM Comision c WHERE c.fechaModif = :fechaModif")})
+@SequenceGenerator(name="COMISION_SEQUENCE", sequenceName="SQ_COMISION", initialValue=1, allocationSize=1)
 public class Comision implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="COMISION_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_COMISION")
-    private BigDecimal codComision;
+    private Long codComision;
     @Basic(optional = false)
     @Column(name = "PORCENTAJE")
     private BigDecimal porcentaje;
@@ -61,20 +65,20 @@ public class Comision implements Serializable {
     public Comision() {
     }
 
-    public Comision(BigDecimal codComision) {
+    public Comision(Long codComision) {
         this.codComision = codComision;
     }
 
-    public Comision(BigDecimal codComision, BigDecimal porcentaje) {
+    public Comision(Long codComision, BigDecimal porcentaje) {
         this.codComision = codComision;
         this.porcentaje = porcentaje;
     }
 
-    public BigDecimal getCodComision() {
+    public Long getCodComision() {
         return codComision;
     }
 
-    public void setCodComision(BigDecimal codComision) {
+    public void setCodComision(Long codComision) {
         this.codComision = codComision;
     }
 
@@ -172,7 +176,7 @@ public class Comision implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.Comision[codComision=" + codComision + "]";
+        return porcentaje.toString();
     }
 
 }

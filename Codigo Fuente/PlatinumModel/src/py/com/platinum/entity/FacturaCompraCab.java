@@ -12,12 +12,13 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,10 +29,11 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "FACTURA_COMPRA_CAB")
-@NamedQueries({@NamedQuery(name = "FacturaCompraCab.findAll", query = "SELECT f FROM FacturaCompraCab f"), @NamedQuery(name = "FacturaCompraCab.findByCodFacComCab", query = "SELECT f FROM FacturaCompraCab f WHERE f.codFacComCab = :codFacComCab"), @NamedQuery(name = "FacturaCompraCab.findByNroFactura", query = "SELECT f FROM FacturaCompraCab f WHERE f.nroFactura = :nroFactura"), @NamedQuery(name = "FacturaCompraCab.findByFecha", query = "SELECT f FROM FacturaCompraCab f WHERE f.fecha = :fecha"), @NamedQuery(name = "FacturaCompraCab.findByTipo", query = "SELECT f FROM FacturaCompraCab f WHERE f.tipo = :tipo"), @NamedQuery(name = "FacturaCompraCab.findByEstado", query = "SELECT f FROM FacturaCompraCab f WHERE f.estado = :estado"), @NamedQuery(name = "FacturaCompraCab.findBySubTotal", query = "SELECT f FROM FacturaCompraCab f WHERE f.subTotal = :subTotal"), @NamedQuery(name = "FacturaCompraCab.findByTotaIva", query = "SELECT f FROM FacturaCompraCab f WHERE f.totaIva = :totaIva"), @NamedQuery(name = "FacturaCompraCab.findByTotal", query = "SELECT f FROM FacturaCompraCab f WHERE f.total = :total"), @NamedQuery(name = "FacturaCompraCab.findByUsuarioAlta", query = "SELECT f FROM FacturaCompraCab f WHERE f.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "FacturaCompraCab.findByUsuarioModif", query = "SELECT f FROM FacturaCompraCab f WHERE f.usuarioModif = :usuarioModif"), @NamedQuery(name = "FacturaCompraCab.findByFechaAlta", query = "SELECT f FROM FacturaCompraCab f WHERE f.fechaAlta = :fechaAlta"), @NamedQuery(name = "FacturaCompraCab.findByFechaModif", query = "SELECT f FROM FacturaCompraCab f WHERE f.fechaModif = :fechaModif")})
+@SequenceGenerator(name="FAC_COMP_CAB_SEQUENCE", sequenceName="SQ_FACTURA_COMPRA_CAB", initialValue=1, allocationSize=1)
 public class FacturaCompraCab implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="FAC_COMP_CAB_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_FAC_COM_CAB")
     private Long codFacComCab;
@@ -255,7 +257,7 @@ public class FacturaCompraCab implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.FacturaCompraCab[codFacComCab=" + codFacComCab + "]";
+        return nroFactura;
     }
 
 }

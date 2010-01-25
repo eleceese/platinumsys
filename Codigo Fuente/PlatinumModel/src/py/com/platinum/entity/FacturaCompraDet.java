@@ -10,11 +10,12 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,10 +26,11 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "FACTURA_COMPRA_DET")
-@NamedQueries({@NamedQuery(name = "FacturaCompraDet.findAll", query = "SELECT f FROM FacturaCompraDet f"), @NamedQuery(name = "FacturaCompraDet.findByCodFacComDet", query = "SELECT f FROM FacturaCompraDet f WHERE f.codFacComDet = :codFacComDet"), @NamedQuery(name = "FacturaCompraDet.findByPrecioUni", query = "SELECT f FROM FacturaCompraDet f WHERE f.precioUni = :precioUni"), @NamedQuery(name = "FacturaCompraDet.findByCantidad", query = "SELECT f FROM FacturaCompraDet f WHERE f.cantidad = :cantidad"), @NamedQuery(name = "FacturaCompraDet.findByTotal", query = "SELECT f FROM FacturaCompraDet f WHERE f.total = :total"), @NamedQuery(name = "FacturaCompraDet.findBySubTotal", query = "SELECT f FROM FacturaCompraDet f WHERE f.subTotal = :subTotal"), @NamedQuery(name = "FacturaCompraDet.findByMontoIva", query = "SELECT f FROM FacturaCompraDet f WHERE f.montoIva = :montoIva"), @NamedQuery(name = "FacturaCompraDet.findByUsuarioAlta", query = "SELECT f FROM FacturaCompraDet f WHERE f.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "FacturaCompraDet.findByUsuarioModif", query = "SELECT f FROM FacturaCompraDet f WHERE f.usuarioModif = :usuarioModif"), @NamedQuery(name = "FacturaCompraDet.findByFechaAlta", query = "SELECT f FROM FacturaCompraDet f WHERE f.fechaAlta = :fechaAlta"), @NamedQuery(name = "FacturaCompraDet.findByFechaModif", query = "SELECT f FROM FacturaCompraDet f WHERE f.fechaModif = :fechaModif")})
+@SequenceGenerator(name="FAC_COMP_DET_SEQUENCE", sequenceName="SQ_FACTURA_COMPRA_DET", initialValue=1, allocationSize=1)
 public class FacturaCompraDet implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="FAC_COMP_DET_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_FAC_COM_DET")
     private Long codFacComDet;
@@ -198,7 +200,7 @@ public class FacturaCompraDet implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.FacturaCompraDet[codFacComDet=" + codFacComDet + "]";
+        return this.codFacComDet.toString();
     }
 
 }

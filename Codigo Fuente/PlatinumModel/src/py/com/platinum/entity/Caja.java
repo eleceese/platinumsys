@@ -12,10 +12,13 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,10 +29,11 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "CAJA")
-@NamedQueries({@NamedQuery(name = "Caja.findAll", query = "SELECT c FROM Caja c"), @NamedQuery(name = "Caja.findByCodCaja", query = "SELECT c FROM Caja c WHERE c.codCaja = :codCaja"), @NamedQuery(name = "Caja.findByNombreCaja", query = "SELECT c FROM Caja c WHERE c.nombreCaja = :nombreCaja"), @NamedQuery(name = "Caja.findByUsuarioAlta", query = "SELECT c FROM Caja c WHERE c.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "Caja.findByUsuarioModif", query = "SELECT c FROM Caja c WHERE c.usuarioModif = :usuarioModif"), @NamedQuery(name = "Caja.findByFechaAlta", query = "SELECT c FROM Caja c WHERE c.fechaAlta = :fechaAlta"), @NamedQuery(name = "Caja.findByFechaModif", query = "SELECT c FROM Caja c WHERE c.fechaModif = :fechaModif")})
+@SequenceGenerator(name="CAJA_SEQUENCE", sequenceName="SQ_CAJA", initialValue=1, allocationSize=1)
 public class Caja implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="CAJA_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_CAJA")
     private Long codCaja;
@@ -139,7 +143,7 @@ public class Caja implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.Caja[codCaja=" + codCaja + "]";
+        return nombreCaja;
     }
 
 }

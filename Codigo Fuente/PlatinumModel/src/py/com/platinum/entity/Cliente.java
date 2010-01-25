@@ -13,10 +13,13 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,13 +30,14 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "CLIENTE")
-@NamedQueries({@NamedQuery(name = "Cliente.findAll", query = "SELECT c FROM Cliente c"), @NamedQuery(name = "Cliente.findByCodCliente", query = "SELECT c FROM Cliente c WHERE c.codCliente = :codCliente"), @NamedQuery(name = "Cliente.findByNombreCliente", query = "SELECT c FROM Cliente c WHERE c.nombreCliente = :nombreCliente"), @NamedQuery(name = "Cliente.findByApellidoCliente", query = "SELECT c FROM Cliente c WHERE c.apellidoCliente = :apellidoCliente"), @NamedQuery(name = "Cliente.findByNumeroDocCliente", query = "SELECT c FROM Cliente c WHERE c.numeroDocCliente = :numeroDocCliente"), @NamedQuery(name = "Cliente.findByTipoDodCliente", query = "SELECT c FROM Cliente c WHERE c.tipoDodCliente = :tipoDodCliente"), @NamedQuery(name = "Cliente.findByRucCliente", query = "SELECT c FROM Cliente c WHERE c.rucCliente = :rucCliente"), @NamedQuery(name = "Cliente.findByDireccionCliente", query = "SELECT c FROM Cliente c WHERE c.direccionCliente = :direccionCliente"), @NamedQuery(name = "Cliente.findByCiudadCliente", query = "SELECT c FROM Cliente c WHERE c.ciudadCliente = :ciudadCliente"), @NamedQuery(name = "Cliente.findByTelefono1Cliente", query = "SELECT c FROM Cliente c WHERE c.telefono1Cliente = :telefono1Cliente"), @NamedQuery(name = "Cliente.findByTelefono2Cliente", query = "SELECT c FROM Cliente c WHERE c.telefono2Cliente = :telefono2Cliente"), @NamedQuery(name = "Cliente.findByMailCliente", query = "SELECT c FROM Cliente c WHERE c.mailCliente = :mailCliente"), @NamedQuery(name = "Cliente.findByContacto1Cliente", query = "SELECT c FROM Cliente c WHERE c.contacto1Cliente = :contacto1Cliente"), @NamedQuery(name = "Cliente.findByContacto2Cliente", query = "SELECT c FROM Cliente c WHERE c.contacto2Cliente = :contacto2Cliente"), @NamedQuery(name = "Cliente.findByEstadoCliente", query = "SELECT c FROM Cliente c WHERE c.estadoCliente = :estadoCliente"), @NamedQuery(name = "Cliente.findByUsuarioAlta", query = "SELECT c FROM Cliente c WHERE c.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "Cliente.findByUsuarioModif", query = "SELECT c FROM Cliente c WHERE c.usuarioModif = :usuarioModif"), @NamedQuery(name = "Cliente.findByFechaAlta", query = "SELECT c FROM Cliente c WHERE c.fechaAlta = :fechaAlta"), @NamedQuery(name = "Cliente.findByFechaModif", query = "SELECT c FROM Cliente c WHERE c.fechaModif = :fechaModif")})
+@SequenceGenerator(name="CLIENTE_SEQUENCE", sequenceName="SEQ_BANCO", initialValue=1, allocationSize=1)
 public class Cliente implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="CLIENTE_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_CLIENTE")
-    private BigDecimal codCliente;
+    private Long codCliente;
     @Basic(optional = false)
     @Column(name = "NOMBRE_CLIENTE")
     private String nombreCliente;
@@ -88,11 +92,11 @@ public class Cliente implements Serializable {
     public Cliente() {
     }
 
-    public Cliente(BigDecimal codCliente) {
+    public Cliente(Long codCliente) {
         this.codCliente = codCliente;
     }
 
-    public Cliente(BigDecimal codCliente, String nombreCliente, String apellidoCliente, String numeroDocCliente, String tipoDodCliente) {
+    public Cliente(Long codCliente, String nombreCliente, String apellidoCliente, String numeroDocCliente, String tipoDodCliente) {
         this.codCliente = codCliente;
         this.nombreCliente = nombreCliente;
         this.apellidoCliente = apellidoCliente;
@@ -100,11 +104,11 @@ public class Cliente implements Serializable {
         this.tipoDodCliente = tipoDodCliente;
     }
 
-    public BigDecimal getCodCliente() {
+    public Long getCodCliente() {
         return codCliente;
     }
 
-    public void setCodCliente(BigDecimal codCliente) {
+    public void setCodCliente(Long codCliente) {
         this.codCliente = codCliente;
     }
 
@@ -306,7 +310,7 @@ public class Cliente implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.Cliente[codCliente=" + codCliente + "]";
+        return this.apellidoCliente + ", " + this.nombreCliente;
     }
 
 }

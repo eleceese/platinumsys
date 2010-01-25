@@ -6,34 +6,34 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
  *
- * @author FerBoy
+ * @author Martin Jara
  */
 @Entity
-@Table(name = "EMPLEADO", catalog = "", schema = "PLATINUM")
-@NamedQueries({@NamedQuery(name = "Empleado.findAll", query = "SELECT e FROM Empleado e")})
+@Table(name = "EMPLEADO")
+@SequenceGenerator(name="EMPLEADO_SEQUENCE", sequenceName="SQ_EMPLEADO", initialValue=5, allocationSize=1)
 public class Empleado implements Serializable {
-    private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="EMPLEADO_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_EMPLEADO")
-    private BigDecimal codEmpleado;
+    private Long codEmpleado;
     @Basic(optional = false)
     @Column(name = "NOMBRE_EMPLEADO")
     private String nombreEmpleado;
@@ -73,30 +73,30 @@ public class Empleado implements Serializable {
     @Column(name = "ESTADO_EMPLEADO")
     private String estadoEmpleado;
     @JoinColumn(name = "COD_CARGO", referencedColumnName = "COD_CARGO")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Cargo codCargo;
     @JoinColumn(name = "COD_SECCION", referencedColumnName = "COD_SECCION")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Seccion codSeccion;
 
     public Empleado() {
     }
 
-    public Empleado(BigDecimal codEmpleado) {
+    public Empleado(Long codEmpleado) {
         this.codEmpleado = codEmpleado;
     }
 
-    public Empleado(BigDecimal codEmpleado, String nombreEmpleado, String apellidoEmpleado) {
+    public Empleado(Long codEmpleado, String nombreEmpleado, String apellidoEmpleado) {
         this.codEmpleado = codEmpleado;
         this.nombreEmpleado = nombreEmpleado;
         this.apellidoEmpleado = apellidoEmpleado;
     }
 
-    public BigDecimal getCodEmpleado() {
+    public Long getCodEmpleado() {
         return codEmpleado;
     }
 
-    public void setCodEmpleado(BigDecimal codEmpleado) {
+    public void setCodEmpleado(Long codEmpleado) {
         this.codEmpleado = codEmpleado;
     }
 
@@ -274,7 +274,7 @@ public class Empleado implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.Empleado[codEmpleado=" + codEmpleado + "]";
+        return this.apellidoEmpleado + ", " + this.nombreEmpleado;
     }
 
 }
