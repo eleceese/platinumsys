@@ -12,25 +12,27 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
  *
- * @author FerBoy
+ * @author Martin
  */
 @Entity
+@SequenceGenerator(name="SECCION_SEQUENCE", sequenceName="SQ_SECCION", initialValue=1, allocationSize=1)
 @Table(name = "SECCION", catalog = "", schema = "PLATINUM")
-@NamedQueries({@NamedQuery(name = "Seccion.findAll", query = "SELECT s FROM Seccion s")})
 public class Seccion implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="SECCION_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_SECCION")
-    private BigDecimal codSeccion;
+    private Long codSeccion;
     @Basic(optional = false)
     @Column(name = "NOMBRE_SECCION")
     private String nombreSeccion;
@@ -40,20 +42,20 @@ public class Seccion implements Serializable {
     public Seccion() {
     }
 
-    public Seccion(BigDecimal codSeccion) {
+    public Seccion(Long codSeccion) {
         this.codSeccion = codSeccion;
     }
 
-    public Seccion(BigDecimal codSeccion, String nombreSeccion) {
+    public Seccion(Long codSeccion, String nombreSeccion) {
         this.codSeccion = codSeccion;
         this.nombreSeccion = nombreSeccion;
     }
 
-    public BigDecimal getCodSeccion() {
+    public Long getCodSeccion() {
         return codSeccion;
     }
 
-    public void setCodSeccion(BigDecimal codSeccion) {
+    public void setCodSeccion(Long codSeccion) {
         this.codSeccion = codSeccion;
     }
 
@@ -95,7 +97,7 @@ public class Seccion implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.Seccion[codSeccion=" + codSeccion + "]";
+        return nombreSeccion;
     }
 
 }

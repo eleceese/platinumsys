@@ -11,12 +11,13 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,10 +28,11 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "FORMA_PAGO")
-@NamedQueries({@NamedQuery(name = "FormaPago.findAll", query = "SELECT f FROM FormaPago f"), @NamedQuery(name = "FormaPago.findByCodFormaPago", query = "SELECT f FROM FormaPago f WHERE f.codFormaPago = :codFormaPago"), @NamedQuery(name = "FormaPago.findByNombreFormaPago", query = "SELECT f FROM FormaPago f WHERE f.nombreFormaPago = :nombreFormaPago"), @NamedQuery(name = "FormaPago.findByUsuarioAlta", query = "SELECT f FROM FormaPago f WHERE f.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "FormaPago.findByUsuarioModif", query = "SELECT f FROM FormaPago f WHERE f.usuarioModif = :usuarioModif"), @NamedQuery(name = "FormaPago.findByFechaAlta", query = "SELECT f FROM FormaPago f WHERE f.fechaAlta = :fechaAlta"), @NamedQuery(name = "FormaPago.findByFechaModif", query = "SELECT f FROM FormaPago f WHERE f.fechaModif = :fechaModif")})
+@SequenceGenerator(name="FORMA_PAGO_SEQUENCE", sequenceName="SEQ_FORMA_PAGO", initialValue=1, allocationSize=1)
 public class FormaPago implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="FORMA_PAGO_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_FORMA_PAGO")
     private Long codFormaPago;

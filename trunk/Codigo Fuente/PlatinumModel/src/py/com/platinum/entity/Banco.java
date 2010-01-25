@@ -11,10 +11,11 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,10 +26,11 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "BANCO")
-@NamedQueries({@NamedQuery(name = "Banco.findAll", query = "SELECT b FROM Banco b"), @NamedQuery(name = "Banco.findByCodBanco", query = "SELECT b FROM Banco b WHERE b.codBanco = :codBanco"), @NamedQuery(name = "Banco.findByNombreBanco", query = "SELECT b FROM Banco b WHERE b.nombreBanco = :nombreBanco"), @NamedQuery(name = "Banco.findByUsuarioAlta", query = "SELECT b FROM Banco b WHERE b.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "Banco.findByUsuarioModif", query = "SELECT b FROM Banco b WHERE b.usuarioModif = :usuarioModif"), @NamedQuery(name = "Banco.findByFechaAlta", query = "SELECT b FROM Banco b WHERE b.fechaAlta = :fechaAlta"), @NamedQuery(name = "Banco.findByFechaModif", query = "SELECT b FROM Banco b WHERE b.fechaModif = :fechaModif")})
+@SequenceGenerator(name="BANCO_SEQUENCE", sequenceName="SEQ_BANCO", initialValue=1, allocationSize=1)
 public class Banco implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="BANCO_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_BANCO")
     private Long codBanco;
@@ -138,7 +140,7 @@ public class Banco implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.Banco[codBanco=" + codBanco + "]";
+        return nombreBanco;
     }
 
 }

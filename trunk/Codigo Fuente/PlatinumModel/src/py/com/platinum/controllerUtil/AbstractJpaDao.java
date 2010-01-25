@@ -132,7 +132,7 @@ public abstract class AbstractJpaDao<T> {
     protected List<T> getAll(Class<T> tipo, String orderBy) {
         EntityManager em = emf.createEntityManager();
         orderBy = (orderBy != null && orderBy.length() > 0) ? " ORDER BY o." + orderBy : " ";
-        List<T> entities = em.createQuery("SELECT o FROM " + tipo.getSimpleName() + " o").getResultList();
+        List<T> entities = em.createQuery("SELECT o FROM " + tipo.getSimpleName() + " o " + orderBy).getResultList();
         em.close();
         return entities;
     }
