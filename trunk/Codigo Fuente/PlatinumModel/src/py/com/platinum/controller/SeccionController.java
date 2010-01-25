@@ -2,36 +2,33 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package py.com.platinum.controller;
 
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
-import py.com.platinum.entity.Marca;
+import py.com.platinum.entity.Seccion;
 
 /**
  *
- * @author FerBoy
+ * @author Martin Jara
  */
-public class MarcaController extends AbstractJpaDao<Marca> {
+public class SeccionController extends AbstractJpaDao<Seccion> {
 
-    public MarcaController() {
+    public SeccionController() {
         super();
     }
 
-
     @Override
-    public Marca findById(Long id) {
-                return (Marca) this.findById(Marca.class, id);
+    public Seccion findById(Long id) {
+        return (Seccion) this.findById(Seccion.class, id);
     }
 
-       @Override
-    public List<Marca> getAll(String orderBy) {
-        return this.getAll(Marca.class, orderBy);
-     }
-
+    @Override
+    public List<Seccion> getAll(String orderBy) {
+        return this.getAll(Seccion.class, orderBy);
+    }
 
     /**
      * Este metodo realiza la consulta de acuerdo a los campos de filtro, la
@@ -39,14 +36,14 @@ public class MarcaController extends AbstractJpaDao<Marca> {
      * @param codigo
      * @param descripcion
      *
-     * @return lista de Marcas que cumplen con la condicion de busqueda
+     * @return lista de Seccions que cumplen con la condicion de busqueda
      */
-    public List<Marca> getMarcas(String codigo, String descripcion) {
+    public List<Seccion> getSeccions(String codigo, String descripcion) {
         //Armamos el sql String
-        String SQL = "SELECT o FROM Marca o WHERE o.codMarca = o.codMarca";
+        String SQL = "SELECT o FROM Seccion o WHERE o.codSeccion = o.codSeccion";
 
         if (codigo != null && !codigo.equals("")) {
-            SQL = SQL + " and UPPER(o.codMarca) like UPPER(:codigo)";
+            SQL = SQL + " and UPPER(o.codSeccion) like UPPER(:codigo)";
         }
 
         if (descripcion != null && !descripcion.equals("")) {
@@ -66,12 +63,11 @@ public class MarcaController extends AbstractJpaDao<Marca> {
         }
 
         //Realizamos la busqueda
-        List<Marca> entities = q.getResultList();
+        List<Seccion> entities = q.getResultList();
         em.close();
 
         //retornamos la lista
         return entities;
 
       }
-
 }
