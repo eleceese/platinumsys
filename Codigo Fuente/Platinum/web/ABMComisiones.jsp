@@ -11,6 +11,28 @@
             <webuijsf:html id="html1">
                 <webuijsf:head id="head1">
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
+                    <webuijsf:script id="scriptPopUp" type="text/javascript" url="/js/utilJS.js"/>
+                    <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
+                    <script>
+                        function initAllRows() {
+                            var table = document.getElementById("form1:table1");
+                            table.initAllRows();}
+                    </script>
+                    <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
+                    <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
+                    <script>
+                        var delSelect;
+                        function confirmar() {
+                            if (delSelect!=null){
+                                if(!confirm("¿Está seguro de eliminar el Registro seleccionado?")) {
+                                    return false;
+                                }else{
+                                    return true;
+                                }
+                            }
+                        }
+                    </script>
+                    <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                 </webuijsf:head>
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
@@ -23,43 +45,47 @@
                         <h:panelGrid id="mainContainer" style="height: 408px; left: 240px; top: 192px; position: absolute" width="888">
                             <webuijsf:pageAlert binding="#{ABMComisiones.pageAlert1}" id="pageAlert1" rendered="false"/>
                             <h:panelGrid binding="#{ABMComisiones.gridPanelBuscar}" columns="3" id="gridPanelBuscar" style="height: 72px" width="599">
-                                <h:panelGrid columns="2" id="gridPanelNombre" style="height:30px; width: 60%">
+                                <h:panelGrid columns="2" id="gridPanelNombre" style="height: 30px" width="263">
                                     <webuijsf:label id="producto" text="Producto"/>
-                                    <webuijsf:textField id="producto1" text="Producto"/>
+                                    <webuijsf:textField binding="#{ABMComisiones.uiTxtFilProducto}" columns="35" id="uiTxtFilProducto"/>
                                 </h:panelGrid>
-                                <h:panelGrid columns="2" id="gridPanelRUC" style="height: 30px" width="239">
-                                    <webuijsf:label id="fechaInic" text="Fecha Inicial"/>
-                                    <webuijsf:calendar id="calendar1"/>
+                                <h:panelGrid columns="2" id="gridPanelRUC" style="height: 30px" width="167">
+                                    <webuijsf:label id="fechaInic" text="Desde"/>
+                                    <webuijsf:calendar binding="#{ABMComisiones.uiCalFilDesde}" columns="15" id="uiCalFilDesde"/>
                                 </h:panelGrid>
-                                <h:panelGrid columns="2" id="gridPanelCedula" style="height: 30px" width="239">
-                                    <webuijsf:label id="fechaFin" text="Fecha Final"/>
-                                    <webuijsf:calendar id="calendar2"/>
+                                <h:panelGrid columns="2" id="gridPanelCedula" style="height: 30px" width="167">
+                                    <webuijsf:label id="fechaFin" text="Hasta"/>
+                                    <webuijsf:calendar binding="#{ABMComisiones.uiCalFilHasta}" columns="15" id="uiCalFilHasta"/>
                                 </h:panelGrid>
-                                <webuijsf:button id="buscar" text="Buscar"/>
-                                <webuijsf:button id="todos" text="Todos"/>
+                            </h:panelGrid>
+                            <h:panelGrid binding="#{ABMComisiones.gridPanelBtnBuscar}" columns="2" id="gridPanelBtnBuscar" style="height: 100%" width="191">
+                                <webuijsf:button actionExpression="#{ABMComisiones.uiBtnBuscar_action}" id="uiBtnBuscar" text="Buscar"/>
+                                <webuijsf:button actionExpression="#{ABMComisiones.uiBtnTodos_action}" id="uiBtnTodos" text="Todos"/>
                             </h:panelGrid>
                             <h:panelGrid binding="#{ABMComisiones.gridPanelTabla}" id="gridPanelTabla" style="height: 154px" width="935">
-                                <webuijsf:table augmentTitle="false" id="tableComisiones" paginateButton="true" paginationControls="true"
-                                    sortPanelToggleButton="true" title="Comisiones" width="719">
-                                    <webuijsf:tableRowGroup emptyDataMsg="No se encontraron registros..." id="proveedores" rows="15"
-                                        sourceData="#{ABMComisiones.defaultTableDataProvider}" sourceVar="currentRow">
-                                        <webuijsf:tableColumn id="selec" width="20">
-                                            <webuijsf:radioButton id="radioButton1" label=""/>
+                                <webuijsf:table augmentTitle="false" id="table1" paginateButton="true" paginationControls="true" sortPanelToggleButton="true"
+                                    title="Comisiones" width="671">
+                                    <webuijsf:tableRowGroup binding="#{ABMComisiones.tableRowGroup1}" emptyDataMsg="No se encontraron registros..."
+                                        id="tableRowGroup1" rows="15" selected="#{ABMComisiones.selectedState}" sourceData="#{SessionBean1.listaComision}" sourceVar="currentRow">
+                                        <webuijsf:tableColumn align="center" binding="#{ABMComisiones.tableColumn6}" id="tableColumn6"
+                                            onClick="setTimeout('initAllRows()',0)" selectId="#{ABMComisiones.radioButton1.id}" width="40">
+                                            <webuijsf:radioButton binding="#{ABMComisiones.radioButton1}" id="radioButton1" label=""
+                                                name="#{ABMComisiones.radioButton1.id}" onClick="delSelect='ok'" selected="#{ABMComisiones.selected}" selectedValue="#{ABMComisiones.selectedValue}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Codigo" id="codigo" noWrap="true">
-                                            <webuijsf:staticText id="staticText1" text="1111122222-2"/>
+                                        <webuijsf:tableColumn headerText="Producto" id="tableColumn1" sort="codProducto">
+                                            <webuijsf:staticText id="staticText1" text="#{currentRow.value['codProducto'].descripcion}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Producto" id="producto2">
-                                            <webuijsf:staticText id="staticText2" text="Producto Producto Producto"/>
+                                        <webuijsf:tableColumn headerText="Porcentaje" id="tableColumn2" sort="porcentaje">
+                                            <webuijsf:staticText id="staticText2" text="#{currentRow.value['porcentaje']}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="% Porcentaje" id="porcentaje">
-                                            <webuijsf:staticText id="staticText3" text="14 % 14 % 14 %"/>
+                                        <webuijsf:tableColumn headerText="Fec. Inicial" id="tableColumn3" sort="fecInicial">
+                                            <webuijsf:staticText converter="#{SessionBean1.dateTimeConverter}" id="staticText3" text="#{currentRow.value['fecInicial']}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Fecha Inicial" id="fechaInic1">
-                                            <webuijsf:staticText id="staticText3" text="12/12/2009 12/12/2009"/>
+                                        <webuijsf:tableColumn headerText="Fec. Final" id="tableColumn4" sort="fecFinal">
+                                            <webuijsf:staticText converter="#{SessionBean1.dateTimeConverter}" id="staticText4" text="#{currentRow.value['fecFinal']}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Fecha Final" id="fechaFin1">
-                                            <webuijsf:staticText id="staticText4" text="12/12/2009 12/12/2009"/>
+                                        <webuijsf:tableColumn headerText="Estado" id="tableColumn5" sort="estado">
+                                            <webuijsf:staticText id="staticText5" text="#{currentRow.value['estado']}"/>
                                         </webuijsf:tableColumn>
                                     </webuijsf:tableRowGroup>
                                 </webuijsf:table>
@@ -68,7 +94,7 @@
                             <h:panelGrid binding="#{ABMComisiones.gridPanelBotones}" columns="3" id="gridPanelBotones" style="height: 50px; width: 150px">
                                 <webuijsf:button actionExpression="#{ABMComisiones.nuevo_action}" id="nuevo" text="Nuevo"/>
                                 <webuijsf:button actionExpression="#{ABMComisiones.editar_action}" id="editar" text="Editar"/>
-                                <webuijsf:button actionExpression="#{ABMComisiones.eliminar_action}" id="eliminar" text="Eliminar"/>
+                                <webuijsf:button actionExpression="#{ABMComisiones.eliminar_action}" id="eliminar" onClick="javascript:return confirmar()" text="Eliminar"/>
                             </h:panelGrid>
                             <br/>
                             <br/>
@@ -76,37 +102,42 @@
                                 style="color: #000099; font-family: Arial,Helvetica,sans-serif; font-size: 14px; font-weight: bold" text="Datos de la Comision"/>
                             <br/>
                             <h:panelGrid binding="#{ABMComisiones.gridPanelAddUpdate}" columns="2" id="gridPanelAddUpdate" style="height: 100%" width="839">
-                                <webuijsf:hyperlink id="linkProducto" text="Producto"/>
+                                <webuijsf:hyperlink id="linkProducto" onClick="doPopup('form1:uiTxtCodProducto_field', 'form1:uiTxtProductoDescripcion_field')"
+                                    target="popup" text="Producto" url="/faces/popup/popupProductos.jsp"/>
                                 <h:panelGrid columns="2" id="gridPanel1" style="height: 100%" width="575">
-                                    <webuijsf:textField binding="#{ABMComisiones.producto3}" columns="50" id="producto3" text="Nombre Producto"/>
-                                    <webuijsf:message for="producto3" id="message1" showDetail="false" showSummary="true"/>
+                                    <h:panelGrid columns="2" id="gridPanelProducto" style="height: 100%; margin-left: -9px" width="311">
+                                        <webuijsf:textField binding="#{ABMComisiones.uiTxtCodProducto}" columns="10" id="uiTxtCodProducto"/>
+                                        <webuijsf:textField binding="#{ABMComisiones.uiTxtProductoDescripcion}" columns="35" id="uiTxtProductoDescripcion"/>
+                                    </h:panelGrid>
+                                    <webuijsf:message for="uiTxtCodProducto" id="message1" showDetail="false" showSummary="true"/>
                                 </h:panelGrid>
                                 <webuijsf:label id="porcentaje1" text="Porcentaje %"/>
                                 <h:panelGrid columns="2" id="gridPanel14" style="height: 100%" width="582">
-                                    <webuijsf:textField binding="#{ABMComisiones.porcentaje2}" columns="15" id="porcentaje2" text="15 % 15 % 15 %"/>
-                                    <webuijsf:message for="porcentaje2" id="message14" showDetail="false" showSummary="true"/>
+                                    <webuijsf:textField binding="#{ABMComisiones.uiTxtPorcentaje}" columns="10" id="uiTxtPorcentaje"/>
+                                    <webuijsf:message for="uiTxtPorcentaje" id="message14" showDetail="false" showSummary="true"/>
                                 </h:panelGrid>
                                 <webuijsf:label id="fechaInicio" text="Fecha Inicial"/>
                                 <h:panelGrid columns="2" id="gridPanel9" style="height: 100%" width="407">
-                                    <webuijsf:calendar id="fechaInic2"/>
-                                    <webuijsf:message id="message9" showDetail="false" showSummary="true"/>
+                                    <webuijsf:calendar binding="#{ABMComisiones.uiCalFechaInicial}" columns="15" id="uiCalFechaInicial" style="margin-left: -9px"/>
+                                    <webuijsf:message for="uiCalFechaInicial" id="message9" showDetail="false" showSummary="true"/>
                                 </h:panelGrid>
                                 <webuijsf:label id="fechaFinal" text="Fecha Final"/>
                                 <h:panelGrid columns="2" id="gridPanel2" style="height: 100%" width="431">
-                                    <webuijsf:calendar id="fechaFin2"/>
-                                    <webuijsf:message id="message2" showDetail="false" showSummary="true"/>
+                                    <webuijsf:calendar binding="#{ABMComisiones.uiCalFechaFin}" columns="15" id="uiCalFechaFin" style="margin-left: -9px"/>
+                                    <webuijsf:message for="uiCalFilHasta" id="message2" showDetail="false" showSummary="true"/>
                                 </h:panelGrid>
                                 <webuijsf:label id="activo" text="Activo"/>
                                 <h:panelGrid columns="2" id="gridPanel10" style="height: 100%" width="481">
-                                    <webuijsf:checkbox id="activo1"/>
-                                    <webuijsf:message id="message10" showDetail="false" showSummary="true"/>
+                                    <webuijsf:checkbox binding="#{ABMComisiones.uiChkEstado}" id="uiChkEstado"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                             <br/>
                             <h:panelGrid binding="#{ABMComisiones.buttonsPanelAddUpdate}" columns="2" id="buttonsPanelAddUpdate" style="height: 100%" width="191">
+                                <webuijsf:button actionExpression="#{ABMComisiones.uiBtnGuardarNuevo_action}" binding="#{ABMComisiones.uiBtnGuardarNuevo}"
+                                    id="uiBtnGuardarNuevo" text="Guardar"/>
+                                <webuijsf:button actionExpression="#{ABMComisiones.uiBtnGuardarEditar_action}" binding="#{ABMComisiones.uiBtnGuardarEditar}"
+                                    id="uiBtnGuardarEditar" text="Guardar"/>
                                 <webuijsf:button actionExpression="#{ABMComisiones.cancelar_action}" id="cancelar" text="Cancelar"/>
-                                <webuijsf:button actionExpression="#{ABMComisiones.button2_action}" binding="#{ABMComisiones.button2}" id="button2" text="Guardar"/>
-                                <webuijsf:button binding="#{ABMComisiones.button3}" id="button3" text="Guardar"/>
                             </h:panelGrid>
                         </h:panelGrid>
                     </webuijsf:form>
