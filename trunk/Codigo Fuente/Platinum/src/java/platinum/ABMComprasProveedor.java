@@ -7,6 +7,7 @@ package platinum;
 import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
+import com.sun.webui.jsf.component.Calendar;
 import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.component.PageAlert;
 import com.sun.webui.jsf.component.RadioButton;
@@ -17,9 +18,13 @@ import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.util.Date;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.event.ValueChangeEvent;
+import py.com.platinum.controller.FacturaCompraCabController;
+import py.com.platinum.entity.FacturaCompraCab;
+import py.com.platinum.entity.FacturaCompraDet;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -41,10 +46,10 @@ public class ABMComprasProveedor extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-        dropDown1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("CON", "Contado"), new com.sun.webui.jsf.model.Option("CRE15", "Crédito 15 Días"), new com.sun.webui.jsf.model.Option("CRE30", "Crédito 30 Días"), new com.sun.webui.jsf.model.Option("CRE60", "Crédito 60 Días"), new com.sun.webui.jsf.model.Option("CRE90", "Crédito 90 Días")});
-        dropDown1DefaultOptions.setSelectedValue("CRE30");
-        dropDown2DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("P", "Pendiente"), new com.sun.webui.jsf.model.Option("R", "Recibido"), new com.sun.webui.jsf.model.Option("A", "Anulado")});
-        dropDown2DefaultOptions.setSelectedValue("R");
+        uiLstTipoComprobanteDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("CON", "Contado"), new com.sun.webui.jsf.model.Option("CRE15", "Crédito 15 Días"), new com.sun.webui.jsf.model.Option("CRE30", "Crédito 30 Días"), new com.sun.webui.jsf.model.Option("CRE60", "Crédito 60 Días"), new com.sun.webui.jsf.model.Option("CRE90", "Crédito 90 Días")});
+        uiLstTipoComprobanteDefaultOptions.setSelectedValue("CRE30");
+        uiLstEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("P", "Pendiente"), new com.sun.webui.jsf.model.Option("R", "Recibido"), new com.sun.webui.jsf.model.Option("A", "Anulado")});
+        uiLstEstadoDefaultOptions.setSelectedValue("R");
     }
     private HtmlPanelGrid mainContainer = new HtmlPanelGrid();
 
@@ -100,14 +105,14 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setAddUpdatePanel(HtmlPanelGrid hpg) {
         this.addUpdatePanel = hpg;
     }
-    private TextField userNameField = new TextField();
+    private TextField uiTxtNombreProveedor = new TextField();
 
-    public TextField getUserNameField() {
-        return userNameField;
+    public TextField getUiTxtNombreProveedor() {
+        return uiTxtNombreProveedor;
     }
 
-    public void setUserNameField(TextField tf) {
-        this.userNameField = tf;
+    public void setUiTxtNombreProveedor(TextField tf) {
+        this.uiTxtNombreProveedor = tf;
     }
     private TextField emailAddressField = new TextField();
 
@@ -118,14 +123,14 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setEmailAddressField(TextField tf) {
         this.emailAddressField = tf;
     }
-    private Button addRecordButton = new Button();
+    private Button uiBtnGuardarNuevo = new Button();
 
-    public Button getAddRecordButton() {
-        return addRecordButton;
+    public Button getUiBtnGuardarNuevo() {
+        return uiBtnGuardarNuevo;
     }
 
-    public void setAddRecordButton(Button b) {
-        this.addRecordButton = b;
+    public void setUiBtnGuardarNuevo(Button b) {
+        this.uiBtnGuardarNuevo = b;
     }
     private Button updateRecordButton = new Button();
 
@@ -136,14 +141,14 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setUpdateRecordButton(Button b) {
         this.updateRecordButton = b;
     }
-    private Button cancelButton = new Button();
+    private Button uiBtnCancelar = new Button();
 
-    public Button getCancelButton() {
-        return cancelButton;
+    public Button getUiBtnCancelar() {
+        return uiBtnCancelar;
     }
 
-    public void setCancelButton(Button b) {
-        this.cancelButton = b;
+    public void setUiBtnCancelar(Button b) {
+        this.uiBtnCancelar = b;
     }
     private PageAlert pageAlert1 = new PageAlert();
 
@@ -163,41 +168,23 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setUserNameFiltro(TextField tf) {
         this.userNameFiltro = tf;
     }
-    private TextField emailAddressFiltro = new TextField();
+    private Button uiBtnBuscar = new Button();
 
-    public TextField getEmailAddressFiltro() {
-        return emailAddressFiltro;
+    public Button getUiBtnBuscar() {
+        return uiBtnBuscar;
     }
 
-    public void setEmailAddressFiltro(TextField tf) {
-        this.emailAddressFiltro = tf;
+    public void setUiBtnBuscar(Button b) {
+        this.uiBtnBuscar = b;
     }
-    private Button buscarButton = new Button();
+    private Button uiBtnTodos = new Button();
 
-    public Button getBuscarButton() {
-        return buscarButton;
-    }
-
-    public void setBuscarButton(Button b) {
-        this.buscarButton = b;
-    }
-    private Button todosButton = new Button();
-
-    public Button getTodosButton() {
-        return todosButton;
+    public Button getUiBtnTodos() {
+        return uiBtnTodos;
     }
 
-    public void setTodosButton(Button b) {
-        this.todosButton = b;
-    }
-    private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
-
-    public DefaultTableDataProvider getDefaultTableDataProvider() {
-        return defaultTableDataProvider;
-    }
-
-    public void setDefaultTableDataProvider(DefaultTableDataProvider dtdp) {
-        this.defaultTableDataProvider = dtdp;
+    public void setUiBtnTodos(Button b) {
+        this.uiBtnTodos = b;
     }
     
     private Table table1 = new Table();
@@ -227,23 +214,167 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setButtonPanel(HtmlPanelGrid hpg) {
         this.buttonPanel = hpg;
     }
-    private SingleSelectOptionsList dropDown1DefaultOptions = new SingleSelectOptionsList();
+    private SingleSelectOptionsList uiLstTipoComprobanteDefaultOptions = new SingleSelectOptionsList();
 
-    public SingleSelectOptionsList getDropDown1DefaultOptions() {
-        return dropDown1DefaultOptions;
+    public SingleSelectOptionsList getUiLstTipoComprobanteDefaultOptions() {
+        return uiLstTipoComprobanteDefaultOptions;
     }
 
-    public void setDropDown1DefaultOptions(SingleSelectOptionsList ssol) {
-        this.dropDown1DefaultOptions = ssol;
+    public void setUiLstTipoComprobanteDefaultOptions(SingleSelectOptionsList ssol) {
+        this.uiLstTipoComprobanteDefaultOptions = ssol;
     }
-    private SingleSelectOptionsList dropDown2DefaultOptions = new SingleSelectOptionsList();
+    private SingleSelectOptionsList uiLstEstadoDefaultOptions = new SingleSelectOptionsList();
 
-    public SingleSelectOptionsList getDropDown2DefaultOptions() {
-        return dropDown2DefaultOptions;
+    public SingleSelectOptionsList getUiLstEstadoDefaultOptions() {
+        return uiLstEstadoDefaultOptions;
     }
 
-    public void setDropDown2DefaultOptions(SingleSelectOptionsList ssol) {
-        this.dropDown2DefaultOptions = ssol;
+    public void setUiLstEstadoDefaultOptions(SingleSelectOptionsList ssol) {
+        this.uiLstEstadoDefaultOptions = ssol;
+    }
+    private TextField uiFilTxtNroFactura = new TextField();
+
+    public TextField getUiFilTxtNroFactura() {
+        return uiFilTxtNroFactura;
+    }
+
+    public void setUiFilTxtNroFactura(TextField tf) {
+        this.uiFilTxtNroFactura = tf;
+    }
+    private Calendar uiFilCalFechaFactura = new Calendar();
+
+    public Calendar getUiFilCalFechaFactura() {
+        return uiFilCalFechaFactura;
+    }
+
+    public void setUiFilCalFechaFactura(Calendar c) {
+        this.uiFilCalFechaFactura = c;
+    }
+    private TextField uiFilTxtProveedor = new TextField();
+
+    public TextField getUiFilTxtProveedor() {
+        return uiFilTxtProveedor;
+    }
+
+    public void setUiFilTxtProveedor(TextField tf) {
+        this.uiFilTxtProveedor = tf;
+    }
+    private TableColumn tableColumn11 = new TableColumn();
+
+    public TableColumn getTableColumn11() {
+        return tableColumn11;
+    }
+
+    public void setTableColumn11(TableColumn tc) {
+        this.tableColumn11 = tc;
+    }
+    private RadioButton radioButton1 = new RadioButton();
+
+    public RadioButton getRadioButton1() {
+        return radioButton1;
+    }
+
+    public void setRadioButton1(RadioButton rb) {
+        this.radioButton1 = rb;
+    }
+    private TextField uiTxtNroFac = new TextField();
+
+    public TextField getUiTxtNroFac() {
+        return uiTxtNroFac;
+    }
+
+    public void setUiTxtNroFac(TextField tf) {
+        this.uiTxtNroFac = tf;
+    }
+    private DropDown uiLstTipoComprobante = new DropDown();
+
+    public DropDown getUiLstTipoComprobante() {
+        return uiLstTipoComprobante;
+    }
+
+    public void setUiLstTipoComprobante(DropDown dd) {
+        this.uiLstTipoComprobante = dd;
+    }
+    private DropDown uiLstEstado = new DropDown();
+
+    public DropDown getUiLstEstado() {
+        return uiLstEstado;
+    }
+
+    public void setUiLstEstado(DropDown dd) {
+        this.uiLstEstado = dd;
+    }
+    private TextField uiTxtCodProveedor = new TextField();
+
+    public TextField getUiTxtCodProveedor() {
+        return uiTxtCodProveedor;
+    }
+
+    public void setUiTxtCodProveedor(TextField tf) {
+        this.uiTxtCodProveedor = tf;
+    }
+    private TextField uiTxtTotalIva = new TextField();
+
+    public TextField getUiTxtTotalIva() {
+        return uiTxtTotalIva;
+    }
+
+    public void setUiTxtTotalIva(TextField tf) {
+        this.uiTxtTotalIva = tf;
+    }
+    private TextField uiTxtCodEmpleado = new TextField();
+
+    public TextField getUiTxtCodEmpleado() {
+        return uiTxtCodEmpleado;
+    }
+
+    public void setUiTxtCodEmpleado(TextField tf) {
+        this.uiTxtCodEmpleado = tf;
+    }
+    private TextField uiTxtNombreEmpleado = new TextField();
+
+    public TextField getUiTxtNombreEmpleado() {
+        return uiTxtNombreEmpleado;
+    }
+
+    public void setUiTxtNombreEmpleado(TextField tf) {
+        this.uiTxtNombreEmpleado = tf;
+    }
+    private TextField uiTxtCantidad = new TextField();
+
+    public TextField getUiTxtCantidad() {
+        return uiTxtCantidad;
+    }
+
+    public void setUiTxtCantidad(TextField tf) {
+        this.uiTxtCantidad = tf;
+    }
+    private TextField uiTxtPrecioUnitario = new TextField();
+
+    public TextField getUiTxtPrecioUnitario() {
+        return uiTxtPrecioUnitario;
+    }
+
+    public void setUiTxtPrecioUnitario(TextField tf) {
+        this.uiTxtPrecioUnitario = tf;
+    }
+    private TextField uiTxtDescProducto = new TextField();
+
+    public TextField getUiTxtDescProducto() {
+        return uiTxtDescProducto;
+    }
+
+    public void setUiTxtDescProducto(TextField tf) {
+        this.uiTxtDescProducto = tf;
+    }
+    private TextField uiTxtCodProducto = new TextField();
+
+    public TextField getUiTxtCodProducto() {
+        return uiTxtCodProducto;
+    }
+
+    public void setUiTxtCodProducto(TextField tf) {
+        this.uiTxtCodProducto = tf;
     }
 
     // </editor-fold>
@@ -313,15 +444,15 @@ public class ABMComprasProveedor extends AbstractPageBean {
      */
     @Override
     public void prerender() {
-        cancelButton.setRendered(true);
+        uiBtnCancelar.setRendered(true);
         if (addRequest) {
             gridPanelBuscar.setRendered(false);
             table1.setRendered(false);
             buttonPanel.setRendered(false);
             addUpdatePanel.setRendered(true);
-            addRecordButton.setRendered(true);
+            uiBtnGuardarNuevo.setRendered(true);
             updateRecordButton.setRendered(false);
-            userNameField.setText("");
+            uiTxtNombreProveedor.setText("");
             emailAddressField.setText("");
         } else if (updateRequest) {
             //if (getTableRowGroup1().getSelectedRowsCount() > 0) {
@@ -329,7 +460,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
                 table1.setRendered(false);
                 buttonPanel.setRendered(false);
                 addUpdatePanel.setRendered(true);
-                addRecordButton.setRendered(false);
+                uiBtnGuardarNuevo.setRendered(false);
                 updateRecordButton.setRendered(true);
             //}
         } else if(errorValidacion){
@@ -431,7 +562,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
         return null;
     }
 
-    public String addRecordButton_action() {
+    public String uiBtnGuardarNuevo_action() {
 
         errorValidacion = validarCampos();
 
@@ -480,7 +611,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
         return null;
     }
 
-    public String cancelButton_action() {
+    public String uiBtnCancelar_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         addRequest = false;
@@ -495,20 +626,115 @@ public class ABMComprasProveedor extends AbstractPageBean {
         //Inicializar
         r = false;
 
-        if (userNameField.getText() == null || userNameField.getText().equals("") ) {
-            info(userNameField, "Campo obligatorio, favor ingrese el Nombre del Usuario");
+        if (uiTxtNombreProveedor.getText() == null || uiTxtNombreProveedor.getText().equals("") ) {
+            info(uiTxtNombreProveedor, "Campo obligatorio, favor ingrese el Nombre del Usuario");
             r = true;
         }
 
-        if (userNameField.getText() == null || userNameField.getText().equals("") ) {
-            info(userNameField, "Campo obligatorio, favor ingrese el e-mail del Usuario");
+        if (uiTxtNombreProveedor.getText() == null || uiTxtNombreProveedor.getText().equals("") ) {
+            info(uiTxtNombreProveedor, "Campo obligatorio, favor ingrese el e-mail del Usuario");
             r = true;
         }
         //result
         return r;
     }
 
-    public void userNameField_processValueChange(ValueChangeEvent event) {
+    public void uiTxtNombreProveedor_processValueChange(ValueChangeEvent event) {
+    }
+
+    public String uiBtnBuscar_action() {
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        //Realizamos la busqueda
+        buscar();
+
+        //Result
+        return null;
+    }
+
+    private FacturaCompraCab cabecera; 
+    private FacturaCompraCab[] lstCabecera;
+    private FacturaCompraDet detalle;
+    private FacturaCompraDet[] lstDetalle;
+
+    public FacturaCompraCab getCabecera() {
+        return cabecera;
+    }
+
+    public void setCabecera(FacturaCompraCab cabecera) {
+        this.cabecera = cabecera;
+    }
+
+    public FacturaCompraDet getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(FacturaCompraDet detalle) {
+        this.detalle = detalle;
+    }
+
+    public FacturaCompraCab[] getLstCabecera() {
+        return lstCabecera;
+    }
+
+    public void setLstCabecera(FacturaCompraCab[] lstCabecera) {
+        this.lstCabecera = lstCabecera;
+    }
+
+    public FacturaCompraDet[] getLstDetalle() {
+        return lstDetalle;
+    }
+
+    public void setLstDetalle(FacturaCompraDet[] lstDetalle) {
+        this.lstDetalle = lstDetalle;
+    }
+    
+    /**
+     * Buscar los registros que cumplan con la condicion/s de busqueda
+     * y actualizar la lista de la session
+     */
+    public void buscar() {
+        //Verificamos el contenido de los campos de busqueda
+        FacturaCompraCabController c = new FacturaCompraCabController();
+        Date pFechaFactura = null;
+        String pNroFactura = null, pProveedor = null;
+
+
+        //Nro. Factura
+        if (this.uiFilTxtNroFactura.getText() != null) {
+            pNroFactura = this.uiFilTxtNroFactura.getText().toString();
+        }
+
+        //Proveedor
+        if (this.uiFilTxtProveedor.getText() != null) {
+            pProveedor = this.uiFilTxtProveedor.getText().toString();
+        }
+
+        //Fecha
+        if (this.uiFilCalFechaFactura.getSelectedDate() != null) {
+            pFechaFactura = this.uiFilCalFechaFactura.getSelectedDate();
+        }
+
+        //Buscamos la lista de registros
+        lstCabecera = (FacturaCompraCab[]) c.getFacturaCompraCab(pNroFactura, pProveedor, pFechaFactura).toArray(new FacturaCompraCab[0]);
+
+    }
+
+    public String uiBtnTodos_action() {
+         //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        //Ceramos los campos de busqueda
+        this.uiFilTxtNroFactura.setText(null);
+        this.uiFilTxtProveedor.setText(null);
+        this.uiFilCalFechaFactura.setSelectedDate(null);
+
+        //Realizamos la busuqueda
+        buscar();
+
+        //Result
+        return null;
     }
 }
 
