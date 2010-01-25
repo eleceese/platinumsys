@@ -12,7 +12,7 @@
                 <br/>
                 <webuijsf:hyperlink id="hyper8" target="rightFrame" text="Solicitudes" url="/faces/ABMClientes.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="hyper9" target="rightFrame" text="Comisiones" url="/faces/ABMEmpleados.jsp"/>
+                <webuijsf:hyperlink id="hyper9" target="rightFrame" text="Comisiones" url="/faces/ABMEmpleados2.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="secciones" target="rightFrame" text="Secciones" url="/faces/ABMSecciones.jsp"/>
                 <br/>
