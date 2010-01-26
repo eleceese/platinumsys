@@ -4,6 +4,7 @@
  */
 package platinum;
 
+import com.ctc.wstx.util.StringUtil;
 import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
@@ -19,12 +20,19 @@ import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import java.util.Date;
+import java.util.List;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.event.ValueChangeEvent;
 import py.com.platinum.controller.FacturaCompraCabController;
+import py.com.platinum.controller.FacturaCompraDetController;
+import py.com.platinum.controller.ProductoController;
+import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.FacturaCompraCab;
 import py.com.platinum.entity.FacturaCompraDet;
+import py.com.platinum.entity.Producto;
+import py.com.platinum.entity.Proveedor;
+import py.com.platinum.utils.StringUtils;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -132,14 +140,14 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setUiBtnGuardarNuevo(Button b) {
         this.uiBtnGuardarNuevo = b;
     }
-    private Button updateRecordButton = new Button();
+    private Button uiBtnGuardarEditar = new Button();
 
-    public Button getUpdateRecordButton() {
-        return updateRecordButton;
+    public Button getUiBtnGuardarEditar() {
+        return uiBtnGuardarEditar;
     }
 
-    public void setUpdateRecordButton(Button b) {
-        this.updateRecordButton = b;
+    public void setUiBtnGuardarEditar(Button b) {
+        this.uiBtnGuardarEditar = b;
     }
     private Button uiBtnCancelar = new Button();
 
@@ -376,6 +384,33 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setUiTxtCodProducto(TextField tf) {
         this.uiTxtCodProducto = tf;
     }
+    private TextField uiTxtSubTotal = new TextField();
+
+    public TextField getUiTxtSubTotal() {
+        return uiTxtSubTotal;
+    }
+
+    public void setUiTxtSubTotal(TextField tf) {
+        this.uiTxtSubTotal = tf;
+    }
+    private TextField uiTxtTotal = new TextField();
+
+    public TextField getUiTxtTotal() {
+        return uiTxtTotal;
+    }
+
+    public void setUiTxtTotal(TextField tf) {
+        this.uiTxtTotal = tf;
+    }
+    private Calendar uiCalFecha = new Calendar();
+
+    public Calendar getUiCalFecha() {
+        return uiCalFecha;
+    }
+
+    public void setUiCalFecha(Calendar c) {
+        this.uiCalFecha = c;
+    }
 
     // </editor-fold>
     /**
@@ -451,9 +486,10 @@ public class ABMComprasProveedor extends AbstractPageBean {
             buttonPanel.setRendered(false);
             addUpdatePanel.setRendered(true);
             uiBtnGuardarNuevo.setRendered(true);
-            updateRecordButton.setRendered(false);
+            uiBtnGuardarEditar.setRendered(false);
             uiTxtNombreProveedor.setText("");
             emailAddressField.setText("");
+            limpiarCampos();
         } else if (updateRequest) {
             //if (getTableRowGroup1().getSelectedRowsCount() > 0) {
                 gridPanelBuscar.setRendered(false);
@@ -461,7 +497,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
                 buttonPanel.setRendered(false);
                 addUpdatePanel.setRendered(true);
                 uiBtnGuardarNuevo.setRendered(false);
-                updateRecordButton.setRendered(true);
+                uiBtnGuardarEditar.setRendered(true);
             //}
         } else if(errorValidacion){
             addUpdatePanel.setRendered(true);
@@ -474,6 +510,25 @@ public class ABMComprasProveedor extends AbstractPageBean {
             addUpdatePanel.setRendered(false);
         }
         // Refresh the users data array in the session bean to to show
+    }
+
+    /**
+     * Limpiar campos
+     */
+    private void limpiarCampos() {
+        uiTxtCantidad.setText(null);
+        uiTxtCodEmpleado.setText(null);
+        uiTxtCodProducto.setText(null);
+        uiTxtCodProveedor.setText(null);
+        uiTxtDescProducto.setText(null);
+        uiTxtNombreEmpleado.setText(null);
+        uiTxtNombreProveedor.setText(null);
+        uiTxtNroFac.setText(null);
+        uiTxtPrecioUnitario.setText(null);
+        uiTxtTotalIva.setText(null);
+        uiTxtSubTotal.setText(null);
+        uiTxtTotal.setText(null);
+        uiCalFecha.setSelectedDate(null);
     }
 
     /**
@@ -564,28 +619,100 @@ public class ABMComprasProveedor extends AbstractPageBean {
 
     public String uiBtnGuardarNuevo_action() {
 
-        errorValidacion = validarCampos();
+        // Apagamos la bandera de nuevo registro
+        this.addRequest = false;
 
-        //Si no hay error de validacion
+        //Validamos los campos
+        validarCampos();
+        FacturaCompraCab r;
+
+        //Si no hay error de validacion insertamos el registro
         if (!errorValidacion) {
-            updateRequest = false;
-            this.pageAlert1.setType("information");
-            this.pageAlert1.setTitle("Registro Creado correctamente!!!");
-            this.pageAlert1.setSummary("");
-            this.pageAlert1.setDetail("");
-            this.pageAlert1.setRendered(true);
-        }else{
-            this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Error en la Validacion de los Campos, favor verificar y volver a intentar");
+            //Nuevo
+            r = new FacturaCompraCab();
+
+            //Set de los artributos
+            r.setCodProveedor(proveedor);
+            r.setEstado(uiLstEstado.getSelected().toString());
+            r.setFecha(uiCalFecha.getSelectedDate());
+            r.setNroFactura(uiTxtNroFac.getText().toString());
+            r.setSubTotal(1);
+            r.setTipo(uiLstTipoComprobante.getSelected().toString());
+            r.setTotaIva(1);
+            r.setTotal(1);
+
+            //Insertamos la cebecera
+            ControllerResult cr = new FacturaCompraCabController().create(r);
+
+            if (cr.getCodRetorno() != -1) {
+                //Insertamos el detalle
+                cr = insertarDetalle(r);
+            }
+
+            //Verificamos el tipo de mensaje
+            if (cr.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(cr.getMsg());
             this.pageAlert1.setSummary("");
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
         }
-        
+
+        //result
         return null;
     }
 
-    public String updateRecordButton_action() {
+    /**
+     * Validar los campos de la entidad, para verificar si los datos ingresados
+     * por el usuario es correcto y si estan todos los campos obligatorios.
+     */
+    private void validarCampos() {
+        //Apagamos la bandera de error
+        this.errorValidacion = false;
+
+    }
+
+    /**
+     * Recorremos la lista de los detalles y vamos insertando
+     * @param cab
+     * @return ControllerResult
+     */
+    private ControllerResult insertarDetalle(FacturaCompraCab cab) {
+        //Result
+        ControllerResult r;
+        FacturaCompraDetController c;
+
+        //Inicializamos
+        r = new ControllerResult();
+        c = new FacturaCompraDetController();
+
+        //Recorremos la lista de los detalles
+        for (int i = 0; i < lstDetalleLIST.size(); i++) {
+            //Obtenemos el detalle
+            FacturaCompraDet d = lstDetalleLIST.get(i);
+
+            //Asignamos la cabecera
+            d.setCodFacComCab(cab);
+
+            //Insertamos
+            r = c.create(d);
+
+            //Verificamos si no hubo error
+            if (r.getCodRetorno() == -1) {
+                break;
+            }
+        }
+
+        //Result
+        return r;
+    }
+
+    
+    public String uiBtnGuardarEditar_action() {
         //errorValidacion = validarCampos();
         errorValidacion = false;
 
@@ -619,29 +746,6 @@ public class ABMComprasProveedor extends AbstractPageBean {
         return null;
     }
 
-    private boolean validarCampos(){
-        //Variables
-        boolean r;
-
-        //Inicializar
-        r = false;
-
-        if (uiTxtNombreProveedor.getText() == null || uiTxtNombreProveedor.getText().equals("") ) {
-            info(uiTxtNombreProveedor, "Campo obligatorio, favor ingrese el Nombre del Usuario");
-            r = true;
-        }
-
-        if (uiTxtNombreProveedor.getText() == null || uiTxtNombreProveedor.getText().equals("") ) {
-            info(uiTxtNombreProveedor, "Campo obligatorio, favor ingrese el e-mail del Usuario");
-            r = true;
-        }
-        //result
-        return r;
-    }
-
-    public void uiTxtNombreProveedor_processValueChange(ValueChangeEvent event) {
-    }
-
     public String uiBtnBuscar_action() {
         //ocultamos el pageAlert
         this.pageAlert1.setRendered(false);
@@ -657,6 +761,9 @@ public class ABMComprasProveedor extends AbstractPageBean {
     private FacturaCompraCab[] lstCabecera;
     private FacturaCompraDet detalle;
     private FacturaCompraDet[] lstDetalle;
+    private List<FacturaCompraDet> lstDetalleLIST;
+    private Producto producto;
+    private Proveedor proveedor;
 
     public FacturaCompraCab getCabecera() {
         return cabecera;
@@ -689,6 +796,15 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setLstDetalle(FacturaCompraDet[] lstDetalle) {
         this.lstDetalle = lstDetalle;
     }
+
+    public List<FacturaCompraDet> getLstDetalleLIST() {
+        return lstDetalleLIST;
+    }
+
+    public void setLstDetalleLIST(List<FacturaCompraDet> lstDetalleLIST) {
+        this.lstDetalleLIST = lstDetalleLIST;
+    }
+    
     
     /**
      * Buscar los registros que cumplan con la condicion/s de busqueda
@@ -722,7 +838,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
     }
 
     public String uiBtnTodos_action() {
-         //ocultamos el pageAlert
+        //ocultamos el pageAlert
         this.pageAlert1.setRendered(false);
 
         //Ceramos los campos de busqueda
@@ -736,5 +852,63 @@ public class ABMComprasProveedor extends AbstractPageBean {
         //Result
         return null;
     }
-}
 
+    public String uiBtnAgregarDet_action() {
+        validarDetalle();
+
+        if (!errorValidacion) {
+            //Nuevo Detalle
+            detalle = new FacturaCompraDet();
+            detalle.setCodProducto(producto);
+            detalle.setCantidad(Long.valueOf(uiTxtCantidad.getText().toString()));
+            detalle.setPrecioUni(Long.valueOf("1"));
+            detalle.setMontoIva(Long.valueOf("1"));
+            detalle.setSubTotal(Long.valueOf("1"));
+            detalle.setTotal(Long.valueOf("1"));
+
+            //Agregamos a la lista
+            lstDetalleLIST.add(detalle);
+
+            //Actualizamos la grilla
+            lstDetalle = (FacturaCompraDet[])lstDetalleLIST.toArray(new FacturaCompraDet[0]);
+            
+        }
+
+        return null;
+    }
+
+    /**
+     * Validar detalle antes de ingresar al detalle
+     */
+    private void validarDetalle() {
+        //Apagamos la bandera de error
+        this.errorValidacion = false;
+
+        //Producto
+        if (this.uiTxtCodProducto.getText() == null || this.uiTxtCodProducto.getText().equals("")) {
+            info("Codigo Producto obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }else{
+            //Obtenemos el producto
+            producto = new ProductoController().findById(Long.valueOf(uiTxtCodProducto.getText().toString()));
+            if (producto == null) {
+                info("Producto no existe, ingrese un codigo de producto correcto");
+                errorValidacion = true;
+            }
+        }
+
+        //Cantidad
+        if (this.uiTxtCantidad.getText() == null || this.uiTxtCantidad.getText().equals("")) {
+            info("Cantidad del Producto obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }else{
+            //Verificamos si la cantidad es un numero
+            String cantidad = this.uiTxtCantidad.getText().toString();
+
+            if (!StringUtils.esNumero(cantidad) || !StringUtils.esNumeroDecimal(cantidad)) {
+                info("Cantidad del Producto,debe se Numero");
+                errorValidacion = true;
+            }
+        }
+    }
+}
