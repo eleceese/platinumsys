@@ -4,12 +4,21 @@
  */
 package platinum;
 
+import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
+import com.sun.webui.jsf.component.Calendar;
 import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.component.PageAlert;
+import com.sun.webui.jsf.component.RadioButton;
+import com.sun.webui.jsf.component.RadioButtonGroup;
 import com.sun.webui.jsf.component.StaticText;
+import com.sun.webui.jsf.component.Table;
+import com.sun.webui.jsf.component.TableColumn;
+import com.sun.webui.jsf.component.TableRowGroup;
+import com.sun.webui.jsf.component.TextArea;
 import com.sun.webui.jsf.component.TextField;
+import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import javax.faces.FacesException;
@@ -17,11 +26,9 @@ import javax.faces.component.html.HtmlPanelGrid;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
-
-
-
-
-
+import py.com.platinum.controller.ClienteController;
+import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Cliente;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -43,17 +50,10 @@ public class ABMClientes extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-        dropDown1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("M", "Masculino"), new com.sun.webui.jsf.model.Option("F", "Femenino"), new com.sun.webui.jsf.model.Option("", "")});
-        tipoDoc1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Cedula de Identidad"), new com.sun.webui.jsf.model.Option("2", "DNI"), new com.sun.webui.jsf.model.Option("3", "Pasaporte")});
-    }
-    private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
-
-    public DefaultTableDataProvider getDefaultTableDataProvider() {
-        return defaultTableDataProvider;
-    }
-
-    public void setDefaultTableDataProvider(DefaultTableDataProvider dtdp) {
-        this.defaultTableDataProvider = dtdp;
+        uiLstSexoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("M", "Masculino"), new com.sun.webui.jsf.model.Option("F", "Femenino"), new com.sun.webui.jsf.model.Option("", "")});
+        uiLstTipoDocDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("CI", "Cedula de Identidad"), new com.sun.webui.jsf.model.Option("DNI", "DNI"), new com.sun.webui.jsf.model.Option("PAS", "Pasaporte")});
+        uiLstEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("A", "Activo"), new com.sun.webui.jsf.model.Option("I", "Inactivo")});
+        uiLstEstadoDefaultOptions.setSelectedValue("A");
     }
     private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
 
@@ -109,50 +109,50 @@ public class ABMClientes extends AbstractPageBean {
     public void setButtonsPanelAddUpdate(HtmlPanelGrid hpg) {
         this.buttonsPanelAddUpdate = hpg;
     }
-    private SingleSelectOptionsList dropDown1DefaultOptions = new SingleSelectOptionsList();
+    private SingleSelectOptionsList uiLstSexoDefaultOptions = new SingleSelectOptionsList();
 
-    public SingleSelectOptionsList getDropDown1DefaultOptions() {
-        return dropDown1DefaultOptions;
+    public SingleSelectOptionsList getUiLstSexoDefaultOptions() {
+        return uiLstSexoDefaultOptions;
     }
 
-    public void setDropDown1DefaultOptions(SingleSelectOptionsList ssol) {
-        this.dropDown1DefaultOptions = ssol;
+    public void setUiLstSexoDefaultOptions(SingleSelectOptionsList ssol) {
+        this.uiLstSexoDefaultOptions = ssol;
     }
-    private Button button3 = new Button();
+    private Button uiBtnGuardarEditar = new Button();
 
-    public Button getButton3() {
-        return button3;
-    }
-
-    public void setButton3(Button b) {
-        this.button3 = b;
-    }
-    private Button button2 = new Button();
-
-    public Button getButton2() {
-        return button2;
+    public Button getUiBtnGuardarEditar() {
+        return uiBtnGuardarEditar;
     }
 
-    public void setButton2(Button b) {
-        this.button2 = b;
+    public void setUiBtnGuardarEditar(Button b) {
+        this.uiBtnGuardarEditar = b;
     }
-    private TextField nombre3 = new TextField();
+    private Button uiBtnGuardarNuevo = new Button();
 
-    public TextField getNombre3() {
-        return nombre3;
-    }
-
-    public void setNombre3(TextField tf) {
-        this.nombre3 = tf;
-    }
-    private TextField apellido2 = new TextField();
-
-    public TextField getApellido2() {
-        return apellido2;
+    public Button getUiBtnGuardarNuevo() {
+        return uiBtnGuardarNuevo;
     }
 
-    public void setApellido2(TextField tf) {
-        this.apellido2 = tf;
+    public void setUiBtnGuardarNuevo(Button b) {
+        this.uiBtnGuardarNuevo = b;
+    }
+    private TextField uiTxtNombre = new TextField();
+
+    public TextField getUiTxtNombre() {
+        return uiTxtNombre;
+    }
+
+    public void setUiTxtNombre(TextField tf) {
+        this.uiTxtNombre = tf;
+    }
+    private TextField uiTxtApellido = new TextField();
+
+    public TextField getUiTxtApellido() {
+        return uiTxtApellido;
+    }
+
+    public void setUiTxtApellido(TextField tf) {
+        this.uiTxtApellido = tf;
     }
     private PageAlert pageAlert1 = new PageAlert();
 
@@ -163,32 +163,203 @@ public class ABMClientes extends AbstractPageBean {
     public void setPageAlert1(PageAlert pa) {
         this.pageAlert1 = pa;
     }
-    private TextField documento = new TextField();
+    private TextField uiTxtDocumento = new TextField();
 
-    public TextField getDocumento() {
-        return documento;
+    public TextField getUiTxtDocumento() {
+        return uiTxtDocumento;
     }
 
-    public void setDocumento(TextField tf) {
-        this.documento = tf;
+    public void setUiTxtDocumento(TextField tf) {
+        this.uiTxtDocumento = tf;
     }
-    private SingleSelectOptionsList tipoDoc1DefaultOptions = new SingleSelectOptionsList();
+    private SingleSelectOptionsList uiLstTipoDocDefaultOptions = new SingleSelectOptionsList();
 
-    public SingleSelectOptionsList getTipoDoc1DefaultOptions() {
-        return tipoDoc1DefaultOptions;
-    }
-
-    public void setTipoDoc1DefaultOptions(SingleSelectOptionsList ssol) {
-        this.tipoDoc1DefaultOptions = ssol;
-    }
-    private DropDown tipoDoc1 = new DropDown();
-
-    public DropDown getTipoDoc1() {
-        return tipoDoc1;
+    public SingleSelectOptionsList getUiLstTipoDocDefaultOptions() {
+        return uiLstTipoDocDefaultOptions;
     }
 
-    public void setTipoDoc1(DropDown dd) {
-        this.tipoDoc1 = dd;
+    public void setUiLstTipoDocDefaultOptions(SingleSelectOptionsList ssol) {
+        this.uiLstTipoDocDefaultOptions = ssol;
+    }
+    private DropDown uiLstTipoDoc = new DropDown();
+
+    public DropDown getUiLstTipoDoc() {
+        return uiLstTipoDoc;
+    }
+
+    public void setUiLstTipoDoc(DropDown dd) {
+        this.uiLstTipoDoc = dd;
+    }
+    private TextField uiTxtFilNombre = new TextField();
+
+    public TextField getUiTxtFilNombre() {
+        return uiTxtFilNombre;
+    }
+
+    public void setUiTxtFilNombre(TextField tf) {
+        this.uiTxtFilNombre = tf;
+    }
+    private TextField uiTxtFilApellido = new TextField();
+
+    public TextField getUiTxtFilApellido() {
+        return uiTxtFilApellido;
+    }
+
+    public void setUiTxtFilApellido(TextField tf) {
+        this.uiTxtFilApellido = tf;
+    }
+    private TextField uiTxtFilRUC = new TextField();
+
+    public TextField getUiTxtFilRUC() {
+        return uiTxtFilRUC;
+    }
+
+    public void setUiTxtFilRUC(TextField tf) {
+        this.uiTxtFilRUC = tf;
+    }
+    private Table table1 = new Table();
+
+    public Table getTable1() {
+        return table1;
+    }
+
+    public void setTable1(Table t) {
+        this.table1 = t;
+    }
+    private TableColumn tableColumn5 = new TableColumn();
+
+    public TableColumn getTableColumn5() {
+        return tableColumn5;
+    }
+
+    public void setTableColumn5(TableColumn tc) {
+        this.tableColumn5 = tc;
+    }
+    private RadioButton radioButton1 = new RadioButton();
+
+    public RadioButton getRadioButton1() {
+        return radioButton1;
+    }
+
+    public void setRadioButton1(RadioButton rb) {
+        this.radioButton1 = rb;
+    }
+    private TableRowGroup tableRowGroup1 = new TableRowGroup();
+
+    public TableRowGroup getTableRowGroup1() {
+        return tableRowGroup1;
+    }
+
+    public void setTableRowGroup1(TableRowGroup trg) {
+        this.tableRowGroup1 = trg;
+    }
+    private DropDown uiLstSexo = new DropDown();
+
+    public DropDown getUiLstSexo() {
+        return uiLstSexo;
+    }
+
+    public void setUiLstSexo(DropDown dd) {
+        this.uiLstSexo = dd;
+    }
+    private TextField uiTxtNroRuc = new TextField();
+
+    public TextField getUiTxtNroRuc() {
+        return uiTxtNroRuc;
+    }
+
+    public void setUiTxtNroRuc(TextField tf) {
+        this.uiTxtNroRuc = tf;
+    }
+    private TextArea uiTxtDireccion = new TextArea();
+
+    public TextArea getUiTxtDireccion() {
+        return uiTxtDireccion;
+    }
+
+    public void setUiTxtDireccion(TextArea ta) {
+        this.uiTxtDireccion = ta;
+    }
+    private TextField uiTxtTelefono1 = new TextField();
+
+    public TextField getUiTxtTelefono1() {
+        return uiTxtTelefono1;
+    }
+
+    public void setUiTxtTelefono1(TextField tf) {
+        this.uiTxtTelefono1 = tf;
+    }
+    private TextField uiTxtTelefono2 = new TextField();
+
+    public TextField getUiTxtTelefono2() {
+        return uiTxtTelefono2;
+    }
+
+    public void setUiTxtTelefono2(TextField tf) {
+        this.uiTxtTelefono2 = tf;
+    }
+    private TextField uiTxtMail = new TextField();
+
+    public TextField getUiTxtMail() {
+        return uiTxtMail;
+    }
+
+    public void setUiTxtMail(TextField tf) {
+        this.uiTxtMail = tf;
+    }
+    private TextField uiTxtContacto1 = new TextField();
+
+    public TextField getUiTxtContacto1() {
+        return uiTxtContacto1;
+    }
+
+    public void setUiTxtContacto1(TextField tf) {
+        this.uiTxtContacto1 = tf;
+    }
+    private TextField uiTxtContacto2 = new TextField();
+
+    public TextField getUiTxtContacto2() {
+        return uiTxtContacto2;
+    }
+
+    public void setUiTxtContacto2(TextField tf) {
+        this.uiTxtContacto2 = tf;
+    }
+    private TextField uiTxtCiudad = new TextField();
+
+    public TextField getUiTxtCiudad() {
+        return uiTxtCiudad;
+    }
+
+    public void setUiTxtCiudad(TextField tf) {
+        this.uiTxtCiudad = tf;
+    }
+    private SingleSelectOptionsList uiLstEstadoDefaultOptions = new SingleSelectOptionsList();
+
+    public SingleSelectOptionsList getUiLstEstadoDefaultOptions() {
+        return uiLstEstadoDefaultOptions;
+    }
+
+    public void setUiLstEstadoDefaultOptions(SingleSelectOptionsList ssol) {
+        this.uiLstEstadoDefaultOptions = ssol;
+    }
+    private RadioButtonGroup uiLstEstado = new RadioButtonGroup();
+
+    public RadioButtonGroup getUiLstEstado() {
+        return uiLstEstado;
+    }
+
+    public void setUiLstEstado(RadioButtonGroup rbg) {
+        this.uiLstEstado = rbg;
+    }
+    private HtmlPanelGrid gridPanelBtnBuscar = new HtmlPanelGrid();
+
+    public HtmlPanelGrid getGridPanelBtnBuscar() {
+        return gridPanelBtnBuscar;
+    }
+
+    public void setGridPanelBtnBuscar(HtmlPanelGrid hpg) {
+        this.gridPanelBtnBuscar = hpg;
     }
 
     // </editor-fold>
@@ -228,13 +399,13 @@ public class ABMClientes extends AbstractPageBean {
             throw e instanceof FacesException ? (FacesException) e : new FacesException(e);
         }
 
-    // </editor-fold>
-    // Perform application initialization that must complete
-    // *after* managed components are initialized
-    // TODO - add your own initialization code here
+        // </editor-fold>
+        // Perform application initialization that must complete
+        // *after* managed components are initialized
+        // TODO - add your own initialization code here
 
-    getSessionBean1().setTituloPagina("Registro de Clientes");
-    getSessionBean1().setDetallePagina("Seleccione el Registro");
+        getSessionBean1().setTituloPagina("Registro de Clientes");
+        getSessionBean1().setDetallePagina("Seleccione el Registro");
 
 
     }
@@ -272,10 +443,11 @@ public class ABMClientes extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosClientes.setRendered(true);
-
-
+            this.gridPanelBtnBuscar.setRendered(false);
+            this.limpiarCampos();
         } else if (updateRequest) {
-
+            cargarCampos();
+            this.gridPanelBtnBuscar.setRendered(false);
             this.gridPanelTabla.setRendered(false);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
@@ -283,9 +455,8 @@ public class ABMClientes extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosClientes.setRendered(true);
-
         } else if (errorValidacion) {
-            
+            this.gridPanelBtnBuscar.setRendered(false);
             this.gridPanelTabla.setRendered(false);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
@@ -293,9 +464,8 @@ public class ABMClientes extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosClientes.setRendered(true);
-
-
         } else {
+            this.gridPanelBtnBuscar.setRendered(true);
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(true);
             this.gridPanelBotones.setRendered(true);
@@ -303,9 +473,56 @@ public class ABMClientes extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(false);
             this.buttonsPanelAddUpdate.setRendered(false);
             this.datosClientes.setRendered(false);
-
         }
 
+        //Actualizamos la lista
+        buscar();
+    }
+
+    /**
+     * Limpiar campos
+     */
+    private void limpiarCampos() {
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        //Ceramos los campos
+        uiTxtApellido.setText(null);
+        uiTxtCiudad.setText(null);
+        uiTxtContacto1.setText(null);
+        uiTxtContacto2.setText(null);
+        uiTxtDireccion.setText(null);
+        uiTxtDocumento.setText(null);
+        uiTxtMail.setText(null);
+        uiTxtNombre.setText(null);
+        uiTxtNroRuc.setText(null);
+        uiTxtTelefono1.setText(null);
+        uiTxtTelefono2.setText(null);
+    }
+
+    /**
+     * Cargar campos, para la edicion del registro seleccionado
+     */
+    private void cargarCampos() {
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+        
+        //Obtenemos el registro seleccionado por medio
+        //del id almacenado en la session
+        Cliente e = new ClienteController().findById(getSessionBean1().getId());
+
+        //Cargamos de los artributos
+        uiTxtNombre.setText(e.getNombreCliente());
+        uiTxtApellido.setText(e.getApellidoCliente());
+        uiTxtCiudad.setText(e.getCiudadCliente());
+        uiTxtContacto1.setText(e.getContacto1Cliente());
+        uiTxtContacto2.setText(e.getContacto2Cliente());
+        uiTxtDireccion.setText(e.getDireccionCliente());
+        uiLstTipoDoc.setSelected(e.getTipoDodCliente());
+        uiTxtDocumento.setText(e.getNumeroDocCliente());
+        uiTxtMail.setText(e.getMailCliente());
+        uiTxtNroRuc.setText(e.getRucCliente());
+        uiLstEstado.setSelected(e.getEstadoCliente());
     }
 
     /**
@@ -351,55 +568,334 @@ public class ABMClientes extends AbstractPageBean {
         // TODO: Process the action. Return value is a navigation
 
         // case name where null will return to the same page.
-        this.addRequest=true;
-        this.button2.setRendered(true);
-        this.button3.setRendered(false);
+        this.addRequest = true;
+        this.uiBtnGuardarNuevo.setRendered(true);
+        this.uiBtnGuardarEditar.setRendered(false);
         return null;
     }
 
     public String editar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        this.updateRequest=true;
-        this.button3.setRendered(true);
-        this.button2.setRendered(false);
-        return null;
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
 
+        if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+            //Obtenemos la lista de
+            Cliente[] l = getSessionBean1().getListaCliente();
+
+            //Posicion en la grilla del elemento seleccionado
+            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+
+            //Elemento seleccionado
+            Cliente e = l[rowId];
+
+            //Guardamos el id del Cliente en la session
+            getSessionBean1().setId(e.getCodCliente());
+        }
+        this.updateRequest = true;
+        this.uiBtnGuardarEditar.setRendered(true);
+        this.uiBtnGuardarNuevo.setRendered(false);
+
+        //Result
+        return null;
     }
 
     public String eliminar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
 
-        return null;
-    }
+        // Si la cantidad de registros en la grilla es mayor a 0
+        // Eliminamos el elemento seleccionado
+        if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+            //Obtenemos la lista de
+            Cliente[] l = getSessionBean1().getListaCliente();
 
-    public String cancelar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        this.addRequest=false;
-        this.updateRequest=false;
+            //Posicion en la grilla del elemento seleccionado
+            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
 
-        return null;
-    }
+            //Elemento seleccionado
+            Cliente e = l[rowId];
 
-    public String button2_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        this.addRequest=false;
-        this.updateRequest=false;
+            //Eliminados el registro
+            ClienteController controller = new ClienteController();
+            ControllerResult r = controller.delete(e);
 
-        info(this.nombre3, "Favor ingresar Nombre, Campo Obligatorio");
-        info(this.apellido2, "Favor ingresar Apellido, Campo Obligatorio");
-        this.errorValidacion=true;
-                      
+            //Mensaje
+            if (r.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+                this.pageAlert1.setTitle("Error al eliminar el Registro");
+            } else {
+                this.pageAlert1.setType("information");
+                this.pageAlert1.setTitle("El Registro se a Eliminado correctamente");
+            }
 
-            this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Error en la Validacion de los Campos, favor verificar y volver a intentar");
             this.pageAlert1.setSummary("");
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
+        }
 
+        //Result
+        return null;
+    }
+
+    public String uiBtnCancelar_action() {
+        this.addRequest = false;
+        this.updateRequest = false;
+
+        //Result
+        return null;
+    }
+
+    public String uiBtnGuardarNuevo_action() {
+        // Apagamos la bandera de nuevo registro
+        this.addRequest = false;
+
+        //Validamos los campos
+        validarCampos();
+        Cliente r;
+
+        //Si no hay error de validacion insertamos el registro
+        if (!errorValidacion) {
+            //Nuevo
+            r = new Cliente();
+
+            //Set de los artributos
+            r.setNombreCliente((String) uiTxtNombre.getText());
+            r.setApellidoCliente((String) uiTxtApellido.getText());
+            r.setCiudadCliente((String) uiTxtCiudad.getText());
+            r.setContacto1Cliente((String) uiTxtContacto1.getText());
+
+            if (uiTxtContacto2.getText() != null) {
+                r.setContacto2Cliente((String) uiTxtContacto2.getText());
+            }
+
+            r.setDireccionCliente((String) uiTxtDireccion.getText());
+            r.setTipoDodCliente(uiLstTipoDoc.getSelected().toString());
+            r.setNumeroDocCliente((String) uiTxtDocumento.getText());
+
+            if (uiTxtMail.getText() != null) {
+                r.setMailCliente((String) uiTxtMail.getText());
+            }
+
+            r.setRucCliente(uiTxtNroRuc.getText().toString());
+
+            r.setEstadoCliente(uiLstEstado.getSelected().toString());
+
+            //Insertamos el nuevo registro
+            ControllerResult cr = new ClienteController().create(r);
+
+            //Verificamos el tipo de mensaje
+            if (cr.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(cr.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+        }
+
+        //result
+        return null;
+    }
+
+    /**
+     * Validar los campos de la entidad, para verificar si los datos ingresados
+     * por el usuario es correcto y si estan todos los campos obligatorios.
+     */
+    private void validarCampos() {
+        //Apagamos la bandera de error
+        this.errorValidacion = false;
+
+        //apellido
+        if (this.uiTxtApellido.getText() == null || this.uiTxtApellido.getText().equals("")) {
+            info(uiTxtApellido, "Campo Apellido obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }
+
+        //nombre
+        if (this.uiTxtNombre.getText() == null || this.uiTxtNombre.getText().equals("")) {
+            info(uiTxtNombre, "Campo Nombre obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }
+
+        //Documento
+        if (this.uiTxtDocumento.getText() == null || this.uiTxtDocumento.getText().equals("")) {
+            info(uiTxtDocumento, "Campo Nro. Documento obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }
+
+        //RUC
+        if (this.uiTxtNroRuc.getText() == null || this.uiTxtNroRuc.getText().equals("")) {
+            info(uiTxtNroRuc, "Campo Nro. RUC obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }
+
+        //Direccion
+        if (this.uiTxtDireccion.getText() == null || this.uiTxtDireccion.getText().equals("")) {
+            info(uiTxtDireccion, "Campo Direccion obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }
+
+        //Telefono 1
+        if (this.uiTxtTelefono1.getText() == null || this.uiTxtTelefono1.getText().equals("")) {
+            info(uiTxtTelefono1, "Campo Direccion obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }
+
+        //Contacto 1
+        if (this.uiTxtContacto1.getText() == null || this.uiTxtContacto1.getText().equals("")) {
+            info(uiTxtContacto1, "Campo Contacto obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }
+
+        //Ciudad
+        if (this.uiTxtCiudad.getText() == null || this.uiTxtCiudad.getText().equals("")) {
+            info(uiTxtCiudad, "Campo Ciudad obligatorio, ingrese un valor");
+            errorValidacion = true;
+        }
+
+    }
+
+    public String uiBtnBuscar_action() {
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        //Realizamos la busqueda
+        buscar();
+
+        //Result
+        return null;
+    }
+
+    /**
+     * Buscar los registros que cumplan con la condicion/s de busqueda
+     * y actualizar la lista de la session
+     */
+    public void buscar() {
+        //Verificamos el contenido de los campos de busqueda
+        ClienteController c = new ClienteController();
+        String pApellido = null, pNombre = null, pRUC = null;
+
+        //Apellido
+        if (this.uiTxtFilApellido.getText() != null) {
+            pApellido = this.uiTxtFilApellido.getText().toString();
+        }
+
+        //Nombre
+        if (this.uiTxtFilNombre.getText() != null) {
+            pNombre = this.uiTxtFilNombre.getText().toString();
+        }
+
+        //Ruc
+        if (this.uiTxtFilRUC.getText() != null) {
+            pRUC = this.uiTxtFilRUC.getText().toString();
+        }
+
+        //Buscamos la lista de registros
+        Cliente[] l = (Cliente[]) c.getClientes(pApellido, pNombre, pRUC).toArray(new Cliente[0]);
+
+        //Actualizamos la lista de empleados de la session
+        getSessionBean1().setListaCliente(l);
+    }
+
+    public String uiBtnTodos_action() {
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        //Ceramos los campos de busqueda
+        this.uiTxtFilApellido.setText(null);
+        this.uiTxtFilNombre.setText(null);
+        this.uiTxtFilRUC.setText(null);
+
+        //Realizamos la busuqueda
+        buscar();
+
+        //Result
+        return null;
+    }
+    private TableSelectPhaseListener tablePhaseListener =
+            new TableSelectPhaseListener();
+
+    public void setSelected(Object object) {
+        RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
+        if (rowKey != null) {
+            tablePhaseListener.setSelected(rowKey, object);
+        }
+    }
+
+    public Object getSelected() {
+        RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.getSelected(rowKey);
+
+    }
+
+    public Object getSelectedValue() {
+        RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
+        return (rowKey != null) ? rowKey.getRowId() : null;
+
+    }
+
+    public boolean getSelectedState() {
+        RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
+        return tablePhaseListener.isSelected(rowKey);
+    }
+
+    public String uiBtnGuardarEditar_action() {
+        // Apagamos la bandera de nuevo registro
+        this.updateRequest = false;
+
+        //Obtenemos el registro seleccionado por medio
+        //del id almacenado en la session
+        Cliente r = new ClienteController().findById(getSessionBean1().getId());
+
+        //Validamos los campos
+        validarCampos();
+
+        //Si no hay error de validacion insertamos el registro
+        if (!errorValidacion) {
+            //Set de los artributos
+
+            //Set de los artributos
+            r.setNombreCliente((String) uiTxtNombre.getText());
+            r.setApellidoCliente((String) uiTxtApellido.getText());
+            r.setCiudadCliente((String) uiTxtCiudad.getText());
+            r.setContacto1Cliente((String) uiTxtContacto1.getText());
+
+            if (uiTxtContacto2.getText() != null) {
+                r.setContacto2Cliente((String) uiTxtContacto2.getText());
+            }
+
+            r.setDireccionCliente((String) uiTxtDireccion.getText());
+            r.setTipoDodCliente(uiLstTipoDoc.getSelected().toString());
+            r.setNumeroDocCliente((String) uiTxtDocumento.getText());
+
+            if (uiTxtMail.getText() != null) {
+                r.setMailCliente((String) uiTxtMail.getText());
+            }
+
+            r.setRucCliente(uiTxtNroRuc.getText().toString());
+
+            r.setEstadoCliente(uiLstEstado.getSelected().toString());
+
+            //Insertamos el nuevo registro
+            ControllerResult cr = new ClienteController().update(r);
+
+            //Verificamos el tipo de mensaje
+            if (cr.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(cr.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+        }
 
         return null;
     }
