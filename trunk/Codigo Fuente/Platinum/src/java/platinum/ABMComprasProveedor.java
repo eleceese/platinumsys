@@ -19,6 +19,7 @@ import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.faces.FacesException;
@@ -411,6 +412,15 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setUiCalFecha(Calendar c) {
         this.uiCalFecha = c;
     }
+    private HtmlPanelGrid gridPanelBtnBuscar = new HtmlPanelGrid();
+
+    public HtmlPanelGrid getGridPanelBtnBuscar() {
+        return gridPanelBtnBuscar;
+    }
+
+    public void setGridPanelBtnBuscar(HtmlPanelGrid hpg) {
+        this.gridPanelBtnBuscar = hpg;
+    }
 
     // </editor-fold>
     /**
@@ -479,7 +489,6 @@ public class ABMComprasProveedor extends AbstractPageBean {
      */
     @Override
     public void prerender() {
-        uiBtnCancelar.setRendered(true);
         if (addRequest) {
             gridPanelBuscar.setRendered(false);
             table1.setRendered(false);
@@ -487,18 +496,19 @@ public class ABMComprasProveedor extends AbstractPageBean {
             addUpdatePanel.setRendered(true);
             uiBtnGuardarNuevo.setRendered(true);
             uiBtnGuardarEditar.setRendered(false);
-            uiTxtNombreProveedor.setText("");
-            emailAddressField.setText("");
+            gridPanelBtnBuscar.setRendered(false);
+            uiBtnCancelar.setRendered(true);
             limpiarCampos();
         } else if (updateRequest) {
-            //if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            if (getTableRowGroup1().getSelectedRowsCount() > 0) {
                 gridPanelBuscar.setRendered(false);
                 table1.setRendered(false);
                 buttonPanel.setRendered(false);
                 addUpdatePanel.setRendered(true);
                 uiBtnGuardarNuevo.setRendered(false);
                 uiBtnGuardarEditar.setRendered(true);
-            //}
+                uiBtnCancelar.setRendered(true);
+            }
         } else if(errorValidacion){
             addUpdatePanel.setRendered(true);
         }else {
@@ -509,7 +519,10 @@ public class ABMComprasProveedor extends AbstractPageBean {
             buttonPanel.setRendered(true);
             addUpdatePanel.setRendered(false);
         }
-        // Refresh the users data array in the session bean to to show
+
+        //Actualizamos la lista
+        buscar();
+        
     }
 
     /**
@@ -600,6 +613,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
     private boolean errorValidacion = false;
 
     public String addButton_action() {
+        lstDetalleLIST = new ArrayList();
         addRequest = true;
         getSessionBean1().setTituloPagina("Nueva Factura Compra");
         getSessionBean1().setDetallePagina("Registro de Facturas - Proveedor");

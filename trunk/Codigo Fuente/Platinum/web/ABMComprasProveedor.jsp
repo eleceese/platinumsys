@@ -58,7 +58,7 @@
                                         <webuijsf:calendar binding="#{ABMComprasProveedor.uiFilCalFechaFactura}" columns="15" id="uiFilCalFechaFactura"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
-                                <h:panelGrid columns="2" id="gridPanelBtnBuscar" style="height: 100%" width="191">
+                                <h:panelGrid binding="#{ABMComprasProveedor.gridPanelBtnBuscar}" columns="2" id="gridPanelBtnBuscar" style="height: 100%" width="191">
                                     <webuijsf:button actionExpression="#{ABMComprasProveedor.uiBtnBuscar_action}" binding="#{ABMComprasProveedor.uiBtnBuscar}"
                                         id="uiBtnBuscar" text="Buscar"/>
                                     <webuijsf:button actionExpression="#{ABMComprasProveedor.uiBtnTodos_action}" binding="#{ABMComprasProveedor.uiBtnTodos}"
@@ -119,7 +119,7 @@
                                         <webuijsf:hyperlink id="hyperlink1" onClick="doPopup('form1:txtCodCliente_field', 'form1:txtApellidoNombre_field')"
                                             text="Proveedor" url="/faces/popupproductos.jsp"/>
                                         <h:panelGrid columns="2" id="gridPanelProveedor" width="335">
-                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtCodProveedor}" columns="10" id="uiTxtCodProveedor" required="true"/>
+                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtCodProveedor}" columns="10" id="uiTxtCodProveedor"/>
                                             <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtNombreProveedor}" columns="50" id="uiTxtNombreProveedor" valueChangeListenerExpression="#{ABMComprasProveedor.uiTxtNombreProveedor_processValueChange}"/>
                                         </h:panelGrid>
                                         <h:panelGrid columns="2" id="panelGridCabCompra3" style="text-align: right" width="200">
@@ -127,7 +127,8 @@
                                             <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtSubTotal}" columns="20" disabled="true" id="uiTxtSubTotal" style="text-align: right"/>
                                         </h:panelGrid>
                                         <webuijsf:label id="lblFecha" text="Fecha"/>
-                                        <webuijsf:calendar binding="#{ABMComprasProveedor.uiCalFecha}" columns="15" dateFormatPattern="dd/MM/yyyy" id="uiCalFecha"/>
+                                        <webuijsf:calendar binding="#{ABMComprasProveedor.uiCalFecha}" columns="15" dateFormatPattern="dd/MM/yyyy"
+                                            id="uiCalFecha" style="margin-left: -9px"/>
                                         <h:panelGrid columns="2" id="panelGridCabCompra4" style="text-align: right" width="200">
                                             <webuijsf:label id="lblTotalIva" text="Total IVA"/>
                                             <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtTotalIva}" columns="20" disabled="true" id="uiTxtTotalIva" style="text-align: right"/>
@@ -187,10 +188,10 @@
                                                 <webuijsf:tableColumn headerText="Total" id="tableColumn9">
                                                     <webuijsf:staticText id="staticText9" text="#{currentRow.value['total']}"/>
                                                 </webuijsf:tableColumn>
-                                                <webuijsf:tableColumn align="center" id="tableColumn15" width="40">
+                                                <webuijsf:tableColumn align="center" id="tableColumnEditarDet" width="40">
                                                     <webuijsf:imageHyperlink id="uilnkEditarDetalle" imageURL="/resources/img/edit_16x16.gif" text=""/>
                                                 </webuijsf:tableColumn>
-                                                <webuijsf:tableColumn align="center" id="tableColumn9" width="40">
+                                                <webuijsf:tableColumn align="center" id="tableColumnEliminarDet" width="40">
                                                     <webuijsf:imageHyperlink id="uilnkEliminarDetalle" imageURL="/resources/img/delete.png" text=""/>
                                                 </webuijsf:tableColumn>
                                             </webuijsf:tableRowGroup>
