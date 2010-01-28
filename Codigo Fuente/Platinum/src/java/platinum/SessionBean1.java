@@ -547,7 +547,7 @@ public class SessionBean1 extends AbstractSessionBean {
         ComisionController ComisionController = new ComisionController();
 
         //Obtenemos la lista de Comision ordenado por nombre del Comision
-        listaComision = (Comision[]) ComisionController.getAll("nombreComision").toArray(new Comision[0]);
+        listaComision = (Comision[]) ComisionController.getAll("codProducto.descripcion").toArray(new Comision[0]);
     }
 
     private DateTimeConverter dateTimeConverter = new DateTimeConverter();
