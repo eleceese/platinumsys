@@ -1,0 +1,3 @@
+alter table FACTURA_COMPRA_DET drop column SUB_TOTAL;
+
+alter table FACTURA_COMPRA_DET add PORC_IVA number(4,2);
