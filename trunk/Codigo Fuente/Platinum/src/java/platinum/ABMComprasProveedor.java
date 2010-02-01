@@ -877,7 +877,6 @@ public class ABMComprasProveedor extends AbstractPageBean {
             detalle.setCantidad(Long.valueOf(uiTxtCantidad.getText().toString()));
             detalle.setPrecioUni(Long.valueOf("1"));
             detalle.setMontoIva(Long.valueOf("1"));
-            detalle.setSubTotal(Long.valueOf("1"));
             detalle.setTotal(Long.valueOf("1"));
 
             //Agregamos a la lista
@@ -925,4 +924,31 @@ public class ABMComprasProveedor extends AbstractPageBean {
             }
         }
     }
+
+
+    private String itemDet;
+
+    public String getItemDet() {
+        return itemDet;
+    }
+
+    public void setItemDet(String itemDet) {
+        this.itemDet = itemDet;
+    }
+
+    public String detail() {
+
+        System.out.println("*******************************");
+        System.out.println(itemDet);
+        System.out.println("*******************************");
+
+
+        lstDetalleLIST.remove(Integer.valueOf(itemDet).intValue());
+
+        //Actualizamos la grilla
+        lstDetalle = (FacturaCompraDet[])lstDetalleLIST.toArray(new FacturaCompraDet[0]);
+
+        return null;
+    }
+
 }

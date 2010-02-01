@@ -216,4 +216,14 @@
         <managed-bean-class>platinum.ABMFormulaSemiTerminado</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupProveedores</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupProveedores</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupEmpleados</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupEmpleados</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 </faces-config>
