@@ -44,8 +44,8 @@ public class FacturaCompraDet implements Serializable {
     @Column(name = "TOTAL")
     private long total;
     @Basic(optional = false)
-    @Column(name = "SUB_TOTAL")
-    private long subTotal;
+    @Column(name = "PORC_IVA")
+    private double porcIva;
     @Basic(optional = false)
     @Column(name = "MONTO_IVA")
     private long montoIva;
@@ -73,12 +73,11 @@ public class FacturaCompraDet implements Serializable {
         this.codFacComDet = codFacComDet;
     }
 
-    public FacturaCompraDet(Long codFacComDet, long precioUni, long cantidad, long total, long subTotal, long montoIva) {
+    public FacturaCompraDet(Long codFacComDet, long precioUni, long cantidad, long total, long montoIva) {
         this.codFacComDet = codFacComDet;
         this.precioUni = precioUni;
         this.cantidad = cantidad;
         this.total = total;
-        this.subTotal = subTotal;
         this.montoIva = montoIva;
     }
 
@@ -113,15 +112,7 @@ public class FacturaCompraDet implements Serializable {
     public void setTotal(long total) {
         this.total = total;
     }
-
-    public long getSubTotal() {
-        return subTotal;
-    }
-
-    public void setSubTotal(long subTotal) {
-        this.subTotal = subTotal;
-    }
-
+    
     public long getMontoIva() {
         return montoIva;
     }
@@ -177,6 +168,15 @@ public class FacturaCompraDet implements Serializable {
     public void setCodProducto(Producto codProducto) {
         this.codProducto = codProducto;
     }
+
+    public double getPorcIva() {
+        return porcIva;
+    }
+
+    public void setPorcIva(double porcIva) {
+        this.porcIva = porcIva;
+    }
+
 
     @Override
     public int hashCode() {
