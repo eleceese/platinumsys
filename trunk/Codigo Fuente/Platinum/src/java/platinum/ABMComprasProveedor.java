@@ -55,10 +55,6 @@ public class ABMComprasProveedor extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-        uiLstTipoComprobanteDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("CON", "Contado"), new com.sun.webui.jsf.model.Option("CRE15", "Crédito 15 Días"), new com.sun.webui.jsf.model.Option("CRE30", "Crédito 30 Días"), new com.sun.webui.jsf.model.Option("CRE60", "Crédito 60 Días"), new com.sun.webui.jsf.model.Option("CRE90", "Crédito 90 Días")});
-        uiLstTipoComprobanteDefaultOptions.setSelectedValue("CRE30");
-        uiLstEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("P", "Pendiente"), new com.sun.webui.jsf.model.Option("R", "Recibido"), new com.sun.webui.jsf.model.Option("A", "Anulado")});
-        uiLstEstadoDefaultOptions.setSelectedValue("R");
     }
     private HtmlPanelGrid mainContainer = new HtmlPanelGrid();
 
@@ -421,6 +417,15 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setGridPanelBtnBuscar(HtmlPanelGrid hpg) {
         this.gridPanelBtnBuscar = hpg;
     }
+    private SingleSelectOptionsList dropDown1DefaultOptions = new SingleSelectOptionsList();
+
+    public SingleSelectOptionsList getDropDown1DefaultOptions() {
+        return dropDown1DefaultOptions;
+    }
+
+    public void setDropDown1DefaultOptions(SingleSelectOptionsList ssol) {
+        this.dropDown1DefaultOptions = ssol;
+    }
 
     // </editor-fold>
     /**
@@ -465,6 +470,13 @@ public class ABMComprasProveedor extends AbstractPageBean {
         // TODO - add your own initialization code here
         getSessionBean1().setTituloPagina("Facturas Compras");
         getSessionBean1().setDetallePagina("Registro de Facturas - Proveedor");
+
+        uiLstTipoComprobanteDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("CON", "Contado"), new com.sun.webui.jsf.model.Option("CRE15", "Crédito 15 Días"), new com.sun.webui.jsf.model.Option("CRE30", "Crédito 30 Días"), new com.sun.webui.jsf.model.Option("CRE60", "Crédito 60 Días"), new com.sun.webui.jsf.model.Option("CRE90", "Crédito 90 Días")});
+        uiLstTipoComprobanteDefaultOptions.setSelectedValue("CRE30");
+        uiLstEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("P", "Pendiente"), new com.sun.webui.jsf.model.Option("R", "Recibido"), new com.sun.webui.jsf.model.Option("A", "Anulado")});
+        uiLstEstadoDefaultOptions.setSelectedValue("R");
+        dropDown1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("5", "IVA 5 %"), new com.sun.webui.jsf.model.Option("10", "IVA 10 %")});
+        dropDown1DefaultOptions.setSelectedValue("10");
 
     }
 
@@ -868,8 +880,10 @@ public class ABMComprasProveedor extends AbstractPageBean {
     }
 
     public String uiBtnAgregarDet_action() {
+        //Validamos el detalle
         validarDetalle();
 
+        //Sino hubo error de validacion
         if (!errorValidacion) {
             //Nuevo Detalle
             detalle = new FacturaCompraDet();
@@ -949,6 +963,10 @@ public class ABMComprasProveedor extends AbstractPageBean {
         lstDetalle = (FacturaCompraDet[])lstDetalleLIST.toArray(new FacturaCompraDet[0]);
 
         return null;
+    }
+
+    public void uiTxtCodProducto_processValueChange(ValueChangeEvent event) {
+        info("Probando value change envent, Producto");
     }
 
 }
