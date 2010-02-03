@@ -71,22 +71,23 @@ function calcularMonto(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal ) {
         if( ePrecio != null && eCantidad != null && eIva != null && eMontoIva != null && eMontoTotal != null) {
             
             //Obtenemos el precio
-            if (ePrecio.valueOf() != null) {
+            if (ePrecio.value != null) {
                 vPrecio = ePrecio.value;
             }
 
             //Obtenemos la cantidad
-            if (eCantidad.valueOf() != null) {
+            if (eCantidad.value != null) {
                 vCantidad = eCantidad.value;
             }
             //Obtenemos el IVA
-            if (eIva.valueOf() != null) {
+            if (eIva.value != null) {
                 vIva = eIva.value;
             }
 
             //Calulamos monto total y monto IVA
             vMontoTotal = vPrecio * vCantidad;
             vMontoIva   = vIva / 100 * vMontoTotal;
+            vMontoTotal = vMontoTotal + vMontoIva;
 
             //Actualizamos el value de los componentes
             eMontoIva.value   = vMontoIva;

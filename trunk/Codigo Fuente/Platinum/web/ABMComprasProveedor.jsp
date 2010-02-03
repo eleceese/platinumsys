@@ -166,17 +166,20 @@
                                             <webuijsf:label id="lblUnidadMedida" text="Unidad Medida"/>
                                             <webuijsf:dropDown id="uiLstUnidadMedida" items="#{SessionBean1.listaUnidadMedidasOp}" width="110"/>
                                             <webuijsf:label id="lblPorcIVA" text="IVA"/>
-                                            <webuijsf:dropDown id="dropDown1" items="#{ABMComprasProveedor.dropDown1DefaultOptions.options}"
-                                                selected="#{ABMComprasProveedor.dropDown1DefaultOptions.selectedValue}" width="90"/>
+                                            <webuijsf:dropDown id="uiLstIva1" items="#{ABMComprasProveedor.uiLstIva1DefaultOptions.options}"
+                                                onChange="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva1_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )"
+                                                selected="#{ABMComprasProveedor.uiLstIva1DefaultOptions.selectedValue}" width="90"/>
                                         </h:panelGrid>
                                         <h:panelGrid columns="9" id="gridPanelDetLin2" style="height: 24px" width="719">
                                             <webuijsf:label id="lblPrecio" text="Precio U."/>
-                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtPrecioUnitario}" columns="12" id="uiTxtPrecioUnitario" style="text-align: right"/>
-                                            <webuijsf:label id="lblCantidaf" text="Cantidad"/>
-                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtCantidad}" columns="10" id="uiTxtCantidad" style="text-align: right"/>
-                                            <webuijsf:label id="lblPrecio" text="Monto IVA"/>
+                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtPrecioUnitario}" columns="12" id="uiTxtPrecioUnitario"
+                                                onKeyUp="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva1_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )" style="text-align: left"/>
+                                            <webuijsf:label id="lblCantida" text="Cantidad"/>
+                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtCantidad}" columns="10" id="uiTxtCantidad"
+                                                onKeyUp="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva1_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )" style="text-align: right"/>
+                                            <webuijsf:label id="lblMontoIva" text="Monto IVA"/>
                                             <webuijsf:textField columns="12" id="uiTxtMontoIva" style="text-align: right"/>
-                                            <webuijsf:label id="lblPrecio" text="Monto Total"/>
+                                            <webuijsf:label id="lblMontoTotal" text="Monto Total"/>
                                             <webuijsf:textField columns="15" id="uiTxtMontoTotal" style="text-align: right"/>
                                             <webuijsf:button actionExpression="#{ABMComprasProveedor.uiBtnAgregarDet_action}" id="uiBtnAgregarDet" text="Agregar"/>
                                         </h:panelGrid>
