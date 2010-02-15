@@ -173,10 +173,10 @@
                                         <h:panelGrid columns="9" id="gridPanelDetLin2" style="height: 24px" width="719">
                                             <webuijsf:label id="lblPrecio" text="Precio U."/>
                                             <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtPrecioUnitario}" columns="12" id="uiTxtPrecioUnitario"
-                                                onKeyUp="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva1_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )" style="text-align: left"/>
+                                                onChange="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva1_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )" style="text-align: left"/>
                                             <webuijsf:label id="lblCantida" text="Cantidad"/>
                                             <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtCantidad}" columns="10" id="uiTxtCantidad"
-                                                onKeyUp="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva1_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )" style="text-align: right"/>
+                                                onChange="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva1_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )" style="text-align: right"/>
                                             <webuijsf:label id="lblMontoIva" text="Monto IVA"/>
                                             <webuijsf:textField columns="12" id="uiTxtMontoIva" style="text-align: right"/>
                                             <webuijsf:label id="lblMontoTotal" text="Monto Total"/>
