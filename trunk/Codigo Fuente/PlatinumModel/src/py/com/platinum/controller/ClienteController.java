@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package py.com.platinum.controller;
 
 import java.util.List;
@@ -21,17 +20,15 @@ public class ClienteController extends AbstractJpaDao<Cliente> {
         super();
     }
 
-
     @Override
     public Cliente findById(Long id) {
-                return (Cliente) this.findById(Cliente.class, id);
+        return (Cliente) this.findById(Cliente.class, id);
     }
 
-       @Override
+    @Override
     public List<Cliente> getAll(String orderBy) {
         return this.getAll(Cliente.class, orderBy);
-     }
-
+    }
 
     /**
      * Este metodo realiza la consulta de acuerdo a los campos de filtro, la
@@ -80,6 +77,104 @@ public class ClienteController extends AbstractJpaDao<Cliente> {
         //retornamos la lista
         return entities;
 
-      }
+    }
+
+    /**
+     * Valida si ya existe el nro de Documento y tipo de documento
+     * @param tipoDoc
+     * @param nroDoc
+     * @param codCliente, se envia null cuando la operacion es insert y cuando
+     * la operacion es update se envia el codigo del cliente que se esta modificando
+     * @return
+     */
+    public boolean existeDocumento(String tipoDoc, String nroDoc, Long codCliente) {
+        //Variables
+        boolean r;
+        String SQL;
+
+        //Inicializamos
+        r = false;
+
+        //Armamos el SQL
+        SQL = "SELECT o FROM Cliente o WHERE o.codCliente = o.codCliente " +
+              " and o.tipoDodCliente   = :tipoDoc " +
+              " and o.numeroDocCliente = :nroDoc  ";
+
+        if (codCliente != null) {
+            SQL = SQL + " and o.codCliente != :codCliente ";
+        }
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Seteamos los parametros
+        q.setParameter("tipoDoc", tipoDoc );
+        q.setParameter("nroDoc", nroDoc );
+
+        if (codCliente != null ) {
+            q.setParameter("codCliente", codCliente );
+        }
+
+        //Realizamos la busqueda
+        List<Cliente> l = q.getResultList();
+
+        if (l != null && l.size() > 0) {
+            r = !r;
+        }
+
+        //Cerrampos el entity manager
+        em.close();
+
+        //result
+        return r;
+    }
+
+
+    /**
+     * Valida si el RUC ya existe
+     * @param ruc
+     * @param codCliente, se envia null cuando la operacion es insert y cuando
+     * la operacion es update se envia el codigo del cliente que se esta modificando
+     * @return
+     */
+    public boolean existeRUC(String ruc, Long codCliente) {
+        //Variables
+        boolean r;
+        String SQL;
+
+        //Inicializamos
+        r = false;
+
+        //Armamos el SQL
+        SQL = "SELECT o FROM Cliente o WHERE o.codCliente = o.codCliente " +
+              " and o.rucCliente  = :ruc ";
+
+        if (codCliente != null) {
+            SQL = SQL + " and o.codCliente != :codCliente ";
+        }
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Seteamos los parametros
+        q.setParameter("ruc", ruc );
+
+        if (codCliente != null ) {
+            q.setParameter("codCliente", codCliente );
+        }
+
+        //Realizamos la busqueda
+        List<Cliente> l = q.getResultList();
+
+        if (l != null && l.size() > 0) {
+            r = !r;
+        }
+
+        //Cerrampos el entity manager
+        em.close();
+
+        //result
+        return r;
+    }
 
 }   

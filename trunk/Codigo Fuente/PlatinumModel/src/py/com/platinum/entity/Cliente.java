@@ -6,7 +6,6 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -16,8 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -54,8 +53,6 @@ public class Cliente implements Serializable {
     private String rucCliente;
     @Column(name = "DIRECCION_CLIENTE")
     private String direccionCliente;
-    @Column(name = "CIUDAD_CLIENTE")
-    private String ciudadCliente;
     @Column(name = "TELEFONO1_CLIENTE")
     private String telefono1Cliente;
     @Column(name = "TELEFONO2_CLIENTE")
@@ -88,6 +85,9 @@ public class Cliente implements Serializable {
     private List<NotaCreditoCliCabecera> notaCreditoCliCabeceraCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "codCliente")
     private List<SaldoCliente> saldoClienteCollection;
+    @JoinColumn(name = "COD_CIUDAD", referencedColumnName = "CODCIUDAD")
+    @ManyToOne
+    private Ciudad codCiudad;
 
     public Cliente() {
     }
@@ -158,14 +158,6 @@ public class Cliente implements Serializable {
 
     public void setDireccionCliente(String direccionCliente) {
         this.direccionCliente = direccionCliente;
-    }
-
-    public String getCiudadCliente() {
-        return ciudadCliente;
-    }
-
-    public void setCiudadCliente(String ciudadCliente) {
-        this.ciudadCliente = ciudadCliente;
     }
 
     public String getTelefono1Cliente() {
@@ -286,6 +278,14 @@ public class Cliente implements Serializable {
 
     public void setSaldoClienteCollection(List<SaldoCliente> saldoClienteCollection) {
         this.saldoClienteCollection = saldoClienteCollection;
+    }
+
+    public Ciudad getCodCiudad() {
+        return codCiudad;
+    }
+
+    public void setCodCiudad(Ciudad codCiudad) {
+        this.codCiudad = codCiudad;
     }
 
     @Override
