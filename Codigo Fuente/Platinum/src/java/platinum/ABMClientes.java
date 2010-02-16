@@ -26,8 +26,10 @@ import javax.faces.component.html.HtmlPanelGrid;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
+import py.com.platinum.controller.CiudadController;
 import py.com.platinum.controller.ClienteController;
 import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Ciudad;
 import py.com.platinum.entity.Cliente;
 
 /**
@@ -325,15 +327,6 @@ public class ABMClientes extends AbstractPageBean {
     public void setUiTxtContacto2(TextField tf) {
         this.uiTxtContacto2 = tf;
     }
-    private TextField uiTxtCiudad = new TextField();
-
-    public TextField getUiTxtCiudad() {
-        return uiTxtCiudad;
-    }
-
-    public void setUiTxtCiudad(TextField tf) {
-        this.uiTxtCiudad = tf;
-    }
     private SingleSelectOptionsList uiLstEstadoDefaultOptions = new SingleSelectOptionsList();
 
     public SingleSelectOptionsList getUiLstEstadoDefaultOptions() {
@@ -360,6 +353,15 @@ public class ABMClientes extends AbstractPageBean {
 
     public void setGridPanelBtnBuscar(HtmlPanelGrid hpg) {
         this.gridPanelBtnBuscar = hpg;
+    }
+    private DropDown uiLstCiudad = new DropDown();
+
+    public DropDown getUiLstCiudad() {
+        return uiLstCiudad;
+    }
+
+    public void setUiLstCiudad(DropDown dd) {
+        this.uiLstCiudad = dd;
     }
 
     // </editor-fold>
@@ -488,7 +490,6 @@ public class ABMClientes extends AbstractPageBean {
 
         //Ceramos los campos
         uiTxtApellido.setText(null);
-        uiTxtCiudad.setText(null);
         uiTxtContacto1.setText(null);
         uiTxtContacto2.setText(null);
         uiTxtDireccion.setText(null);
@@ -514,7 +515,7 @@ public class ABMClientes extends AbstractPageBean {
         //Cargamos de los artributos
         uiTxtNombre.setText(e.getNombreCliente());
         uiTxtApellido.setText(e.getApellidoCliente());
-        uiTxtCiudad.setText(e.getCiudadCliente());
+        uiLstCiudad.setSelected(e.getCodCiudad());
         uiTxtContacto1.setText(e.getContacto1Cliente());
         uiTxtContacto2.setText(e.getContacto2Cliente());
         uiTxtDireccion.setText(e.getDireccionCliente());
@@ -652,6 +653,7 @@ public class ABMClientes extends AbstractPageBean {
         this.addRequest = false;
 
         //Validamos los campos
+        codCliente = null;
         validarCampos();
         Cliente r;
 
@@ -663,7 +665,11 @@ public class ABMClientes extends AbstractPageBean {
             //Set de los artributos
             r.setNombreCliente((String) uiTxtNombre.getText());
             r.setApellidoCliente((String) uiTxtApellido.getText());
-            r.setCiudadCliente((String) uiTxtCiudad.getText());
+
+            //Obtenemos la ciudad
+            Ciudad ciudad = new CiudadController().findById(Long.valueOf(uiLstCiudad.getSelected().toString()));
+            r.setCodCiudad(ciudad);
+
             r.setContacto1Cliente((String) uiTxtContacto1.getText());
 
             if (uiTxtContacto2.getText() != null) {
@@ -726,6 +732,9 @@ public class ABMClientes extends AbstractPageBean {
         if (this.uiTxtDocumento.getText() == null || this.uiTxtDocumento.getText().equals("")) {
             info(uiTxtDocumento, "Campo Nro. Documento obligatorio, ingrese un valor");
             errorValidacion = true;
+        }else if(new ClienteController().existeDocumento(this.uiLstTipoDoc.getSelected().toString(), this.uiTxtDocumento.getText().toString(), codCliente)){
+            info(uiTxtDocumento, "Nro. Documento Ya Existe para otro Clietne, ingrese un Documento que no se repita");
+            errorValidacion = true;
         }
 
         //RUC
@@ -753,8 +762,8 @@ public class ABMClientes extends AbstractPageBean {
         }
 
         //Ciudad
-        if (this.uiTxtCiudad.getText() == null || this.uiTxtCiudad.getText().equals("")) {
-            info(uiTxtCiudad, "Campo Ciudad obligatorio, ingrese un valor");
+        if (this.uiLstCiudad.getSelected() == null || uiLstCiudad.getSelected().toString().equals("")) {
+            info(uiLstCiudad, "Campo Ciudad obligatorio, ingrese un valor");
             errorValidacion = true;
         }
 
@@ -844,6 +853,8 @@ public class ABMClientes extends AbstractPageBean {
         return tablePhaseListener.isSelected(rowKey);
     }
 
+    private Long codCliente;
+
     public String uiBtnGuardarEditar_action() {
         // Apagamos la bandera de nuevo registro
         this.updateRequest = false;
@@ -851,6 +862,9 @@ public class ABMClientes extends AbstractPageBean {
         //Obtenemos el registro seleccionado por medio
         //del id almacenado en la session
         Cliente r = new ClienteController().findById(getSessionBean1().getId());
+
+        //Seteamos el codigo del cliente que esta siendo editado
+        codCliente = r.getCodCliente();
 
         //Validamos los campos
         validarCampos();
@@ -862,7 +876,10 @@ public class ABMClientes extends AbstractPageBean {
             //Set de los artributos
             r.setNombreCliente((String) uiTxtNombre.getText());
             r.setApellidoCliente((String) uiTxtApellido.getText());
-            r.setCiudadCliente((String) uiTxtCiudad.getText());
+
+            //Ciudad
+            Ciudad ciudad = new CiudadController().findById(Long.valueOf(uiLstCiudad.getSelected().toString()));
+            r.setCodCiudad(ciudad);
             r.setContacto1Cliente((String) uiTxtContacto1.getText());
 
             if (uiTxtContacto2.getText() != null) {

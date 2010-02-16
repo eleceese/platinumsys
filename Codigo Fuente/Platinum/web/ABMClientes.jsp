@@ -164,8 +164,8 @@
                                 </h:panelGrid>
                                 <webuijsf:label id="uiLblCiudad" text="Ciudad"/>
                                 <h:panelGrid columns="2" id="gridPanel13" style="height: 100%" width="575">
-                                    <webuijsf:textField binding="#{ABMClientes.uiTxtCiudad}" columns="50" id="uiTxtCiudad"/>
-                                    <webuijsf:message for="uiTxtCiudad" id="message13" showDetail="false" showSummary="true"/>
+                                    <webuijsf:dropDown binding="#{ABMClientes.uiLstCiudad}" id="uiLstCiudad" items="#{SessionBean1.listaCiudadOption}" width="307"/>
+                                    <webuijsf:message for="uiLstCiudad" id="message13" showDetail="false" showSummary="true"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                             <h:panelGrid binding="#{ABMClientes.buttonsPanelAddUpdate}" columns="2" id="buttonsPanelAddUpdate" style="height: 100%" width="191">
