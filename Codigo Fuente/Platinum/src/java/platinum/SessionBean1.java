@@ -19,6 +19,7 @@ import py.com.platinum.controller.EmpleadoController;
 import py.com.platinum.controller.FormaPagoController;
 import py.com.platinum.controller.DepositoController;
 import py.com.platinum.controller.FormulaCabeceraController;
+import py.com.platinum.controller.FormulaSemiCabeceraController;
 import py.com.platinum.controller.MarcaController;
 import py.com.platinum.controller.PresentacionController;
 import py.com.platinum.controller.ProductoController;
@@ -37,6 +38,7 @@ import py.com.platinum.entity.Empleado;
 import py.com.platinum.entity.FormaPago;
 import py.com.platinum.entity.Deposito;
 import py.com.platinum.entity.FormulaCabecera;
+import py.com.platinum.entity.FormulaSemiCabecera;
 import py.com.platinum.entity.Marca;
 import py.com.platinum.entity.Presentacion;
 import py.com.platinum.entity.Producto;
@@ -118,6 +120,8 @@ public class SessionBean1 extends AbstractSessionBean {
         dateTimeConverter.setTimeZone(null);
 
         //El siguiente Metodo Carga la Grilla De Productos al cargar la pagina de productos.
+        cargarListaTodosFormulaCabecerasSemiTer();
+        cargarListaTodosProductosSemiterminados();
         cargarListaTodosProductos();
         cargarListaTodosMarcas();
         cargarListaTodosTipoProductos();
@@ -199,6 +203,10 @@ public class SessionBean1 extends AbstractSessionBean {
     public void setTituloPagina(String tituloPagina) {
         this.tituloPagina = tituloPagina;
     }
+
+
+
+////// CARGA DE COMBO BOX PRODUCTOS
     Producto[] listaProductos;
 
     public Producto[] getListaProductos() {
@@ -212,6 +220,23 @@ public class SessionBean1 extends AbstractSessionBean {
     public void cargarListaTodosProductos() {
         ProductoController productoController = new ProductoController();
         listaProductos = (Producto[]) productoController.getAll("descripcion").toArray(new Producto[0]);
+
+    }
+////// CARGA DE COMBO BOX PRODUCTOS SEMITERMINADOS
+    Producto[] listaProductosSemiterminados;
+
+    public Producto[] getListaProductosSemiterminados() {
+        return listaProductosSemiterminados;
+    }
+
+    public void setListaProductosSemiterminados(Producto[] listaProductosSemiterminados) {
+        this.listaProductosSemiterminados = listaProductosSemiterminados;
+    }
+
+    public void cargarListaTodosProductosSemiterminados() {
+        ProductoController productoController = new ProductoController();
+        listaProductosSemiterminados = (Producto[]) productoController.getAllFiltered(null,null,"SemiTerminado",null).toArray(new Producto[0]);
+
 
     }
 ////// CARGA DE COMBO BOX MARCAS
@@ -713,74 +738,39 @@ public class SessionBean1 extends AbstractSessionBean {
     }
 ////// FIN CARGA DE COMBO BOX Proveedores
 
-////// CARGA DE COMBO BOX Formulas TERMINADOS
+
+////// CARGA DE COMBO BOX Formulas SEMITERMINADOS
 //////     import com.sun.webui.jsf.model.Option;
 
-    FormulaCabecera[] listaFormulaCabeceras;
-    Option[] listaFormulaCabecerasOp;
-
-    public Option[] getListaFormulaCabecerasOp() {
-        return listaFormulaCabecerasOp;
-    }
-
-    public void setListaFormulaCabecerasOp(Option[] listaFormulaCabeceraOp) {
-        this.listaFormulaCabecerasOp = listaFormulaCabeceraOp;
-    }
-
-    public FormulaCabecera[] getListaFormulaCabeceras() {
-        return listaFormulaCabeceras;
-    }
-
-    public void setListaFormulaCabeceras(FormulaCabecera[] listaFormulaCabeceras) {
-        this.listaFormulaCabeceras = listaFormulaCabeceras;
-    }
-
-    public void cargarListaTodosFormulaCabeceras(){
-        FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
-        listaFormulaCabeceras = (FormulaCabecera[]) formulaCabeceraController.getAll("codProducto.codProducto").toArray(new FormulaCabecera[0]);
-        listaFormulaCabecerasOp = new Option [listaFormulaCabeceras.length];
-        Option option;
-        for (int i = 0; i < listaFormulaCabeceras.length; i++) {
-            FormulaCabecera p = listaFormulaCabeceras[i];
-            option = new Option();
-            option.setLabel(p.getDescripcion());
-            option.setValue(p.getCodFormula().toString());
-            listaFormulaCabecerasOp[i] = option;
-        }
-    }
-////// FIN CARGA DE COMBO BOX Formulas
-////// CARGA DE COMBO BOX Formulas TERMINADOS
-//////     import com.sun.webui.jsf.model.Option;
-
-    FormulaCabecera[] listaFormulaCabecerasSemiTer;
+    FormulaSemiCabecera[] listaFormulaCabecerasSemiTer;
     Option[] listaFormulaCabecerasSemiTerOp;
 
     public Option[] getListaFormulaCabecerasSemiTerOp() {
-        return listaFormulaCabecerasOp;
+        return listaFormulaCabecerasSemiTerOp;
     }
 
     public void setListaFormulaCabecerasSemiTerOp(Option[] listaFormulaCabeceraSemiTerOp) {
         this.listaFormulaCabecerasSemiTerOp = listaFormulaCabeceraSemiTerOp;
     }
 
-    public FormulaCabecera[] getListaFormulaCabecerasSemiTer() {
+    public FormulaSemiCabecera[] getListaFormulaCabecerasSemiTer() {
         return listaFormulaCabecerasSemiTer;
     }
 
-    public void setListaFormulaCabecerasSemiTer(FormulaCabecera[] listaFormulaCabecerasSemiTer) {
+    public void setListaFormulaCabecerasSemiTer(FormulaSemiCabecera[] listaFormulaCabecerasSemiTer) {
         this.listaFormulaCabecerasSemiTer = listaFormulaCabecerasSemiTer;
     }
 
     public void cargarListaTodosFormulaCabecerasSemiTer(){
-        FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
-        listaFormulaCabecerasSemiTer = (FormulaCabecera[]) formulaCabeceraController.getAll("codProducto.codProducto").toArray(new FormulaCabecera[0]);
+        FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
+        listaFormulaCabecerasSemiTer = (FormulaSemiCabecera[]) formulaSemiCabeceraController.getAll("descripcion").toArray(new FormulaSemiCabecera[0]);
         listaFormulaCabecerasSemiTerOp = new Option [listaFormulaCabecerasSemiTer.length];
         Option option;
         for (int i = 0; i < listaFormulaCabecerasSemiTer.length; i++) {
-            FormulaCabecera p = listaFormulaCabecerasSemiTer[i];
+            FormulaSemiCabecera p = listaFormulaCabecerasSemiTer[i];
             option = new Option();
             option.setLabel(p.getDescripcion());
-            option.setValue(p.getCodFormula().toString());
+            option.setValue(p.getCodFormulaSemiCabecera().toString());
             listaFormulaCabecerasSemiTerOp[i] = option;
         }
     }
