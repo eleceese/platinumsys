@@ -6,6 +6,7 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -21,11 +22,11 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author Martin
+ * @author FerBoy
  */
 @Entity
 @Table(name = "TAREA_FORMULA")
-@NamedQueries({@NamedQuery(name = "TareaFormula.findAll", query = "SELECT t FROM TareaFormula t"), @NamedQuery(name = "TareaFormula.findByCodTareaFormula", query = "SELECT t FROM TareaFormula t WHERE t.codTareaFormula = :codTareaFormula"), @NamedQuery(name = "TareaFormula.findByCantidadTarea", query = "SELECT t FROM TareaFormula t WHERE t.cantidadTarea = :cantidadTarea"), @NamedQuery(name = "TareaFormula.findByOrdenTarea", query = "SELECT t FROM TareaFormula t WHERE t.ordenTarea = :ordenTarea"), @NamedQuery(name = "TareaFormula.findByUsuarioAlta", query = "SELECT t FROM TareaFormula t WHERE t.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "TareaFormula.findByUsuarioModif", query = "SELECT t FROM TareaFormula t WHERE t.usuarioModif = :usuarioModif"), @NamedQuery(name = "TareaFormula.findByFechaAlta", query = "SELECT t FROM TareaFormula t WHERE t.fechaAlta = :fechaAlta"), @NamedQuery(name = "TareaFormula.findByFechaModif", query = "SELECT t FROM TareaFormula t WHERE t.fechaModif = :fechaModif")})
+@NamedQueries({@NamedQuery(name = "TareaFormula.findAll", query = "SELECT t FROM TareaFormula t")})
 public class TareaFormula implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -34,10 +35,10 @@ public class TareaFormula implements Serializable {
     private Long codTareaFormula;
     @Basic(optional = false)
     @Column(name = "CANTIDAD_TAREA")
-    private long cantidadTarea;
+    private BigInteger cantidadTarea;
     @Basic(optional = false)
     @Column(name = "ORDEN_TAREA")
-    private long ordenTarea;
+    private BigInteger ordenTarea;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -48,9 +49,9 @@ public class TareaFormula implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @JoinColumn(name = "COD_FORMULA_DETALLE", referencedColumnName = "COD_FORMULA_DETALLE")
+    @JoinColumn(name = "COD_FORMULA_SEMI_CABECERA", referencedColumnName = "COD_FORMULA_SEMI_CABECERA")
     @ManyToOne(optional = false)
-    private FormulaDetalle codFormulaDetalle;
+    private FormulaSemiCabecera codFormulaSemiCabecera;
     @JoinColumn(name = "COD_TAREA", referencedColumnName = "COD_TAREA")
     @ManyToOne(optional = false)
     private Tarea codTarea;
@@ -58,16 +59,22 @@ public class TareaFormula implements Serializable {
     public TareaFormula() {
     }
 
+
     public TareaFormula(Long codTareaFormula) {
         this.codTareaFormula = codTareaFormula;
     }
 
-    public TareaFormula(Long codTareaFormula, long cantidadTarea, long ordenTarea) {
+    public TareaFormula(Long codTareaFormula, BigInteger cantidadTarea, BigInteger ordenTarea) {
         this.codTareaFormula = codTareaFormula;
         this.cantidadTarea = cantidadTarea;
         this.ordenTarea = ordenTarea;
     }
 
+
+    public FormulaSemiCabecera getCodFormulaSemiCabecera() {
+        return codFormulaSemiCabecera;
+    }
+    
     public Long getCodTareaFormula() {
         return codTareaFormula;
     }
@@ -76,19 +83,19 @@ public class TareaFormula implements Serializable {
         this.codTareaFormula = codTareaFormula;
     }
 
-    public long getCantidadTarea() {
+    public BigInteger getCantidadTarea() {
         return cantidadTarea;
     }
 
-    public void setCantidadTarea(long cantidadTarea) {
+    public void setCantidadTarea(BigInteger cantidadTarea) {
         this.cantidadTarea = cantidadTarea;
     }
 
-    public long getOrdenTarea() {
+    public BigInteger getOrdenTarea() {
         return ordenTarea;
     }
 
-    public void setOrdenTarea(long ordenTarea) {
+    public void setOrdenTarea(BigInteger ordenTarea) {
         this.ordenTarea = ordenTarea;
     }
 
@@ -122,14 +129,6 @@ public class TareaFormula implements Serializable {
 
     public void setFechaModif(Date fechaModif) {
         this.fechaModif = fechaModif;
-    }
-
-    public FormulaDetalle getCodFormulaDetalle() {
-        return codFormulaDetalle;
-    }
-
-    public void setCodFormulaDetalle(FormulaDetalle codFormulaDetalle) {
-        this.codFormulaDetalle = codFormulaDetalle;
     }
 
     public Tarea getCodTarea() {

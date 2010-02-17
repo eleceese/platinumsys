@@ -8,25 +8,25 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
-import py.com.platinum.entity.FormulaCabecera;
+import py.com.platinum.entity.FormulaSemiCabecera;
 import py.com.platinum.entity.Producto;
 
 /**
  *
  * @author FerBoy
  */
-public class FormulaCabeceraController extends AbstractJpaDao <FormulaCabecera> {
+public class FormulaSemiCabeceraController extends AbstractJpaDao <FormulaSemiCabecera> {
 
-    public boolean existe(String codFormula){
+    public boolean existe(String codFormulaSemiCabecera){
 
-        String SQL = "SELECT o FROM FormulaCabecera o WHERE o.codFormula = :codFormula";
+        String SQL = "SELECT o FROM FormulaSemiCabecera o WHERE o.codFormulaSemiCabecera = :codFormulaSemiCabecera";
 
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
 
-        q.setParameter("codFormula", codFormula);
+        q.setParameter("codFormulaSemiCabecera", codFormulaSemiCabecera);
 
-        List<FormulaCabecera> entities = q.getResultList();
+        List<FormulaSemiCabecera> entities = q.getResultList();
         em.close();
 
         if (entities.size() > 0){
@@ -38,23 +38,23 @@ public class FormulaCabeceraController extends AbstractJpaDao <FormulaCabecera> 
     }
 
 
-    public FormulaCabeceraController() {
+    public FormulaSemiCabeceraController() {
         super();
     }
 
     @Override
-    public FormulaCabecera findById(Long id) {
-        return (FormulaCabecera) this.findById(FormulaCabecera.class, id);
+    public FormulaSemiCabecera findById(Long id) {
+        return (FormulaSemiCabecera) this.findById(FormulaSemiCabecera.class, id);
     }
 
     @Override
-    public List<FormulaCabecera> getAll(String orderBy) {
-        return this.getAll(FormulaCabecera.class, orderBy);
+    public List<FormulaSemiCabecera> getAll(String orderBy) {
+        return this.getAll(FormulaSemiCabecera.class, orderBy);
     }
 
-    public List<FormulaCabecera> getAllFiltered(String codigo, String descripcion, String codProducto) {
+    public List<FormulaSemiCabecera> getAllFiltered(String codigo, String descripcion, String codProducto) {
         //emf.createEntityManager Levanta el contexto del JPA
-        String SQL = "SELECT o FROM FormulaCabecera o WHERE o.codFormula= o.codFormula";
+        String SQL = "SELECT o FROM FormulaSemiCabecera o WHERE o.codFormulaSemiCabecera= o.codFormulaSemiCabecera";
 
         if (codigo != null && !codigo.equals("99999") && !codigo.equals("")) {
             SQL = SQL + " and UPPER(o.codFormula) like upper(:codigo)";
@@ -67,6 +67,9 @@ public class FormulaCabeceraController extends AbstractJpaDao <FormulaCabecera> 
         if (codProducto != null && !codProducto.equals("99999") && !codProducto.equals("")) {
             SQL = SQL + " and UPPER(o.codProducto.descripcion) like upper(:codProducto)";
         }
+
+
+      
 
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
@@ -83,7 +86,7 @@ public class FormulaCabeceraController extends AbstractJpaDao <FormulaCabecera> 
             q.setParameter("codProducto", "%"+codProducto+"%");
         }
 
-        List<FormulaCabecera> entities = q.getResultList();
+        List<FormulaSemiCabecera> entities = q.getResultList();
         em.close();
 
         return entities;
@@ -91,11 +94,11 @@ public class FormulaCabeceraController extends AbstractJpaDao <FormulaCabecera> 
       }
 
 //public static void main (String[] v) {
-//        ProductoController productoController = new ProductoController();
-//        Producto producto = new Producto();
-//        producto = productoController.findById(Long.valueOf("1000"));
-//        System.out.println(producto.getDescripcion());
-//        productoController.delete(producto);
+//        FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
+//        FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabecera();
+//        formulaSemiCabecera = formulaSemiCabeceraController.findById(Long.valueOf("1001"));
+//        System.out.println(formulaSemiCabecera.getDescripcion());
+//
 //        };
 
 

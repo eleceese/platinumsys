@@ -1,0 +1,10 @@
+Trying to change property 'svn:ignore' from 'private
+' to 'build-impl.xml
+genfiles.properties
+private
+',
+but the property has been locally changed from 'private
+' to 'build-impl.xml
+genfiles.properties
+private
+'.

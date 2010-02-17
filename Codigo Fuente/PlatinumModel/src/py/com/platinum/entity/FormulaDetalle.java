@@ -18,6 +18,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -60,8 +61,18 @@ public class FormulaDetalle implements Serializable {
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
     @ManyToOne(optional = false)
     private Producto codProducto;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codFormulaDetalle")
-    private List<TareaFormula> tareaFormulaCollection;
+    @JoinColumn(name = "CODIGO_FORMULA_SEMITER", referencedColumnName = "COD_FORMULA_SEMI_CABECERA")
+    @ManyToOne(optional = false)
+    private FormulaSemiCabecera codFormulaSemiCabecera;
+
+    public FormulaSemiCabecera getCodFormulaSemiCabecera() {
+        return codFormulaSemiCabecera;
+    }
+
+    public void setCodFormulaSemiCabecera(FormulaSemiCabecera codFormulaSemiCabecera) {
+        this.codFormulaSemiCabecera = codFormulaSemiCabecera;
+    }
+
 
     public FormulaDetalle() {
     }
@@ -134,13 +145,6 @@ public class FormulaDetalle implements Serializable {
         this.codProducto = codProducto;
     }
 
-    public List<TareaFormula> getTareaFormulaCollection() {
-        return tareaFormulaCollection;
-    }
-
-    public void setTareaFormulaCollection(List<TareaFormula> tareaFormulaCollection) {
-        this.tareaFormulaCollection = tareaFormulaCollection;
-    }
 
     @Override
     public int hashCode() {
