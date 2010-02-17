@@ -209,11 +209,16 @@
     <managed-bean>
         <managed-bean-name>ABMFormulaTerminado</managed-bean-name>
         <managed-bean-class>platinum.ABMFormulaTerminado</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
+        <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
         <managed-bean-name>ABMFormulaSemiTerminado</managed-bean-name>
         <managed-bean-class>platinum.ABMFormulaSemiTerminado</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupProductosSemiter</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupProductosSemiter</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
