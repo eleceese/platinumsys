@@ -7,6 +7,7 @@ package py.com.platinum.controller;
 
 import java.util.List;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
+import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.FacturaCompraDet;
 
 /**
@@ -29,5 +30,20 @@ public class FacturaCompraDetController extends AbstractJpaDao<FacturaCompraDet>
     public List<FacturaCompraDet> getAll(String orderBy) {
         return this.getAll(FacturaCompraDet.class, orderBy);
      }
-    
+
+     public static void main(String[] args){
+         
+         FacturaCompraDet d = new FacturaCompraDetController().findById(Long.valueOf("1"));
+         
+         ControllerResult r = new FacturaCompraDetController().delete(d);
+         
+         System.out.println("Cod retorno = " + r.getCodRetorno());
+         
+         
+         
+         
+         
+     }
+
+
 }   
