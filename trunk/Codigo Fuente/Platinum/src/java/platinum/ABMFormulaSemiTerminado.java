@@ -7,17 +7,34 @@ package platinum;
 import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
+import com.sun.webui.jsf.component.Calendar;
+import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.component.PageAlert;
 import com.sun.webui.jsf.component.RadioButton;
 import com.sun.webui.jsf.component.Table;
 import com.sun.webui.jsf.component.TableColumn;
 import com.sun.webui.jsf.component.TableRowGroup;
+import com.sun.webui.jsf.component.TextArea;
 import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
+import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
+
+import py.com.platinum.controller.FormulaSemiCabeceraController;
+import py.com.platinum.controller.ProductoController;
+import py.com.platinum.controller.TareaController;
+import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.FormulaSemiCabecera;
+import py.com.platinum.entity.FormulaSemiDetalle;
+import py.com.platinum.entity.Producto;
+import py.com.platinum.entity.Tarea;
+import py.com.platinum.entity.TareaFormula;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -39,8 +56,8 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-        dropDown1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("A", "ACTIVO"), new com.sun.webui.jsf.model.Option("I", "INACTIVO")});
-        dropDown1DefaultOptions.setSelectedValue("A");
+        uiEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("A", "ACTIVO"), new com.sun.webui.jsf.model.Option("I", "INACTIVO")});
+        uiEstadoDefaultOptions.setSelectedValue("A");
         //table1.setWidth();
     }
     private HtmlPanelGrid mainContainer = new HtmlPanelGrid();
@@ -52,14 +69,14 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
     public void setMainContainer(HtmlPanelGrid hpg) {
         this.mainContainer = hpg;
     }
-    private TableRowGroup tableRowGroup1 = new TableRowGroup();
+    private TableRowGroup tableFormulasRW = new TableRowGroup();
 
-    public TableRowGroup getTableRowGroup1() {
-        return tableRowGroup1;
+    public TableRowGroup getTableFormulasRW() {
+        return tableFormulasRW;
     }
 
-    public void setTableRowGroup1(TableRowGroup trg) {
-        this.tableRowGroup1 = trg;
+    public void setTableFormulasRW(TableRowGroup trg) {
+        this.tableFormulasRW = trg;
     }
     private Button addButton = new Button();
 
@@ -97,23 +114,23 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
     public void setAddUpdatePanel(HtmlPanelGrid hpg) {
         this.addUpdatePanel = hpg;
     }
-    private TextField userNameField = new TextField();
+    private TextField uiProductoCodigo = new TextField();
 
-    public TextField getUserNameField() {
-        return userNameField;
+    public TextField getUiProductoCodigo() {
+        return uiProductoCodigo;
     }
 
-    public void setUserNameField(TextField tf) {
-        this.userNameField = tf;
+    public void setUiProductoCodigo(TextField tf) {
+        this.uiProductoCodigo = tf;
     }
-    private TextField emailAddressField = new TextField();
+    private TextField uiCantidad = new TextField();
 
-    public TextField getEmailAddressField() {
-        return emailAddressField;
+    public TextField getUiCantidad() {
+        return uiCantidad;
     }
 
-    public void setEmailAddressField(TextField tf) {
-        this.emailAddressField = tf;
+    public void setUiCantidad(TextField tf) {
+        this.uiCantidad = tf;
     }
     private Button addRecordButton = new Button();
 
@@ -123,15 +140,6 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
 
     public void setAddRecordButton(Button b) {
         this.addRecordButton = b;
-    }
-    private Button updateRecordButton = new Button();
-
-    public Button getUpdateRecordButton() {
-        return updateRecordButton;
-    }
-
-    public void setUpdateRecordButton(Button b) {
-        this.updateRecordButton = b;
     }
     private Button cancelButton = new Button();
 
@@ -151,68 +159,23 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
     public void setPageAlert1(PageAlert pa) {
         this.pageAlert1 = pa;
     }
-    private TextField userNameFiltro = new TextField();
+    private SingleSelectOptionsList uiEstadoDefaultOptions = new SingleSelectOptionsList();
 
-    public TextField getUserNameFiltro() {
-        return userNameFiltro;
+    public SingleSelectOptionsList getUiEstadoDefaultOptions() {
+        return uiEstadoDefaultOptions;
     }
 
-    public void setUserNameFiltro(TextField tf) {
-        this.userNameFiltro = tf;
+    public void setUiEstadoDefaultOptions(SingleSelectOptionsList ssol) {
+        this.uiEstadoDefaultOptions = ssol;
     }
-    private TextField emailAddressFiltro = new TextField();
+    private Table tableFormulas = new Table();
 
-    public TextField getEmailAddressFiltro() {
-        return emailAddressFiltro;
-    }
-
-    public void setEmailAddressFiltro(TextField tf) {
-        this.emailAddressFiltro = tf;
-    }
-    private Button buscarButton = new Button();
-
-    public Button getBuscarButton() {
-        return buscarButton;
+    public Table getTableFormulas() {
+        return tableFormulas;
     }
 
-    public void setBuscarButton(Button b) {
-        this.buscarButton = b;
-    }
-    private Button todosButton = new Button();
-
-    public Button getTodosButton() {
-        return todosButton;
-    }
-
-    public void setTodosButton(Button b) {
-        this.todosButton = b;
-    }
-    private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
-
-    public DefaultTableDataProvider getDefaultTableDataProvider() {
-        return defaultTableDataProvider;
-    }
-
-    public void setDefaultTableDataProvider(DefaultTableDataProvider dtdp) {
-        this.defaultTableDataProvider = dtdp;
-    }
-    private SingleSelectOptionsList dropDown1DefaultOptions = new SingleSelectOptionsList();
-
-    public SingleSelectOptionsList getDropDown1DefaultOptions() {
-        return dropDown1DefaultOptions;
-    }
-
-    public void setDropDown1DefaultOptions(SingleSelectOptionsList ssol) {
-        this.dropDown1DefaultOptions = ssol;
-    }
-    private Table table1 = new Table();
-
-    public Table getTable1() {
-        return table1;
-    }
-
-    public void setTable1(Table t) {
-        this.table1 = t;
+    public void setTableFormulas(Table t) {
+        this.tableFormulas = t;
     }
     private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
 
@@ -240,6 +203,141 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
 
     public void setGridPanelTareas(HtmlPanelGrid hpg) {
         this.gridPanelTareas = hpg;
+    }
+    private TextField uiCodigoFil1 = new TextField();
+
+    public TextField getUiCodigoFil1() {
+        return uiCodigoFil1;
+    }
+
+    public void setUiCodigoFil1(TextField tf) {
+        this.uiCodigoFil1 = tf;
+    }
+    private TextField uiProductoFil1 = new TextField();
+
+    public TextField getUiProductoFil1() {
+        return uiProductoFil1;
+    }
+
+    public void setUiProductoFil1(TextField tf) {
+        this.uiProductoFil1 = tf;
+    }
+    private TextField uiDescripcionFil1 = new TextField();
+
+    public TextField getUiDescripcionFil1() {
+        return uiDescripcionFil1;
+    }
+
+    public void setUiDescripcionFil1(TextField tf) {
+        this.uiDescripcionFil1 = tf;
+    }
+    private RadioButton radioButton1 = new RadioButton();
+
+    public RadioButton getRadioButton1() {
+        return radioButton1;
+    }
+
+    public void setRadioButton1(RadioButton rb) {
+        this.radioButton1 = rb;
+    }
+    private TableColumn tableColumn12 = new TableColumn();
+
+    public TableColumn getTableColumn12() {
+        return tableColumn12;
+    }
+
+    public void setTableColumn12(TableColumn tc) {
+        this.tableColumn12 = tc;
+    }
+    private TextField uiProductoNombre = new TextField();
+
+    public TextField getUiProductoNombre() {
+        return uiProductoNombre;
+    }
+
+    public void setUiProductoNombre(TextField tf) {
+        this.uiProductoNombre = tf;
+    }
+    private TextArea uiDescripcion = new TextArea();
+
+    public TextArea getUiDescripcion() {
+        return uiDescripcion;
+    }
+
+    public void setUiDescripcion(TextArea ta) {
+        this.uiDescripcion = ta;
+    }
+    private Calendar uiFecha = new Calendar();
+
+    public Calendar getUiFecha() {
+        return uiFecha;
+    }
+
+    public void setUiFecha(Calendar c) {
+        this.uiFecha = c;
+    }
+    private DropDown uiEstado = new DropDown();
+
+    public DropDown getUiEstado() {
+        return uiEstado;
+    }
+
+    public void setUiEstado(DropDown dd) {
+        this.uiEstado = dd;
+    }
+    private Button updateRecordButton = new Button();
+
+    public Button getUpdateRecordButton() {
+        return updateRecordButton;
+    }
+
+    public void setUpdateRecordButton(Button b) {
+        this.updateRecordButton = b;
+    }
+    private TextField uiDetTareaCantidad = new TextField();
+
+    public TextField getUiDetTareaCantidad() {
+        return uiDetTareaCantidad;
+    }
+
+    public void setUiDetTareaCantidad(TextField tf) {
+        this.uiDetTareaCantidad = tf;
+    }
+    private TextField uiDetTareaCodigo = new TextField();
+
+    public TextField getUiDetTareaCodigo() {
+        return uiDetTareaCodigo;
+    }
+
+    public void setUiDetTareaCodigo(TextField tf) {
+        this.uiDetTareaCodigo = tf;
+    }
+    private TextField uiDetTareaOrden = new TextField();
+
+    public TextField getUiDetTareaOrden() {
+        return uiDetTareaOrden;
+    }
+
+    public void setUiDetTareaOrden(TextField tf) {
+        this.uiDetTareaOrden = tf;
+    }
+    private TextField uiDetProductoCodigo = new TextField();
+
+    public TextField getUiDetProductoCodigo() {
+        return uiDetProductoCodigo;
+    }
+
+    public void setUiDetProductoCodigo(TextField tf) {
+        this.uiDetProductoCodigo = tf;
+    }
+    private TextField uiDetProductoCantidad = new TextField();
+
+    public TextField getUiDetProductoCantidad() {
+        return uiDetProductoCantidad;
+    }
+
+    public void setUiDetProductoCantidad(TextField tf) {
+        this.uiDetProductoCantidad = tf;
     }
 
     // </editor-fold>
@@ -312,17 +410,17 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
         cancelButton.setRendered(true);
         if (addRequest) {
             gridPanelBuscar.setRendered(false);
-            table1.setRendered(false);
+            tableFormulas.setRendered(false);
             buttonPanel.setRendered(false);
             addUpdatePanel.setRendered(true);
             addRecordButton.setRendered(true);
             updateRecordButton.setRendered(false);
-            userNameField.setText("");
-            emailAddressField.setText("");
+            uiProductoCodigo.setText("");
+            uiCantidad.setText("");
         } else if (updateRequest) {
             //if (getTableRowGroup1().getSelectedRowsCount() > 0) {
                 gridPanelBuscar.setRendered(false);
-                table1.setRendered(false);
+                tableFormulas.setRendered(false);
                 buttonPanel.setRendered(false);
                 addUpdatePanel.setRendered(true);
                 gridPanelTareas.setRendered(true);
@@ -335,13 +433,50 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
             getSessionBean1().setTituloPagina("Fórmulas de Producción");
             getSessionBean1().setDetallePagina("Productos Semiterminados");
             gridPanelBuscar.setRendered(true);
-            table1.setRendered(true);
+            tableFormulas.setRendered(true);
             buttonPanel.setRendered(true);
             addUpdatePanel.setRendered(false);
         }
+         buscar_action2();
         // Refresh the users data array in the session bean to to show
     }
 
+
+     private String buscar_action2() {
+
+        FormulaSemiCabecera[] listaFormulaSemiCabeceras;
+        FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
+
+        String pCodigo=null, pDescripcion=null, pCodigoProducto=null;
+
+        if (this.uiCodigoFil1.getText()!=null) {
+            pCodigo = this.uiCodigoFil1.getText().toString();
+        }
+
+        if (this.uiProductoFil1.getText()!=null) {
+            pCodigoProducto = this.uiProductoFil1.getText().toString();
+        }
+
+        if (this.uiDescripcionFil1.getText()!=null) {
+            pDescripcion= this.uiDescripcionFil1.getText().toString();
+        }
+
+        listaFormulaSemiCabeceras = (FormulaSemiCabecera[]) formulaSemiCabeceraController.getAllFiltered
+                                        (pCodigo,
+                                         pDescripcion,
+                                         pCodigoProducto).toArray(new FormulaSemiCabecera[0]);
+
+        setListaFormulaSemiCabeceras(listaFormulaSemiCabeceras);
+        return null;
+
+    }
+
+     public String buscar_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        this.pageAlert1.setRendered(false);
+        return null;
+    }
     /**
      * <p>Callback method that is called after rendering is completed for
      * this request, if <code>init()</code> was called (regardless of whether
@@ -410,15 +545,89 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
     private boolean updateRequest = false;
     private boolean errorValidacion = false;
 
+    ////// CARGA DE ARRAY Formulas SEMITERMINADOS
+//////     import com.sun.webui.jsf.model.Option;
+
+    FormulaSemiCabecera[] listaFormulaSemiCabeceras;
+    Option[] listaFormulaSemiCabecerasOp;
+
+    public Option[] getListaFormulaCabecerasOp() {
+        return listaFormulaSemiCabecerasOp;
+    }
+
+    public void setListaFormulaCabecerasOp(Option[] listaFormulaSemiCabeceraOp) {
+        this.listaFormulaSemiCabecerasOp = listaFormulaSemiCabeceraOp;
+    }
+
+    public FormulaSemiCabecera[] getListaFormulaSemiCabeceras() {
+        return listaFormulaSemiCabeceras;
+    }
+
+    public void setListaFormulaSemiCabeceras(FormulaSemiCabecera[] listaFormulaSemiCabeceras) {
+        this.listaFormulaSemiCabeceras = listaFormulaSemiCabeceras;
+    }
+
+    public void cargarListaTodosFormulaSemiCabeceras(){
+        FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
+        listaFormulaSemiCabeceras = (FormulaSemiCabecera[]) formulaSemiCabeceraController.getAll("codProducto.codProducto").toArray(new FormulaSemiCabecera[0]);
+        listaFormulaSemiCabecerasOp = new Option [listaFormulaSemiCabeceras.length];
+        Option option;
+        for (int i = 0; i < listaFormulaSemiCabeceras.length; i++) {
+            FormulaSemiCabecera p = listaFormulaSemiCabeceras[i];
+            option = new Option();
+            option.setLabel(p.getDescripcion());
+            option.setValue(p.getCodFormulaSemiCabecera().toString());
+            listaFormulaSemiCabecerasOp[i] = option;
+        }
+    }
+////// FIN CARGA DE COMBO BOX Formulas
+
+
+
+
+
+
     public String addButton_action() {
+            
+        this.pageAlert1.setRendered(false);
+        detalleFormulaSemiList = new ArrayList();
+        detallesFormulaSemi = (FormulaSemiDetalle[]) detalleFormulaSemiList.toArray(new FormulaSemiDetalle[0]);
+
+        tareaFormulaList = new ArrayList();
+        tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
+
+
         addRequest = true;
         getSessionBean1().setTituloPagina("Nueva Fórmula de Producción");
         getSessionBean1().setDetallePagina("Crear una fórmula de producción de un Producto Semiterminado, " +
                 "con su detalle correspondiente de Recursos y Tareas");
+
+
+//
+//        detalleFormulaList = new ArrayList();
+//        detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
+//        addRequest = true;
+
+        getSessionBean1().setTituloPagina("Nueva Fórmula de Producción");
+        getSessionBean1().setDetallePagina("Crear una fórmula de producción, " +
+                "con su detalle correspondiente de Semiterminados");
+        uiProductoCodigo.setText("");
+        uiProductoNombre.setText("");
+        uiCantidad.setText("");
+        uiDescripcion.setText("");
+
+        this.addRecordButton.setRendered(true);
+//        this.updateRecordButton.setRendered(false);
+
+
+
+
         return null;
     }
 
     public String updateButton_action() {
+
+        this.pageAlert1.setRendered(true);
         updateRequest = true;
         getSessionBean1().setTituloPagina("Editar Fórmula de Producción");
         getSessionBean1().setDetallePagina("Crear una fórmula de producción de un Producto Semiterminado, " +
@@ -432,26 +641,137 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
 
     public String addRecordButton_action() {
 
+
         errorValidacion = validarCampos();
 
         //Si no hay error de validacion
-        if (!errorValidacion) {
-            updateRequest = false;
-            this.pageAlert1.setType("information");
-            this.pageAlert1.setTitle("Registro Creado correctamente!!!");
-            this.pageAlert1.setSummary("");
-            this.pageAlert1.setDetail("");
-            this.pageAlert1.setRendered(true);
-        }else{
-            this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Error en la Validacion de los Campos, favor verificar y volver a intentar");
-            this.pageAlert1.setSummary("");
-            this.pageAlert1.setDetail("");
-            this.pageAlert1.setRendered(true);
+        if (! errorValidacion){
+
+//// CARGA DE LA CABECERA
+          FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabecera();
+          ProductoController productoController = new ProductoController();
+
+          formulaSemiCabecera.setCodProducto(productoController.findById(Long.valueOf(this.uiProductoCodigo.getText().toString())));
+          formulaSemiCabecera.setCantidad(new BigInteger( this.uiCantidad.getText().toString()));
+          formulaSemiCabecera.setDescripcion(this.uiDescripcion.getText().toString());
+          formulaSemiCabecera.setFecha(this.uiFecha.getSelectedDate());
+//          formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
+          formulaSemiCabecera.setEstado("A");
+
+                            FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
+                            ControllerResult controllerResult = new ControllerResult();
+                            controllerResult = formulaSemiCabeceraController.create(formulaSemiCabecera);
+
+//// FIN DE LA CARGA DE LA CABECERA
+//                            if (controllerResult.getCodRetorno() ==-1) {
+//                                    this.pageAlert1.setType("error");
+//                                    this.errorValidacion=true;
+//                                } else {
+//
+//                                                        // CARGA DE LOS DETALLES
+//
+//                                                        detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
+//                                                        for (int i = 0; i < detallesFormula.length; i++) {
+//
+//                                                            FormulaDetalle fdet = new FormulaDetalle();
+//                                                            fdet = detallesFormula[i];
+//                                                            fdet.setCodFormula(formulaCabecera);
+//                                                            FormulaDetalleController formulaDetalleController = new FormulaDetalleController();
+//                                                            controllerResult = formulaDetalleController.create(fdet);
+//
+//                                                            if (controllerResult.getCodRetorno() ==-1) {
+//                                                                this.pageAlert1.setType("error");
+//                                                                this.errorValidacion=true;
+//                                                                break;
+//                                                            }
+//
+//                                                        }
+//
+//                                                        // FIN DE CARGA DE LOS DETALLES
+//                            }
+//
+//
+                            if (controllerResult.getCodRetorno() != -1) {
+                                    addRequest = false;
+                                    this.pageAlert1.setType("information");
+                            }
+
+                                this.pageAlert1.setTitle(controllerResult.getMsg());
+                                this.pageAlert1.setSummary("");
+                                this.pageAlert1.setDetail("");
+                                this.pageAlert1.setRendered(true);
         }
+
+
         
         return null;
     }
+
+
+//MANEJO DE LOS DETALLES
+
+
+private FormulaSemiDetalle[] detallesFormulaSemi;
+private FormulaSemiDetalle  detalleFormulaSemi;
+private List<FormulaSemiDetalle>  detalleFormulaSemiList;
+
+private TareaFormula[] tareasFormula;
+private TareaFormula  tareaFormula;
+private List<TareaFormula>  tareaFormulaList;
+
+
+    public TareaFormula getTareaFormula() {
+        return tareaFormula;
+    }
+
+    public void setTareaFormula(TareaFormula tareaFormula) {
+        this.tareaFormula = tareaFormula;
+    }
+
+    public List<TareaFormula> getTareaFormulaList() {
+        return tareaFormulaList;
+    }
+
+    public void setTareaFormulaList(List<TareaFormula> tareaFormulaList) {
+        this.tareaFormulaList = tareaFormulaList;
+    }
+
+    public TareaFormula[] getTareasFormula() {
+        return tareasFormula;
+    }
+
+    public void setTareasFormula(TareaFormula[] tareasFormula) {
+        this.tareasFormula = tareasFormula;
+    }
+
+
+
+
+private FormulaSemiCabecera cabeceraFormulaSemi;
+
+    public FormulaSemiCabecera getCabeceraFormulaSemi() {
+        return cabeceraFormulaSemi;
+    }
+
+    public FormulaSemiDetalle getDetalleFormulaSemi() {
+        return detalleFormulaSemi;
+    }
+
+    public List<FormulaSemiDetalle> getDetalleFormulaSemiList() {
+        return detalleFormulaSemiList;
+    }
+
+    public FormulaSemiDetalle[] getDetallesFormulaSemi() {
+        return detallesFormulaSemi;
+    }
+
+    public Option[] getListaFormulaSemiCabecerasOp() {
+        return listaFormulaSemiCabecerasOp;
+    }
+
+
+
+
 
     public String updateRecordButton_action() {
         //errorValidacion = validarCampos();
@@ -494,13 +814,13 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
         //Inicializar
         r = false;
 
-        if (userNameField.getText() == null || userNameField.getText().equals("") ) {
-            info(userNameField, "Campo obligatorio, favor ingrese el Nombre del Usuario");
+        if (uiProductoCodigo.getText() == null || uiProductoCodigo.getText().equals("") ) {
+            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Nombre del Usuario");
             r = true;
         }
 
-        if (userNameField.getText() == null || userNameField.getText().equals("") ) {
-            info(userNameField, "Campo obligatorio, favor ingrese el e-mail del Usuario");
+        if (uiProductoCodigo.getText() == null || uiProductoCodigo.getText().equals("") ) {
+            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el e-mail del Usuario");
             r = true;
         }
         //result
@@ -512,5 +832,116 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
         // case name where null will return to the same page.
         return null;
     }
+
+    public String buscarButton_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        return null;
+    }
+
+    public String todosButton_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+           this.uiDescripcionFil1.setText("");
+           this.uiCodigoFil1.setText("");
+           this.uiProductoFil1.setText("");
+
+           return null;
+    }
+
+    public void validarDetalleProducto(){
+        this.errorValidacion= false;
+        if (uiDetProductoCodigo.getText() == null || uiDetProductoCodigo.getText().equals("") ) {
+        this.errorValidacion= true;
+        info(uiDetProductoCodigo, "Verifique el detalle");
+        }
+
+        if (uiDetProductoCantidad.getText() == null || uiDetProductoCantidad.getText().equals("") ) {
+        this.errorValidacion= true;
+        info(uiDetProductoCodigo, "Verifique el detalle");
+        }
+    }
+    public void validarDetalleTarea(){
+        this.errorValidacion= false;
+        if (uiDetTareaCodigo.getText() == null || uiDetTareaCodigo.getText().equals("") ) {
+        this.errorValidacion= true;
+        info(uiDetTareaCodigo, "Verifique el detalle");
+        }
+
+        if (uiDetTareaCantidad.getText() == null || uiDetTareaCantidad.getText().equals("") ) {
+        this.errorValidacion= true;
+        info(uiDetTareaCodigo, "Verifique el detalle");
+        }
+
+        if (uiDetTareaOrden.getText() == null || uiDetTareaOrden.getText().equals("") ) {
+        this.errorValidacion= true;
+        info(uiDetTareaCodigo, "Verifique el detalle");
+        }
+    }
+
+public void limpiarDetalleProducto(){
+
+this.uiDetProductoCodigo.setText("");
+this.uiDetProductoCantidad.setText("");
+
 }
+
+public void limpiarDetalleTarea(){
+
+this.uiDetTareaCodigo.setText("");
+this.uiDetTareaCantidad.setText("");
+this.uiDetTareaOrden.setText("");
+
+}
+
+
+    public String buttonAddDetProd_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+
+        validarDetalleProducto();
+
+        if (!errorValidacion) {
+           Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetProductoCodigo.getText().toString()));
+
+           detalleFormulaSemi = new FormulaSemiDetalle();
+           detalleFormulaSemi.setCodProducto(producto);
+           detalleFormulaSemi.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetProductoCantidad.getText().toString())));
+
+           detalleFormulaSemiList.add(detalleFormulaSemi);
+           detallesFormulaSemi = (FormulaSemiDetalle[]) detalleFormulaSemiList.toArray(new FormulaSemiDetalle[0]);
+
+           limpiarDetalleProducto();
+        }
+
+        return null;
+    }
+
+    public String buttonAddDetTar_action() {
+        // TODO: Replace with your code
+        
+        validarDetalleTarea();
+
+        if (!errorValidacion) {
+           Tarea tarea = new TareaController().findById(Long.valueOf(this.uiDetTareaCodigo.getText().toString()));
+
+           tareaFormula = new TareaFormula();
+           tareaFormula.setCodTarea(tarea);
+           tareaFormula.setCantidadTarea(BigInteger.valueOf(Long.valueOf(this.uiDetTareaCantidad.getText().toString())));
+           tareaFormula.setOrdenTarea(BigInteger.valueOf(Long.valueOf(this.uiDetTareaOrden.getText().toString())));
+
+           tareaFormulaList.add(tareaFormula);
+           tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
+
+           limpiarDetalleProducto();
+         }
+        return null;
+        
+    }
+      
+}
+
+
+
+   
 
