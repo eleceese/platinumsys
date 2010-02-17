@@ -43,7 +43,6 @@ public class FacturaCompraDet implements Serializable {
     @Basic(optional = false)
     @Column(name = "TOTAL")
     private long total;
-    @Basic(optional = false)
     @Column(name = "PORC_IVA")
     private double porcIva;
     @Basic(optional = false)
@@ -59,11 +58,11 @@ public class FacturaCompraDet implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @JoinColumn(name = "COD_FAC_COM_CAB", referencedColumnName = "COD_FAC_COM_CAB")
-    @ManyToOne(optional = false)
+    @JoinColumn(name = "COD_FAC_COM_CAB", referencedColumnName = "COD_FAC_COM_CAB", insertable = false, updatable = false)
+    @ManyToOne
     private FacturaCompraCab codFacComCab;
-    @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
-    @ManyToOne(optional = false)
+    @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO", insertable = false, updatable = false)
+    @ManyToOne
     private Producto codProducto;
 
     public FacturaCompraDet() {
