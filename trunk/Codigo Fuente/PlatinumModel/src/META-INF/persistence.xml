@@ -55,7 +55,10 @@
     <class>py.com.platinum.entity.NotaCreditoCliDetalle</class>
     <class>py.com.platinum.entity.NotaCreditoProvDet</class>
     <class>py.com.platinum.entity.RecursoAsignado</class>
-    <class>py.com.platinum.entity.Ciudad</class>
+    <class>py.com.platinum.entity.FormulaSemiDetalle</class>
+    <class>py.com.platinum.entity.FormulaSemiCabecera</class>
+    <class>py.com.platinum.entity.Detalle</class>
+    <class>py.com.platinum.entity.Cabecera</class>
     <properties>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
       <property name="hibernate.connection.username" value="platinum"/>
@@ -65,3 +68,4 @@
     </properties>
   </persistence-unit>
 </persistence>
+
