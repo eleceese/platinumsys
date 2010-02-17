@@ -79,7 +79,7 @@ public class FacturaCompraCab implements Serializable {
     @JoinColumn(name = "NRO_SOLICITUD", referencedColumnName = "COD_SOLICITUD")
     @ManyToOne
     private SolicitudInterna nroSolicitud;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codFacturaCab")
+    @OneToMany(mappedBy = "codFacturaCab")
     private List<NotaCreditoProvCab> notaCreditoProvCabCollection;
 
     public FacturaCompraCab() {
