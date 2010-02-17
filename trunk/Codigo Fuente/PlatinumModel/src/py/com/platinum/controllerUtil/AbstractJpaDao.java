@@ -89,7 +89,7 @@ public abstract class AbstractJpaDao<T> {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            em.remove(em.merge(entity));
+            em.remove(entity);
             em.getTransaction().commit();
             r.setCodRetorno(0);
             r.setMsg("Registro eliminado correctamente");
