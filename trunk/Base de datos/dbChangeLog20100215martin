@@ -1,0 +1,20 @@
+
+create table ciudad
+(      codCiudad number(10) not null, 
+       nombreCiudad varchar2(100) not null, 
+       constraint pk_ciudad primary key (codCiudad) 
+);
+	   
+	   
+	   
+-- Add/modify columns 
+alter table CLIENTE add COD_CIUDAD number(10);
+
+
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CLIENTE
+  add constraint FK_CLI_CIU foreign key (COD_CIUDAD)
+  references ciudad (CODCIUDAD);
+  
+-- Drop columns 
+alter table CLIENTE drop column CIUDAD_CLIENTE;
