@@ -92,17 +92,17 @@ public class OrdenTrabajo implements Serializable {
         this.codOrdenTrabjo = codOrdenTrabjo;
     }
 
-    public OrdenTrabajo(Long codOrdenTrabjo, BigInteger numeroOrdenTrabajo, BigInteger cantidadOt) {
+    public OrdenTrabajo(Long codOrdenTrabjo, Long numeroOrdenTrabajo, BigInteger cantidadOt) {
         this.codOrdenTrabjo = codOrdenTrabjo;
         this.numeroOrdenTrabajo = numeroOrdenTrabajo;
         this.cantidadOt = cantidadOt;
     }
 
-    public BigInteger getNumeroOrdenTrabajo() {
+    public Long getNumeroOrdenTrabajo() {
         return numeroOrdenTrabajo;
     }
 
-    public void setNumeroOrdenTrabajo(BigInteger numeroOrdenTrabajo) {
+    public void setNumeroOrdenTrabajo(Long numeroOrdenTrabajo) {
         this.numeroOrdenTrabajo = numeroOrdenTrabajo;
     }
 
