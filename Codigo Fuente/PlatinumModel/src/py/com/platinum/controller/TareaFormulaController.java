@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
+import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.FormulaSemiCabecera;
 import py.com.platinum.entity.TareaFormula;
 import py.com.platinum.entity.Producto;
@@ -84,7 +85,30 @@ public class TareaFormulaController extends AbstractJpaDao <TareaFormula> {
 
       }
 
-
+public ControllerResult eliminar(TareaFormula entity) {
+        ControllerResult r = new ControllerResult();
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            TareaFormula tareaFormula = em.find(TareaFormula.class, entity.getCodTareaFormula());
+            em.remove(tareaFormula);
+            em.getTransaction().commit();
+            r.setCodRetorno(0);
+            r.setMsg("Registro eliminado correctamente");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            r.setCodRetorno(-1);
+            r.setMsg("Error al persistir " + entity.getClass());
+            try {
+                em.getTransaction().rollback();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            em.close();
+            return r;
+        }
+    }
 
 
 

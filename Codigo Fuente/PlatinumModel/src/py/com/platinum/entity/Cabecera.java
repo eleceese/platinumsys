@@ -33,7 +33,7 @@ public class Cabecera implements Serializable {
     private Integer id;
     @Column(name = "NOMBRE")
     private String nombre;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCab", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idCab", fetch = FetchType.EAGER)
     private List<Detalle> detalleCollection;
 
     public Cabecera() {

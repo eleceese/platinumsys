@@ -2,19 +2,22 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package py.com.platinum.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,19 +37,19 @@ import javax.persistence.TemporalType;
  * @author FerBoy
  */
 @Entity
-@SequenceGenerator(name="FORMULA_SEMI_CABECERA_SEQUENCE", sequenceName="SQ_FORMULA_SEMI_CABECERA", initialValue=1, allocationSize=1)
+@SequenceGenerator(name = "FORMULA_SEMI_CABECERA_SEQUENCE", sequenceName = "SQ_FORMULA_SEMI_CABECERA", initialValue = 1, allocationSize = 1)
 @Table(name = "FORMULA_SEMI_CABECERA")
 @NamedQueries({@NamedQuery(name = "FormulaSemiCabecera.findAll", query = "SELECT f FROM FormulaSemiCabecera f")})
 public class FormulaSemiCabecera implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="FORMULA_SEMI_CABECERA_SEQUENCE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FORMULA_SEMI_CABECERA_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_FORMULA_SEMI_CABECERA")
     private Long codFormulaSemiCabecera;
     @Column(name = "DESCRIPCION")
     private String descripcion;
-   
     @Basic(optional = false)
     @Column(name = "CANTIDAD")
     private BigInteger cantidad;
@@ -60,20 +63,38 @@ public class FormulaSemiCabecera implements Serializable {
     @Column(name = "FECHA_ALTA")
     @Temporal(TemporalType.DATE)
     private Date fechaAlta;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codFormulaSemiCabecera")
-    private Collection<FormulaSemiDetalle> formulaSemiDetalleCollection;
+    @OneToMany(mappedBy = "codFormulaSemiCabecera", fetch=FetchType.EAGER)
+    private Set<FormulaSemiDetalle> formulaSemiDetalleList;
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
     @ManyToOne(optional = false)
     private Producto codProducto;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codFormulaSemiCabecera")
-    private List<TareaFormula> tareaFormulaCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codFormulaSemiCabecera")
-    private List<FormulaDetalle> formulaDetalleObject;
+    @OneToMany(mappedBy = "codFormulaSemiCabecera",fetch=FetchType.EAGER)
+    private Set<TareaFormula> tareaFormulaList;
+    @OneToMany(mappedBy = "codFormulaSemiCabecera",fetch=FetchType.EAGER)
+    private Set<FormulaDetalle> formulaDetalleList;
+
+
+    public void setFormulaSemiDetalleList(Set<FormulaSemiDetalle> formulaSemiDetalleList) {
+        this.formulaSemiDetalleList = formulaSemiDetalleList;
+    }
+
+    public void setFormulaDetalleList(Set<FormulaDetalle> formulaDetalleList) {
+        this.formulaDetalleList = formulaDetalleList;
+    }
+
+    public Set<TareaFormula> getTareaFormulaList() {
+        return tareaFormulaList;
+    }
+
+    public List<TareaFormula> getTareaFormulaListList() {
+        return new ArrayList(Arrays.asList(tareaFormulaList.toArray(new TareaFormula[0])));
+    }
+    
 
     public FormulaSemiCabecera() {
     }
 
-public String getDescripcion() {
+    public String getDescripcion() {
         return descripcion;
     }
 
@@ -81,16 +102,13 @@ public String getDescripcion() {
         this.descripcion = descripcion;
     }
 
-    public List<FormulaDetalle> getFormulaDetalleObject() {
-        return formulaDetalleObject;
+    public Set<FormulaDetalle> getFormulaDetalleList() {
+        return formulaDetalleList;
     }
 
-    public void setFormulaDetalleObject(List<FormulaDetalle> formulaDetalleObject) {
-        this.formulaDetalleObject = formulaDetalleObject;
+    public void setFormulaDetalleObject(Set<FormulaDetalle> formulaDetalleObject) {
+        this.formulaDetalleList = formulaDetalleObject;
     }
-
-
-
 
     public FormulaSemiCabecera(Long codFormulaSemiCabecera) {
         this.codFormulaSemiCabecera = codFormulaSemiCabecera;
@@ -149,13 +167,15 @@ public String getDescripcion() {
         this.fechaAlta = fechaAlta;
     }
 
-    public Collection<FormulaSemiDetalle> getFormulaSemiDetalleCollection() {
-        return formulaSemiDetalleCollection;
+    public Set<FormulaSemiDetalle> getFormulaSemiDetalleList() {
+        return formulaSemiDetalleList;
     }
 
-    public void setFormulaSemiDetalleCollection(Collection<FormulaSemiDetalle> formulaSemiDetalleCollection) {
-        this.formulaSemiDetalleCollection = formulaSemiDetalleCollection;
+    public List<FormulaSemiDetalle> getFormulaSemiDetalleListList() {
+        return new ArrayList(Arrays.asList(formulaSemiDetalleList.toArray(new FormulaSemiDetalle[0])));
     }
+
+
 
     public Producto getCodProducto() {
         return codProducto;
@@ -165,12 +185,8 @@ public String getDescripcion() {
         this.codProducto = codProducto;
     }
 
-    public Collection<TareaFormula> getTareaFormulaCollection() {
-        return tareaFormulaCollection;
-    }
-
-    public void setTareaFormulaCollection(List<TareaFormula> tareaFormulaCollection) {
-        this.tareaFormulaCollection = tareaFormulaCollection;
+    public void setTareaFormulaList(Set<TareaFormula> tareaFormulaList) {
+        this.tareaFormulaList = tareaFormulaList;
     }
 
     @Override
@@ -197,5 +213,4 @@ public String getDescripcion() {
     public String toString() {
         return descripcion;
     }
-
 }
