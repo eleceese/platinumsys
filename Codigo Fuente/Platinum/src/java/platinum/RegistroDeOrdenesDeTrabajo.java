@@ -44,7 +44,7 @@ public class RegistroDeOrdenesDeTrabajo extends AbstractPageBean {
         tipoDoc1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Cedula de Identidad"), new com.sun.webui.jsf.model.Option("2", "DNI"), new com.sun.webui.jsf.model.Option("3", "Pasaporte")});
         radioButtonGroup1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("e", "Entrada"), new com.sun.webui.jsf.model.Option("s", "Salida")});
         referencia1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Orden de Trabajo"), new com.sun.webui.jsf.model.Option("2", "Venta"), new com.sun.webui.jsf.model.Option("3", "Trabajo Diario")});
-        dropDownEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "En Progreso"), new com.sun.webui.jsf.model.Option("2", "Parada"), new com.sun.webui.jsf.model.Option("3", "Terminado"), new com.sun.webui.jsf.model.Option("4", "Cancelado")});
+        uiEstadoFIlDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "En Progreso"), new com.sun.webui.jsf.model.Option("2", "Parada"), new com.sun.webui.jsf.model.Option("3", "Terminado"), new com.sun.webui.jsf.model.Option("4", "Cancelado")});
         estadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "En Proceso"), new com.sun.webui.jsf.model.Option("2", "Terminado"), new com.sun.webui.jsf.model.Option("3", "En Espera")});
     }
     private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
@@ -146,14 +146,14 @@ public class RegistroDeOrdenesDeTrabajo extends AbstractPageBean {
     public void setSelec(TableColumn tc) {
         this.selec = tc;
     }
-    private SingleSelectOptionsList dropDownEstadoDefaultOptions = new SingleSelectOptionsList();
+    private SingleSelectOptionsList uiEstadoFIlDefaultOptions = new SingleSelectOptionsList();
 
-    public SingleSelectOptionsList getDropDownEstadoDefaultOptions() {
-        return dropDownEstadoDefaultOptions;
+    public SingleSelectOptionsList getUiEstadoFIlDefaultOptions() {
+        return uiEstadoFIlDefaultOptions;
     }
 
-    public void setDropDownEstadoDefaultOptions(SingleSelectOptionsList ssol) {
-        this.dropDownEstadoDefaultOptions = ssol;
+    public void setUiEstadoFIlDefaultOptions(SingleSelectOptionsList ssol) {
+        this.uiEstadoFIlDefaultOptions = ssol;
     }
     private SingleSelectOptionsList estadoDefaultOptions = new SingleSelectOptionsList();
 
@@ -208,6 +208,15 @@ public class RegistroDeOrdenesDeTrabajo extends AbstractPageBean {
 
     public void setBotonDeFormula(Button b) {
         this.botonDeFormula = b;
+    }
+    private DropDown dropDown1 = new DropDown();
+
+    public DropDown getDropDown1() {
+        return dropDown1;
+    }
+
+    public void setDropDown1(DropDown dd) {
+        this.dropDown1 = dd;
     }
 
     // </editor-fold>

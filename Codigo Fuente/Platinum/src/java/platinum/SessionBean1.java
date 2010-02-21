@@ -40,6 +40,7 @@ import py.com.platinum.entity.Deposito;
 import py.com.platinum.entity.FormulaCabecera;
 import py.com.platinum.entity.FormulaSemiCabecera;
 import py.com.platinum.entity.Marca;
+import py.com.platinum.entity.OrdenTrabajo;
 import py.com.platinum.entity.Presentacion;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.Seccion;
@@ -120,14 +121,16 @@ public class SessionBean1 extends AbstractSessionBean {
         dateTimeConverter.setTimeZone(null);
 
         //El siguiente Metodo Carga la Grilla De Productos al cargar la pagina de productos.
+        cargarListaTodosTareas();
         cargarListaTodosFormulaCabecerasSemiTer();
         cargarListaTodosProductosSemiterminados();
+        cargarListaTodosInsumosMaterias();
         cargarListaTodosProductos();
         cargarListaTodosMarcas();
         cargarListaTodosTipoProductos();
         cargarListaTodosPresentacions();
         cargarListaTodosUnidadMedidas();
-        cargarListaCiudad();
+//        cargarListaCiudad();
         cargarListaCargo();
         cargarListaSeccion();
         cargarListaBanco();
@@ -208,6 +211,17 @@ public class SessionBean1 extends AbstractSessionBean {
 
 ////// CARGA DE COMBO BOX PRODUCTOS
     Producto[] listaProductos;
+    Option [] listaProductosOp;
+
+    public Option[] getListaProductosOp() {
+        return listaProductosOp;
+    }
+
+    public void setListaProductosOp(Option[] listaProductosOp) {
+        this.listaProductosOp = listaProductosOp;
+    }
+
+
 
     public Producto[] getListaProductos() {
         return listaProductos;
@@ -220,8 +234,18 @@ public class SessionBean1 extends AbstractSessionBean {
     public void cargarListaTodosProductos() {
         ProductoController productoController = new ProductoController();
         listaProductos = (Producto[]) productoController.getAll("descripcion").toArray(new Producto[0]);
+        listaProductosOp = new Option[listaProductos.length];
+        Option option;
+        for (int i = 0; i < listaProductos.length; i++) {
+            Producto p = listaProductos[i];
+            option = new Option();
+            option.setLabel(p.getDescripcion());
+            option.setValue(p.getCodProducto().toString());
+            listaProductosOp[i] = option;
+        }
 
     }
+
 ////// CARGA DE COMBO BOX PRODUCTOS SEMITERMINADOS
     Producto[] listaProductosSemiterminados;
 
@@ -239,6 +263,24 @@ public class SessionBean1 extends AbstractSessionBean {
 
 
     }
+
+    ////// CARGA DE COMBO BOX Insumos Y materias Primas
+    Producto[] listaInsumosMaterias;
+
+    public Producto[] getListaInsumosMaterias() {
+        return listaInsumosMaterias;
+    }
+
+    public void setListaInsumosMaterias(Producto[] listaInsumosMaterias) {
+        this.listaInsumosMaterias = listaInsumosMaterias;
+    }
+
+    public void cargarListaTodosInsumosMaterias() {
+        ProductoController productoController = new ProductoController();
+        listaInsumosMaterias = (Producto[]) productoController.getInsumosMaterias(null,null,null).toArray(new Producto[0]);
+    }
+
+
 ////// CARGA DE COMBO BOX MARCAS
 //////     import com.sun.webui.jsf.model.Option;
     Marca[] listaMarcas;
@@ -774,56 +816,26 @@ public class SessionBean1 extends AbstractSessionBean {
             listaFormulaCabecerasSemiTerOp[i] = option;
         }
     }
-////// FIN CARGA DE COMBO BOX Formulas SEMITERMINADOS
+////// FIN CARGA DE COMBO BOX DE ORDENES DE TRABAJO
 
+    
+    OrdenTrabajo[] listaOtCab;
+    Option[] listaOtCabOp;
 
-
-    //Cargar lista Ciudad
-    Ciudad[] listaCiudad;
-    Option[] listaCiudadOption;
-
-    public Ciudad[] getListaCiudad() {
-        return listaCiudad;
+    public OrdenTrabajo[] getListaOtCab() {
+        return listaOtCab;
     }
 
-    public void setListaCiudad(Ciudad[] listaCiudad) {
-        this.listaCiudad = listaCiudad;
+    public void setListaOtCab(OrdenTrabajo[] listaOtCab) {
+        this.listaOtCab = listaOtCab;
     }
 
-    public Option[] getListaCiudadOption() {
-        return listaCiudadOption;
+    public Option[] getListaOtCabOp() {
+        return listaOtCabOp;
     }
 
-    public void setListaCiudadOption(Option[] listaCiudadOption) {
-        this.listaCiudadOption = listaCiudadOption;
+    public void setListaOtCabOp(Option[] listaOtCabOp) {
+        this.listaOtCabOp = listaOtCabOp;
     }
 
-    /**
-     * Obtenemos la lista de Ciudad de la base de datos
-     */
-    public void cargarListaCiudad() {
-        //Variables
-        CiudadController CiudadController = new CiudadController();
-        Option o;
-
-        //Obtenemos la lista de Ciudad ordenado por nombre del Ciudad
-        listaCiudad = (Ciudad[]) CiudadController.getAll("nombreciudad").toArray(new Ciudad[0]);
-
-        //Dimensionamos el array de options para la lista de Ciudads
-        listaCiudadOption = new Option[listaCiudad.length];
-
-        //Recorremos la lista de Ciudads
-        for (int i = 0; i < listaCiudad.length; i++) {
-            //Optenemos el Ciudad
-            Ciudad e = listaCiudad[i];
-
-            //Creamos nuevo options
-            o = new Option();
-            o.setValue(e.getCodciudad().toString());
-            o.setLabel(e.getNombreciudad());
-
-            //agregamos option al array de option - Ciudad
-            listaCiudadOption[i] = o;
-        }
-    }
 }
