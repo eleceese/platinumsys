@@ -10,6 +10,7 @@
     <class>py.com.platinum.entity.UnidadMedida</class>
     <class>py.com.platinum.entity.TipoProducto</class>
     <class>py.com.platinum.entity.Cargo</class>
+    <class>py.com.platinum.entity.Ciudad</class>
     <class>py.com.platinum.entity.MovimientoCajaDetalle</class>
     <class>py.com.platinum.entity.SolicitudInterna</class>
     <class>py.com.platinum.entity.PedidoDetalle</class>
