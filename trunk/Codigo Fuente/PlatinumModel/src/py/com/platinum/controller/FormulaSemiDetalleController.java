@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
+import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.FormulaSemiCabecera;
 import py.com.platinum.entity.FormulaSemiDetalle;
 import py.com.platinum.entity.Producto;
@@ -94,6 +95,30 @@ public static void main (String[] v) {
         };
 
 
+public ControllerResult eliminar(FormulaSemiDetalle entity) {
+        ControllerResult r = new ControllerResult();
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            FormulaSemiDetalle formulaSemiDetalle = em.find(FormulaSemiDetalle.class, entity.getCodFormulaSemiDetalle());
+            em.remove(formulaSemiDetalle);
+            em.getTransaction().commit();
+            r.setCodRetorno(0);
+            r.setMsg("Registro eliminado correctamente");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            r.setCodRetorno(-1);
+            r.setMsg("Error al persistir " + entity.getClass());
+            try {
+                em.getTransaction().rollback();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            em.close();
+            return r;
+        }
+    }
 
 
 }

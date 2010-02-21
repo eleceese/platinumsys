@@ -11,11 +11,14 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,11 +28,13 @@ import javax.persistence.TemporalType;
  * @author FerBoy
  */
 @Entity
+@SequenceGenerator(name="TAREA_FORMULA_SEQUENCE", sequenceName="SQ_TAREA_FORMULA", initialValue=1, allocationSize=1)
 @Table(name = "TAREA_FORMULA")
 @NamedQueries({@NamedQuery(name = "TareaFormula.findAll", query = "SELECT t FROM TareaFormula t")})
 public class TareaFormula implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="TAREA_FORMULA_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_TAREA_FORMULA")
     private Long codTareaFormula;
@@ -55,6 +60,10 @@ public class TareaFormula implements Serializable {
     @JoinColumn(name = "COD_TAREA", referencedColumnName = "COD_TAREA")
     @ManyToOne(optional = false)
     private Tarea codTarea;
+
+    public void setCodFormulaSemiCabecera(FormulaSemiCabecera codFormulaSemiCabecera) {
+        this.codFormulaSemiCabecera = codFormulaSemiCabecera;
+    }
 
     public TareaFormula() {
     }

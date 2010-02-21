@@ -89,7 +89,7 @@ public abstract class AbstractJpaDao<T> {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            em.remove(entity);
+            em.remove(em.merge(entity));
             em.getTransaction().commit();
             r.setCodRetorno(0);
             r.setMsg("Registro eliminado correctamente");
@@ -138,6 +138,34 @@ public abstract class AbstractJpaDao<T> {
     }
 
     public abstract List<T> getAll(String orderBy);
+
+public ControllerResult createC(T entity) throws RuntimeException {
+        ControllerResult r = new ControllerResult();
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.persist(entity);
+            tx.commit();
+            r.setCodRetorno(0);
+            r.setMsg("Se creo correctamente el registro");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            r.setCodRetorno(-1);
+            r.setMsg("Error al persistir " + entity.getClass() + ": " + ex);
+            try {
+                tx.rollback();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            em.close();
+            return r;
+        }
+    }
+
+
+
 
 }
 

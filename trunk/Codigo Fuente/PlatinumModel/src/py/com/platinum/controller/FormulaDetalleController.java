@@ -89,9 +89,9 @@ public class FormulaDetalleController extends AbstractJpaDao <FormulaDetalle> {
 public static void main (String[] v) {
         FormulaDetalleController formulaDetalleController = new FormulaDetalleController();
         FormulaDetalle formulaDetalle = new FormulaDetalle();
-        formulaDetalle = formulaDetalleController.findById(Long.valueOf("9"));
+        formulaDetalle = formulaDetalleController.findById(Long.valueOf("10"));
         System.out.println(formulaDetalle.getCodProducto());
-        formulaDetalleController.eliminar(formulaDetalle);
+        formulaDetalleController.delete(formulaDetalle);
         };
 
 
