@@ -50,7 +50,7 @@
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
                         <div>
-                            <h:panelGrid binding="#{ABMFormulaSemiTerminado.mainContainer}" id="mainContainer" style="height: 96px; left: 240px; top: 192px; position: absolute; width: 96px">
+                            <h:panelGrid binding="#{ABMFormulaSemiTerminado.mainContainer}" id="mainContainer" style="height: 96px; left: 264px; top: 192px; position: absolute; width: 96px">
                                 <h:panelGrid binding="#{ABMFormulaSemiTerminado.gridPanelBuscar}" columns="3" id="gridPanelBuscar">
                                     <h:panelGrid columns="2" id="gridPanelCodigoFil1">
                                         <webuijsf:label id="label1Filtro1" text="Codigo"/>
@@ -91,7 +91,7 @@
                                         <webuijsf:tableColumn headerText="Producto" id="tableColumn3" sort="codProducto">
                                             <webuijsf:staticText id="staticText3" text="#{currentRow.value['codProducto']}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Cantidad" id="tableColumn4" sort="cantidad">
+                                        <webuijsf:tableColumn headerText="Cantidad" id="tableColumn4" sort="cantidad" width="132">
                                             <webuijsf:staticText id="staticText4" text="#{currentRow.value['cantidad']}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Descripcion" id="tableColumn5" sort="descripcion">
@@ -114,12 +114,12 @@
                                         <h:panelGrid columns="3" id="gridPanelProd">
                                             <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiProductoCodigo}" columns="15" id="uiProductoCodigo"/>
                                             <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiProductoNombre}" columns="50" id="uiProductoNombre"/>
-                                            <webuijsf:message id="message1" showDetail="false" showSummary="true"/>
+                                            <webuijsf:message for="uiProductoCodigo" id="message1" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
                                         <webuijsf:label id="label2" text="Descripcion"/>
                                         <h:panelGrid columns="2" id="gridPanelPassword">
                                             <webuijsf:textArea binding="#{ABMFormulaSemiTerminado.uiDescripcion}" columns="50" id="uiDescripcion" rows="5"/>
-                                            <webuijsf:message id="message2" showDetail="false" showSummary="true"/>
+                                            <webuijsf:message for="uiDescripcion" id="message2" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
                                         <webuijsf:label for="uiCantidad" id="label3" text="Cantidad"/>
                                         <h:panelGrid columns="2" id="gridPanelEmail">
@@ -129,13 +129,13 @@
                                         <webuijsf:label id="labelfec" text="Fecha Vigencia"/>
                                         <h:panelGrid columns="2" id="gridPanelfecvi">
                                             <webuijsf:calendar binding="#{ABMFormulaSemiTerminado.uiFecha}" dateFormatPattern="dd/MM/yyyy" id="uiFecha"/>
-                                            <webuijsf:message id="message3cal" showDetail="false" showSummary="true"/>
+                                            <webuijsf:message for="uiFecha" id="message3cal" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
                                         <webuijsf:label id="labelesta" text="Estado"/>
                                         <h:panelGrid columns="2" id="gridPanelestado">
                                             <webuijsf:dropDown binding="#{ABMFormulaSemiTerminado.uiEstado}" id="uiEstado"
                                                 items="#{ABMFormulaSemiTerminado.uiEstadoDefaultOptions.options}" selected="#{ABMFormulaSemiTerminado.uiEstadoDefaultOptions.selectedValue}"/>
-                                            <webuijsf:message id="message3esta" showDetail="false" showSummary="true"/>
+                                            <webuijsf:message for="uiEstado" id="message3esta" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanelBottonDet"
@@ -151,42 +151,55 @@
                                     <h:panelGrid id="gridPanelRecursos" style="width: 100%; height: 100%;">
                                         <webuijsf:label id="label5" style="font-size: 16px" text="Detalle Recursos"/>
                                         <h:panelGrid columns="5" id="gridPanel3" style="height: 48px" width="623">
-                                            <webuijsf:hyperlink id="hyperlink2" onClick="doPopup('form1:txtCodCliente_field', 'form1:txtApellidoNombre_field')"
-                                                target="popup" text="Producto" url="/faces/popupproductos.jsp"/>
+                                            <webuijsf:hyperlink actionExpression="#{ABMFormulaSemiTerminado.hyperlink2_action}" id="hyperlink2"
+                                                onClick="doPopup('form1:uiDetProductoCodigo_field', 'form1:uiDetProductoNombre_field')&#xd;&#xa;" target="popup"
+                                                text="Producto" url="/faces/popup/popupMateriasInsumos.jsp"/>
                                             <h:panelGrid columns="2" id="gridPanel1" style="width: 100%; height: 100%;">
                                                 <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiDetProductoCodigo}" columns="10" id="uiDetProductoCodigo"/>
-                                                <webuijsf:textField columns="30" id="uiDetProductoNombre"/>
+                                                <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiDetProductoNombre}" columns="30" id="uiDetProductoNombre"/>
                                             </h:panelGrid>
                                             <webuijsf:label id="label1" text="Cantidad"/>
                                             <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiDetProductoCantidad}" id="uiDetProductoCantidad"/>
                                             <webuijsf:button actionExpression="#{ABMFormulaSemiTerminado.buttonAddDetProd_action}" id="buttonAddDetProd" text="Agregar"/>
                                         </h:panelGrid>
-                                        <webuijsf:table augmentTitle="false" id="table2" width="623">
+                                        <webuijsf:table augmentTitle="false" id="table2" paginateButton="true" paginationControls="true" width="647">
                                             <webuijsf:tableRowGroup id="tableRowGroup2" rows="10" sourceData="#{ABMFormulaSemiTerminado.detallesFormulaSemi}" sourceVar="currentRow">
-                                                <webuijsf:tableColumn id="tableColumn8" width="26">
-                                                    <webuijsf:radioButton id="radioButton2" label=""/>
+                                                <webuijsf:tableColumn headerText="Codigo" id="tableColumn16" sort="codProducto" width="96">
+                                                    <webuijsf:staticText id="staticText115" text="#{currentRow.value['codProducto'].codProducto}"/>
                                                 </webuijsf:tableColumn>
-                                                <webuijsf:tableColumn headerText="Codigo" id="tableColumn1" sort="codFormulaSemiDetalle" width="97">
-                                                    <webuijsf:staticText id="staticText1" text="#{currentRow.value['codFormulaSemiDetalle']}"/>
-                                                </webuijsf:tableColumn>
-                                                <webuijsf:tableColumn headerText="Producto" id="tableColumn6" sort="codProducto" width="249">
+                                                <webuijsf:tableColumn headerText="Producto" id="tableColumn6" sort="codProducto" width="311">
                                                     <webuijsf:staticText id="staticText5" text="#{currentRow.value['codProducto']}"/>
                                                 </webuijsf:tableColumn>
                                                 <webuijsf:tableColumn headerText="Cantidad" id="tableColumn7" sort="cantidad">
                                                     <webuijsf:staticText id="staticText6" text="#{currentRow.value['cantidad']}"/>
                                                 </webuijsf:tableColumn>
+                                                <webuijsf:tableColumn align="center" id="tableColumn1" valign="top" width="34">
+                                                    <webuijsf:imageHyperlink actionExpression="#{ABMFormulaSemiTerminado.detailEditRecurso}"
+                                                        binding="#{ABMFormulaSemiTerminado.imageHyperlink2}" id="imageHyperlink2"
+                                                        imageURL="/resources/Images/edit_16x16.gif" text="">
+                                                        <f:setPropertyActionListener target="#{ABMFormulaSemiTerminado.itemDet}" value="#{currentRow.tableRow.rowId}"/>
+                                                    </webuijsf:imageHyperlink>
+                                                </webuijsf:tableColumn>
+                                                <webuijsf:tableColumn align="center" id="tableColumn14" valign="top" width="35">
+                                                    <webuijsf:imageHyperlink actionExpression="#{ABMFormulaSemiTerminado.detailRemoveRecurso}"
+                                                        binding="#{ABMFormulaSemiTerminado.imageHyperlink3}" id="imageHyperlink3"
+                                                        imageURL="/resources/Images/delete.gif" text="">
+                                                        <f:setPropertyActionListener target="#{ABMFormulaSemiTerminado.itemDet}" value="#{currentRow.tableRow.rowId}"/>
+                                                    </webuijsf:imageHyperlink>
+                                                </webuijsf:tableColumn>
                                             </webuijsf:tableRowGroup>
                                         </webuijsf:table>
                                     </h:panelGrid>
                                     <!-- DETALLE TAREAS -->
+                                    <webuijsf:message for="uiDetProductoCodigo" id="message4" showDetail="false" showSummary="true"/>
                                     <h:panelGrid binding="#{ABMFormulaSemiTerminado.gridPanelTareas}" id="gridPanelTareas" style="width: 100%; height: 100%;">
                                         <webuijsf:label id="lblDetTareas" style="font-size: 16px" text="Detalle Tareas"/>
                                         <h:panelGrid columns="7" id="gridPanelAddDetTarea" style="height: 48px" width="623">
-                                            <webuijsf:hyperlink id="hlTarea" onClick="doPopup('form1:txtCodCliente_field', 'form1:txtApellidoNombre_field')"
-                                                target="popup" text="Tarea" url="/faces/popuptareas.jsp"/>
+                                            <webuijsf:hyperlink id="hlTarea" onClick="doPopup('form1:uiDetTareaCodigo_field', 'form1:uiDetTareaNombre_field')"
+                                                target="popup" text="Tarea" url="/faces/popup/popupTareas.jsp"/>
                                             <h:panelGrid columns="2" id="gridPanel2" style="width: 100%; height: 100%;">
                                                 <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiDetTareaCodigo}" columns="10" id="uiDetTareaCodigo"/>
-                                                <webuijsf:textField columns="30" id="uiDetTareaNombre"/>
+                                                <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiDetTareaNombre}" columns="30" id="uiDetTareaNombre"/>
                                             </h:panelGrid>
                                             <webuijsf:label id="lblCantTarea" text="Cantidad"/>
                                             <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiDetTareaCantidad}" columns="10" id="uiDetTareaCantidad"/>
@@ -194,23 +207,38 @@
                                             <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiDetTareaOrden}" columns="5" id="uiDetTareaOrden"/>
                                             <webuijsf:button actionExpression="#{ABMFormulaSemiTerminado.buttonAddDetTar_action}" id="buttonAddDetTar" text="Agregar"/>
                                         </h:panelGrid>
-                                        <webuijsf:table augmentTitle="false" id="tableTareas" width="623">
+                                        <webuijsf:table augmentTitle="false" id="tableTareas" paginateButton="true" paginationControls="true" width="647">
                                             <webuijsf:tableRowGroup id="tableTareasRowGroup" rows="10" sourceData="#{ABMFormulaSemiTerminado.tareasFormula}" sourceVar="currentRow">
-                                                <webuijsf:tableColumn align="center" id="tableColumn13">
-                                                    <webuijsf:radioButton id="radioButton3" label=""/>
+                                                <webuijsf:tableColumn headerText="Cod Tarea" id="tableColumn229" width="89">
+                                                    <webuijsf:staticText id="staticText197" text="#{currentRow.value['codTarea'].codTarea}"/>
                                                 </webuijsf:tableColumn>
-                                                <webuijsf:tableColumn headerText="Tarea" id="tableColumn9" sort="codTarea">
+                                                <webuijsf:tableColumn headerText="Tarea" id="tableColumn9" sort="codTarea" width="263">
                                                     <webuijsf:staticText id="staticText7" text="#{currentRow.value['codTarea']}"/>
                                                 </webuijsf:tableColumn>
-                                                <webuijsf:tableColumn headerText="Cantidad" id="tableColumn10" sort="cantidadTarea">
+                                                <webuijsf:tableColumn headerText="Cantidad" id="tableColumn10" width="120">
                                                     <webuijsf:staticText id="staticText8" text="#{currentRow.value['cantidadTarea']}"/>
                                                 </webuijsf:tableColumn>
-                                                <webuijsf:tableColumn headerText="Orden" id="tableColumn11" sort="ordenTarea">
+                                                <webuijsf:tableColumn headerText="Orden" id="tableColumn11" sort="ordenTarea" width="90">
                                                     <webuijsf:staticText id="staticText10" text="#{currentRow.value['ordenTarea']}"/>
+                                                </webuijsf:tableColumn>
+                                                <webuijsf:tableColumn align="center" id="tableColumn15" valign="top">
+                                                    <webuijsf:imageHyperlink actionExpression="#{ABMFormulaSemiTerminado.detailEditTarea}"
+                                                        binding="#{ABMFormulaSemiTerminado.imageHyperlink4}" id="imageHyperlink4"
+                                                        imageURL="resources/Images/edit_16x16.gif" text="">
+                                                        <f:setPropertyActionListener target="#{ABMFormulaSemiTerminado.itemDet}" value="#{currentRow.tableRow.rowId}"/>
+                                                    </webuijsf:imageHyperlink>
+                                                </webuijsf:tableColumn>
+                                                <webuijsf:tableColumn align="center" id="tableColumn17" valign="top">
+                                                    <webuijsf:imageHyperlink actionExpression="#{ABMFormulaSemiTerminado.detailRemoveTarea}"
+                                                        binding="#{ABMFormulaSemiTerminado.imageHyperlink5}" id="imageHyperlink5"
+                                                        imageURL="/resources/Images/delete.gif" text="">
+                                                        <f:setPropertyActionListener target="#{ABMFormulaSemiTerminado.itemDet}" value="#{currentRow.tableRow.rowId}"/>
+                                                    </webuijsf:imageHyperlink>
                                                 </webuijsf:tableColumn>
                                             </webuijsf:tableRowGroup>
                                         </webuijsf:table>
                                     </h:panelGrid>
+                                    <webuijsf:message for="uiDetTareaCodigo" id="message5" showDetail="false" showSummary="true"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                         </div>

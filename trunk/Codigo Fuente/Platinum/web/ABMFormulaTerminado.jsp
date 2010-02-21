@@ -117,7 +117,7 @@
                                         <h:panelGrid binding="#{ABMFormulaTerminado.gridPanelUser}" columns="3" id="gridPanelUser">
                                             <webuijsf:textField binding="#{ABMFormulaTerminado.uiProductoCodigo}" columns="15" id="uiProductoCodigo"/>
                                             <webuijsf:textField binding="#{ABMFormulaTerminado.uiProductoNombre}" columns="50" id="uiProductoNombre" valueChangeListenerExpression="#{ABMFormulaTerminado.uiProductoNombre_processValueChange}"/>
-                                            <webuijsf:message for="uiProductoNombre" id="message1" showDetail="false" showSummary="true"/>
+                                            <webuijsf:message for="uiProductoCodigo" id="message1" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
                                         <webuijsf:label id="label2" text="Descripcion"/>
                                         <h:panelGrid columns="2" id="gridPanelPassword">
@@ -151,7 +151,9 @@
                                             binding="#{ABMFormulaTerminado.updateRecordButton}" id="updateRecordButton" style="width: 71px; font-size: 14px" text="Guardar"/>
                                     </h:panelGrid>
                                     <h:panelGrid id="gridPanel2" style="width: 100%; height: 100%;">
-                                        <webuijsf:label id="label5" style="font-size: 16px" text="Detalle Semiterminados"/>
+                                        <h:panelGrid id="gridPanel4" style="height: 48px">
+                                            <webuijsf:label id="label5" style="font-size: 16px" text="Detalle Formula / Formulas de Semiterminados"/>
+                                        </h:panelGrid>
                                         <h:panelGrid columns="6" id="gridPanel3" style="height: 48px" width="839">
                                             <webuijsf:hyperlink id="uiHiperLynkProductos"
                                                 onClick="doPopup('form1:uiDetalleProdCod_field', 'form1:uiDetalleProdDesc_field','form1:uiDetalleCodFormula_field','form1:uiDetalleFormula_field','form1:uiDetalleCant_field')&#xd;&#xa;"
@@ -160,7 +162,7 @@
                                             <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleProdDesc}" columns="35" id="uiDetalleProdDesc"/>
                                             <webuijsf:label id="label4" text="Formula"/>
                                             <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleCodFormula}" columns="10" id="uiDetalleCodFormula"/>
-                                            <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleFormula}" columns="35" id="uiDetalleFormula"/>
+                                            <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleFormula}" columns="45" id="uiDetalleFormula"/>
                                             <webuijsf:label id="label1" text="Cantidad"/>
                                             <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleCant}" id="uiDetalleCant"/>
                                             <webuijsf:button actionExpression="#{ABMFormulaTerminado.uiButtonAgregarDetalle_action}" id="uiButtonAgregarDetalle" text="Agregar"/>
@@ -185,12 +187,14 @@
                                                     <webuijsf:staticText id="staticText16" text="#{currentRow.value['codFormulaSemiCabecera'].cantidad}"/>
                                                 </webuijsf:tableColumn>
                                                 <webuijsf:tableColumn align="center" id="tableColumn7">
-                                                    <webuijsf:imageHyperlink actionExpression="#{ABMFormulaTerminado.detail}"
+                                                    <webuijsf:imageHyperlink actionExpression="#{ABMFormulaTerminado.detailEdit}"
                                                         binding="#{ABMFormulaTerminado.uiImageHyperlinkEdit}" id="uiImageHyperlinkEdit"
-                                                        imageURL="/resources/Images/edit_16x16.gif" text=""/>
+                                                        imageURL="/resources/Images/edit_16x16.gif" text="">
+                                                        <f:setPropertyActionListener target="#{ABMFormulaTerminado.itemDet}" value="#{currentRow.tableRow.rowId}"/>
+                                                    </webuijsf:imageHyperlink>
                                                 </webuijsf:tableColumn>
                                                 <webuijsf:tableColumn align="center" id="tableColumn8">
-                                                    <webuijsf:imageHyperlink actionExpression="#{ABMFormulaTerminado.detail}"
+                                                    <webuijsf:imageHyperlink actionExpression="#{ABMFormulaTerminado.detailRemove}"
                                                         binding="#{ABMFormulaTerminado.uiImageHyperlinkDel}" id="uiImageHyperlinkDel"
                                                         imageURL="/resources/img/delete.png" text="">
                                                         <f:setPropertyActionListener target="#{ABMFormulaTerminado.itemDet}" value="#{currentRow.tableRow.rowId}"/>

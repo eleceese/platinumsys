@@ -23,20 +23,29 @@
                         <h:panelGrid id="mainContainer" style="height: 408px; left: 264px; top: 264px; position: absolute" width="888">
                             <webuijsf:pageAlert binding="#{RegistroDeOrdenesDeTrabajo.pageAlert1}" id="pageAlert1" rendered="false"/>
                             <h:panelGrid binding="#{RegistroDeOrdenesDeTrabajo.gridPanelBuscar}" id="gridPanelBuscar" style="height: 100%; width: 100%">
-                                <h:panelGrid columns="2" id="gridPanelBuscar1" style="height: 96px" width="647">
-                                    <h:panelGrid columns="2" id="gridPanelProducto">
+                                <h:panelGrid columns="2" id="gridPanelFiltros" style="height: 96px" width="647">
+                                    <h:panelGrid columns="2" id="gridPanelProducto" width="359">
                                         <webuijsf:hyperlink id="linkProducto" style="width: 85px" text="Producto"/>
-                                        <webuijsf:textField columns="50" id="producto1" text="Producto Producto"/>
+                                        <webuijsf:dropDown binding="#{RegistroDeOrdenesDeTrabajo.dropDown1}" id="dropDown1"
+                                            items="#{SessionBean1.listaProductosOp}" width="270"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanelEstado" style="height: 30px" width="239">
                                         <webuijsf:label id="labelEstado" text="Estado OT"/>
-                                        <webuijsf:dropDown id="dropDownEstado" items="#{RegistroDeOrdenesDeTrabajo.dropDownEstadoDefaultOptions.options}" width="150px"/>
+                                        <webuijsf:dropDown id="uiEstadoFIl" items="#{RegistroDeOrdenesDeTrabajo.uiEstadoFIlDefaultOptions.options}" width="150px"/>
                                     </h:panelGrid>
-                                    <h:panelGrid columns="2" id="gridPanelFecha1" style="height: 30px; text-align: left; width: 100%">
-                                        <webuijsf:label id="fechaApertura" style="width: 10px" text="Fecha Apertura"/>
-                                        <webuijsf:calendar columns="40" id="calendar2"/>
+                                    <h:panelGrid columns="2" id="gridPanelVacio" style="vertical-align: top" width="431">
+                                        <webuijsf:label id="label1" style="background-position: top; vertical-align: top" text="Rango de Fecha Apertura"/>
+                                        <h:panelGrid columns="1" id="gridPanelVacio1" style="height: 30px; width: 60%">
+                                            <h:panelGrid columns="2" id="gridPanelFecha2" style="height: 30px; text-align: left; width: 100%">
+                                                <webuijsf:label id="fechaApertura1" style="width: 10px" text="Desde"/>
+                                                <webuijsf:calendar columns="40" id="uiFechaDesdeFil"/>
+                                            </h:panelGrid>
+                                            <h:panelGrid columns="2" id="gridPanelFecha1" style="height: 30px; text-align: left; width: 100%">
+                                                <webuijsf:label id="inicio" style="width: 10px" text="Hasta"/>
+                                                <webuijsf:calendar columns="40" id="uiFechaHastaFil"/>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
                                     </h:panelGrid>
-                                    <h:panelGrid columns="2" id="gridPanelVacio" style="height: 30px; width: 60%"/>
                                     <h:panelGrid columns="2" id="gridPanelResponsable1" style="height:30px; width: 100%">
                                         <webuijsf:hyperlink id="linkResponsable" style="width: 85px" text="Responsable"/>
                                         <h:panelGrid columns="2" id="gridPanelResponsable" style="height: 30px; text-align: left" width="311">

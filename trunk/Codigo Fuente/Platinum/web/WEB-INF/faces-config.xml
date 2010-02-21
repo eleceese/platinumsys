@@ -2,9 +2,9 @@
 
 <!-- =========== FULL CONFIGURATION FILE ================================== -->
 
-<faces-config version="1.2" 
-    xmlns="http://java.sun.com/xml/ns/javaee" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<faces-config version="1.2"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
     <managed-bean>
         <managed-bean-name>SessionBean1</managed-bean-name>
@@ -222,16 +222,6 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>popup$popupProveedores</managed-bean-name>
-        <managed-bean-class>platinum.popup.popupProveedores</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>popup$popupEmpleados</managed-bean-name>
-        <managed-bean-class>platinum.popup.popupEmpleados</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
         <managed-bean-name>ABMUnidadMedida_2</managed-bean-name>
         <managed-bean-class>platinum.ABMUnidadMedida_2</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
@@ -247,36 +237,6 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>ABMGenerarComisionMensual</managed-bean-name>
-        <managed-bean-class>platinum.ABMGenerarComisionMensual</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>ABMNotaCreProveedor</managed-bean-name>
-        <managed-bean-class>platinum.ABMNotaCreProveedor</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>LSTEstadisticasCostosProduccion</managed-bean-name>
-        <managed-bean-class>platinum.LSTEstadisticasCostosProduccion</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>ABMPerdidasProduccion</managed-bean-name>
-        <managed-bean-class>platinum.ABMPerdidasProduccion</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>LSTEstadisticaDeCobranza</managed-bean-name>
-        <managed-bean-class>platinum.LSTEstadisticaDeCobranza</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>LSTRequerimientoInterno</managed-bean-name>
-        <managed-bean-class>platinum.LSTRequerimientoInterno</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
         <managed-bean-name>popupproductos_1</managed-bean-name>
         <managed-bean-class>platinum.popupproductos_1</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
@@ -287,13 +247,83 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>ABMVentasCliente</managed-bean-name>
-        <managed-bean-class>platinum.ABMVentasCliente</managed-bean-class>
+        <managed-bean-name>popupEmpleados</managed-bean-name>
+        <managed-bean-class>platinum.popupEmpleados</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>LSTClientesMorosos</managed-bean-name>
-        <managed-bean-class>platinum.LSTClientesMorosos</managed-bean-class>
+        <managed-bean-name>ABMSolicitudesInternasAprobacion</managed-bean-name>
+        <managed-bean-class>platinum.ABMSolicitudesInternasAprobacion</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>LSTClientesEstadisticaVenta</managed-bean-name>
+        <managed-bean-class>platinum.LSTClientesEstadisticaVenta</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMGenerarComisionMensual</managed-bean-name>
+        <managed-bean-class>platinum.ABMGenerarComisionMensual</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>LSTRequerimientoInterno</managed-bean-name>
+        <managed-bean-class>platinum.LSTRequerimientoInterno</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>LSTEstadisticaPerdidasEnProduccion</managed-bean-name>
+        <managed-bean-class>platinum.LSTEstadisticaPerdidasEnProduccion</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMPerdidasProduccion</managed-bean-name>
+        <managed-bean-class>platinum.ABMPerdidasProduccion</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>LSTExistenciaProducto</managed-bean-name>
+        <managed-bean-class>platinum.LSTExistenciaProducto</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popuptareas</managed-bean-name>
+        <managed-bean-class>platinum.popuptareas</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>LSTLibroIVAVenta</managed-bean-name>
+        <managed-bean-class>platinum.LSTLibroIVAVenta</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>LSTEstadisticasCostosProduccion</managed-bean-name>
+        <managed-bean-class>platinum.LSTEstadisticasCostosProduccion</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMCalculoDeCostosFinales</managed-bean-name>
+        <managed-bean-class>platinum.ABMCalculoDeCostosFinales</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMNotaCreProveedor</managed-bean-name>
+        <managed-bean-class>platinum.ABMNotaCreProveedor</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>LSTMovimientoDeposito</managed-bean-name>
+        <managed-bean-class>platinum.LSTMovimientoDeposito</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMSolicitudesInternas</managed-bean-name>
+        <managed-bean-class>platinum.ABMSolicitudesInternas</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>LSTPedidosProvisiones</managed-bean-name>
+        <managed-bean-class>platinum.LSTPedidosProvisiones</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
@@ -307,58 +337,8 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>LSTClientesEstadisticaVenta</managed-bean-name>
-        <managed-bean-class>platinum.LSTClientesEstadisticaVenta</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>LSTLibroIVAVenta</managed-bean-name>
-        <managed-bean-class>platinum.LSTLibroIVAVenta</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>LSTEstadisticaDeProduccion</managed-bean-name>
-        <managed-bean-class>platinum.LSTEstadisticaDeProduccion</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>ABMSolicitudesInternas</managed-bean-name>
-        <managed-bean-class>platinum.ABMSolicitudesInternas</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
         <managed-bean-name>LSTValoresEnDeposito</managed-bean-name>
         <managed-bean-class>platinum.LSTValoresEnDeposito</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>popuptareas</managed-bean-name>
-        <managed-bean-class>platinum.popuptareas</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>LSTMovimientoDeposito</managed-bean-name>
-        <managed-bean-class>platinum.LSTMovimientoDeposito</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>ABMNotaCreCliente</managed-bean-name>
-        <managed-bean-class>platinum.ABMNotaCreCliente</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>ABMSolicitudesInternasAprobacion</managed-bean-name>
-        <managed-bean-class>platinum.ABMSolicitudesInternasAprobacion</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>ABMReciboCobro</managed-bean-name>
-        <managed-bean-class>platinum.ABMReciboCobro</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>ABMCalculoDeCostosFinales</managed-bean-name>
-        <managed-bean-class>platinum.ABMCalculoDeCostosFinales</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
@@ -367,8 +347,8 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>ABMPedidoCliente</managed-bean-name>
-        <managed-bean-class>platinum.ABMPedidoCliente</managed-bean-class>
+        <managed-bean-name>ABMReciboCobro</managed-bean-name>
+        <managed-bean-class>platinum.ABMReciboCobro</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
@@ -377,23 +357,58 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>LSTEstadisticaPerdidasEnProduccion</managed-bean-name>
-        <managed-bean-class>platinum.LSTEstadisticaPerdidasEnProduccion</managed-bean-class>
+        <managed-bean-name>ABMPedidoCliente</managed-bean-name>
+        <managed-bean-class>platinum.ABMPedidoCliente</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>LSTPedidosProvisiones</managed-bean-name>
-        <managed-bean-class>platinum.LSTPedidosProvisiones</managed-bean-class>
+        <managed-bean-name>LSTClientesMorosos</managed-bean-name>
+        <managed-bean-class>platinum.LSTClientesMorosos</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>popupEmpleados</managed-bean-name>
-        <managed-bean-class>platinum.popupEmpleados</managed-bean-class>
+        <managed-bean-name>LSTEstadisticaDeCobranza</managed-bean-name>
+        <managed-bean-class>platinum.LSTEstadisticaDeCobranza</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>LSTExistenciaProducto</managed-bean-name>
-        <managed-bean-class>platinum.LSTExistenciaProducto</managed-bean-class>
+        <managed-bean-name>ABMVentasCliente</managed-bean-name>
+        <managed-bean-class>platinum.ABMVentasCliente</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>LSTEstadisticaDeProduccion</managed-bean-name>
+        <managed-bean-class>platinum.LSTEstadisticaDeProduccion</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMNotaCreCliente</managed-bean-name>
+        <managed-bean-class>platinum.ABMNotaCreCliente</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupFormulasSemiter</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupFormulasSemiter</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupProveedores</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupProveedores</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupEmpleados</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupEmpleados</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupMateriasInsumos</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupMateriasInsumos</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupTareas</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupTareas</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 </faces-config>

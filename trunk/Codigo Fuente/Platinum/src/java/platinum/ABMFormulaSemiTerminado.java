@@ -9,6 +9,7 @@ import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.Calendar;
 import com.sun.webui.jsf.component.DropDown;
+import com.sun.webui.jsf.component.ImageHyperlink;
 import com.sun.webui.jsf.component.PageAlert;
 import com.sun.webui.jsf.component.RadioButton;
 import com.sun.webui.jsf.component.Table;
@@ -22,19 +23,25 @@ import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 
 import py.com.platinum.controller.FormulaSemiCabeceraController;
+import py.com.platinum.controller.FormulaSemiDetalleController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.TareaController;
+import py.com.platinum.controller.TareaFormulaController;
 import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.FormulaDetalle;
 import py.com.platinum.entity.FormulaSemiCabecera;
 import py.com.platinum.entity.FormulaSemiDetalle;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.Tarea;
 import py.com.platinum.entity.TareaFormula;
+import py.com.platinum.utils.StringUtils;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -339,6 +346,69 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
     public void setUiDetProductoCantidad(TextField tf) {
         this.uiDetProductoCantidad = tf;
     }
+    private TextField uiDetProductoNombre = new TextField();
+
+    public TextField getUiDetProductoNombre() {
+        return uiDetProductoNombre;
+    }
+
+    public void setUiDetProductoNombre(TextField tf) {
+        this.uiDetProductoNombre = tf;
+    }
+    private TextField uiDetTareaNombre = new TextField();
+
+    public TextField getUiDetTareaNombre() {
+        return uiDetTareaNombre;
+    }
+
+    public void setUiDetTareaNombre(TextField tf) {
+        this.uiDetTareaNombre = tf;
+    }
+    private ImageHyperlink imageHyperlink1 = new ImageHyperlink();
+
+    public ImageHyperlink getImageHyperlink1() {
+        return imageHyperlink1;
+    }
+
+    public void setImageHyperlink1(ImageHyperlink ih) {
+        this.imageHyperlink1 = ih;
+    }
+    private ImageHyperlink imageHyperlink2 = new ImageHyperlink();
+
+    public ImageHyperlink getImageHyperlink2() {
+        return imageHyperlink2;
+    }
+
+    public void setImageHyperlink2(ImageHyperlink ih) {
+        this.imageHyperlink2 = ih;
+    }
+    private ImageHyperlink imageHyperlink3 = new ImageHyperlink();
+
+    public ImageHyperlink getImageHyperlink3() {
+        return imageHyperlink3;
+    }
+
+    public void setImageHyperlink3(ImageHyperlink ih) {
+        this.imageHyperlink3 = ih;
+    }
+    private ImageHyperlink imageHyperlink4 = new ImageHyperlink();
+
+    public ImageHyperlink getImageHyperlink4() {
+        return imageHyperlink4;
+    }
+
+    public void setImageHyperlink4(ImageHyperlink ih) {
+        this.imageHyperlink4 = ih;
+    }
+    private ImageHyperlink imageHyperlink5 = new ImageHyperlink();
+
+    public ImageHyperlink getImageHyperlink5() {
+        return imageHyperlink5;
+    }
+
+    public void setImageHyperlink5(ImageHyperlink ih) {
+        this.imageHyperlink5 = ih;
+    }
 
     // </editor-fold>
     /**
@@ -415,8 +485,7 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
             addUpdatePanel.setRendered(true);
             addRecordButton.setRendered(true);
             updateRecordButton.setRendered(false);
-            uiProductoCodigo.setText("");
-            uiCantidad.setText("");
+            
         } else if (updateRequest) {
             //if (getTableRowGroup1().getSelectedRowsCount() > 0) {
                 gridPanelBuscar.setRendered(false);
@@ -544,6 +613,9 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
     private boolean addRequest = false;
     private boolean updateRequest = false;
     private boolean errorValidacion = false;
+    private boolean editarDetalleRecurso = false;
+    private boolean editarDetalleTarea = false;
+
 
     ////// CARGA DE ARRAY Formulas SEMITERMINADOS
 //////     import com.sun.webui.jsf.model.Option;
@@ -590,11 +662,19 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
     public String addButton_action() {
             
         this.pageAlert1.setRendered(false);
+        uiProductoCodigo.setText("");
+        uiCantidad.setText("");
+        uiProductoNombre.setText("");
+        uiDescripcion.setText("");
+
+
         detalleFormulaSemiList = new ArrayList();
         detallesFormulaSemi = (FormulaSemiDetalle[]) detalleFormulaSemiList.toArray(new FormulaSemiDetalle[0]);
 
+
         tareaFormulaList = new ArrayList();
         tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
+
 
 
         addRequest = true;
@@ -627,23 +707,157 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
 
     public String updateButton_action() {
 
-        this.pageAlert1.setRendered(true);
+        detalleFormulaSemiEliminadaList = new ArrayList();
+        tareaFormulaEliminadaList = new ArrayList();
+
         updateRequest = true;
         getSessionBean1().setTituloPagina("Editar Fórmula de Producción");
         getSessionBean1().setDetallePagina("Crear una fórmula de producción de un Producto Semiterminado, " +
                 "con su detalle correspondiente de Recursos y Tareas");
+
+        this.pageAlert1.setRendered(false);
+        this.updateRequest=true;
+        this.addRecordButton.setRendered(false);
+        this.updateRecordButton.setRendered(true);
+
+        cargarCamposUpdate();
+//        limpiarDetalle();
+
+
+
         return null;
     }
 
+    public void cargarCamposUpdate(){
+         if (getTableFormulasRW().getSelectedRowsCount() > 0){
+          RowKey[] selectedRowKeys = getTableFormulasRW().getSelectedRowKeys();
+          FormulaSemiCabecera[] formulasSemiCabecera = this.listaFormulaSemiCabeceras;
+          int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+          FormulaSemiCabecera formulaSemiCabecera = formulasSemiCabecera[rowId];
+
+          getSessionBean1().setId(formulaSemiCabecera.getCodFormulaSemiCabecera());
+
+         //// CARGA DE CAMPOS DE LA PAGINA
+         this.uiProductoCodigo.setText(formulaSemiCabecera.getCodProducto().getCodProducto().toString());
+         this.uiProductoNombre.setText(formulaSemiCabecera.getCodProducto().getDescripcion().toString());
+         this.uiDescripcion.setText(formulaSemiCabecera.getDescripcion().toString());
+         this.uiCantidad.setText(formulaSemiCabecera.getCantidad());
+         this.uiFecha.setSelectedDate(formulaSemiCabecera.getFecha());
+
+         detalleFormulaSemiList = new ArrayList();
+         detalleFormulaSemiList = formulaSemiCabecera.getFormulaSemiDetalleListList();
+         detallesFormulaSemi = (FormulaSemiDetalle[]) detalleFormulaSemiList.toArray(new FormulaSemiDetalle[0]);
+
+         tareaFormulaList = new ArrayList();
+         tareaFormulaList = formulaSemiCabecera.getTareaFormulaListList();
+         tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
+         
+         }
+}
+
+
     public String deleteButton_action() {
-        return null;
+        if (getTableFormulasRW().getSelectedRowsCount() > 0) {
+                RowKey[] selectedRowKeys = getTableFormulasRW().getSelectedRowKeys();
+                FormulaSemiCabecera[] formulasSemiCabecera = this.listaFormulaSemiCabeceras;
+                int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+                FormulaSemiCabecera formulaSemiCabecera = formulasSemiCabecera[rowId];
+
+                FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
+                getSessionBean1().setId(formulaSemiCabecera.getCodFormulaSemiCabecera());
+
+        /// ELIMINACION DE LOS DETALES
+                detalleFormulaSemiList = new ArrayList();
+                detalleFormulaSemiList = formulaSemiCabecera.getFormulaSemiDetalleListList();
+                detallesFormulaSemi = (FormulaSemiDetalle[]) detalleFormulaSemiList.toArray(new FormulaSemiDetalle[0]);
+
+                tareaFormulaList = new ArrayList();
+                tareaFormulaList = formulaSemiCabecera.getTareaFormulaListList();
+                tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
+
+                ControllerResult controllerResult = new ControllerResult();
+                controllerResult = formulaSemiCabeceraController.deleteCabDet(formulaSemiCabecera, detallesFormulaSemi, tareasFormula);
+
+
+//                /// ELIMINACION DE LOS DETALLES DE RECURSOS
+//                if (detallesFormulaSemi != null) {
+//                    for (int i = 0; i < detallesFormulaSemi.length; i++) {
+//
+//                                    FormulaSemiDetalle fdet = new FormulaSemiDetalle();
+//                                    fdet = detallesFormulaSemi[i];
+//
+//
+//                                    FormulaSemiDetalleController formulaSemiDetalleController = new FormulaSemiDetalleController();
+//                                    controllerResult = formulaSemiDetalleController.eliminar(fdet);
+//
+//                                    if (controllerResult.getCodRetorno() ==-1) {
+//                                        this.pageAlert1.setType("error");
+//                                        break;
+//                                    }
+//                      }
+//
+//                }
+//
+//                /// FIN ELIMINACION DE LOS DETALLES DE RECURSOS
+//
+//                /// ELIMINACION DE LOS DETALLES DE TAREAS
+//                if (controllerResult.getCodRetorno() !=-1) {
+//                    if (tareasFormula != null) {
+//                        for (int i = 0; i < tareasFormula.length; i++) {
+//
+//                                    TareaFormula tfor = new TareaFormula();
+//                                    tfor = tareasFormula[i];
+//
+//                                    TareaFormulaController tareaFormulaController = new TareaFormulaController();
+//                                    controllerResult = tareaFormulaController.eliminar(tfor);
+//
+//                                    if (controllerResult.getCodRetorno() ==-1) {
+//                                        this.pageAlert1.setType("error");
+//                                        break;
+//                                    }
+//                        }
+//                    }
+//                }
+//                /// FIN ELIMINACION DE LOS DETALLES DE TAREAS
+//
+//        /// FIN DE ELIMINACION DE LOS DETALLES
+//
+//
+//       /// ELIMINACION DE LA CABECERA
+//
+//                if (controllerResult.getCodRetorno() !=-1) {
+//                        formulaSemiCabecera = formulaSemiCabeceraController.findById(formulaSemiCabecera.getCodFormulaSemiCabecera());
+//                        controllerResult = formulaSemiCabeceraController.delete(formulaSemiCabecera);
+//                         if (controllerResult.getCodRetorno() ==-1) {
+//                                this.pageAlert1.setType("error");
+//                            } else {
+//                                this.pageAlert1.setType("information");
+//                         }
+//                }
+//       /// FIN ELIMINACION DE LA CABECERA
+
+            if (controllerResult.getCodRetorno() ==-1) {
+                this.pageAlert1.setType("error");
+            } else {
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(controllerResult.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
     }
+
+        return null;
+}
 
     public String addRecordButton_action() {
 
 
         errorValidacion = validarCampos();
 
+        detallesFormulaSemi = (FormulaSemiDetalle[]) detalleFormulaSemiList.toArray(new FormulaSemiDetalle[0]);
+        tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
         //Si no hay error de validacion
         if (! errorValidacion){
 
@@ -660,56 +874,98 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
 
                             FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
                             ControllerResult controllerResult = new ControllerResult();
-                            controllerResult = formulaSemiCabeceraController.create(formulaSemiCabecera);
-
-//// FIN DE LA CARGA DE LA CABECERA
+//                            controllerResult = formulaSemiCabeceraController.create(formulaSemiCabecera);
+                            controllerResult = formulaSemiCabeceraController.createCabDet(formulaSemiCabecera, detallesFormulaSemi, tareasFormula);
+//controllerResult = formulaSemiCabeceraController.create(formulaSemiCabecera);
+//
+////// FIN DE LA CARGA DE LA CABECERA
 //                            if (controllerResult.getCodRetorno() ==-1) {
 //                                    this.pageAlert1.setType("error");
 //                                    this.errorValidacion=true;
 //                                } else {
 //
-//                                                        // CARGA DE LOS DETALLES
+//                                        // CARGA DE LOS DETALLES DE RECURSOS
 //
-//                                                        detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
-//                                                        for (int i = 0; i < detallesFormula.length; i++) {
+//                                        detallesFormulaSemi = (FormulaSemiDetalle[]) detalleFormulaSemiList.toArray(new FormulaSemiDetalle[0]);
+//                                        for (int i = 0; i < detallesFormulaSemi.length; i++) {
 //
-//                                                            FormulaDetalle fdet = new FormulaDetalle();
-//                                                            fdet = detallesFormula[i];
-//                                                            fdet.setCodFormula(formulaCabecera);
-//                                                            FormulaDetalleController formulaDetalleController = new FormulaDetalleController();
-//                                                            controllerResult = formulaDetalleController.create(fdet);
+//                                            FormulaSemiDetalle fsdet = new FormulaSemiDetalle();
+//                                            fsdet = detallesFormulaSemi[i];
+//                                            fsdet.setCodFormulaSemiCabecera(formulaSemiCabecera);
+//                                            FormulaSemiDetalleController formulaSemiDetalleController = new FormulaSemiDetalleController();
+//                                            controllerResult = formulaSemiDetalleController.create(fsdet);
+//
+//                                            if (controllerResult.getCodRetorno() ==-1) {
+//                                                this.pageAlert1.setType("error");
+//                                                this.errorValidacion=true;
+//                                                break;
+//                                            }
+//                                        }
+//                                        // FIN DE CARGA DE LOS DETALLES DE RECURSOS
+//
+//                                        if (controllerResult.getCodRetorno() != -1) {
+//
+//
+////                                                                        // CARGA DE LOS DETALLES DE TAREAS
+////
+//                                                        tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
+//                                                        for (int i = 0; i < tareasFormula.length; i++) {
+//                                                            TareaFormula tfor = new TareaFormula();
+//                                                            tfor = tareasFormula[i];
+//                                                            tfor.setCodFormulaSemiCabecera(formulaSemiCabecera);
+//                                                            TareaFormulaController tareaFormulaController = new TareaFormulaController();
+//                                                            controllerResult = tareaFormulaController.create(tfor);
 //
 //                                                            if (controllerResult.getCodRetorno() ==-1) {
 //                                                                this.pageAlert1.setType("error");
 //                                                                this.errorValidacion=true;
 //                                                                break;
 //                                                            }
-//
 //                                                        }
-//
-//                                                        // FIN DE CARGA DE LOS DETALLES
+//                                        }
+//                                        // FIN DE CARGA DE LOS DETALLES DE TAREAS
 //                            }
 //
 //
-                            if (controllerResult.getCodRetorno() != -1) {
-                                    addRequest = false;
-                                    this.pageAlert1.setType("information");
-                            }
+//
+//                            if (controllerResult.getCodRetorno() != -1) {
+//                                    addRequest = false;
+//                                    this.pageAlert1.setType("information");
+//                            }
+//
+//                                this.pageAlert1.setTitle(controllerResult.getMsg());
+//                                this.pageAlert1.setSummary("");
+//                                this.pageAlert1.setDetail("");
+//                                this.pageAlert1.setRendered(true);
+//        }
+        
+        if (controllerResult.getCodRetorno() != -1) {
+                addRequest = false;
+                this.pageAlert1.setType("information");
+        }else{
+        
+        this.pageAlert1.setType("error");
+        this.errorValidacion=true;
+        
+        }
 
-                                this.pageAlert1.setTitle(controllerResult.getMsg());
-                                this.pageAlert1.setSummary("");
-                                this.pageAlert1.setDetail("");
-                                this.pageAlert1.setRendered(true);
+            this.pageAlert1.setTitle(controllerResult.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+
+        
+        
         }
 
 
-        
+
         return null;
-    }
+
+}
 
 
 //MANEJO DE LOS DETALLES
-
 
 private FormulaSemiDetalle[] detallesFormulaSemi;
 private FormulaSemiDetalle  detalleFormulaSemi;
@@ -719,6 +975,8 @@ private TareaFormula[] tareasFormula;
 private TareaFormula  tareaFormula;
 private List<TareaFormula>  tareaFormulaList;
 
+private List<FormulaSemiDetalle>  detalleFormulaSemiEliminadaList;
+private List<TareaFormula>  tareaFormulaEliminadaList;
 
     public TareaFormula getTareaFormula() {
         return tareaFormula;
@@ -776,34 +1034,184 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
     public String updateRecordButton_action() {
         //errorValidacion = validarCampos();
         errorValidacion = false;
+        updateRequest = true;
 
-        if (!errorValidacion) {
-            // TODO: Process the action. Return value is a navigation
-            // case name where null will return to the same page.
-            // Create a new Users Entity
-            // Update the database table data using UserController
-            addRequest = false;
-            this.pageAlert1.setType("information");
-            this.pageAlert1.setTitle("Registro Editado correctamente!!!");
-            this.pageAlert1.setSummary("");
-            this.pageAlert1.setDetail("");
-            this.pageAlert1.setRendered(true);
-        }else{
-            this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Error en la Validacion de los Campos, favor verificar y volver a intentar");
-            this.pageAlert1.setSummary("");
-            this.pageAlert1.setDetail("");
-            this.pageAlert1.setRendered(true);
-        }
-        
-        return null;
+        ControllerResult controllerResult = new ControllerResult();
+        FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabecera();
+        validarCampos();
+
+        if (!errorValidacion){
+                formulaSemiCabecera = new FormulaSemiCabeceraController().findById(getSessionBean1().getId());
+                ProductoController productoController = new ProductoController();
+
+                formulaSemiCabecera.setCodProducto(productoController.findById(Long.valueOf(this.uiProductoCodigo.getText().toString())));
+                formulaSemiCabecera.setCantidad(new BigInteger( this.uiCantidad.getText().toString()));
+                formulaSemiCabecera.setDescripcion(this.uiDescripcion.getText().toString());
+                formulaSemiCabecera.setFecha(this.uiFecha.getSelectedDate());
+    //          formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
+                formulaSemiCabecera.setEstado("A");
+
+                //// Convertilos los List a Array y enviamos
+
+                FormulaSemiDetalle[] detallesFormulaSemiElim = (FormulaSemiDetalle[]) detalleFormulaSemiEliminadaList.toArray(new FormulaSemiDetalle[0]);
+                detallesFormulaSemi = (FormulaSemiDetalle[]) detalleFormulaSemiList.toArray(new FormulaSemiDetalle[0]);
+                TareaFormula[] tareasFormulaElim = (TareaFormula[]) tareaFormulaEliminadaList.toArray(new TareaFormula[0]);
+                tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
+                FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
+                controllerResult = formulaSemiCabeceraController.updateCabDet(formulaSemiCabecera, detallesFormulaSemi, tareasFormula, detallesFormulaSemiElim, tareasFormulaElim);
+          }
+
+//          // ELIMINAR LOS DETALLES DE PRODUCTOS BORRADOS DE LA GRILLA
+//
+//            if (detalleFormulaSemiEliminadaList.size() > 0) {
+//
+//                        for (int i = 0; i < detalleFormulaSemiEliminadaList.size(); i++) {
+//                            FormulaSemiDetalle fdetSemiElim = new FormulaSemiDetalle();
+//                            fdetSemiElim = detalleFormulaSemiEliminadaList.get(i);
+//                            FormulaSemiDetalleController formulaSemiDetalleController = new FormulaSemiDetalleController();
+//                            controllerResult = formulaSemiDetalleController.eliminar(fdetSemiElim);
+//
+//                            if (controllerResult.getCodRetorno() ==-1) {
+//                                    this.pageAlert1.setType("error");
+//                                    this.errorValidacion=true;
+//                                    break;
+//                            }
+//                        }
+//             }
+//            // FIN ELIMINAR LOS DETALLES DE PRODUCTOS BORRADOS DE LA GRILLA
+//
+//
+//            // ELIMINAR LOS DETALLES DE TAREAS DE LA GRILLA
+//
+//            if (tareaFormulaEliminadaList.size() > 0) {
+//
+//                        for (int i = 0; i < tareaFormulaEliminadaList.size(); i++) {
+//                            TareaFormula tarForElim = new TareaFormula();
+//                            tarForElim = tareaFormulaEliminadaList.get(i);
+//                            TareaFormulaController tareaFormulaController = new TareaFormulaController();
+//                            controllerResult = tareaFormulaController.eliminar(tarForElim);
+//
+//                            if (controllerResult.getCodRetorno() ==-1) {
+//                                    this.pageAlert1.setType("error");
+//                                    this.errorValidacion=true;
+//                                    break;
+//                            }
+//                        }
+//             }
+//
+//        // FIN ELIMINAR LOS DETALLES DE TAREAS DE LA GRILLA
+//
+//           //// ACTUALIZAR DETALLES RECURSOS
+//            if (controllerResult.getCodRetorno() !=-1) {
+//                    formulaSemiCabecera = new FormulaSemiCabeceraController().findById(getSessionBean1().getId());
+//                    detallesFormulaSemi = (FormulaSemiDetalle[]) detalleFormulaSemiList.toArray(new FormulaSemiDetalle[0]);
+//                    for (int i = 0; i < detallesFormulaSemi.length; i++) {
+//
+//                        FormulaSemiDetalle fSemidet = new FormulaSemiDetalle();
+//                        fSemidet = detallesFormulaSemi[i];
+//
+//                        if (fSemidet.getCodFormulaSemiCabecera() != null) {
+//
+//                            FormulaSemiDetalleController formulaSemiDetalleController = new FormulaSemiDetalleController();
+//                            controllerResult = formulaSemiDetalleController.update(fSemidet);
+//
+//                        }else{
+//
+//                            fSemidet.setCodFormulaSemiCabecera(formulaSemiCabecera);
+//                            FormulaSemiDetalleController formulaSemiDetalleController = new FormulaSemiDetalleController();
+//                            controllerResult = formulaSemiDetalleController.create(fSemidet);
+//
+//                        }
+//
+//                        if (controllerResult.getCodRetorno() ==-1) {
+//                            this.pageAlert1.setType("error");
+//                            this.errorValidacion=true;
+//                            break;
+//                        }
+//
+//                    }
+//           }
+//           //// FIN ACTUALIZAR DETALLES RECURSOS
+//
+//           //// ACTUALIZAR DETALLES TAREAS
+//            if (controllerResult.getCodRetorno() !=-1) {
+//                    formulaSemiCabecera = new FormulaSemiCabeceraController().findById(getSessionBean1().getId());
+//                    tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
+//                    for (int i = 0; i < tareasFormula.length; i++) {
+//
+//                        TareaFormula tarFor = new TareaFormula();
+//                        tarFor = tareasFormula[i];
+//
+//                        if (tarFor.getCodFormulaSemiCabecera() != null) {
+//
+//                            TareaFormulaController tareaFormulaController = new TareaFormulaController();
+//                            controllerResult = tareaFormulaController.update(tarFor);
+//
+//                        }else{
+//
+//                            tarFor.setCodFormulaSemiCabecera(formulaSemiCabecera);
+//                            TareaFormulaController tareaFormulaController = new TareaFormulaController();
+//                            controllerResult = tareaFormulaController.update(tarFor);
+//
+//                        }
+//
+//                        if (controllerResult.getCodRetorno() ==-1) {
+//                            this.pageAlert1.setType("error");
+//                            this.errorValidacion=true;
+//                            break;
+//                        }
+//
+//                    }
+//             }
+//             //// FIN ACTUALIZAR DETALLES RECURSOS
+//
+//                ///// ACTUALIZAR CABECERA
+//                if (controllerResult.getCodRetorno() !=-1) {
+//                            formulaSemiCabecera = new FormulaSemiCabeceraController().findById(getSessionBean1().getId());
+//                            ProductoController productoController = new ProductoController();
+//
+//                            formulaSemiCabecera.setCodProducto(productoController.findById(Long.valueOf(this.uiProductoCodigo.getText().toString())));
+//                            formulaSemiCabecera.setCantidad(new BigInteger( this.uiCantidad.getText().toString()));
+//                            formulaSemiCabecera.setDescripcion(this.uiDescripcion.getText().toString());
+//                            formulaSemiCabecera.setFecha(this.uiFecha.getSelectedDate());
+//                //          formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
+//                            formulaSemiCabecera.setEstado("A");
+//
+//                            FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
+//                            controllerResult = formulaSemiCabeceraController.update(formulaSemiCabecera);
+//
+//                            if (controllerResult.getCodRetorno() ==-1) {
+//                                    this.pageAlert1.setType("error");
+//                                    this.errorValidacion=true;
+//                                } else {
+//                                    updateRequest = false;
+//                                    this.pageAlert1.setType("information");
+//                            }
+//
+//                }
+
+                if (controllerResult.getCodRetorno() ==-1) {
+                                    this.pageAlert1.setType("error");
+                                    this.errorValidacion=true;
+                                } else {
+                                    updateRequest = false;
+                                    this.pageAlert1.setType("information");
+                            }
+
+                this.pageAlert1.setTitle(controllerResult.getMsg());
+                this.pageAlert1.setSummary("");
+                this.pageAlert1.setDetail("");
+                this.pageAlert1.setRendered(true);
+                return null;
     }
+
 
     public String cancelButton_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         addRequest = false;
         updateRequest = false;
+        errorValidacion = false;
         return null;
     }
 
@@ -814,13 +1222,33 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
         //Inicializar
         r = false;
 
-        if (uiProductoCodigo.getText() == null || uiProductoCodigo.getText().equals("") ) {
-            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Nombre del Usuario");
+        if (detalleFormulaSemiList.size() < 1){
+            info(uiDetProductoCodigo, "Debe cargar los detalles de productos de la formula");
+            r = true;
+        }
+
+
+        if (tareaFormulaList.size() < 1){
+            info(uiDetTareaCodigo, "Debe cargar los detalles de tareas de la formula");
             r = true;
         }
 
         if (uiProductoCodigo.getText() == null || uiProductoCodigo.getText().equals("") ) {
-            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el e-mail del Usuario");
+            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
+            r = true;
+        }
+
+        if (uiDescripcion.getText() == null || uiDescripcion.getText().equals("") ) {
+            info(uiDescripcion, "Campo obligatorio, favor ingrese la descripcion de la formula");
+            r = true;
+        }
+        if (!StringUtils.esNumero(this.uiCantidad.getText().toString()))
+            {   errorValidacion = true;
+                this.info(uiCantidad, "La cantidad debe ser campo numerico");
+            }
+        
+        if (uiEstado.getSelected().toString() == null || uiEstado.getSelected().toString().equals("") ) {
+            info(uiEstado, "Campo obligatorio, favor ingrese el estado de la formula");
             r = true;
         }
         //result
@@ -882,6 +1310,7 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
 public void limpiarDetalleProducto(){
 
 this.uiDetProductoCodigo.setText("");
+this.uiDetProductoNombre.setText("");
 this.uiDetProductoCantidad.setText("");
 
 }
@@ -889,6 +1318,7 @@ this.uiDetProductoCantidad.setText("");
 public void limpiarDetalleTarea(){
 
 this.uiDetTareaCodigo.setText("");
+this.uiDetTareaNombre.setText("");
 this.uiDetTareaCantidad.setText("");
 this.uiDetTareaOrden.setText("");
 
@@ -902,16 +1332,28 @@ this.uiDetTareaOrden.setText("");
         validarDetalleProducto();
 
         if (!errorValidacion) {
-           Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetProductoCodigo.getText().toString()));
+           
+            if (!editarDetalleRecurso){
 
-           detalleFormulaSemi = new FormulaSemiDetalle();
-           detalleFormulaSemi.setCodProducto(producto);
-           detalleFormulaSemi.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetProductoCantidad.getText().toString())));
+                   Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetProductoCodigo.getText().toString()));
 
-           detalleFormulaSemiList.add(detalleFormulaSemi);
+                   detalleFormulaSemi = new FormulaSemiDetalle();
+                   detalleFormulaSemi.setCodProducto(producto);
+                   detalleFormulaSemi.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetProductoCantidad.getText().toString())));
+
+                   detalleFormulaSemiList.add(detalleFormulaSemi);
+            }else{
+                   Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetProductoCodigo.getText().toString()));
+
+                   detalleFormulaSemi  = detalleFormulaSemiList.get(Integer.valueOf(itemDet).intValue());
+                   detalleFormulaSemi.setCodProducto(producto);
+                   detalleFormulaSemi.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetProductoCantidad.getText().toString())));
+                   editarDetalleRecurso = false;
+
+            }
            detallesFormulaSemi = (FormulaSemiDetalle[]) detalleFormulaSemiList.toArray(new FormulaSemiDetalle[0]);
+            limpiarDetalleProducto();
 
-           limpiarDetalleProducto();
         }
 
         return null;
@@ -923,22 +1365,165 @@ this.uiDetTareaOrden.setText("");
         validarDetalleTarea();
 
         if (!errorValidacion) {
-           Tarea tarea = new TareaController().findById(Long.valueOf(this.uiDetTareaCodigo.getText().toString()));
+            if (!editarDetalleRecurso){
+                   Tarea tarea = new TareaController().findById(Long.valueOf(this.uiDetTareaCodigo.getText().toString()));
 
-           tareaFormula = new TareaFormula();
-           tareaFormula.setCodTarea(tarea);
-           tareaFormula.setCantidadTarea(BigInteger.valueOf(Long.valueOf(this.uiDetTareaCantidad.getText().toString())));
-           tareaFormula.setOrdenTarea(BigInteger.valueOf(Long.valueOf(this.uiDetTareaOrden.getText().toString())));
-
-           tareaFormulaList.add(tareaFormula);
-           tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
-
-           limpiarDetalleProducto();
+                   tareaFormula = new TareaFormula();
+                   tareaFormula.setCodTarea(tarea);
+                   tareaFormula.setCantidadTarea(BigInteger.valueOf(Long.valueOf(this.uiDetTareaCantidad.getText().toString())));
+                   tareaFormula.setOrdenTarea(BigInteger.valueOf(Long.valueOf(this.uiDetTareaOrden.getText().toString())));
+                   tareaFormulaList.add(tareaFormula); 
+            }else{
+                  Tarea tarea = new TareaController().findById(Long.valueOf(this.uiDetTareaCodigo.getText().toString()));
+                  
+                  tareaFormula  = tareaFormulaList.get(Integer.valueOf(itemDet).intValue());
+                  tareaFormula.setCodTarea(tarea);
+                  tareaFormula.setCantidadTarea(BigInteger.valueOf(Long.valueOf(this.uiDetTareaCantidad.getText().toString())));
+                  tareaFormula.setOrdenTarea(BigInteger.valueOf(Long.valueOf(this.uiDetTareaOrden.getText().toString())));
+            }
+            tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
+            limpiarDetalleTarea();
          }
         return null;
         
     }
-      
+
+
+    public String detailRemoveTarea() {
+
+        // esta bandera se usa para determinar el comportamiento del boton guardar detalle
+    editarDetalleTarea = false;
+
+    //// agrego la formula eliminada a la lista de formulas Eliminadas
+    //// se utiliza luego al actualizar el registro
+    TareaFormula tarForEliminada  = tareaFormulaList.get(Integer.valueOf(itemDet).intValue());
+    tareaFormulaEliminadaList.add(tarForEliminada);
+
+    tareaFormulaList.remove(Integer.valueOf(itemDet).intValue());
+    tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
+    return null;
+
+    }
+
+    public String detailRemoveRecurso() {
+
+        // esta bandera se usa para determinar el comportamiento del boton guardar detalle
+    editarDetalleRecurso = false;
+
+        //// agrego la formula eliminada a la lista de formulas Eliminadas
+        //// se utiliza luego al actualizar el registro
+        FormulaSemiDetalle fSemiDetEliminada  = detalleFormulaSemiList.get(Integer.valueOf(itemDet).intValue());
+        detalleFormulaSemiEliminadaList.add(fSemiDetEliminada);
+
+        detalleFormulaSemiList.remove(Integer.valueOf(itemDet).intValue());
+        detallesFormulaSemi = (FormulaSemiDetalle[]) detalleFormulaSemiList.toArray(new FormulaSemiDetalle[0]);
+        return null;
+
+    }
+
+    public String detailEditTarea() {
+            // esta bandera se usa para determinar el comportamiento del boton guardar detalle
+            editarDetalleTarea = true;
+
+            TareaFormula tareaFormula = new TareaFormula();
+            tareaFormula = tareaFormulaList.get(Integer.valueOf(itemDet).intValue());
+
+            this.uiDetTareaCodigo.setText(tareaFormula.getCodTarea().getCodTarea().toString());
+            this.uiDetTareaNombre.setText(tareaFormula.getCodTarea().getNombreTarea().toString());
+            this.uiDetTareaCantidad.setText(tareaFormula.getCantidadTarea().toString());
+            this.uiDetTareaOrden.setText(tareaFormula.getOrdenTarea().toString());
+
+    return null;
+}
+
+    public String detailEditRecurso() {
+            // esta bandera se usa para determinar el comportamiento del boton guardar detalle
+            editarDetalleRecurso = true;
+
+            FormulaSemiDetalle formulaSemiDetalle = new FormulaSemiDetalle();
+            formulaSemiDetalle = detalleFormulaSemiList.get(Integer.valueOf(itemDet).intValue());
+
+            this.uiDetProductoCodigo.setText(formulaSemiDetalle.getCodProducto().getCodProducto().toString());
+            this.uiDetProductoNombre.setText(formulaSemiDetalle.getCodProducto().getDescripcion().toString());
+            this.uiDetProductoCantidad.setText(formulaSemiDetalle.getCantidad().toString());
+
+    return null;
+}
+
+
+    private String itemDet;
+
+    public String getItemDet() {
+        return itemDet;
+    }
+
+    public void setItemDet(String itemDet) {
+        this.itemDet = itemDet;
+    }
+
+
+
+
+
+    public boolean isAddRequest() {
+        return addRequest;
+    }
+
+    public void setAddRequest(boolean addRequest) {
+        this.addRequest = addRequest;
+    }
+
+    public boolean isErrorValidacion() {
+        return errorValidacion;
+    }
+
+    public void setErrorValidacion(boolean errorValidacion) {
+        this.errorValidacion = errorValidacion;
+    }
+
+    public boolean isUpdateRequest() {
+        return updateRequest;
+    }
+
+    public void setUpdateRequest(boolean updateRequest) {
+        this.updateRequest = updateRequest;
+    }
+
+    public List<FormulaSemiDetalle> getDetalleFormulaSemiEliminadaList() {
+        return detalleFormulaSemiEliminadaList;
+    }
+
+    public void setDetalleFormulaSemiEliminadaList(List<FormulaSemiDetalle> detalleFormulaSemiEliminadaList) {
+        this.detalleFormulaSemiEliminadaList = detalleFormulaSemiEliminadaList;
+    }
+
+    public boolean isEditarDetalleRecurso() {
+        return editarDetalleRecurso;
+    }
+
+    public void setEditarDetalleRecurso(boolean editarDetalleRecurso) {
+        this.editarDetalleRecurso = editarDetalleRecurso;
+    }
+
+    public List<TareaFormula> getTareaFormulaEliminadaList() {
+        return tareaFormulaEliminadaList;
+    }
+
+    public void setTareaFormulaEliminadaList(List<TareaFormula> tareaFormulaEliminadaList) {
+        this.tareaFormulaEliminadaList = tareaFormulaEliminadaList;
+    }
+
+    public boolean isEditarDetalleTarea() {
+        return editarDetalleTarea;
+    }
+
+    public void setEditarDetalleTarea(boolean editarDetalleTarea) {
+        this.editarDetalleTarea = editarDetalleTarea;
+    }
+
+
+
+
 }
 
 

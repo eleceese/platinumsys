@@ -58,6 +58,45 @@ public class ABMFormulaTerminado extends AbstractPageBean {
      * This method is automatically generated, so any user-specified code inserted
      * here is subject to being replaced.</p>
      */
+    
+    
+    private boolean addRequest = false;
+    private boolean updateRequest = false;
+    private boolean errorValidacion = false;
+    private boolean editarDetalle = false;
+
+    public boolean isAddRequest() {
+        return addRequest;
+    }
+
+    public void setAddRequest(boolean addRequest) {
+        this.addRequest = addRequest;
+    }
+
+    public List<FormulaDetalle> getDetalleFormulaList() {
+        return detalleFormulaList;
+    }
+
+    public void setDetalleFormulaList(List<FormulaDetalle> detalleFormulaList) {
+        this.detalleFormulaList = detalleFormulaList;
+    }
+
+    public boolean isEditarDetalle() {
+        return editarDetalle;
+    }
+
+    public void setEditarDetalle(boolean editarDetalle) {
+        this.editarDetalle = editarDetalle;
+    }
+
+    public boolean isErrorValidacion() {
+        return errorValidacion;
+    }
+
+    public void setErrorValidacion(boolean errorValidacion) {
+        this.errorValidacion = errorValidacion;
+    }
+
     private void _init() throws Exception {
        
         //table1.setWidth();
@@ -519,6 +558,7 @@ public class ABMFormulaTerminado extends AbstractPageBean {
           getSessionBean1().setId(formulaCabecera.getCodFormula());
          //// CARGA DE CAMPOS DE LA PAGINA
          this.uiProductoCodigo.setText(formulaCabecera.getCodProducto().getCodProducto().toString());
+         this.uiProductoNombre.setText(formulaCabecera.getCodProducto().getDescripcion().toString());
          this.uiDescripcion.setText(formulaCabecera.getDescripcion().toString());
          this.uiCantidad.setText(formulaCabecera.getCantidad());
          this.uiFecha.setSelectedDate(formulaCabecera.getFecha());
@@ -626,9 +666,7 @@ public class ABMFormulaTerminado extends AbstractPageBean {
         RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
         return tablePhaseListener.isSelected(rowKey);
     }
-    private boolean addRequest = false;
-    private boolean updateRequest = false;
-    private boolean errorValidacion = false;
+
 
     public String addButton_action() {
 
@@ -642,6 +680,7 @@ public class ABMFormulaTerminado extends AbstractPageBean {
         uiProductoNombre.setText("");
         uiCantidad.setText("");
         uiDescripcion.setText("");
+        limpiarDetalle();
 
         this.addRecordButton.setRendered(true);
         this.updateRecordButton.setRendered(false);
@@ -651,7 +690,7 @@ public class ABMFormulaTerminado extends AbstractPageBean {
     }
 
     public String updateButton_action() {
-
+        detalleFormulaEliminadaList = new ArrayList();
         getSessionBean1().setTituloPagina("Editar Fórmula de Producción");
         getSessionBean1().setDetallePagina("Editar una fórmula de producción, " +
                 "con su detalle correspondiente de Semiterminados");
@@ -660,7 +699,9 @@ public class ABMFormulaTerminado extends AbstractPageBean {
         this.addRecordButton.setRendered(false);
         this.updateRecordButton.setRendered(true);
 
+
         cargarCamposUpdate();
+        limpiarDetalle();
 
 
         return null;
@@ -681,38 +722,55 @@ public class ABMFormulaTerminado extends AbstractPageBean {
                         detalleFormulaList = new ArrayList();
                         detalleFormulaList = formulaCabecera.getFormulaDetalleCollection();
                         detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
+                        ControllerResult controllerResult = new ControllerResult();
+                        controllerResult = formulaCabeceraController.deleteCabDet(formulaCabecera, detallesFormula);
 
-                            for (int i = 0; i < detallesFormula.length; i++) {
+//                        if (detallesFormula != null) {
+//
+//                                for (int i = 0; i < detallesFormula.length; i++) {
+//
+//                                    FormulaDetalle fdet = new FormulaDetalle();
+//                                    fdet = detallesFormula[i];
+//
+//
+//                                    FormulaDetalleController formulaDetalleController = new FormulaDetalleController();
+//                                    controllerResult = formulaDetalleController.eliminar(fdet);
+//
+//                                    if (controllerResult.getCodRetorno() ==-1) {
+//                                        this.pageAlert1.setType("error");
+//                                        break;
+//                                    }
+//                               }
+//                        }
+//                //// FIN DE ELIMINACION DE LOS DETALLES
+//
+//
+//
+//                //// ELIMINACION DE LA CABECERA
+//
+//        if (controllerResult.getCodRetorno() !=-1) {
+//                formulaCabecera = formulaCabeceraController.findById(formulaCabecera.getCodFormula());
+//                controllerResult = formulaCabeceraController.delete(formulaCabecera);
+//                 if (controllerResult.getCodRetorno() ==-1) {
+//                        this.pageAlert1.setType("error");
+//                    } else {
+//                        this.pageAlert1.setType("information");
+//                 }
+//        }
+//            ///FIN ELIMINACION DE LA CABECERA
 
-                                FormulaDetalle fdet = new FormulaDetalle();
-                                fdet = detallesFormula[i];
-                                
-                                FormulaDetalleController formulaDetalleController = new FormulaDetalleController();
-                                ControllerResult controllerResult = formulaDetalleController.delete(fdet);
-
-                                if (controllerResult.getCodRetorno() ==-1) {
-                                    this.pageAlert1.setType("error");
-                                    break;
-                                }
-                           }
-                //// FIN DE ELIMINACION DE LOS DETALLES
-
-
-
-                //// ELIMINACION DE LA CABECERA
-
-
-                ControllerResult controllerResult = formulaCabeceraController.delete(formulaCabecera);
-                 if (controllerResult.getCodRetorno() ==-1) {
+            if (controllerResult.getCodRetorno() ==-1) {
                         this.pageAlert1.setType("error");
                     } else {
                         this.pageAlert1.setType("information");
-                 }
+           }
 
             this.pageAlert1.setTitle(controllerResult.getMsg());
             this.pageAlert1.setSummary("");
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
+ 
+
       }
             return null;
 
@@ -735,37 +793,41 @@ public class ABMFormulaTerminado extends AbstractPageBean {
 //          formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
           formulaCabecera.setEstado("A");
 
-                            FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
-                            ControllerResult controllerResult = new ControllerResult();
-                            controllerResult = formulaCabeceraController.create(formulaCabecera);
+          detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
 
-//// FIN DE LA CARGA DE LA CABECERA
-                            if (controllerResult.getCodRetorno() ==-1) {
-                                    this.pageAlert1.setType("error");
-                                    this.errorValidacion=true;
-                                } else {
+          FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
+          ControllerResult controllerResult = new ControllerResult();
+//                            controllerResult = formulaCabeceraController.create(formulaCabecera);
+          controllerResult = formulaCabeceraController.createCabDet(formulaCabecera,detallesFormula);
 
-                                                        //// CARGA DE LOS DETALLES
 
-                                                        detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
-                                                        for (int i = 0; i < detallesFormula.length; i++) {
-
-                                                            FormulaDetalle fdet = new FormulaDetalle();
-                                                            fdet = detallesFormula[i];
-                                                            fdet.setCodFormula(formulaCabecera);
-                                                            FormulaDetalleController formulaDetalleController = new FormulaDetalleController();
-                                                            controllerResult = formulaDetalleController.create(fdet);
-
-                                                            if (controllerResult.getCodRetorno() ==-1) {
-                                                                this.pageAlert1.setType("error");
-                                                                this.errorValidacion=true;
-                                                                break;
-                                                            }
-
-                                                        }
-
-                                                        //// FIN DE CARGA DE LOS DETALLES
-                            }
+////// FIN DE LA CARGA DE LA CABECERA
+//                            if (controllerResult.getCodRetorno() ==-1) {
+//                                    this.pageAlert1.setType("error");
+//                                    this.errorValidacion=true;
+//                                } else {
+//
+//                                    //// CARGA DE LOS DETALLES
+//
+//                                    detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
+//                                    for (int i = 0; i < detallesFormula.length; i++) {
+//
+//                                        FormulaDetalle fdet = new FormulaDetalle();
+//                                        fdet = detallesFormula[i];
+//                                        fdet.setCodFormula(formulaCabecera);
+//                                        FormulaDetalleController formulaDetalleController = new FormulaDetalleController();
+//                                        controllerResult = formulaDetalleController.create(fdet);
+//
+//                                        if (controllerResult.getCodRetorno() ==-1) {
+//                                            this.pageAlert1.setType("error");
+//                                            this.errorValidacion=true;
+//                                            break;
+//                                        }
+//
+//                                    }
+//
+//                                                        //// FIN DE CARGA DE LOS DETALLES
+//                            }
 
 
                             if (controllerResult.getCodRetorno() != -1) {
@@ -787,75 +849,162 @@ public class ABMFormulaTerminado extends AbstractPageBean {
         errorValidacion = false;
         updateRequest = true;
         validarCampos();
+        ControllerResult controllerResult = new ControllerResult();
+        FormulaCabecera formulaCabecera = new FormulaCabecera();
+        FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
+        validarCampos();
+
 
         if (! errorValidacion){
+            formulaCabecera = new FormulaCabeceraController().findById(getSessionBean1().getId());
+                            formulaCabecera = new FormulaCabeceraController().findById(getSessionBean1().getId());
+                            ProductoController productoController = new ProductoController();
+
+                            formulaCabecera.setCodProducto(productoController.findById(Long.valueOf(this.uiProductoCodigo.getText().toString())));
+                            formulaCabecera.setCantidad(new BigInteger( this.uiCantidad.getText().toString()));
+                            formulaCabecera.setDescripcion(this.uiDescripcion.getText().toString());
+                            formulaCabecera.setFecha(this.uiFecha.getSelectedDate());
+                //          formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
+                            formulaCabecera.setEstado("A");
+            FormulaDetalle[] detallesFormulaEliminada = (FormulaDetalle[]) detalleFormulaEliminadaList.toArray(new FormulaDetalle[0]);
+            detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
+
+            controllerResult = formulaCabeceraController.updateCabDet(formulaCabecera, detallesFormula, detallesFormulaEliminada);
+
+       
+//            // ELIMINAR LOS DETALLES BORRADOS DE LA GRILLA
+//            if (detalleFormulaEliminadaList.size() > 0) {
+//
+//                        for (int i = 0; i < detalleFormulaEliminadaList.size(); i++) {
+//                            FormulaDetalle fdetElim = new FormulaDetalle();
+//                            fdetElim = detalleFormulaEliminadaList.get(i);
+//                            FormulaDetalleController formulaDetalleController = new FormulaDetalleController();
+//                            controllerResult = formulaDetalleController.eliminar(fdetElim);
+//
+//                            if (controllerResult.getCodRetorno() ==-1) {
+//                                    this.pageAlert1.setType("error");
+//                                    this.errorValidacion=true;
+//                                    break;
+//                            }
+//                        }
+//             }
+//                    // fin de la eliminacion
+//
+//            //// ACTUALIZAR DETALLES
+//            if (controllerResult.getCodRetorno() !=-1) {
+//                    formulaCabecera = new FormulaCabeceraController().findById(getSessionBean1().getId());
+//                    detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
+//                    for (int i = 0; i < detallesFormula.length; i++) {
+//
+//                        FormulaDetalle fdet = new FormulaDetalle();
+//                        fdet = detallesFormula[i];
+//
+//                        if (fdet.getCodFormulaDetalle() != null) {
+//
+//                            FormulaDetalleController formulaDetalleController = new FormulaDetalleController();
+//                            controllerResult = formulaDetalleController.update(fdet);
+//
+//                        }else{
+//
+//                            fdet.setCodFormula(formulaCabecera);
+//                            FormulaDetalleController formulaDetalleController = new FormulaDetalleController();
+//                            controllerResult = formulaDetalleController.create(fdet);
+//
+//                        }
+//
+//                        if (controllerResult.getCodRetorno() ==-1) {
+//                            this.pageAlert1.setType("error");
+//                            this.errorValidacion=true;
+//                            break;
+//                        }
+//
+//                    }
+//                //// FIN ACTUALIZAR DETALLES
+//            }
+//
+//                    ///// ACTUALIZAR CABECERA
+//            if (controllerResult.getCodRetorno() !=-1) {
+//                            formulaCabecera = new FormulaCabeceraController().findById(getSessionBean1().getId());
+//                            ProductoController productoController = new ProductoController();
+//
+//                            formulaCabecera.setCodProducto(productoController.findById(Long.valueOf(this.uiProductoCodigo.getText().toString())));
+//                            formulaCabecera.setCantidad(new BigInteger( this.uiCantidad.getText().toString()));
+//                            formulaCabecera.setDescripcion(this.uiDescripcion.getText().toString());
+//                            formulaCabecera.setFecha(this.uiFecha.getSelectedDate());
+//                //          formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
+//                            formulaCabecera.setEstado("A");
+//
+//                            FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
+//                            controllerResult = formulaCabeceraController.update(formulaCabecera);
+//
+//                             if (controllerResult.getCodRetorno() ==-1) {
+//                                    this.pageAlert1.setType("error");
+//                                    this.errorValidacion=true;
+//                                } else {
+//                                    updateRequest = false;
+//                                    this.pageAlert1.setType("information");
+//                                }
+//
+//            }
 
 
-          FormulaCabecera formulaCabecera = new FormulaCabeceraController().findById(getSessionBean1().getId());
+            if (controllerResult.getCodRetorno() ==-1) {
+                this.pageAlert1.setType("error");
+                this.errorValidacion=true;
+            } else {
+                updateRequest = false;
+                this.pageAlert1.setType("information");
+            }
 
-          ProductoController productoController = new ProductoController();
+            this.pageAlert1.setTitle(controllerResult.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
 
-          formulaCabecera.setCodProducto(productoController.findById(Long.valueOf(this.uiProductoCodigo.getText().toString())));
-          formulaCabecera.setCantidad(new BigInteger( this.uiCantidad.getText().toString()));
-          formulaCabecera.setDescripcion(this.uiDescripcion.getText().toString());
-          formulaCabecera.setFecha(this.uiFecha.getSelectedDate());
-//          formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
-          formulaCabecera.setEstado("A");
 
-           FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
-           ControllerResult controllerResult = new ControllerResult();
-           controllerResult = formulaCabeceraController.update(formulaCabecera);
-
-                             if (controllerResult.getCodRetorno() ==-1) {
-                                    this.pageAlert1.setType("error");
-                                    this.errorValidacion=true;
-                                } else {
-                                    updateRequest = false;
-                                    this.pageAlert1.setType("information");
-                                }
-
-                                this.pageAlert1.setTitle(controllerResult.getMsg());
-                                this.pageAlert1.setSummary("");
-                                this.pageAlert1.setDetail("");
-                                this.pageAlert1.setRendered(true);
-        }
-
-       return null;
+           
+       
     }
+ return null;
+}
 
     public String cancelButton_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         addRequest = false;
         updateRequest = false;
+        errorValidacion = false;
         return null;
     }
-
-    private boolean validarCampos(){
+private boolean validarCampos(){
          errorValidacion = false;
 
- if (this.uiProductoCodigo.getText() == null ||
-        this.uiProductoCodigo.getText().toString() == null ||
-        this.uiProductoCodigo.getText().toString().equals("")){
-            errorValidacion = true;
-           this.info(uiProductoCodigo, "Debe seleccionar un producto");
-    }
+            if (detallesFormula.length < 1){
+                        errorValidacion = true;
+                       this.info(uiDetalleProdDesc, "Debe agregar los detalles de la formula");}
 
-       if (this.uiDescripcion.getText() == null ||
-        this.uiDescripcion.getText().toString() == null ||
-        this.uiDescripcion.getText().toString().equals("")){
-            errorValidacion = true;
-           this.info(uiDescripcion, "La Descripcion no puede ser nula");
-    }
+             if (this.uiProductoCodigo.getText() == null ||
+                    this.uiProductoCodigo.getText().toString() == null ||
+                    this.uiProductoCodigo.getText().toString().equals("")){
+                        errorValidacion = true;
+                       this.info(uiProductoCodigo, "Debe seleccionar un producto");
+                }
 
-      if (!StringUtils.esNumero(this.uiCantidad.getText().toString()))
-            {   errorValidacion = true;
-                this.info(uiCantidad, "La cantidad debe ser campo numerico");
-            }
+                   if (this.uiDescripcion.getText() == null ||
+                    this.uiDescripcion.getText().toString() == null ||
+                    this.uiDescripcion.getText().toString().equals("")){
+                        errorValidacion = true;
+                       this.info(uiDescripcion, "La Descripcion no puede ser nula");
+                }
 
-     return errorValidacion;
+                  if (!StringUtils.esNumero(this.uiCantidad.getText().toString()))
+                        {   errorValidacion = true;
+                            this.info(uiCantidad, "La cantidad debe ser campo numerico");
+                        }
 
-    }
+                 return errorValidacion;
+
+}
 
 
 ////// CARGA DE COMBO BOX Formulas TERMINADOS
@@ -900,6 +1049,16 @@ public class ABMFormulaTerminado extends AbstractPageBean {
 private FormulaDetalle[] detallesFormula;
 private FormulaDetalle  detalleFormula;
 private List<FormulaDetalle>  detalleFormulaList;
+private List<FormulaDetalle>  detalleFormulaEliminadaList;
+
+    public List<FormulaDetalle> getDetalleFormulaEliminadaList() {
+        return detalleFormulaEliminadaList;
+    }
+
+    public void setDetalleFormulaEliminadaList(List<FormulaDetalle> detalleFormulaEliminadaList) {
+        this.detalleFormulaEliminadaList = detalleFormulaEliminadaList;
+    }
+
 private FormulaCabecera cabeceraFormula;
 
     public FormulaCabecera getCabeceraFormula() {
@@ -933,23 +1092,44 @@ private FormulaCabecera cabeceraFormula;
         validarDetalle();
 
         if (!errorValidacion) {
-           Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetalleProdCod.getText().toString()));
 
-            FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
-            FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabecera();
-            formulaSemiCabecera = formulaSemiCabeceraController.findById(Long.valueOf(Long.valueOf(this.uiDetalleCodFormula.getText().toString())));
+            if (!editarDetalle){
 
-//           FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabeceraController().findById(Long.valueOf(this.uiDetalleCodFormula.getText().toString()));
-          
+                            Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetalleProdCod.getText().toString()));
 
-           detalleFormula = new FormulaDetalle();
-           detalleFormula.setCodProducto(producto);
-           detalleFormula.setCodFormulaSemiCabecera(formulaSemiCabecera);
-           detalleFormula.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetalleCant.getText().toString())));
+                            FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
+                            FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabecera();
+                            formulaSemiCabecera = formulaSemiCabeceraController.findById(Long.valueOf(Long.valueOf(this.uiDetalleCodFormula.getText().toString())));
 
-           detalleFormulaList.add(detalleFormula);
+                //           FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabeceraController().findById(Long.valueOf(this.uiDetalleCodFormula.getText().toString()));
+
+
+                           detalleFormula = new FormulaDetalle();
+                           detalleFormula.setCodProducto(producto);
+                           detalleFormula.setCodFormulaSemiCabecera(formulaSemiCabecera);
+                           detalleFormula.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetalleCant.getText().toString())));
+                           detalleFormulaList.add(detalleFormula);
+
+
+
+            }else{
+                
+                            Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetalleProdCod.getText().toString()));
+
+                            FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
+                            FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabecera();
+                            formulaSemiCabecera = formulaSemiCabeceraController.findById(Long.valueOf(Long.valueOf(this.uiDetalleCodFormula.getText().toString())));
+
+                //           FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabeceraController().findById(Long.valueOf(this.uiDetalleCodFormula.getText().toString()));
+
+
+                           detalleFormula  = detalleFormulaList.get(Integer.valueOf(itemDet).intValue());
+                           detalleFormula.setCodProducto(producto);
+                           detalleFormula.setCodFormulaSemiCabecera(formulaSemiCabecera);
+                           detalleFormula.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetalleCant.getText().toString())));
+                           editarDetalle = false;
+           }
            detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
-
            limpiarDetalle();
         }
 
@@ -980,11 +1160,36 @@ this.uiDetalleCodFormula.setText("");
 }
 
 
-public String detail() {
+public String detailRemove() {
+    // esta bandera se usa para determinar el comportamiento del boton guardar detalle
+    editarDetalle = false;
+
+    //// agrego la formula eliminada a la lista de formulas Eliminadas
+    //// se utiliza luego al actualizar el registro
+    FormulaDetalle fDetEliminada  = detalleFormulaList.get(Integer.valueOf(itemDet).intValue());
+    detalleFormulaEliminadaList.add(fDetEliminada);
+
     detalleFormulaList.remove(Integer.valueOf(itemDet).intValue());
     detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
     return null;
 }
+
+public String detailEdit() {
+    // esta bandera se usa para determinar el comportamiento del boton guardar detalle
+    editarDetalle = true;
+
+    FormulaDetalle formulaDetalle = new FormulaDetalle();
+    formulaDetalle = detalleFormulaList.get(Integer.valueOf(itemDet).intValue());
+    
+    this.uiDetalleCodFormula.setText(formulaDetalle.getCodFormulaSemiCabecera().getCodFormulaSemiCabecera().toString());
+    this.uiDetalleFormula.setText(formulaDetalle.getCodFormulaSemiCabecera().getDescripcion().toString());
+    this.uiDetalleProdCod.setText(formulaDetalle.getCodProducto().getCodProducto().toString());
+    this.uiDetalleProdDesc.setText(formulaDetalle.getCodProducto().getDescripcion());
+    this.uiDetalleCant.setText(formulaDetalle.getCantidad().toString());
+    
+    return null;
+}
+
 
 private String itemDet;
 
