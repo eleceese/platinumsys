@@ -411,4 +411,9 @@
         <managed-bean-class>platinum.popup.popupTareas</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupSolicitudes</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupSolicitudes</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 </faces-config>
