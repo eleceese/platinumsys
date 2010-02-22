@@ -8,9 +8,11 @@ package py.com.platinum.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -62,10 +64,10 @@ public class SolicitudInterna implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(mappedBy = "codSolicitud")
-    private List<EntradaSalidaCabecera> entradaSalidaCabeceraCollection;
-    @OneToMany(mappedBy = "nroSolicitud")
-    private List<FacturaCompraDet> facturaCompraDetCollection;
+    @OneToMany(mappedBy = "codSolicitud", fetch=FetchType.EAGER)
+    private Set<EntradaSalidaCabecera> entradaSalidaCabecera;
+    @OneToMany(mappedBy = "nroSolicitud", fetch=FetchType.EAGER)
+    private Set<FacturaCompraDet> facturaCompraDet;
     @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(optional = false)
     private Empleado codEmpleado;
@@ -178,20 +180,20 @@ public class SolicitudInterna implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public List<EntradaSalidaCabecera> getEntradaSalidaCabeceraCollection() {
-        return entradaSalidaCabeceraCollection;
+    public Set<EntradaSalidaCabecera> getEntradaSalidaCabecera() {
+        return entradaSalidaCabecera;
     }
 
-    public void setEntradaSalidaCabeceraCollection(List<EntradaSalidaCabecera> entradaSalidaCabeceraCollection) {
-        this.entradaSalidaCabeceraCollection = entradaSalidaCabeceraCollection;
+    public void setEntradaSalidaCabecera(Set<EntradaSalidaCabecera> entradaSalidaCabecera) {
+        this.entradaSalidaCabecera = entradaSalidaCabecera;
     }
 
-    public List<FacturaCompraDet> getFacturaCompraDetCollection() {
-        return facturaCompraDetCollection;
+    public Set<FacturaCompraDet> getFacturaCompraDet() {
+        return facturaCompraDet;
     }
 
-    public void setFacturaCompraDetCollection(List<FacturaCompraDet> facturaCompraDetCollection) {
-        this.facturaCompraDetCollection = facturaCompraDetCollection;
+    public void setFacturaCompraDet(Set<FacturaCompraDet> facturaCompraDet) {
+        this.facturaCompraDet = facturaCompraDet;
     }
 
     public Empleado getCodEmpleado() {

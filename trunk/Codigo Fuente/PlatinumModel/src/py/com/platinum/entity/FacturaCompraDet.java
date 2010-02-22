@@ -58,10 +58,10 @@ public class FacturaCompraDet implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @JoinColumn(name = "COD_FAC_COM_CAB", referencedColumnName = "COD_FAC_COM_CAB", insertable = false, updatable = false)
+    @JoinColumn(name = "COD_FAC_COM_CAB", referencedColumnName = "COD_FAC_COM_CAB")
     @ManyToOne
     private FacturaCompraCab codFacComCab;
-    @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO", insertable = false, updatable = false)
+    @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
     @ManyToOne
     private Producto codProducto;
     @JoinColumn(name = "NRO_SOLICITUD", referencedColumnName = "COD_SOLICITUD")
