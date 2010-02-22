@@ -27,7 +27,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "SOLICITUD_INTERNA")
-@NamedQueries({@NamedQuery(name = "SolicitudInterna.findAll", query = "SELECT s FROM SolicitudInterna s"), @NamedQuery(name = "SolicitudInterna.findByCodSolicitud", query = "SELECT s FROM SolicitudInterna s WHERE s.codSolicitud = :codSolicitud"), @NamedQuery(name = "SolicitudInterna.findByFecha", query = "SELECT s FROM SolicitudInterna s WHERE s.fecha = :fecha"), @NamedQuery(name = "SolicitudInterna.findByEstado", query = "SELECT s FROM SolicitudInterna s WHERE s.estado = :estado"), @NamedQuery(name = "SolicitudInterna.findByCantidad", query = "SELECT s FROM SolicitudInterna s WHERE s.cantidad = :cantidad"), @NamedQuery(name = "SolicitudInterna.findByCantidadAprobada", query = "SELECT s FROM SolicitudInterna s WHERE s.cantidadAprobada = :cantidadAprobada"), @NamedQuery(name = "SolicitudInterna.findByCantidadCompra", query = "SELECT s FROM SolicitudInterna s WHERE s.cantidadCompra = :cantidadCompra"), @NamedQuery(name = "SolicitudInterna.findByObservacion", query = "SELECT s FROM SolicitudInterna s WHERE s.observacion = :observacion"), @NamedQuery(name = "SolicitudInterna.findByUsuarioAlta", query = "SELECT s FROM SolicitudInterna s WHERE s.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "SolicitudInterna.findByUsuarioModif", query = "SELECT s FROM SolicitudInterna s WHERE s.usuarioModif = :usuarioModif"), @NamedQuery(name = "SolicitudInterna.findByFechaAlta", query = "SELECT s FROM SolicitudInterna s WHERE s.fechaAlta = :fechaAlta"), @NamedQuery(name = "SolicitudInterna.findByFechaModif", query = "SELECT s FROM SolicitudInterna s WHERE s.fechaModif = :fechaModif")})
 public class SolicitudInterna implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -66,7 +65,7 @@ public class SolicitudInterna implements Serializable {
     @OneToMany(mappedBy = "codSolicitud")
     private List<EntradaSalidaCabecera> entradaSalidaCabeceraCollection;
     @OneToMany(mappedBy = "nroSolicitud")
-    private List<FacturaCompraCab> facturaCompraCabCollection;
+    private List<FacturaCompraDet> facturaCompraDetCollection;
     @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(optional = false)
     private Empleado codEmpleado;
@@ -187,12 +186,12 @@ public class SolicitudInterna implements Serializable {
         this.entradaSalidaCabeceraCollection = entradaSalidaCabeceraCollection;
     }
 
-    public List<FacturaCompraCab> getFacturaCompraCabCollection() {
-        return facturaCompraCabCollection;
+    public List<FacturaCompraDet> getFacturaCompraDetCollection() {
+        return facturaCompraDetCollection;
     }
 
-    public void setFacturaCompraCabCollection(List<FacturaCompraCab> facturaCompraCabCollection) {
-        this.facturaCompraCabCollection = facturaCompraCabCollection;
+    public void setFacturaCompraDetCollection(List<FacturaCompraDet> facturaCompraDetCollection) {
+        this.facturaCompraDetCollection = facturaCompraDetCollection;
     }
 
     public Empleado getCodEmpleado() {

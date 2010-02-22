@@ -64,6 +64,9 @@ public class FacturaCompraDet implements Serializable {
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO", insertable = false, updatable = false)
     @ManyToOne
     private Producto codProducto;
+    @JoinColumn(name = "NRO_SOLICITUD", referencedColumnName = "COD_SOLICITUD")
+    @ManyToOne
+    private SolicitudInterna nroSolicitud;
 
     public FacturaCompraDet() {
     }
@@ -176,6 +179,13 @@ public class FacturaCompraDet implements Serializable {
         this.porcIva = porcIva;
     }
 
+    public SolicitudInterna getNroSolicitud() {
+        return nroSolicitud;
+    }
+
+    public void setNroSolicitud(SolicitudInterna nroSolicitud) {
+        this.nroSolicitud = nroSolicitud;
+    }
 
     @Override
     public int hashCode() {
