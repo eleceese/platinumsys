@@ -12,32 +12,29 @@ import javax.faces.convert.DateTimeConverter;
 import py.com.platinum.controller.BancoController;
 import py.com.platinum.controller.CajaController;
 import py.com.platinum.controller.CargoController;
-import py.com.platinum.controller.CiudadController;
 import py.com.platinum.controller.ClienteController;
 import py.com.platinum.controller.ComisionController;
 import py.com.platinum.controller.EmpleadoController;
 import py.com.platinum.controller.FormaPagoController;
 import py.com.platinum.controller.DepositoController;
-import py.com.platinum.controller.FormulaCabeceraController;
 import py.com.platinum.controller.FormulaSemiCabeceraController;
 import py.com.platinum.controller.MarcaController;
 import py.com.platinum.controller.PresentacionController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.SeccionController;
 import py.com.platinum.controller.ProveedorController;
+import py.com.platinum.controller.SolicitudInternaController;
 import py.com.platinum.controller.TareaController;
 import py.com.platinum.controller.TipoProductoController;
 import py.com.platinum.controller.UnidadMedidaController;
 import py.com.platinum.entity.Banco;
 import py.com.platinum.entity.Caja;
 import py.com.platinum.entity.Cargo;
-import py.com.platinum.entity.Ciudad;
 import py.com.platinum.entity.Cliente;
 import py.com.platinum.entity.Comision;
 import py.com.platinum.entity.Empleado;
 import py.com.platinum.entity.FormaPago;
 import py.com.platinum.entity.Deposito;
-import py.com.platinum.entity.FormulaCabecera;
 import py.com.platinum.entity.FormulaSemiCabecera;
 import py.com.platinum.entity.Marca;
 import py.com.platinum.entity.OrdenTrabajo;
@@ -45,6 +42,7 @@ import py.com.platinum.entity.Presentacion;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.Seccion;
 import py.com.platinum.entity.Proveedor;
+import py.com.platinum.entity.SolicitudInterna;
 import py.com.platinum.entity.Tarea;
 import py.com.platinum.entity.TipoProducto;
 import py.com.platinum.entity.UnidadMedida;
@@ -138,7 +136,7 @@ public class SessionBean1 extends AbstractSessionBean {
         cargarListaCaja();
         cargarListaComision();
         cargarListaCliente();
-        
+
     }
 
     /**
@@ -206,12 +204,9 @@ public class SessionBean1 extends AbstractSessionBean {
     public void setTituloPagina(String tituloPagina) {
         this.tituloPagina = tituloPagina;
     }
-
-
-
 ////// CARGA DE COMBO BOX PRODUCTOS
     Producto[] listaProductos;
-    Option [] listaProductosOp;
+    Option[] listaProductosOp;
 
     public Option[] getListaProductosOp() {
         return listaProductosOp;
@@ -220,8 +215,6 @@ public class SessionBean1 extends AbstractSessionBean {
     public void setListaProductosOp(Option[] listaProductosOp) {
         this.listaProductosOp = listaProductosOp;
     }
-
-
 
     public Producto[] getListaProductos() {
         return listaProductos;
@@ -259,7 +252,7 @@ public class SessionBean1 extends AbstractSessionBean {
 
     public void cargarListaTodosProductosSemiterminados() {
         ProductoController productoController = new ProductoController();
-        listaProductosSemiterminados = (Producto[]) productoController.getAllFiltered(null,null,"SemiTerminado",null).toArray(new Producto[0]);
+        listaProductosSemiterminados = (Producto[]) productoController.getAllFiltered(null, null, "SemiTerminado", null).toArray(new Producto[0]);
 
 
     }
@@ -277,10 +270,8 @@ public class SessionBean1 extends AbstractSessionBean {
 
     public void cargarListaTodosInsumosMaterias() {
         ProductoController productoController = new ProductoController();
-        listaInsumosMaterias = (Producto[]) productoController.getInsumosMaterias(null,null,null).toArray(new Producto[0]);
+        listaInsumosMaterias = (Producto[]) productoController.getInsumosMaterias(null, null, null).toArray(new Producto[0]);
     }
-
-
 ////// CARGA DE COMBO BOX MARCAS
 //////     import com.sun.webui.jsf.model.Option;
     Marca[] listaMarcas;
@@ -540,7 +531,6 @@ public class SessionBean1 extends AbstractSessionBean {
         this.listaBanco = listaBanco;
     }
 
-
     /**
      * Obtenemos la lista de Banco de la base de datos
      */
@@ -562,7 +552,6 @@ public class SessionBean1 extends AbstractSessionBean {
     public void setListaFormaPago(FormaPago[] listaFormaPago) {
         this.listaFormaPago = listaFormaPago;
     }
-
 
     /**
      * Obtenemos la lista de FormaPago de la base de datos
@@ -586,7 +575,6 @@ public class SessionBean1 extends AbstractSessionBean {
         this.listaCaja = listaCaja;
     }
 
-
     /**
      * Obtenemos la lista de Caja de la base de datos
      */
@@ -609,7 +597,6 @@ public class SessionBean1 extends AbstractSessionBean {
         this.listaComision = listaComision;
     }
 
-
     /**
      * Obtenemos la lista de Comision de la base de datos
      */
@@ -620,7 +607,6 @@ public class SessionBean1 extends AbstractSessionBean {
         //Obtenemos la lista de Comision ordenado por nombre del Comision
         listaComision = (Comision[]) ComisionController.getAll("codProducto.descripcion").toArray(new Comision[0]);
     }
-
     private DateTimeConverter dateTimeConverter = new DateTimeConverter();
 
     public DateTimeConverter getDateTimeConverter() {
@@ -652,7 +638,6 @@ public class SessionBean1 extends AbstractSessionBean {
         //Obtenemos la lista de Cliente ordenado por nombre del Cliente
         listaCliente = (Cliente[]) ClienteController.getAll("apellidoCliente, o.nombreCliente").toArray(new Cliente[0]);
     }
-
     Empleado[] listaEmpleados;
 
     public Empleado[] getListaEmpleados() {
@@ -663,13 +648,12 @@ public class SessionBean1 extends AbstractSessionBean {
         this.listaEmpleados = listaEmpleados;
     }
 
-    public void cargarListaTodosEmpleados(){
+    public void cargarListaTodosEmpleados() {
         EmpleadoController EmpleadoController = new EmpleadoController();
         listaEmpleados = (Empleado[]) EmpleadoController.getAll("apellidoEmpleado").toArray(new Empleado[0]);
     }
     ////// CARGA DE COMBO BOX Tareas
 //////     import com.sun.webui.jsf.model.Option;
-
     Tarea[] listaTareas;
     Option[] listaTareasOp;
 
@@ -689,10 +673,10 @@ public class SessionBean1 extends AbstractSessionBean {
         this.listaTareas = listaTareas;
     }
 
-    public void cargarListaTodosTareas(){
+    public void cargarListaTodosTareas() {
         TareaController tareaController = new TareaController();
-        listaTareas = (Tarea[])tareaController.getAll("nombreTarea").toArray(new Tarea[0]);
-        listaTareasOp = new Option [listaTareas.length];
+        listaTareas = (Tarea[]) tareaController.getAll("nombreTarea").toArray(new Tarea[0]);
+        listaTareasOp = new Option[listaTareas.length];
         Option option;
         for (int i = 0; i < listaTareas.length; i++) {
             Tarea tp = listaTareas[i];
@@ -704,9 +688,8 @@ public class SessionBean1 extends AbstractSessionBean {
     }
 ////// FIN CARGA DE COMBO BOX Tareas
 
-        ////// CARGA DE COMBO BOX Depositos
+    ////// CARGA DE COMBO BOX Depositos
 //////     import com.sun.webui.jsf.model.Option;
-
     Deposito[] listaDepositos;
     Option[] listaDepositosOp;
 
@@ -726,10 +709,10 @@ public class SessionBean1 extends AbstractSessionBean {
         this.listaDepositos = listaDepositos;
     }
 
-    public void cargarListaTodosDepositos(){
+    public void cargarListaTodosDepositos() {
         DepositoController depositoController = new DepositoController();
-        listaDepositos = (Deposito[])depositoController.getAll("nombre").toArray(new Deposito[0]);
-        listaDepositosOp = new Option [listaDepositos.length];
+        listaDepositos = (Deposito[]) depositoController.getAll("nombre").toArray(new Deposito[0]);
+        listaDepositosOp = new Option[listaDepositos.length];
         Option option;
         for (int i = 0; i < listaDepositos.length; i++) {
             Deposito tp = listaDepositos[i];
@@ -740,12 +723,8 @@ public class SessionBean1 extends AbstractSessionBean {
         }
     }
 ////// FIN CARGA DE COMBO BOX Depositos
-
-
-
     ////// CARGA DE COMBO BOX Proveedores
 //////     import com.sun.webui.jsf.model.Option;
-
     Proveedor[] listaProveedores;
     Option[] listaProveedoresOp;
 
@@ -765,10 +744,10 @@ public class SessionBean1 extends AbstractSessionBean {
         this.listaProveedores = listaProveedores;
     }
 
-    public void cargarListaTodosProveedores(){
+    public void cargarListaTodosProveedores() {
         ProveedorController proveedorController = new ProveedorController();
         listaProveedores = (Proveedor[]) proveedorController.getAll("nombreProveedor").toArray(new Proveedor[0]);
-        listaProveedoresOp = new Option [listaProveedores.length];
+        listaProveedoresOp = new Option[listaProveedores.length];
         Option option;
         for (int i = 0; i < listaProveedores.length; i++) {
             Proveedor p = listaProveedores[i];
@@ -779,11 +758,8 @@ public class SessionBean1 extends AbstractSessionBean {
         }
     }
 ////// FIN CARGA DE COMBO BOX Proveedores
-
-
 ////// CARGA DE COMBO BOX Formulas SEMITERMINADOS
 //////     import com.sun.webui.jsf.model.Option;
-
     FormulaSemiCabecera[] listaFormulaCabecerasSemiTer;
     Option[] listaFormulaCabecerasSemiTerOp;
 
@@ -803,10 +779,10 @@ public class SessionBean1 extends AbstractSessionBean {
         this.listaFormulaCabecerasSemiTer = listaFormulaCabecerasSemiTer;
     }
 
-    public void cargarListaTodosFormulaCabecerasSemiTer(){
+    public void cargarListaTodosFormulaCabecerasSemiTer() {
         FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
         listaFormulaCabecerasSemiTer = (FormulaSemiCabecera[]) formulaSemiCabeceraController.getAll("descripcion").toArray(new FormulaSemiCabecera[0]);
-        listaFormulaCabecerasSemiTerOp = new Option [listaFormulaCabecerasSemiTer.length];
+        listaFormulaCabecerasSemiTerOp = new Option[listaFormulaCabecerasSemiTer.length];
         Option option;
         for (int i = 0; i < listaFormulaCabecerasSemiTer.length; i++) {
             FormulaSemiCabecera p = listaFormulaCabecerasSemiTer[i];
@@ -817,8 +793,6 @@ public class SessionBean1 extends AbstractSessionBean {
         }
     }
 ////// FIN CARGA DE COMBO BOX DE ORDENES DE TRABAJO
-
-    
     OrdenTrabajo[] listaOtCab;
     Option[] listaOtCabOp;
 
@@ -838,4 +812,23 @@ public class SessionBean1 extends AbstractSessionBean {
         this.listaOtCabOp = listaOtCabOp;
     }
 
+    SolicitudInterna[] listaSolicitud;
+
+    public SolicitudInterna[] getListaSolicitud() {
+        return listaSolicitud;
+    }
+
+    public void setListaSolicitud(SolicitudInterna[] listaSolicitud) {
+        this.listaSolicitud = listaSolicitud;
+    }
+
+    public void cargarListaSolictud() {
+        EmpleadoController EmpleadoController = new EmpleadoController();
+        listaEmpleados = (Empleado[]) EmpleadoController.getAll("fecha").toArray(new Empleado[0]);
+    }
+
+    public void cargarListaSolictud(String estado) {
+        SolicitudInternaController c = new SolicitudInternaController();
+        listaSolicitud = (SolicitudInterna[]) c.getSolicitudInternas(null, null, null, estado).toArray(new SolicitudInterna[0]);
+    }
 }
