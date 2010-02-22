@@ -1,0 +1,11 @@
+-- Eliminadmos  la columna hora_pedido de la tabla PEDIDO_CABECERA
+alter table PEDIDO_CABECERA drop column HORA_PEDIDO;
+
+--Agregamos la columna nro. solicitud  a la tabla factura_compra_det
+alter table factura_compra_det add   NRO_SOLICITUD   NUMBER(15);
+
+--Agregar foreign key en factura_compra_det con la tabla solicitud_interna
+alter table factura_compra_det 
+    add constraints fk_compra_det_solicitud foreign key (NRO_SOLICITUD) 
+       references solicitud_interna(cod_solicitud);
+	   
