@@ -30,7 +30,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "PEDIDO_CABECERA")
-@NamedQueries({@NamedQuery(name = "PedidoCabecera.findAll", query = "SELECT p FROM PedidoCabecera p"), @NamedQuery(name = "PedidoCabecera.findByCodPedido", query = "SELECT p FROM PedidoCabecera p WHERE p.codPedido = :codPedido"), @NamedQuery(name = "PedidoCabecera.findByNumeroPedido", query = "SELECT p FROM PedidoCabecera p WHERE p.numeroPedido = :numeroPedido"), @NamedQuery(name = "PedidoCabecera.findByFechaPedido", query = "SELECT p FROM PedidoCabecera p WHERE p.fechaPedido = :fechaPedido"), @NamedQuery(name = "PedidoCabecera.findByHoraPedido", query = "SELECT p FROM PedidoCabecera p WHERE p.horaPedido = :horaPedido"), @NamedQuery(name = "PedidoCabecera.findByTotalPedido", query = "SELECT p FROM PedidoCabecera p WHERE p.totalPedido = :totalPedido"), @NamedQuery(name = "PedidoCabecera.findByEstadoPedido", query = "SELECT p FROM PedidoCabecera p WHERE p.estadoPedido = :estadoPedido"), @NamedQuery(name = "PedidoCabecera.findByUsuarioAlta", query = "SELECT p FROM PedidoCabecera p WHERE p.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "PedidoCabecera.findByUsuarioModif", query = "SELECT p FROM PedidoCabecera p WHERE p.usuarioModif = :usuarioModif"), @NamedQuery(name = "PedidoCabecera.findByFechaAlta", query = "SELECT p FROM PedidoCabecera p WHERE p.fechaAlta = :fechaAlta"), @NamedQuery(name = "PedidoCabecera.findByFechaModif", query = "SELECT p FROM PedidoCabecera p WHERE p.fechaModif = :fechaModif")})
 public class PedidoCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -44,10 +43,6 @@ public class PedidoCabecera implements Serializable {
     @Column(name = "FECHA_PEDIDO")
     @Temporal(TemporalType.DATE)
     private Date fechaPedido;
-    @Basic(optional = false)
-    @Column(name = "HORA_PEDIDO")
-    @Temporal(TemporalType.DATE)
-    private Date horaPedido;
     @Column(name = "TOTAL_PEDIDO")
     private BigInteger totalPedido;
     @Column(name = "ESTADO_PEDIDO")
@@ -80,11 +75,10 @@ public class PedidoCabecera implements Serializable {
         this.codPedido = codPedido;
     }
 
-    public PedidoCabecera(BigDecimal codPedido, String numeroPedido, Date fechaPedido, Date horaPedido) {
+    public PedidoCabecera(BigDecimal codPedido, String numeroPedido, Date fechaPedido) {
         this.codPedido = codPedido;
         this.numeroPedido = numeroPedido;
         this.fechaPedido = fechaPedido;
-        this.horaPedido = horaPedido;
     }
 
     public BigDecimal getCodPedido() {
@@ -109,14 +103,6 @@ public class PedidoCabecera implements Serializable {
 
     public void setFechaPedido(Date fechaPedido) {
         this.fechaPedido = fechaPedido;
-    }
-
-    public Date getHoraPedido() {
-        return horaPedido;
-    }
-
-    public void setHoraPedido(Date horaPedido) {
-        this.horaPedido = horaPedido;
     }
 
     public BigInteger getTotalPedido() {

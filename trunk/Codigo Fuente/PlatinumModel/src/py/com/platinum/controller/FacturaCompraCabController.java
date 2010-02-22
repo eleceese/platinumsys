@@ -8,9 +8,12 @@ package py.com.platinum.controller;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
+import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.FacturaCompraCab;
+import py.com.platinum.entity.FacturaCompraDet;
 
 /**
  *
@@ -85,5 +88,52 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
         return entities;
 
       }
+
+    /**
+     * Este metodo recibe como parametro un Entity para insertar o persistir
+     * dicha entidad a la base de datos.
+     * @param entity
+     * @return ControllerResult
+     */
+    public ControllerResult crear(FacturaCompraCab cabecera, List<FacturaCompraDet> detalle ) throws RuntimeException {
+        ControllerResult r = new ControllerResult();
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+
+            //Persistimos la Cabecera
+            em.persist(cabecera);
+
+            //Persistimos el detalle
+            for (int i = 0; i < detalle.size(); i++) {
+                //Obtenemos el detalle a insertar
+                FacturaCompraDet det = detalle.get(i);
+
+                //Asignamos la cabecera al detalle
+                det.setCodFacComCab(cabecera);
+
+                //Persistimos
+                em.persist(det);
+            }
+
+            //Confirmamos la transaccion
+            tx.commit();
+            r.setCodRetorno(0);
+            r.setMsg("Se creo correctamente el registro");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            r.setCodRetorno(-1);
+            r.setMsg("Error al persistir Factura Compra Proveedor Cabecera y detalle" + ex);
+            try {
+                tx.rollback();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            em.close();
+            return r;
+        }
+    }
 
 }   

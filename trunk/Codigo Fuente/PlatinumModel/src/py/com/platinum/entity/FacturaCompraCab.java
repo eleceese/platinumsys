@@ -74,11 +74,8 @@ public class FacturaCompraCab implements Serializable {
     @ManyToOne
     private EntradaSalidaCabecera codEntSal;
     @JoinColumn(name = "COD_PROVEEDOR", referencedColumnName = "COD_PROVEEDOR")
-    @ManyToOne(optional = false)
-    private Proveedor codProveedor;
-    @JoinColumn(name = "NRO_SOLICITUD", referencedColumnName = "COD_SOLICITUD")
     @ManyToOne
-    private SolicitudInterna nroSolicitud;
+    private Proveedor codProveedor;
     @OneToMany(mappedBy = "codFacturaCab")
     private List<NotaCreditoProvCab> notaCreditoProvCabCollection;
 
@@ -217,14 +214,6 @@ public class FacturaCompraCab implements Serializable {
 
     public void setCodProveedor(Proveedor codProveedor) {
         this.codProveedor = codProveedor;
-    }
-
-    public SolicitudInterna getNroSolicitud() {
-        return nroSolicitud;
-    }
-
-    public void setNroSolicitud(SolicitudInterna nroSolicitud) {
-        this.nroSolicitud = nroSolicitud;
     }
 
     public List<NotaCreditoProvCab> getNotaCreditoProvCabCollection() {
