@@ -60,6 +60,7 @@
     <class>py.com.platinum.entity.FormulaSemiCabecera</class>
     <class>py.com.platinum.entity.Detalle</class>
     <class>py.com.platinum.entity.Cabecera</class>
+    <class>py.com.platinum.entity.TipoComprobante</class>
     <properties>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
       <property name="hibernate.connection.username" value="platinum"/>
@@ -69,4 +70,3 @@
     </properties>
   </persistence-unit>
 </persistence>
-

@@ -6,12 +6,15 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,28 +37,23 @@ public class FacturaCompraCab implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="FAC_COMP_CAB_SEQUENCE")
-    @Basic(optional = false)
     @Column(name = "COD_FAC_COM_CAB")
     private Long codFacComCab;
-    @Basic(optional = false)
     @Column(name = "NRO_FACTURA")
     private String nroFactura;
-    @Basic(optional = false)
     @Column(name = "FECHA")
     @Temporal(TemporalType.DATE)
     private Date fecha;
-    @Column(name = "TIPO")
-    private String tipo;
+    @JoinColumn(name = "TIPO", referencedColumnName = "COD_TIPO")
+    @ManyToOne
+    private TipoComprobante tipo;
     @Basic(optional = false)
     @Column(name = "ESTADO")
     private String estado;
-    @Basic(optional = false)
     @Column(name = "SUB_TOTAL")
     private long subTotal;
-    @Basic(optional = false)
     @Column(name = "TOTA_IVA")
     private long totaIva;
-    @Basic(optional = false)
     @Column(name = "TOTAL")
     private long total;
     @Column(name = "USUARIO_ALTA")
@@ -68,16 +66,16 @@ public class FacturaCompraCab implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codFacComCab")
-    private List<FacturaCompraDet> facturaCompraDetCollection;
+    @OneToMany(mappedBy = "codFacComCab", fetch=FetchType.EAGER)
+    private Set<FacturaCompraDet> facturaCompraDet;
     @JoinColumn(name = "COD_ENT_SAL", referencedColumnName = "COD_ENTRADA_SALIDA")
     @ManyToOne
     private EntradaSalidaCabecera codEntSal;
     @JoinColumn(name = "COD_PROVEEDOR", referencedColumnName = "COD_PROVEEDOR")
     @ManyToOne
     private Proveedor codProveedor;
-    @OneToMany(mappedBy = "codFacturaCab")
-    private List<NotaCreditoProvCab> notaCreditoProvCabCollection;
+    @OneToMany(mappedBy = "codFacturaCab", fetch=FetchType.EAGER)
+    private Set<NotaCreditoProvCab> notaCreditoProvCab;
 
     public FacturaCompraCab() {
     }
@@ -120,11 +118,11 @@ public class FacturaCompraCab implements Serializable {
         this.fecha = fecha;
     }
 
-    public String getTipo() {
+    public TipoComprobante getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(TipoComprobante tipo) {
         this.tipo = tipo;
     }
 
@@ -192,12 +190,16 @@ public class FacturaCompraCab implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public List<FacturaCompraDet> getFacturaCompraDetCollection() {
-        return facturaCompraDetCollection;
+    public Set<FacturaCompraDet> getFacturaCompraDet() {
+        return facturaCompraDet;
     }
 
-    public void setFacturaCompraDetCollection(List<FacturaCompraDet> facturaCompraDetCollection) {
-        this.facturaCompraDetCollection = facturaCompraDetCollection;
+    public List<FacturaCompraDet> getFacturaCompraDetList() {
+        return new ArrayList((List<FacturaCompraDet>) Arrays.asList(facturaCompraDet.toArray(new FacturaCompraDet[0])));
+    }
+
+    public void setFacturaCompraDet(Set<FacturaCompraDet> facturaCompraDet) {
+        this.facturaCompraDet = facturaCompraDet;
     }
 
     public EntradaSalidaCabecera getCodEntSal() {
@@ -216,12 +218,12 @@ public class FacturaCompraCab implements Serializable {
         this.codProveedor = codProveedor;
     }
 
-    public List<NotaCreditoProvCab> getNotaCreditoProvCabCollection() {
-        return notaCreditoProvCabCollection;
+    public Set<NotaCreditoProvCab> getNotaCreditoProvCab() {
+        return notaCreditoProvCab;
     }
 
-    public void setNotaCreditoProvCabCollection(List<NotaCreditoProvCab> notaCreditoProvCabCollection) {
-        this.notaCreditoProvCabCollection = notaCreditoProvCabCollection;
+    public void setNotaCreditoProvCab(Set<NotaCreditoProvCab> notaCreditoProvCab) {
+        this.notaCreditoProvCab = notaCreditoProvCab;
     }
 
     @Override
