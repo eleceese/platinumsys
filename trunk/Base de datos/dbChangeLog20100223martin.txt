@@ -9,7 +9,7 @@ create table tipo_comprobante
 );
 
 -- Create sequence 
-create sequence SQ_FACTURA_COMPRA
+create sequence SQ_TIPO_COMPROBANTE
 minvalue 50
 maxvalue 99999999999999999999
 start with 50
