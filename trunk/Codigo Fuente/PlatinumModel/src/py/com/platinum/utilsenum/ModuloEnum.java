@@ -33,5 +33,11 @@ public enum ModuloEnum {
         public String toString() {
             return "PEDIDO CLIENTE";
         }
+    },
+    PAGO_PROVEEDOR {
+        @Override
+        public String toString() {
+            return "PAGO PROVEEDOR";
+        }
     }
 }
