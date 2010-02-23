@@ -25,6 +25,7 @@ import py.com.platinum.controller.SeccionController;
 import py.com.platinum.controller.ProveedorController;
 import py.com.platinum.controller.SolicitudInternaController;
 import py.com.platinum.controller.TareaController;
+import py.com.platinum.controller.TipoComprobanteController;
 import py.com.platinum.controller.TipoProductoController;
 import py.com.platinum.controller.UnidadMedidaController;
 import py.com.platinum.entity.Banco;
@@ -44,8 +45,10 @@ import py.com.platinum.entity.Seccion;
 import py.com.platinum.entity.Proveedor;
 import py.com.platinum.entity.SolicitudInterna;
 import py.com.platinum.entity.Tarea;
+import py.com.platinum.entity.TipoComprobante;
 import py.com.platinum.entity.TipoProducto;
 import py.com.platinum.entity.UnidadMedida;
+import py.com.platinum.utilsenum.ModuloEnum;
 
 /**
  * <p>Session scope data bean for your application.  Create properties
@@ -128,7 +131,7 @@ public class SessionBean1 extends AbstractSessionBean {
         cargarListaTodosTipoProductos();
         cargarListaTodosPresentacions();
         cargarListaTodosUnidadMedidas();
-//        cargarListaCiudad();
+        //cargarListaCiudad();
         cargarListaCargo();
         cargarListaSeccion();
         cargarListaBanco();
@@ -136,6 +139,7 @@ public class SessionBean1 extends AbstractSessionBean {
         cargarListaCaja();
         cargarListaComision();
         cargarListaCliente();
+        cargarListaTipoComprobante();
 
     }
 
@@ -830,5 +834,80 @@ public class SessionBean1 extends AbstractSessionBean {
     public void cargarListaSolictud(String estado) {
         SolicitudInternaController c = new SolicitudInternaController();
         listaSolicitud = (SolicitudInterna[]) c.getSolicitudInternas(null, null, null, estado).toArray(new SolicitudInterna[0]);
+    }
+
+    TipoComprobante[] listaTipoComprobante;
+    Option[] listaTipoComprobanteOption;
+
+    public TipoComprobante[] getListaTipoComprobante() {
+        return listaTipoComprobante;
+    }
+
+    public void setListaTipoComprobante(TipoComprobante[] listaTipoComprobante) {
+        this.listaTipoComprobante = listaTipoComprobante;
+    }
+
+    public Option[] getListaTipoComprobanteOption() {
+        return listaTipoComprobanteOption;
+    }
+
+    public void setListaTipoComprobanteOption(Option[] listaTipoComprobanteOption) {
+        this.listaTipoComprobanteOption = listaTipoComprobanteOption;
+    }
+
+    public void cargarListaTipoComprobante() {
+        //Variables
+        Option o;
+        TipoComprobanteController TipoComprobanteController = new TipoComprobanteController();
+
+        //Obtenemos la lista de TipoComprobante ordenado por nombre del TipoComprobante
+        listaTipoComprobante = (TipoComprobante[]) TipoComprobanteController.getAll("descTipo").toArray(new TipoComprobante[0]);
+        
+        //Dimensionamos el array de options para la lista de TipoComprobantes
+        listaTipoComprobanteOption = new Option[listaTipoComprobante.length];
+
+        //Recorremos la lista de TipoComprobantes
+        for (int i = 0; i < listaTipoComprobante.length; i++) {
+            //Optenemos el TipoComprobante
+            TipoComprobante e = listaTipoComprobante[i];
+
+            //Creamos nuevo options
+            o = new Option();
+            o.setValue(e.getCodTipo().toString());
+            o.setLabel(e.getDescTipo());
+
+            //agregamos option al array de option - TipoComprobante
+            listaTipoComprobanteOption[i] = o;
+        }
+    }
+
+    /**
+     * Consultamos los tipo de comprobante por Modulo
+     * @param modulo
+     */
+    public void cargarListaTipoComprobantePorModulo(ModuloEnum modulo) {
+        //Variables
+        TipoComprobanteController TipoComprobanteController = new TipoComprobanteController();
+        Option o;
+
+        //Obtenemos la lista de TipoComprobante ordenado por nombre del TipoComprobante
+        listaTipoComprobante = (TipoComprobante[]) TipoComprobanteController.getTipoComprobantesPorModulo(modulo).toArray(new TipoComprobante[0]);
+
+        //Dimensionamos el array de options para la lista de TipoComprobantes
+        listaTipoComprobanteOption = new Option[listaTipoComprobante.length];
+
+        //Recorremos la lista de TipoComprobantes
+        for (int i = 0; i < listaTipoComprobante.length; i++) {
+            //Optenemos el TipoComprobante
+            TipoComprobante e = listaTipoComprobante[i];
+
+            //Creamos nuevo options
+            o = new Option();
+            o.setValue(e.getCodTipo().toString());
+            o.setLabel(e.getDescTipo());
+
+            //agregamos option al array de option - TipoComprobante
+            listaTipoComprobanteOption[i] = o;
+        }
     }
 }
