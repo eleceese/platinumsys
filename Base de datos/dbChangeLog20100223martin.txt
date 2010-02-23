@@ -1,0 +1,28 @@
+--Cramos la Tabla de Tipos de comprobantes
+create table tipo_comprobante
+(
+       cod_tipo number(10) not null,
+       desc_tipo varchar2(50) not null,
+       cant_días number(5) not null,
+	   modulo varchar2(30) not null,
+       constraint pk_tipo_comprobante primary key (cod_tipo)
+);
+
+-- Create sequence 
+create sequence SQ_FACTURA_COMPRA
+minvalue 50
+maxvalue 99999999999999999999
+start with 50
+increment by 1;
+
+--Cambiamos el tipo de datos en la tabla Fatura compra Cab.
+update factura_compra_cab set tipo = null;
+
+commit;
+
+alter table factura_compra_cab modify tipo number(10);
+
+--Relacionamos Factura compra cab. con tipo comprobante
+alter table factura_compra_cab
+	add constraint fk_faccomcab_tipcompro foreign key (tipo)
+	    references tipo_comprobante(cod_tipo);
