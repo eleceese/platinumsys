@@ -31,13 +31,16 @@ import py.com.platinum.controller.FacturaCompraDetController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.ProveedorController;
 import py.com.platinum.controller.SolicitudInternaController;
+import py.com.platinum.controller.TipoComprobanteController;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.FacturaCompraCab;
 import py.com.platinum.entity.FacturaCompraDet;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.Proveedor;
 import py.com.platinum.entity.SolicitudInterna;
+import py.com.platinum.entity.TipoComprobante;
 import py.com.platinum.utils.StringUtils;
+import py.com.platinum.utilsenum.ModuloEnum;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -221,15 +224,6 @@ public class ABMComprasProveedor extends AbstractPageBean {
 
     public void setButtonPanel(HtmlPanelGrid hpg) {
         this.buttonPanel = hpg;
-    }
-    private SingleSelectOptionsList uiLstTipoComprobanteDefaultOptions = new SingleSelectOptionsList();
-
-    public SingleSelectOptionsList getUiLstTipoComprobanteDefaultOptions() {
-        return uiLstTipoComprobanteDefaultOptions;
-    }
-
-    public void setUiLstTipoComprobanteDefaultOptions(SingleSelectOptionsList ssol) {
-        this.uiLstTipoComprobanteDefaultOptions = ssol;
     }
     private SingleSelectOptionsList uiLstEstadoDefaultOptions = new SingleSelectOptionsList();
 
@@ -471,12 +465,17 @@ public class ABMComprasProveedor extends AbstractPageBean {
      * <p>Construct a new Page bean instance.</p>
      */
     public ABMComprasProveedor() {
+
+        //Tipos de IVa
         uiLstIvaDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("0", "Exento"), new com.sun.webui.jsf.model.Option("5", "IVA 5%"), new com.sun.webui.jsf.model.Option("10", "IVA 10%")});
         uiLstIvaDefaultOptions.setSelectedValue("0");
+
+        //Estados de la factura
         uiLstEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("P", "Pendiente"), new com.sun.webui.jsf.model.Option("C", "Confirmado")});
         uiLstEstadoDefaultOptions.setSelectedValue("P");
-        uiLstTipoComprobanteDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("CON0", "Contado"), new com.sun.webui.jsf.model.Option("CRE30", "Crédito 30 días"), new com.sun.webui.jsf.model.Option("CRE60", "Crédito 60 días"), new com.sun.webui.jsf.model.Option("CRE90", "Crédito 90 días")});
-        uiLstTipoComprobanteDefaultOptions.setSelectedValue("CON0");
+        
+        //Cargamos a las tablas relacionadas
+        cargarRelaciones();
     }
 
     /**
@@ -547,6 +546,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
             uiBtnGuardarEditar.setRendered(false);
             gridPanelBtnBuscar.setRendered(false);
             uiBtnCancelar.setRendered(true);
+            gridPanelBtnBuscar.setRendered(false);
             limpiarCamposCabecera();
             addRequest = false;
         } else if (updateRequest) {
@@ -559,6 +559,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
                 uiBtnGuardarEditar.setRendered(true);
                 uiBtnCancelar.setRendered(true);
                 updateRequest = false;
+                gridPanelBtnBuscar.setRendered(false);
             }
         } else if (errorValidacion) {
             addUpdatePanel.setRendered(true);
@@ -568,6 +569,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
             gridPanelBuscar.setRendered(true);
             table1.setRendered(true);
             buttonPanel.setRendered(true);
+            gridPanelBtnBuscar.setRendered(true);
             addUpdatePanel.setRendered(false);
         }
 
@@ -678,14 +680,9 @@ public class ABMComprasProveedor extends AbstractPageBean {
         updateDetRequest = true;
         itemDet = null;
 
-        //Cargamos la lista de unidades de medida
-        getSessionBean1().cargarListaTodosUnidadMedidas();
 
-        //Cargamos la lista de Productos
-        getSessionBean1().cargarListaTodosProductos();
-
-        //Cargamos la lista de Proveedores
-        getSessionBean1().cargarListaTodosProveedores();
+        //Cargar tablas realcionadas
+        cargarRelaciones();
 
         //Actualizamos le titulo de la pagina
         getSessionBean1().setTituloPagina("Nueva Factura Compra");
@@ -707,32 +704,87 @@ public class ABMComprasProveedor extends AbstractPageBean {
         updateDetRequest = true;
         itemDet = null;
 
-        //Cargamos la lista de unidades de medida
-        getSessionBean1().cargarListaTodosUnidadMedidas();
-
-        //Cargamos la lista de Productos
-        getSessionBean1().cargarListaTodosProductos();
-
-        //Cargamos la lista de Proveedores
-        getSessionBean1().cargarListaTodosProveedores();
+        //Cargamos los datos de las relaciones con esta entidad
+        cargarRelaciones();
 
         //Actualizamos le titulo de la pagina
         getSessionBean1().setTituloPagina("Editar Factura Compra");
         getSessionBean1().setDetallePagina("Registro de Facturas - Proveedor");
+
+        //ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+
+            //Posicion en la grilla del elemento seleccionado
+            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+
+            //Elemento seleccionado
+            cabecera = lstCabecera[rowId];
+
+            //Obetenemos el detalle
+            lstDetalleLIST = cabecera.getFacturaCompraDetList();
+            lstDetalle = (FacturaCompraDet[]) lstDetalleLIST.toArray(new FacturaCompraDet[0]);
+
+            //Detalles a eliminar
+            lstDetalleEliminar = new ArrayList();
+
+            //Obetenemos los atributos de la cabecera
+            uiTxtNroFac.setText(cabecera.getNroFactura());
+            uiTxtCodProveedor.setText(cabecera.getCodProveedor().getCodProveedor());
+            uiTxtNombreProveedor.setText(cabecera.getCodProveedor().getNombreProveedor());
+            uiLstEstado.setSelected(cabecera.getEstado());
+            uiLstTipoComprobante.setSelected(cabecera.getTipo().getCodTipo().toString());
+            uiCalFecha.setSelectedDate(cabecera.getFecha());
+            uiTxtSubTotal.setText(String.valueOf(cabecera.getSubTotal()));
+            uiTxtTotal.setText(String.valueOf(cabecera.getTotal()));
+            uiTxtTotalIva.setText(String.valueOf(cabecera.getTotaIva()));
+        }
+
 
         //result
         return null;
     }
 
     public String deleteButton_action() {
+        //Ocultamos el pageAlert
+        this.pageAlert1.setRendered(false);
+
+        // Si la cantidad de registros en la grilla es mayor a 0
+        // Eliminamos el elemento seleccionado
+        if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+
+            //Posicion en la grilla del elemento seleccionado
+            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+
+            //Elemento seleccionado
+            FacturaCompraCab e = lstCabecera[rowId];
+
+            //Eliminados el registro
+            FacturaCompraCabController controller = new FacturaCompraCabController();
+            ControllerResult r = controller.eliminar(e, e.getFacturaCompraDetList());
+
+            //Mensaje
+            if (r.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+                this.pageAlert1.setTitle("Error al eliminar el Registro");
+            } else {
+                this.pageAlert1.setType("information");
+                this.pageAlert1.setTitle("El Registro se a Eliminado correctamente");
+            }
+
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+        }
+
+        //Result
         return null;
     }
 
     public String uiBtnGuardarNuevo_action() {
-
-        // Apagamos la bandera de nuevo registro
-        this.addRequest = false;
-
         //Validamos los campos
         validarCabecera();
 
@@ -746,7 +798,8 @@ public class ABMComprasProveedor extends AbstractPageBean {
             cabecera.setEstado(uiLstEstado.getSelected().toString());
             cabecera.setFecha(uiCalFecha.getSelectedDate());
             cabecera.setNroFactura(uiTxtNroFac.getText().toString());
-            cabecera.setTipo(uiLstTipoComprobante.getSelected().toString());
+            //Tipo de comprobante
+            cabecera.setTipo(tipoComprobante);
             cabecera.setTotaIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
             cabecera.setSubTotal(Long.valueOf(uiTxtSubTotal.getText().toString()));
             cabecera.setTotal(Long.valueOf(uiTxtTotal.getText().toString()));
@@ -759,7 +812,11 @@ public class ABMComprasProveedor extends AbstractPageBean {
                 this.pageAlert1.setType("error");
                 errorValidacion = true;
             } else {
+                // Apagamos la bandera de nuevo registro
+                this.addRequest = false;
+                this.updateDetRequest = false;
                 this.pageAlert1.setType("information");
+
             }
 
             this.pageAlert1.setTitle(cr.getMsg());
@@ -800,6 +857,20 @@ public class ABMComprasProveedor extends AbstractPageBean {
             }
         }
 
+        //Tipo de Comprobante
+        if (this.uiLstTipoComprobante.getSelected() == null) {
+            info("Tipo de Comprobante, campo obligatorio");
+            this.errorValidacion = true;
+        }else{
+            //Validamos el codigo del proveedor ingresado
+            tipoComprobante = new TipoComprobanteController().findById(Long.valueOf(this.uiLstTipoComprobante.getSelected().toString()));
+
+            if (tipoComprobante == null) {
+                info("Tipo de Comprobante ingresado no es encontrado, campo obligatorio");
+                this.errorValidacion = true;
+            }
+        }
+
         //Fecha
         if (this.uiCalFecha.getSelectedDate() == null) {
             info("Fecha Pedido, campo obligatorio");
@@ -809,28 +880,44 @@ public class ABMComprasProveedor extends AbstractPageBean {
     }
 
     public String uiBtnGuardarEditar_action() {
-        //errorValidacion = validarCampos();
-        errorValidacion = false;
+        //Validamos los campos
+        validarCabecera();
 
+        //Si no hay error de validacion insertamos el registro
         if (!errorValidacion) {
-            // TODO: Process the action. Return value is a navigation
-            // case name where null will return to the same page.
-            // Create a new Users Entity
-            // Update the database table data using UserController
-            addRequest = false;
-            this.pageAlert1.setType("information");
-            this.pageAlert1.setTitle("Registro Editado correctamente!!!");
-            this.pageAlert1.setSummary("");
-            this.pageAlert1.setDetail("");
-            this.pageAlert1.setRendered(true);
-        } else {
-            this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Error en la Validacion de los Campos, favor verificar y volver a intentar");
+
+            //Set de los artributos
+            cabecera.setCodProveedor(proveedor);
+            cabecera.setEstado(uiLstEstado.getSelected().toString());
+            cabecera.setFecha(uiCalFecha.getSelectedDate());
+            cabecera.setNroFactura(uiTxtNroFac.getText().toString());
+            //Tipo de comprobante
+            cabecera.setTipo(tipoComprobante);
+            cabecera.setTotaIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
+            cabecera.setSubTotal(Long.valueOf(uiTxtSubTotal.getText().toString()));
+            cabecera.setTotal(Long.valueOf(uiTxtTotal.getText().toString()));
+
+            //Insertamos la cebecera y del detalle
+            ControllerResult cr = new FacturaCompraCabController().actualizar(cabecera, lstDetalleLIST, lstDetalleEliminar);
+
+            //Verificamos el tipo de mensaje
+            if (cr.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+                errorValidacion = true;
+            } else {
+                // Apagamos la bandera de Editar registro
+                this.updateRequest = false;
+                this.updateDetRequest = false;
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(cr.getMsg());
             this.pageAlert1.setSummary("");
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
         }
 
+        //result
         return null;
     }
 
@@ -858,9 +945,11 @@ public class ABMComprasProveedor extends AbstractPageBean {
     private FacturaCompraDet detalle;
     private FacturaCompraDet[] lstDetalle;
     private List<FacturaCompraDet> lstDetalleLIST;
+    private List<FacturaCompraDet> lstDetalleEliminar;
     private SolicitudInterna solicitud;
     private Producto producto;
     private Proveedor proveedor;
+    private TipoComprobante tipoComprobante;
 
     public FacturaCompraCab getCabecera() {
         return cabecera;
@@ -958,7 +1047,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
 
             /* Si itemDet es null, en ese caso es un nuevo detalle */
 
-            //Nuevo Detalle
+            //Controlamos si es Nuevo Detalle
             if (itemDet == null) {
                 detalle = new FacturaCompraDet();
             }
@@ -995,6 +1084,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
 
         }
 
+        //result
         return null;
     }
 
@@ -1111,7 +1201,15 @@ public class ABMComprasProveedor extends AbstractPageBean {
      * @return
      */
     public String deleteDetAction() {
-        //Eliminamos de la lista el detalle seleccionado
+        //Obtenemos el detalle seleccionado
+        detalle = lstDetalleLIST.get(Integer.valueOf(itemDet).intValue());
+
+        //Argegamos el detalle, a la lista de detalle para eliminar
+        if (updateRequest) {
+            lstDetalleEliminar.add(detalle);
+        }
+
+        //Eliminamos de la lista temporal el detalle
         lstDetalleLIST.remove(Integer.valueOf(itemDet).intValue());
 
         //Actualizamos la grilla
@@ -1184,5 +1282,27 @@ public class ABMComprasProveedor extends AbstractPageBean {
 
         //result
         return null;
+    }
+
+    /**
+     * Carga los datos de las tablas relacionadas a esta entidad
+     */
+    private void cargarRelaciones() {
+        //Cargamos la lista de unidades de medida
+        getSessionBean1().cargarListaTodosUnidadMedidas();
+
+        //Cargamos la lista de Productos
+        getSessionBean1().cargarListaTodosProductos();
+
+        //Cargamos la lista de Proveedores
+        getSessionBean1().cargarListaTodosProveedores();
+
+        //Cargamos la lista de unidades de medida
+        getSessionBean1().cargarListaTodosUnidadMedidas();
+
+        //Cargamos la lista de tipos de comprobantes
+        getSessionBean1().cargarListaTipoComprobantePorModulo(ModuloEnum.COMPRA);
+
+
     }
 }
