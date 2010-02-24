@@ -8,21 +8,27 @@ package py.com.platinum.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.utilsenum.PedidoVentaEstado;
 
 /**
  *
@@ -30,23 +36,34 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "PEDIDO_CABECERA")
+@SequenceGenerator(name="PEDIDO_CABECERA_SEQUENCE", sequenceName="SQ_CABECERA_PEDIDO")
 public class PedidoCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PEDIDO_CABECERA_SEQUENCE")
     @Column(name = "COD_PEDIDO")
-    private BigDecimal codPedido;
-    @Basic(optional = false)
+    private Long codPedido;
+    @JoinColumn(name = "TIPO", referencedColumnName = "COD_TIPO")
+    @ManyToOne
+    private TipoComprobante tipo;
     @Column(name = "NUMERO_PEDIDO")
     private String numeroPedido;
-    @Basic(optional = false)
     @Column(name = "FECHA_PEDIDO")
     @Temporal(TemporalType.DATE)
     private Date fechaPedido;
-    @Column(name = "TOTAL_PEDIDO")
-    private BigInteger totalPedido;
+    @Column(name = "SUB_TOTAL")
+    private Long subTotal;
+    @Column(name = "TOTAL_IVA")
+    private Long totalIva;
+    @Column(name = "PORC_DESCUENTO")
+    private Long porcDescuento;
+    @Column(name = "MONTO_DESCUENTO")
+    private Long montoDescuento;
+    @Column(name = "TOTAL")
+    private Long total;
     @Column(name = "ESTADO_PEDIDO")
-    private String estadoPedido;
+    @Enumerated(EnumType.STRING)
+    private PedidoVentaEstado estadoPedido;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -63,29 +80,29 @@ public class PedidoCabecera implements Serializable {
     @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(optional = false)
     private Empleado codEmpleado;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codPedido")
-    private List<PedidoDetalle> pedidoDetalleCollection;
-    @OneToMany(mappedBy = "codPedido")
-    private List<FacturaCabecera> facturaCabeceraCollection;
+    @OneToMany(mappedBy = "codPedido", fetch=FetchType.EAGER)
+    private Set<PedidoDetalle> pedidoDetalle;
+    @OneToMany(mappedBy = "codPedido", fetch=FetchType.EAGER)
+    private Set<FacturaCabecera> facturaCabecera;
 
     public PedidoCabecera() {
     }
 
-    public PedidoCabecera(BigDecimal codPedido) {
+    public PedidoCabecera(Long codPedido) {
         this.codPedido = codPedido;
     }
 
-    public PedidoCabecera(BigDecimal codPedido, String numeroPedido, Date fechaPedido) {
+    public PedidoCabecera(Long codPedido, String numeroPedido, Date fechaPedido) {
         this.codPedido = codPedido;
         this.numeroPedido = numeroPedido;
         this.fechaPedido = fechaPedido;
     }
 
-    public BigDecimal getCodPedido() {
+    public Long getCodPedido() {
         return codPedido;
     }
 
-    public void setCodPedido(BigDecimal codPedido) {
+    public void setCodPedido(Long codPedido) {
         this.codPedido = codPedido;
     }
 
@@ -105,19 +122,51 @@ public class PedidoCabecera implements Serializable {
         this.fechaPedido = fechaPedido;
     }
 
-    public BigInteger getTotalPedido() {
-        return totalPedido;
+    public Long getMontoDescuento() {
+        return montoDescuento;
     }
 
-    public void setTotalPedido(BigInteger totalPedido) {
-        this.totalPedido = totalPedido;
+    public void setMontoDescuento(Long montoDescuento) {
+        this.montoDescuento = montoDescuento;
     }
 
-    public String getEstadoPedido() {
+    public Long getPorcDescuento() {
+        return porcDescuento;
+    }
+
+    public void setPorcDescuento(Long porcDescuento) {
+        this.porcDescuento = porcDescuento;
+    }
+
+    public Long getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(Long subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public Long getTotal() {
+        return total;
+    }
+
+    public void setTotal(Long total) {
+        this.total = total;
+    }
+
+    public Long getTotalIva() {
+        return totalIva;
+    }
+
+    public void setTotalIva(Long totalIva) {
+        this.totalIva = totalIva;
+    }
+
+    public PedidoVentaEstado getEstadoPedido() {
         return estadoPedido;
     }
 
-    public void setEstadoPedido(String estadoPedido) {
+    public void setEstadoPedido(PedidoVentaEstado estadoPedido) {
         this.estadoPedido = estadoPedido;
     }
 
@@ -169,20 +218,36 @@ public class PedidoCabecera implements Serializable {
         this.codEmpleado = codEmpleado;
     }
 
-    public List<PedidoDetalle> getPedidoDetalleCollection() {
-        return pedidoDetalleCollection;
+    public Set<PedidoDetalle> getPedidoDetalle() {
+        return pedidoDetalle;
     }
 
-    public void setPedidoDetalleCollection(List<PedidoDetalle> pedidoDetalleCollection) {
-        this.pedidoDetalleCollection = pedidoDetalleCollection;
+    public List<PedidoDetalle> getPedidoDetalleList() {
+        return new ArrayList(Arrays.asList(pedidoDetalle.toArray(new PedidoDetalle[0])));
     }
 
-    public List<FacturaCabecera> getFacturaCabeceraCollection() {
-        return facturaCabeceraCollection;
+    public void setPedidoDetalle(Set<PedidoDetalle> pedidoDetalle) {
+        this.pedidoDetalle = pedidoDetalle;
     }
 
-    public void setFacturaCabeceraCollection(List<FacturaCabecera> facturaCabeceraCollection) {
-        this.facturaCabeceraCollection = facturaCabeceraCollection;
+    public Set<FacturaCabecera> getFacturaCabecera() {
+        return facturaCabecera;
+    }
+
+    public List<FacturaCabecera> getFacturaCabeceraList() {
+        return new ArrayList(Arrays.asList(facturaCabecera.toArray(new FacturaCabecera[0])));
+    }
+
+    public void setFacturaCabecera(Set<FacturaCabecera> facturaCabecera) {
+        this.facturaCabecera = facturaCabecera;
+    }
+
+    public TipoComprobante getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoComprobante tipo) {
+        this.tipo = tipo;
     }
 
     @Override
@@ -207,7 +272,7 @@ public class PedidoCabecera implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.PedidoCabecera[codPedido=" + codPedido + "]";
+        return numeroPedido;
     }
 
 }

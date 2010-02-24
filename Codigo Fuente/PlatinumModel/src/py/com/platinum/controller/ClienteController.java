@@ -177,4 +177,35 @@ public class ClienteController extends AbstractJpaDao<Cliente> {
         return r;
     }
 
+    /**
+     * Busqueda aproximada por apellido y nombre
+     * 
+     * @param apellidoNombre
+     * @return
+     */
+    public List<Cliente> getClientes(String apellidoNombre) {
+        //Armamos el sql String
+        String SQL = "SELECT o FROM Cliente o WHERE o.codCliente = o.codCliente";
+
+        if (apellidoNombre != null && !apellidoNombre.equals("")) {
+            SQL = SQL + " and UPPER( CONCAT(CONCAT(o.codCliente.apellidoCliente, '%'), o.codCliente.nombreCliente)) like UPPER(:apellidoNombre)  ";
+        }
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Seteamos los parametros
+        if (apellidoNombre != null && !apellidoNombre.equals("")) {
+            q.setParameter("apellidoNombre", "%" + apellidoNombre + "%");
+        }
+
+        //Realizamos la busqueda
+        List<Cliente> entities = q.getResultList();
+        em.close();
+
+        //retornamos la lista
+        return entities;
+
+    }
+
 }   

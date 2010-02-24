@@ -31,21 +31,16 @@ public class FacturaCompraDet implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="FAC_COMP_DET_SEQUENCE")
-    @Basic(optional = false)
     @Column(name = "COD_FAC_COM_DET")
     private Long codFacComDet;
-    @Basic(optional = false)
     @Column(name = "PRECIO_UNI")
     private long precioUni;
-    @Basic(optional = false)
     @Column(name = "CANTIDAD")
     private long cantidad;
-    @Basic(optional = false)
     @Column(name = "TOTAL")
     private long total;
     @Column(name = "PORC_IVA")
     private double porcIva;
-    @Basic(optional = false)
     @Column(name = "MONTO_IVA")
     private long montoIva;
     @Column(name = "USUARIO_ALTA")
