@@ -12,6 +12,7 @@ import javax.faces.convert.DateTimeConverter;
 import py.com.platinum.controller.BancoController;
 import py.com.platinum.controller.CajaController;
 import py.com.platinum.controller.CargoController;
+import py.com.platinum.controller.CiudadController;
 import py.com.platinum.controller.ClienteController;
 import py.com.platinum.controller.ComisionController;
 import py.com.platinum.controller.EmpleadoController;
@@ -31,6 +32,7 @@ import py.com.platinum.controller.UnidadMedidaController;
 import py.com.platinum.entity.Banco;
 import py.com.platinum.entity.Caja;
 import py.com.platinum.entity.Cargo;
+import py.com.platinum.entity.Ciudad;
 import py.com.platinum.entity.Cliente;
 import py.com.platinum.entity.Comision;
 import py.com.platinum.entity.Empleado;
@@ -131,7 +133,7 @@ public class SessionBean1 extends AbstractSessionBean {
         cargarListaTodosTipoProductos();
         cargarListaTodosPresentacions();
         cargarListaTodosUnidadMedidas();
-        //cargarListaCiudad();
+        cargarListaCiudad();
         cargarListaCargo();
         cargarListaSeccion();
         cargarListaBanco();
@@ -908,6 +910,55 @@ public class SessionBean1 extends AbstractSessionBean {
 
             //agregamos option al array de option - TipoComprobante
             listaTipoComprobanteOption[i] = o;
+        }
+    }
+
+    //Cargar lista Ciudad
+    Ciudad[] listaCiudad;
+    Option[] listaCiudadOption;
+
+    public Ciudad[] getListaCiudad() {
+        return listaCiudad;
+    }
+
+    public void setListaCiudad(Ciudad[] listaCiudad) {
+        this.listaCiudad = listaCiudad;
+    }
+
+    public Option[] getListaCiudadOption() {
+        return listaCiudadOption;
+    }
+
+    public void setListaCiudadOption(Option[] listaCiudadOption) {
+        this.listaCiudadOption = listaCiudadOption;
+    }
+
+    /**
+     * Obtenemos la lista de Ciudad de la base de datos
+     */
+    public void cargarListaCiudad() {
+        //Variables
+        CiudadController CiudadController = new CiudadController();
+        Option o;
+
+        //Obtenemos la lista de Ciudad ordenado por nombre del Ciudad
+        listaCiudad = (Ciudad[]) CiudadController.getAll("nombreciudad").toArray(new Ciudad[0]);
+
+        //Dimensionamos el array de options para la lista de Ciudads
+        listaCiudadOption = new Option[listaCiudad.length];
+
+        //Recorremos la lista de Ciudads
+        for (int i = 0; i < listaCiudad.length; i++) {
+            //Optenemos el Ciudad
+            Ciudad e = listaCiudad[i];
+
+            //Creamos nuevo options
+            o = new Option();
+            o.setValue(e.getCodciudad().toString());
+            o.setLabel(e.getNombreciudad());
+
+            //agregamos option al array de option - Ciudad
+            listaCiudadOption[i] = o;
         }
     }
 }
