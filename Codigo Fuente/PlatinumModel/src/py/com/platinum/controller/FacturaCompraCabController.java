@@ -112,7 +112,7 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
                     det.setCodFacComCab(cabecera);
 
                     //Persistimos
-                    em.merge(det);
+                    em.persist(det);
                 }
             }
 
@@ -170,6 +170,7 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
 
                         //Persistir
                         em.persist(det);
+                        
                     } else {
                         //Actualizamos
                         em.merge(det);
@@ -185,7 +186,7 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
                     FacturaCompraDet det = detalleAeliminar.get(i);
 
                     //Eliminamos
-                    em.remove(det);
+                    em.remove(em.merge(det));
                 }
             }
 
@@ -241,7 +242,8 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
 
 
             //Eliminamos la Cabecera
-            em.persist(cabecera);
+            cabecera = findById(cabecera.getCodFacComCab());
+            em.remove(em.merge(cabecera));
 
             //Confirmamos la transaccion
             tx.commit();

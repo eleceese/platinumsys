@@ -6,12 +6,15 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -67,10 +70,10 @@ public class EntradaSalidaCabecera implements Serializable {
     @JoinColumn(name = "COD_SOLICITUD", referencedColumnName = "COD_SOLICITUD")
     @ManyToOne
     private SolicitudInterna codSolicitud;
-    @OneToMany(mappedBy = "codEntSal")
-    private List<FacturaCompraCab> facturaCompraCabCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codEntradaSalida")
-    private List<EntradaSalidaDetalle> entradaSalidaDetalleCollection;
+    @OneToMany(mappedBy = "codEntSal", fetch=FetchType.EAGER)
+    private Set<FacturaCompraCab> facturaCompraCab;
+    @OneToMany(mappedBy = "codEntradaSalida", fetch=FetchType.EAGER)
+    private Set<EntradaSalidaDetalle> entradaSalidaDetalle;
 
     public EntradaSalidaCabecera() {
     }
@@ -183,20 +186,28 @@ public class EntradaSalidaCabecera implements Serializable {
         this.codSolicitud = codSolicitud;
     }
 
-    public List<FacturaCompraCab> getFacturaCompraCabCollection() {
-        return facturaCompraCabCollection;
+    public Set<FacturaCompraCab> getFacturaCompraCab() {
+        return facturaCompraCab;
     }
 
-    public void setFacturaCompraCabCollection(List<FacturaCompraCab> facturaCompraCabCollection) {
-        this.facturaCompraCabCollection = facturaCompraCabCollection;
+    public List<FacturaCompraCab> getFacturaCompraCabList() {
+        return new ArrayList(Arrays.asList(facturaCompraCab.toArray(new FacturaCompraCab[0])));
     }
 
-    public List<EntradaSalidaDetalle> getEntradaSalidaDetalleCollection() {
-        return entradaSalidaDetalleCollection;
+    public void setFacturaCompraCab(Set<FacturaCompraCab> facturaCompraCab) {
+        this.facturaCompraCab = facturaCompraCab;
     }
 
-    public void setEntradaSalidaDetalleCollection(List<EntradaSalidaDetalle> entradaSalidaDetalleCollection) {
-        this.entradaSalidaDetalleCollection = entradaSalidaDetalleCollection;
+    public Set<EntradaSalidaDetalle> getEntradaSalidaDetalle() {
+        return entradaSalidaDetalle;
+    }
+
+    public List<EntradaSalidaDetalle> getEntradaSalidaDetalleList() {
+        return new ArrayList(Arrays.asList(entradaSalidaDetalle.toArray(new EntradaSalidaDetalle[0])));
+    }
+
+    public void setEntradaSalidaDetalle(Set<EntradaSalidaDetalle> entradaSalidaDetalle) {
+        this.entradaSalidaDetalle = entradaSalidaDetalle;
     }
 
     @Override
