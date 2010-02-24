@@ -558,7 +558,6 @@ public class ABMComprasProveedor extends AbstractPageBean {
                 uiBtnGuardarNuevo.setRendered(false);
                 uiBtnGuardarEditar.setRendered(true);
                 uiBtnCancelar.setRendered(true);
-                updateRequest = false;
                 gridPanelBtnBuscar.setRendered(false);
             }
         } else if (errorValidacion) {
