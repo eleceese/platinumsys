@@ -6,18 +6,17 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -31,15 +30,12 @@ import javax.persistence.TemporalType;
 @Entity
 @SequenceGenerator(name="PROVEEDOR_SEQUENCE", sequenceName="SQ_PROVEEDOR", initialValue=1, allocationSize=1)
 @Table(name = "PROVEEDOR")
-@NamedQueries({@NamedQuery(name = "Proveedor.findAll", query = "SELECT p FROM Proveedor p"), @NamedQuery(name = "Proveedor.findByCodProveedor", query = "SELECT p FROM Proveedor p WHERE p.codProveedor = :codProveedor"), @NamedQuery(name = "Proveedor.findByNombreProveedor", query = "SELECT p FROM Proveedor p WHERE p.nombreProveedor = :nombreProveedor"), @NamedQuery(name = "Proveedor.findByRucProveedor", query = "SELECT p FROM Proveedor p WHERE p.rucProveedor = :rucProveedor"), @NamedQuery(name = "Proveedor.findByTelefono1Proveedor", query = "SELECT p FROM Proveedor p WHERE p.telefono1Proveedor = :telefono1Proveedor"), @NamedQuery(name = "Proveedor.findByTelefono2Proveedor", query = "SELECT p FROM Proveedor p WHERE p.telefono2Proveedor = :telefono2Proveedor"), @NamedQuery(name = "Proveedor.findByDireccionProveedor", query = "SELECT p FROM Proveedor p WHERE p.direccionProveedor = :direccionProveedor"), @NamedQuery(name = "Proveedor.findByMailProveedor", query = "SELECT p FROM Proveedor p WHERE p.mailProveedor = :mailProveedor"), @NamedQuery(name = "Proveedor.findByContactoProveedor", query = "SELECT p FROM Proveedor p WHERE p.contactoProveedor = :contactoProveedor"), @NamedQuery(name = "Proveedor.findByEstadoProveedor", query = "SELECT p FROM Proveedor p WHERE p.estadoProveedor = :estadoProveedor"), @NamedQuery(name = "Proveedor.findByUsuarioAlta", query = "SELECT p FROM Proveedor p WHERE p.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "Proveedor.findByUsuarioModif", query = "SELECT p FROM Proveedor p WHERE p.usuarioModif = :usuarioModif"), @NamedQuery(name = "Proveedor.findByFechaAlta", query = "SELECT p FROM Proveedor p WHERE p.fechaAlta = :fechaAlta"), @NamedQuery(name = "Proveedor.findByFechaModif", query = "SELECT p FROM Proveedor p WHERE p.fechaModif = :fechaModif")})
 public class Proveedor implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PROVEEDOR_SEQUENCE")
-    @Basic(optional = false)
     @Column(name = "COD_PROVEEDOR")
     private Long codProveedor;
-    @Basic(optional = false)
     @Column(name = "NOMBRE_PROVEEDOR")
     private String nombreProveedor;
     @Column(name = "RUC_PROVEEDOR")
@@ -66,10 +62,11 @@ public class Proveedor implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codProveedor")
-    private List<FacturaCompraCab> facturaCompraCabCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codProveedor")
-    private List<NotaCreditoProvCab> notaCreditoProvCabCollection;
+    @OneToMany(mappedBy = "codProveedor", fetch=FetchType.EAGER)
+    private Set<FacturaCompraCab> facturaCompraCab;
+    @OneToMany(mappedBy = "codProveedor", fetch=FetchType.EAGER)
+    private Set<NotaCreditoProvCab> notaCreditoProvCab;
+
 
     public Proveedor() {
     }
@@ -187,20 +184,28 @@ public class Proveedor implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public List<FacturaCompraCab> getFacturaCompraCabCollection() {
-        return facturaCompraCabCollection;
+    public Set<FacturaCompraCab> getFacturaCompraCab() {
+        return facturaCompraCab;
     }
 
-    public void setFacturaCompraCabCollection(List<FacturaCompraCab> facturaCompraCabCollection) {
-        this.facturaCompraCabCollection = facturaCompraCabCollection;
+    public List<FacturaCompraCab> getFacturaCompraCabList() {
+        return new ArrayList(Arrays.asList(facturaCompraCab.toArray(new FacturaCompraCab[0])));
     }
 
-    public List<NotaCreditoProvCab> getNotaCreditoProvCabCollection() {
-        return notaCreditoProvCabCollection;
+    public void setFacturaCompraCab(Set<FacturaCompraCab> facturaCompraCab) {
+        this.facturaCompraCab = facturaCompraCab;
     }
 
-    public void setNotaCreditoProvCabCollection(List<NotaCreditoProvCab> notaCreditoProvCabCollection) {
-        this.notaCreditoProvCabCollection = notaCreditoProvCabCollection;
+    public Set<NotaCreditoProvCab> getNotaCreditoProvCab() {
+        return notaCreditoProvCab;
+    }
+
+    public List<NotaCreditoProvCab> getNotaCreditoProvCabList() {
+        return new ArrayList(Arrays.asList(notaCreditoProvCab.toArray(new NotaCreditoProvCab[0])));
+    }
+
+    public void setNotaCreditoProvCab(Set<NotaCreditoProvCab> notaCreditoProvCab) {
+        this.notaCreditoProvCab = notaCreditoProvCab;
     }
 
     @Override

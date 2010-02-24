@@ -13,8 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,29 +23,21 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "NOTA_CREDITO_PROV_DET")
-@NamedQueries({@NamedQuery(name = "NotaCreditoProvDet.findAll", query = "SELECT n FROM NotaCreditoProvDet n"), @NamedQuery(name = "NotaCreditoProvDet.findByCodNotCreDet", query = "SELECT n FROM NotaCreditoProvDet n WHERE n.codNotCreDet = :codNotCreDet"), @NamedQuery(name = "NotaCreditoProvDet.findByPrecioUni", query = "SELECT n FROM NotaCreditoProvDet n WHERE n.precioUni = :precioUni"), @NamedQuery(name = "NotaCreditoProvDet.findByCantidad", query = "SELECT n FROM NotaCreditoProvDet n WHERE n.cantidad = :cantidad"), @NamedQuery(name = "NotaCreditoProvDet.findByPorcIva", query = "SELECT n FROM NotaCreditoProvDet n WHERE n.porcIva = :porcIva"), @NamedQuery(name = "NotaCreditoProvDet.findByMontoIva", query = "SELECT n FROM NotaCreditoProvDet n WHERE n.montoIva = :montoIva"), @NamedQuery(name = "NotaCreditoProvDet.findBySubTotal", query = "SELECT n FROM NotaCreditoProvDet n WHERE n.subTotal = :subTotal"), @NamedQuery(name = "NotaCreditoProvDet.findByTotal", query = "SELECT n FROM NotaCreditoProvDet n WHERE n.total = :total"), @NamedQuery(name = "NotaCreditoProvDet.findByUsuarioAlta", query = "SELECT n FROM NotaCreditoProvDet n WHERE n.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "NotaCreditoProvDet.findByUsuarioModif", query = "SELECT n FROM NotaCreditoProvDet n WHERE n.usuarioModif = :usuarioModif"), @NamedQuery(name = "NotaCreditoProvDet.findByFechaAlta", query = "SELECT n FROM NotaCreditoProvDet n WHERE n.fechaAlta = :fechaAlta"), @NamedQuery(name = "NotaCreditoProvDet.findByFechaModif", query = "SELECT n FROM NotaCreditoProvDet n WHERE n.fechaModif = :fechaModif")})
 public class NotaCreditoProvDet implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
     @Column(name = "COD_NOT_CRE_DET")
     private Long codNotCreDet;
-    @Basic(optional = false)
     @Column(name = "PRECIO_UNI")
     private long precioUni;
-    @Basic(optional = false)
     @Column(name = "CANTIDAD")
     private long cantidad;
-    @Basic(optional = false)
     @Column(name = "PORC_IVA")
     private short porcIva;
-    @Basic(optional = false)
     @Column(name = "MONTO_IVA")
     private long montoIva;
-    @Basic(optional = false)
     @Column(name = "SUB_TOTAL")
     private long subTotal;
-    @Basic(optional = false)
     @Column(name = "TOTAL")
     private long total;
     @Column(name = "USUARIO_ALTA")
@@ -61,10 +51,10 @@ public class NotaCreditoProvDet implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
     @JoinColumn(name = "COD_NOT_CRE_CAB", referencedColumnName = "COD_NOT_CRE_CAB")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private NotaCreditoProvCab codNotCreCab;
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Producto codProducto;
 
     public NotaCreditoProvDet() {

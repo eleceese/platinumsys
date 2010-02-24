@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,30 +29,22 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "NOTA_CREDITO_PROV_CAB")
-@NamedQueries({@NamedQuery(name = "NotaCreditoProvCab.findAll", query = "SELECT n FROM NotaCreditoProvCab n"), @NamedQuery(name = "NotaCreditoProvCab.findByCodNotCreCab", query = "SELECT n FROM NotaCreditoProvCab n WHERE n.codNotCreCab = :codNotCreCab"), @NamedQuery(name = "NotaCreditoProvCab.findByFecha", query = "SELECT n FROM NotaCreditoProvCab n WHERE n.fecha = :fecha"), @NamedQuery(name = "NotaCreditoProvCab.findByNroNotaCredito", query = "SELECT n FROM NotaCreditoProvCab n WHERE n.nroNotaCredito = :nroNotaCredito"), @NamedQuery(name = "NotaCreditoProvCab.findByEstado", query = "SELECT n FROM NotaCreditoProvCab n WHERE n.estado = :estado"), @NamedQuery(name = "NotaCreditoProvCab.findByTotal", query = "SELECT n FROM NotaCreditoProvCab n WHERE n.total = :total"), @NamedQuery(name = "NotaCreditoProvCab.findByIva", query = "SELECT n FROM NotaCreditoProvCab n WHERE n.iva = :iva"), @NamedQuery(name = "NotaCreditoProvCab.findBySaldoFac", query = "SELECT n FROM NotaCreditoProvCab n WHERE n.saldoFac = :saldoFac"), @NamedQuery(name = "NotaCreditoProvCab.findByUsuarioAlta", query = "SELECT n FROM NotaCreditoProvCab n WHERE n.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "NotaCreditoProvCab.findByUsuarioModif", query = "SELECT n FROM NotaCreditoProvCab n WHERE n.usuarioModif = :usuarioModif"), @NamedQuery(name = "NotaCreditoProvCab.findByFechaAlta", query = "SELECT n FROM NotaCreditoProvCab n WHERE n.fechaAlta = :fechaAlta"), @NamedQuery(name = "NotaCreditoProvCab.findByFechaModif", query = "SELECT n FROM NotaCreditoProvCab n WHERE n.fechaModif = :fechaModif")})
 public class NotaCreditoProvCab implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
     @Column(name = "COD_NOT_CRE_CAB")
     private Long codNotCreCab;
-    @Basic(optional = false)
     @Column(name = "FECHA")
     @Temporal(TemporalType.DATE)
     private Date fecha;
-    @Basic(optional = false)
     @Column(name = "NRO_NOTA_CREDITO")
     private String nroNotaCredito;
-    @Basic(optional = false)
     @Column(name = "ESTADO")
     private String estado;
-    @Basic(optional = false)
     @Column(name = "TOTAL")
     private long total;
-    @Basic(optional = false)
     @Column(name = "IVA")
     private long iva;
-    @Basic(optional = false)
     @Column(name = "SALDO_FAC")
     private long saldoFac;
     @Column(name = "USUARIO_ALTA")
@@ -64,13 +57,13 @@ public class NotaCreditoProvCab implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codNotCreCab")
-    private List<NotaCreditoProvDet> notaCreditoProvDetCollection;
+    @OneToMany(mappedBy = "codNotCreCab", fetch=FetchType.EAGER)
+    private List<NotaCreditoProvDet> notaCreditoProvDet;
     @JoinColumn(name = "COD_FACTURA_CAB", referencedColumnName = "COD_FAC_COM_CAB")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private FacturaCompraCab codFacturaCab;
     @JoinColumn(name = "COD_PROVEEDOR", referencedColumnName = "COD_PROVEEDOR")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Proveedor codProveedor;
 
     public NotaCreditoProvCab() {
@@ -178,12 +171,12 @@ public class NotaCreditoProvCab implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public List<NotaCreditoProvDet> getNotaCreditoProvDetCollection() {
-        return notaCreditoProvDetCollection;
+    public List<NotaCreditoProvDet> getNotaCreditoProvDet() {
+        return notaCreditoProvDet;
     }
 
-    public void setNotaCreditoProvDetCollection(List<NotaCreditoProvDet> notaCreditoProvDetCollection) {
-        this.notaCreditoProvDetCollection = notaCreditoProvDetCollection;
+    public void setNotaCreditoProvDet(List<NotaCreditoProvDet> notaCreditoProvDet) {
+        this.notaCreditoProvDet = notaCreditoProvDet;
     }
 
     public FacturaCompraCab getCodFacturaCab() {
