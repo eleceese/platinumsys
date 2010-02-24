@@ -1,0 +1,27 @@
+--pedido_cabecera
+alter table pedido_cabecera add tipo number(10);
+
+--Relacionamos Factura compra cab. con tipo comprobante
+alter table pedido_cabecera
+	add constraint fk_pedidocab_tipcompro foreign key (tipo)
+	    references tipo_comprobante(cod_tipo);
+		
+--Pedido detalle agregamos Porcentaje de iva
+alter table PEDIDO_DETALLE add PORC_IVA number(5,2);
+
+--Pedido detalle agregamos Monto de iva
+alter table pedido_detalle add MONTO_IVA number(10);
+
+--Quitamos el atributo total_pedido, mas adelante lo volvemos a recrear con otro nombre
+alter table pedido_cabecera drop column total_pedido;
+
+--Agregamos las columnas para los montos totales
+alter table pedido_cabecera add sub_total number not null;
+alter table pedido_cabecera add total_iva number not null;
+alter table pedido_cabecera add porc_descuento number(5,2) not null;
+alter table pedido_cabecera add monto_descuento number not null;
+alter table pedido_cabecera add total number not null;
+
+--Modificamos el estado del pedido
+alter table pedido_cabecera modify ESTADO_PEDIDO varchar2(15);
+
