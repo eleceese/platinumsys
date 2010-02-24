@@ -1296,9 +1296,6 @@ public class ABMComprasProveedor extends AbstractPageBean {
         //Cargamos la lista de Proveedores
         getSessionBean1().cargarListaTodosProveedores();
 
-        //Cargamos la lista de unidades de medida
-        getSessionBean1().cargarListaTodosUnidadMedidas();
-
         //Cargamos la lista de tipos de comprobantes
         getSessionBean1().cargarListaTipoComprobantePorModulo(ModuloEnum.COMPRA);
 

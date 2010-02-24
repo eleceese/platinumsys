@@ -357,11 +357,6 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>ABMPedidoCliente</managed-bean-name>
-        <managed-bean-class>platinum.ABMPedidoCliente</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
         <managed-bean-name>LSTClientesMorosos</managed-bean-name>
         <managed-bean-class>platinum.LSTClientesMorosos</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
@@ -414,6 +409,21 @@
     <managed-bean>
         <managed-bean-name>popup$popupSolicitudes</managed-bean-name>
         <managed-bean-class>platinum.popup.popupSolicitudes</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMPedidoCliente</managed-bean-name>
+        <managed-bean-class>platinum.ABMPedidoCliente</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupCliente</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupCliente</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupProductoVenta</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupProductoVenta</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 </faces-config>
