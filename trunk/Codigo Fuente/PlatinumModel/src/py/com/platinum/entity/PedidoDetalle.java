@@ -12,11 +12,14 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,21 +30,25 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "PEDIDO_DETALLE")
-@NamedQueries({@NamedQuery(name = "PedidoDetalle.findAll", query = "SELECT p FROM PedidoDetalle p"), @NamedQuery(name = "PedidoDetalle.findByCodPedidoDetalle", query = "SELECT p FROM PedidoDetalle p WHERE p.codPedidoDetalle = :codPedidoDetalle"), @NamedQuery(name = "PedidoDetalle.findByCantidadPedida", query = "SELECT p FROM PedidoDetalle p WHERE p.cantidadPedida = :cantidadPedida"), @NamedQuery(name = "PedidoDetalle.findByCantidadEntregada", query = "SELECT p FROM PedidoDetalle p WHERE p.cantidadEntregada = :cantidadEntregada"), @NamedQuery(name = "PedidoDetalle.findByPrecioUnitario", query = "SELECT p FROM PedidoDetalle p WHERE p.precioUnitario = :precioUnitario"), @NamedQuery(name = "PedidoDetalle.findByTotal", query = "SELECT p FROM PedidoDetalle p WHERE p.total = :total"), @NamedQuery(name = "PedidoDetalle.findByUsuarioAlta", query = "SELECT p FROM PedidoDetalle p WHERE p.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "PedidoDetalle.findByUsuarioModif", query = "SELECT p FROM PedidoDetalle p WHERE p.usuarioModif = :usuarioModif"), @NamedQuery(name = "PedidoDetalle.findByFechaAlta", query = "SELECT p FROM PedidoDetalle p WHERE p.fechaAlta = :fechaAlta"), @NamedQuery(name = "PedidoDetalle.findByFechaModif", query = "SELECT p FROM PedidoDetalle p WHERE p.fechaModif = :fechaModif")})
+@SequenceGenerator(name="PEDIDO_DETALLE_SEQUENCE", sequenceName="SQ_DETALLE_PEDIDO", initialValue=1, allocationSize=1)
 public class PedidoDetalle implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PEDIDO_DETALLE_SEQUENCE")
     @Column(name = "COD_PEDIDO_DETALLE")
-    private BigDecimal codPedidoDetalle;
-    @Column(name = "CANTIDAD_PEDIDA")
-    private BigInteger cantidadPedida;
-    @Column(name = "CANTIDAD_ENTREGADA")
-    private BigInteger cantidadEntregada;
+    private Long codPedidoDetalle;
     @Column(name = "PRECIO_UNITARIO")
-    private BigInteger precioUnitario;
+    private Long precioUnitario;
+    @Column(name = "CANTIDAD_PEDIDA")
+    private Long cantidadPedida;
+    @Column(name = "CANTIDAD_ENTREGADA")
+    private Long cantidadEntregada;
+    @Column(name = "PORC_IVA")
+    private Double porcIva;
+    @Column(name = "MONTO_IVA")
+    private Long montoIva;
     @Column(name = "TOTAL")
-    private BigInteger total;
+    private Long total;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -53,56 +60,56 @@ public class PedidoDetalle implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
     @JoinColumn(name = "COD_PEDIDO", referencedColumnName = "COD_PEDIDO")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private PedidoCabecera codPedido;
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Producto codProducto;
 
     public PedidoDetalle() {
     }
 
-    public PedidoDetalle(BigDecimal codPedidoDetalle) {
+    public PedidoDetalle(Long codPedidoDetalle) {
         this.codPedidoDetalle = codPedidoDetalle;
     }
 
-    public BigDecimal getCodPedidoDetalle() {
+    public Long getCodPedidoDetalle() {
         return codPedidoDetalle;
     }
 
-    public void setCodPedidoDetalle(BigDecimal codPedidoDetalle) {
+    public void setCodPedidoDetalle(Long codPedidoDetalle) {
         this.codPedidoDetalle = codPedidoDetalle;
     }
 
-    public BigInteger getCantidadPedida() {
+    public Long getCantidadPedida() {
         return cantidadPedida;
     }
 
-    public void setCantidadPedida(BigInteger cantidadPedida) {
+    public void setCantidadPedida(Long cantidadPedida) {
         this.cantidadPedida = cantidadPedida;
     }
 
-    public BigInteger getCantidadEntregada() {
+    public Long getCantidadEntregada() {
         return cantidadEntregada;
     }
 
-    public void setCantidadEntregada(BigInteger cantidadEntregada) {
+    public void setCantidadEntregada(Long cantidadEntregada) {
         this.cantidadEntregada = cantidadEntregada;
     }
 
-    public BigInteger getPrecioUnitario() {
+    public Long getPrecioUnitario() {
         return precioUnitario;
     }
 
-    public void setPrecioUnitario(BigInteger precioUnitario) {
+    public void setPrecioUnitario(Long precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
 
-    public BigInteger getTotal() {
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(BigInteger total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 
@@ -154,6 +161,23 @@ public class PedidoDetalle implements Serializable {
         this.codProducto = codProducto;
     }
 
+    public Long getMontoIva() {
+        return montoIva;
+    }
+
+    public void setMontoIva(Long montoIva) {
+        this.montoIva = montoIva;
+    }
+
+    public Double getPorcIva() {
+        return porcIva;
+    }
+
+    public void setPorcIva(Double porcIva) {
+        this.porcIva = porcIva;
+    }
+
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -176,7 +200,7 @@ public class PedidoDetalle implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.PedidoDetalle[codPedidoDetalle=" + codPedidoDetalle + "]";
+        return  codPedidoDetalle.toString();
     }
 
 }
