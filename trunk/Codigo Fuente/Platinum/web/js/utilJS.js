@@ -151,13 +151,15 @@ function doSave(val1, val2,val3,val4,val5) {
 }
 
 
-function calcularMonto(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal ) {
+function calcularMonto(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal, uiPorcDescuento, uiMontoDescuento ) {
     /*Inicializamos las variables*/
     ePrecio     = null;
     eCantidad   = null;
     eIva        = null;
     eMontoIva   = null;
     eMontoTotal = null;
+    ePorcDescuento  = null;
+    eMontoDescuento = null;
 
     //Verificamos que los elementos no sean null
     if( uiPrecio != null && uiCantidad != null && uiIva != null && uiMontoIva != null && uiMontoTotal != null){
@@ -167,6 +169,8 @@ function calcularMonto(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal ) {
         eIva        = document.getElementById(uiIva);
         eMontoIva   = document.getElementById(uiMontoIva);
         eMontoTotal = document.getElementById(uiMontoTotal);
+        ePorcDescuento  = document.getElementById(uiPorcDescuento);
+        eMontoDescuento = document.getElementById(uiMontoDescuento);
 
         //Variables para los calculos
         vPrecio     = 0;
@@ -174,8 +178,10 @@ function calcularMonto(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal ) {
         vIva        = 0;
         vMontoIva   = 0;
         vMontoTotal = 0;
+        vPorcDescuento  = 0;
+        vMontoDescuento = 0;
         
-        if( ePrecio != null && eCantidad != null && eIva != null && eMontoIva != null && eMontoTotal != null) {
+        if( ePrecio != null && eCantidad != null && eIva != null && eMontoIva != null && eMontoTotal != null && ePorcDescuento != null && eMontoDescuento != null) {
             
             //Obtenemos el precio
             if (ePrecio.value != null) {
@@ -186,9 +192,14 @@ function calcularMonto(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal ) {
             if (eCantidad.value != null) {
                 vCantidad = eCantidad.value;
             }
+
             //Obtenemos el IVA
             if (eIva.value != null) {
                 vIva = eIva.value;
+            }
+            //Obtenemos el Porcentaje de descuento
+            if (ePorcDescuento.value != null) {
+                vPorcDescuento = ePorcDescuento.value;
             }
 
             //Calulamos monto total y monto IVA
@@ -199,6 +210,12 @@ function calcularMonto(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal ) {
             //Actualizamos el value de los componentes
             eMontoIva.value   = vMontoIva;
             eMontoTotal.value = vMontoTotal;
+
+            //Calculamos el descuento
+            vMontoDescuento = vMontoTotal * vPorcDescuento / 100;
+
+            //Aplicamos el descuento
+            eMontoTotal.value = vMontoTotal - vMontoDescuento;
         }
     }
 }
