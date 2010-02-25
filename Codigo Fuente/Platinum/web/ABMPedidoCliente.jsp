@@ -121,7 +121,7 @@
                                             target="popup" text="Cliente" url="/faces/popup/popupCliente.jsp"/>
                                         <h:panelGrid columns="2" id="gridPanelProveedor" width="335">
                                             <webuijsf:textField binding="#{ABMPedidoCliente.uiTxtCodCliente}" columns="10" id="uiTxtCodCliente" maxLength="15"/>
-                                            <webuijsf:textField binding="#{ABMPedidoCliente.uiTxtNombreCliente}" columns="50" id="uiTxtNombreCliente" valueChangeListenerExpression="#{ABMPedidoCliente.uiTxtNombreCliente_processValueChange}"/>
+                                            <webuijsf:textField binding="#{ABMPedidoCliente.uiTxtNombreCliente}" columns="50" id="uiTxtNombreCliente"/>
                                         </h:panelGrid>
                                         <h:panelGrid columns="2" id="panelGridCabCompra3" style="text-align: right" width="200">
                                             <webuijsf:label id="lblSubTotal" text="SUB-TOTAL"/>
@@ -135,8 +135,15 @@
                                             <webuijsf:textField binding="#{ABMPedidoCliente.uiTxtTotalIva}" columns="20" id="uiTxtTotalIva"
                                                 onFocus="document.getElementById('form1:uiBtnCancelar').focus(); return false;" style="text-align: right"/>
                                         </h:panelGrid>
-                                        <h:panelGrid columns="2" id="gridPanelaux1" style="height: 24px; width: 96px"/>
-                                        <h:panelGrid columns="2" id="gridPanelaux2" style="height: 24px" width="335"/>
+                                        <h:panelGrid columns="2" id="gridPanelDescuento1" style="height: 24px; width: 96px">
+                                            <webuijsf:label id="label1" text="Porc. Descuento"/>
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="3" id="gridPanelDescuento2" style="height: 24px" width="383">
+                                            <webuijsf:textField binding="#{ABMPedidoCliente.uiTxtPorcDescuento}" columns="7" id="uiTxtPorcDescuento" onChange="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )"/>
+                                            <webuijsf:label id="label2" text="Monto Descuento"/>
+                                            <webuijsf:textField binding="#{ABMPedidoCliente.uiTxtMontoDescuento}" id="uiTxtMontoDescuento"
+                                                onFocus="document.getElementById('form1:uiBtnCancelar').focus(); return false;" style="text-align: right"/>
+                                        </h:panelGrid>
                                         <h:panelGrid columns="2" id="panelGridCabCompra5" style="text-align: right" width="200">
                                             <webuijsf:label id="lblTotal" text="TOTAL"/>
                                             <webuijsf:textField binding="#{ABMPedidoCliente.uiTxtTotal}" columns="20" id="uiTxtTotal"
@@ -163,7 +170,7 @@
                                             <webuijsf:textField binding="#{ABMPedidoCliente.uiTxtDescProducto}" columns="30" id="uiTxtDescProducto" onFocus="document.getElementById('form1:uiTxtNroSolicitud_field').focus(); return false;"/>
                                             <webuijsf:label id="lblPrecio" text="Precio"/>
                                             <webuijsf:textField binding="#{ABMPedidoCliente.uiTxtPrecioUnitario}" columns="15" id="uiTxtPrecioUnitario"
-                                                onChange="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )"
+                                                onChange="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )"
                                                 onFocus="document.getElementById('form1:uiLstUnidadMedida_list').focus(); return false;" style="margin-left: -20px; text-align: left"/>
                                             <webuijsf:label id="lblUnidadMedida" text="Unidad Medida"/>
                                             <webuijsf:dropDown binding="#{ABMPedidoCliente.uiLstUnidadMedida}" id="uiLstUnidadMedida"
@@ -174,11 +181,11 @@
                                         <h:panelGrid columns="10" id="gridPanelDetLin2" style="height: 24px" width="719">
                                             <webuijsf:label id="lblCantida" text="Cantidad"/>
                                             <webuijsf:textField binding="#{ABMPedidoCliente.uiTxtCantidad}" columns="10" id="uiTxtCantidad"
-                                                onChange="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )" style="text-align: right"/>
+                                                onChange="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )" style="text-align: right"/>
                                             <webuijsf:label id="lblPorcIVA" text="Tipo de Impuesto"/>
                                             <webuijsf:dropDown binding="#{ABMPedidoCliente.uiLstIva}" id="uiLstIva"
                                                 items="#{ABMPedidoCliente.uiLstIvaDefaultOptions.options}"
-                                                onChange="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )"
+                                                onChange="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )"
                                                 selected="#{ABMPedidoCliente.uiLstIvaDefaultOptions.selectedValue}" width="70"/>
                                             <webuijsf:label id="lblMontoIva" text="Monto IVA"/>
                                             <webuijsf:textField binding="#{ABMPedidoCliente.uiTxtMontoIva}" columns="12" id="uiTxtMontoIva"

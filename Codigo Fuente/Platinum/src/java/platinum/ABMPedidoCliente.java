@@ -31,9 +31,11 @@ import py.com.platinum.controller.PedidoCabeceraController;
 import py.com.platinum.controller.PedidoDetalleController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.ClienteController;
+import py.com.platinum.controller.EmpleadoController;
 import py.com.platinum.controller.SolicitudInternaController;
 import py.com.platinum.controller.TipoComprobanteController;
 import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Empleado;
 import py.com.platinum.entity.PedidoCabecera;
 import py.com.platinum.entity.PedidoDetalle;
 import py.com.platinum.entity.Producto;
@@ -453,6 +455,24 @@ public class ABMPedidoCliente extends AbstractPageBean {
     public void setCharacterConverter1(CharacterConverter cc) {
         this.characterConverter1 = cc;
     }
+    private TextField uiTxtPorcDescuento = new TextField();
+
+    public TextField getUiTxtPorcDescuento() {
+        return uiTxtPorcDescuento;
+    }
+
+    public void setUiTxtPorcDescuento(TextField tf) {
+        this.uiTxtPorcDescuento = tf;
+    }
+    private TextField uiTxtMontoDescuento = new TextField();
+
+    public TextField getUiTxtMontoDescuento() {
+        return uiTxtMontoDescuento;
+    }
+
+    public void setUiTxtMontoDescuento(TextField tf) {
+        this.uiTxtMontoDescuento = tf;
+    }
 
     // </editor-fold>
     /**
@@ -604,6 +624,8 @@ public class ABMPedidoCliente extends AbstractPageBean {
         uiTxtTotalIva.setText("0");
         uiTxtSubTotal.setText("0");
         uiTxtTotal.setText("0");
+        uiTxtPorcDescuento.setText("0");
+        uiTxtMontoDescuento.setText("0");
         uiCalFecha.setSelectedDate(null);
 
         //Limpiamos los campos del detalle
@@ -811,6 +833,13 @@ public class ABMPedidoCliente extends AbstractPageBean {
             cabecera.setEstadoPedido(ModelUtil.getPedidoEstado(uiLstEstado.getSelected().toString()));
             cabecera.setFechaPedido(uiCalFecha.getSelectedDate());
             cabecera.setNumeroPedido(uiTxtNroPedido.getText().toString());
+            //TODO: Falta Implementar el modulo de Usuarios, para tomar directamente
+            //el usuario de la session
+            codEmpleado = new EmpleadoController().findById(Long.valueOf("1"));
+            cabecera.setCodEmpleado(codEmpleado);
+            cabecera.setPorcDescuento(Long.valueOf(uiTxtPorcDescuento.getText().toString()));
+            cabecera.setMontoDescuento(Long.valueOf(uiTxtMontoDescuento.getText().toString()));
+
             //Tipo de comprobante
             cabecera.setTipo(tipoComprobante);
             cabecera.setTotalIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
@@ -909,6 +938,8 @@ public class ABMPedidoCliente extends AbstractPageBean {
             cabecera.setTotalIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
             cabecera.setSubTotal(Long.valueOf(uiTxtSubTotal.getText().toString()));
             cabecera.setTotal(Long.valueOf(uiTxtTotal.getText().toString()));
+            cabecera.setPorcDescuento(Long.valueOf(uiTxtPorcDescuento.getText().toString()));
+            cabecera.setMontoDescuento(Long.valueOf(uiTxtMontoDescuento.getText().toString()));
 
             //Insertamos la cebecera y del detalle
             ControllerResult cr = new PedidoCabeceraController().actualizar(cabecera, lstDetalleLIST, lstDetalleEliminar);
@@ -962,6 +993,7 @@ public class ABMPedidoCliente extends AbstractPageBean {
     private Producto producto;
     private Cliente Cliente;
     private TipoComprobante tipoComprobante;
+    Empleado codEmpleado = new Empleado();
 
     public PedidoCabecera getCabecera() {
         return cabecera;
@@ -1226,11 +1258,14 @@ public class ABMPedidoCliente extends AbstractPageBean {
      */
     private void calcularTotales() {
         //Variables
-        long total, totalIva;
+        double porcDescuento;
+        long total, totalIva, totalDescuento;
 
         //Inicializamos
         total = 0;
         totalIva = 0;
+        totalDescuento = 0;
+        porcDescuento  = Double.valueOf(uiTxtPorcDescuento.getText().toString());
 
         //Recorremos el detalle para recalcular los totales
         for (int i = 0; i < lstDetalleLIST.size(); i++) {
@@ -1247,8 +1282,13 @@ public class ABMPedidoCliente extends AbstractPageBean {
 
         //Actualizamos los totales de la cabecera
         uiTxtSubTotal.setText(String.valueOf(total - totalIva));
-        uiTxtTotal.setText(String.valueOf(total));
         uiTxtTotalIva.setText(String.valueOf(totalIva));
+
+        //Aplicamos el descuento
+        totalDescuento = (long) ((total + totalIva) * porcDescuento / 100);
+        total = total + totalIva - totalDescuento;
+        uiTxtTotal.setText(String.valueOf(total));
+        uiTxtMontoDescuento.setText(String.valueOf(totalDescuento));
     }
 
     /**
