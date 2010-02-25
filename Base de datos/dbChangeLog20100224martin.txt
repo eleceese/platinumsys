@@ -25,3 +25,6 @@ alter table pedido_cabecera add total number not null;
 --Modificamos el estado del pedido
 alter table pedido_cabecera modify ESTADO_PEDIDO varchar2(15);
 
+--PEDIDO_DETALLE eliminamos este constraint
+alter table PEDIDO_DETALLE
+  drop constraint PRODUCTO_PEDIDO_UK cascade
