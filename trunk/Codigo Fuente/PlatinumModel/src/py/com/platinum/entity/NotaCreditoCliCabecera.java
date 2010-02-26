@@ -8,12 +8,15 @@ package py.com.platinum.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -30,7 +33,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "NOTA_CREDITO_CLI_CABECERA")
-@NamedQueries({@NamedQuery(name = "NotaCreditoCliCabecera.findAll", query = "SELECT n FROM NotaCreditoCliCabecera n"), @NamedQuery(name = "NotaCreditoCliCabecera.findByCodNotaCreditoCliente", query = "SELECT n FROM NotaCreditoCliCabecera n WHERE n.codNotaCreditoCliente = :codNotaCreditoCliente"), @NamedQuery(name = "NotaCreditoCliCabecera.findByNumNotaCredtoCliente", query = "SELECT n FROM NotaCreditoCliCabecera n WHERE n.numNotaCredtoCliente = :numNotaCredtoCliente"), @NamedQuery(name = "NotaCreditoCliCabecera.findByTotalNotaCredito", query = "SELECT n FROM NotaCreditoCliCabecera n WHERE n.totalNotaCredito = :totalNotaCredito"), @NamedQuery(name = "NotaCreditoCliCabecera.findByFechaNotaCredito", query = "SELECT n FROM NotaCreditoCliCabecera n WHERE n.fechaNotaCredito = :fechaNotaCredito"), @NamedQuery(name = "NotaCreditoCliCabecera.findByTotalIva", query = "SELECT n FROM NotaCreditoCliCabecera n WHERE n.totalIva = :totalIva"), @NamedQuery(name = "NotaCreditoCliCabecera.findByUsuarioAlta", query = "SELECT n FROM NotaCreditoCliCabecera n WHERE n.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "NotaCreditoCliCabecera.findByUsuarioModif", query = "SELECT n FROM NotaCreditoCliCabecera n WHERE n.usuarioModif = :usuarioModif"), @NamedQuery(name = "NotaCreditoCliCabecera.findByFechaAlta", query = "SELECT n FROM NotaCreditoCliCabecera n WHERE n.fechaAlta = :fechaAlta"), @NamedQuery(name = "NotaCreditoCliCabecera.findByFechaModif", query = "SELECT n FROM NotaCreditoCliCabecera n WHERE n.fechaModif = :fechaModif")})
 public class NotaCreditoCliCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -58,8 +60,8 @@ public class NotaCreditoCliCabecera implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codNotaCreditoCliente")
-    private List<NotaCreditoCliDetalle> notaCreditoCliDetalleCollection;
+    @OneToMany(mappedBy = "codNotaCreditoCliente", fetch=FetchType.EAGER)
+    private Set<NotaCreditoCliDetalle> notaCreditoCliDetalle;
     @JoinColumn(name = "COD_CLIENTE", referencedColumnName = "COD_CLIENTE")
     @ManyToOne(optional = false)
     private Cliente codCliente;
@@ -69,9 +71,8 @@ public class NotaCreditoCliCabecera implements Serializable {
     @JoinColumn(name = "COD_FACTURA", referencedColumnName = "COD_FACTURA")
     @ManyToOne(optional = false)
     private FacturaCabecera codFactura;
-    
-    @OneToMany(mappedBy = "codNotaCreditoCliente")
-    private List<ReciboDetalle> reciboDetalleCollection;
+    @OneToMany(mappedBy = "codNotaCreditoCliente", fetch=FetchType.EAGER)
+    private Set<ReciboDetalle> reciboDetalle;
 
     public NotaCreditoCliCabecera() {
     }
@@ -158,12 +159,16 @@ public class NotaCreditoCliCabecera implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public List<NotaCreditoCliDetalle> getNotaCreditoCliDetalleCollection() {
-        return notaCreditoCliDetalleCollection;
+    public Set<NotaCreditoCliDetalle> getNotaCreditoCliDetalle() {
+        return notaCreditoCliDetalle;
     }
 
-    public void setNotaCreditoCliDetalleCollection(List<NotaCreditoCliDetalle> notaCreditoCliDetalleCollection) {
-        this.notaCreditoCliDetalleCollection = notaCreditoCliDetalleCollection;
+    public List<NotaCreditoCliDetalle> getNotaCreditoCliDetalleList() {
+        return new ArrayList(Arrays.asList(notaCreditoCliDetalle.toArray(new NotaCreditoCliDetalle[0])));
+    }
+
+    public void setNotaCreditoCliDetalle(Set<NotaCreditoCliDetalle> notaCreditoCliDetalle) {
+        this.notaCreditoCliDetalle = notaCreditoCliDetalle;
     }
 
     public Cliente getCodCliente() {
@@ -190,12 +195,16 @@ public class NotaCreditoCliCabecera implements Serializable {
         this.codFactura = codFactura;
     }
 
-    public List<ReciboDetalle> getReciboDetalleCollection() {
-        return reciboDetalleCollection;
+    public Set<ReciboDetalle> getReciboDetalle() {
+        return reciboDetalle;
     }
 
-    public void setReciboDetalleCollection(List<ReciboDetalle> reciboDetalleCollection) {
-        this.reciboDetalleCollection = reciboDetalleCollection;
+    public List<ReciboDetalle> getReciboDetalleList() {
+        return new ArrayList(Arrays.asList(reciboDetalle.toArray(new ReciboDetalle[0])));
+    }
+
+    public void setReciboDetalle(Set<ReciboDetalle> reciboDetalle) {
+        this.reciboDetalle = reciboDetalle;
     }
 
     @Override

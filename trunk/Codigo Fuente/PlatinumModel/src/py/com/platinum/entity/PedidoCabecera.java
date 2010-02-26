@@ -80,7 +80,7 @@ public class PedidoCabecera implements Serializable {
     @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(optional = false)
     private Empleado codEmpleado;
-    @OneToMany(mappedBy = "codPedido", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "codPedidoCab", fetch=FetchType.EAGER)
     private Set<PedidoDetalle> pedidoDetalle;
     @OneToMany(mappedBy = "codPedido", fetch=FetchType.EAGER)
     private Set<FacturaCabecera> facturaCabecera;

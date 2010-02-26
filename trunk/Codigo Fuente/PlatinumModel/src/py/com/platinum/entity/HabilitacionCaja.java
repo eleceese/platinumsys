@@ -8,12 +8,15 @@ package py.com.platinum.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -30,7 +33,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "HABILITACION_CAJA")
-@NamedQueries({@NamedQuery(name = "HabilitacionCaja.findAll", query = "SELECT h FROM HabilitacionCaja h"), @NamedQuery(name = "HabilitacionCaja.findByCodHabilitacionCaja", query = "SELECT h FROM HabilitacionCaja h WHERE h.codHabilitacionCaja = :codHabilitacionCaja"), @NamedQuery(name = "HabilitacionCaja.findByFechaHabCaja", query = "SELECT h FROM HabilitacionCaja h WHERE h.fechaHabCaja = :fechaHabCaja"), @NamedQuery(name = "HabilitacionCaja.findByHoraHabCaja", query = "SELECT h FROM HabilitacionCaja h WHERE h.horaHabCaja = :horaHabCaja"), @NamedQuery(name = "HabilitacionCaja.findByMontoInicial", query = "SELECT h FROM HabilitacionCaja h WHERE h.montoInicial = :montoInicial"), @NamedQuery(name = "HabilitacionCaja.findByTotalMovimientoCaja", query = "SELECT h FROM HabilitacionCaja h WHERE h.totalMovimientoCaja = :totalMovimientoCaja"), @NamedQuery(name = "HabilitacionCaja.findByTotalGasto", query = "SELECT h FROM HabilitacionCaja h WHERE h.totalGasto = :totalGasto"), @NamedQuery(name = "HabilitacionCaja.findByMontoSaldo", query = "SELECT h FROM HabilitacionCaja h WHERE h.montoSaldo = :montoSaldo"), @NamedQuery(name = "HabilitacionCaja.findByMontoRendido", query = "SELECT h FROM HabilitacionCaja h WHERE h.montoRendido = :montoRendido"), @NamedQuery(name = "HabilitacionCaja.findByFechaCierre", query = "SELECT h FROM HabilitacionCaja h WHERE h.fechaCierre = :fechaCierre"), @NamedQuery(name = "HabilitacionCaja.findByHoraCierre", query = "SELECT h FROM HabilitacionCaja h WHERE h.horaCierre = :horaCierre"), @NamedQuery(name = "HabilitacionCaja.findByEstado", query = "SELECT h FROM HabilitacionCaja h WHERE h.estado = :estado"), @NamedQuery(name = "HabilitacionCaja.findByObservacion", query = "SELECT h FROM HabilitacionCaja h WHERE h.observacion = :observacion"), @NamedQuery(name = "HabilitacionCaja.findByUsuarioAlta", query = "SELECT h FROM HabilitacionCaja h WHERE h.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "HabilitacionCaja.findByUsuarioModif", query = "SELECT h FROM HabilitacionCaja h WHERE h.usuarioModif = :usuarioModif"), @NamedQuery(name = "HabilitacionCaja.findByFechaAlta", query = "SELECT h FROM HabilitacionCaja h WHERE h.fechaAlta = :fechaAlta"), @NamedQuery(name = "HabilitacionCaja.findByFechaModif", query = "SELECT h FROM HabilitacionCaja h WHERE h.fechaModif = :fechaModif")})
 public class HabilitacionCaja implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -82,10 +84,10 @@ public class HabilitacionCaja implements Serializable {
     @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(optional = false)
     private Empleado codEmpleado;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codHabilitacionCaja")
-    private List<MovimientoCajaCabecera> movimientoCajaCabeceraCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codHabilitacionCaja")
-    private List<Gasto> gastoCollection;
+    @OneToMany(mappedBy = "codHabilitacionCaja", fetch=FetchType.EAGER)
+    private Set<MovimientoCajaCabecera> movimientoCajaCabecera;
+    @OneToMany(mappedBy = "codHabilitacionCaja", fetch=FetchType.EAGER)
+    private Set<Gasto> gasto;
 
     public HabilitacionCaja() {
     }
@@ -246,20 +248,28 @@ public class HabilitacionCaja implements Serializable {
         this.codEmpleado = codEmpleado;
     }
 
-    public List<MovimientoCajaCabecera> getMovimientoCajaCabeceraCollection() {
-        return movimientoCajaCabeceraCollection;
+    public Set<MovimientoCajaCabecera> getMovimientoCajaCabecera() {
+        return movimientoCajaCabecera;
     }
 
-    public void setMovimientoCajaCabeceraCollection(List<MovimientoCajaCabecera> movimientoCajaCabeceraCollection) {
-        this.movimientoCajaCabeceraCollection = movimientoCajaCabeceraCollection;
+    public List<MovimientoCajaCabecera> getMovimientoCajaCabeceraList() {
+        return new ArrayList(Arrays.asList(movimientoCajaCabecera.toArray(new MovimientoCajaCabecera[0])));
     }
 
-    public List<Gasto> getGastoCollection() {
-        return gastoCollection;
+    public void setMovimientoCajaCabecera(Set<MovimientoCajaCabecera> movimientoCajaCabecera) {
+        this.movimientoCajaCabecera = movimientoCajaCabecera;
     }
 
-    public void setGastoCollection(List<Gasto> gastoCollection) {
-        this.gastoCollection = gastoCollection;
+    public Set<Gasto> getGasto() {
+        return gasto;
+    }
+
+    public List<Gasto> getGastoList() {
+        return new ArrayList(Arrays.asList(gasto.toArray(new Gasto[0])));
+    }
+
+    public void setGasto(Set<Gasto> gasto) {
+        this.gasto = gasto;
     }
 
     @Override

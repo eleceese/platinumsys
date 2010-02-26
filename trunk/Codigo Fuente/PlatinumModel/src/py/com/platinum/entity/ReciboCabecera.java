@@ -8,17 +8,18 @@ package py.com.platinum.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -30,7 +31,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "RECIBO_CABECERA")
-@NamedQueries({@NamedQuery(name = "ReciboCabecera.findAll", query = "SELECT r FROM ReciboCabecera r"), @NamedQuery(name = "ReciboCabecera.findByCodRecibo", query = "SELECT r FROM ReciboCabecera r WHERE r.codRecibo = :codRecibo"), @NamedQuery(name = "ReciboCabecera.findByNumeroRecibo", query = "SELECT r FROM ReciboCabecera r WHERE r.numeroRecibo = :numeroRecibo"), @NamedQuery(name = "ReciboCabecera.findByMontoTotal", query = "SELECT r FROM ReciboCabecera r WHERE r.montoTotal = :montoTotal"), @NamedQuery(name = "ReciboCabecera.findByMontoNotaCredito", query = "SELECT r FROM ReciboCabecera r WHERE r.montoNotaCredito = :montoNotaCredito"), @NamedQuery(name = "ReciboCabecera.findByEstado", query = "SELECT r FROM ReciboCabecera r WHERE r.estado = :estado"), @NamedQuery(name = "ReciboCabecera.findBySerieRecibo", query = "SELECT r FROM ReciboCabecera r WHERE r.serieRecibo = :serieRecibo"), @NamedQuery(name = "ReciboCabecera.findByUsuarioAlta", query = "SELECT r FROM ReciboCabecera r WHERE r.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "ReciboCabecera.findByUsuarioModif", query = "SELECT r FROM ReciboCabecera r WHERE r.usuarioModif = :usuarioModif"), @NamedQuery(name = "ReciboCabecera.findByFechaAlta", query = "SELECT r FROM ReciboCabecera r WHERE r.fechaAlta = :fechaAlta"), @NamedQuery(name = "ReciboCabecera.findByFechaModif", query = "SELECT r FROM ReciboCabecera r WHERE r.fechaModif = :fechaModif")})
 public class ReciboCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -58,13 +58,13 @@ public class ReciboCabecera implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codRecibo")
-    private List<MovimientoCajaCabecera> movimientoCajaCabeceraCollection;
+    @OneToMany(mappedBy = "codRecibo", fetch=FetchType.EAGER)
+    private Set<MovimientoCajaCabecera> movimientoCajaCabecera;
     @JoinColumn(name = "COD_CLIENTE", referencedColumnName = "COD_CLIENTE")
     @ManyToOne(optional = false)
     private Cliente codCliente;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codRecibo")
-    private List<ReciboDetalle> reciboDetalleCollection;
+    @OneToMany(mappedBy = "codRecibo", fetch=FetchType.EAGER)
+    private Set<ReciboDetalle> reciboDetalle;
 
     public ReciboCabecera() {
     }
@@ -158,12 +158,16 @@ public class ReciboCabecera implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public List<MovimientoCajaCabecera> getMovimientoCajaCabeceraCollection() {
-        return movimientoCajaCabeceraCollection;
+    public Set<MovimientoCajaCabecera> getMovimientoCajaCabecera() {
+        return movimientoCajaCabecera;
     }
 
-    public void setMovimientoCajaCabeceraCollection(List<MovimientoCajaCabecera> movimientoCajaCabeceraCollection) {
-        this.movimientoCajaCabeceraCollection = movimientoCajaCabeceraCollection;
+    public List<MovimientoCajaCabecera> getMovimientoCajaCabeceraList() {
+        return new ArrayList(Arrays.asList(movimientoCajaCabecera.toArray(new MovimientoCajaCabecera[0])));
+    }
+
+    public void setMovimientoCajaCabecera(Set<MovimientoCajaCabecera> movimientoCajaCabecera) {
+        this.movimientoCajaCabecera = movimientoCajaCabecera;
     }
 
     public Cliente getCodCliente() {
@@ -174,12 +178,16 @@ public class ReciboCabecera implements Serializable {
         this.codCliente = codCliente;
     }
 
-    public List<ReciboDetalle> getReciboDetalleCollection() {
-        return reciboDetalleCollection;
+    public Set<ReciboDetalle> getReciboDetalle() {
+        return reciboDetalle;
     }
 
-    public void setReciboDetalleCollection(List<ReciboDetalle> reciboDetalleCollection) {
-        this.reciboDetalleCollection = reciboDetalleCollection;
+    public List<ReciboDetalle> getReciboDetalleList() {
+        return new ArrayList(Arrays.asList(reciboDetalle.toArray(new ReciboDetalle[0])));
+    }
+
+    public void setReciboDetalle(Set<ReciboDetalle> reciboDetalle) {
+        this.reciboDetalle = reciboDetalle;
     }
 
     @Override

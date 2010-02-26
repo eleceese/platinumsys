@@ -25,7 +25,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "RECIBO_DETALLE")
-@NamedQueries({@NamedQuery(name = "ReciboDetalle.findAll", query = "SELECT r FROM ReciboDetalle r"), @NamedQuery(name = "ReciboDetalle.findByCodReciboDet", query = "SELECT r FROM ReciboDetalle r WHERE r.codReciboDet = :codReciboDet"), @NamedQuery(name = "ReciboDetalle.findByMontoEfectivo", query = "SELECT r FROM ReciboDetalle r WHERE r.montoEfectivo = :montoEfectivo"), @NamedQuery(name = "ReciboDetalle.findByMontoNotaCredito", query = "SELECT r FROM ReciboDetalle r WHERE r.montoNotaCredito = :montoNotaCredito"), @NamedQuery(name = "ReciboDetalle.findByMontoTotal", query = "SELECT r FROM ReciboDetalle r WHERE r.montoTotal = :montoTotal"), @NamedQuery(name = "ReciboDetalle.findByEstadoDetalleRecibo", query = "SELECT r FROM ReciboDetalle r WHERE r.estadoDetalleRecibo = :estadoDetalleRecibo"), @NamedQuery(name = "ReciboDetalle.findByUsuarioAlta", query = "SELECT r FROM ReciboDetalle r WHERE r.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "ReciboDetalle.findByUsuarioModif", query = "SELECT r FROM ReciboDetalle r WHERE r.usuarioModif = :usuarioModif"), @NamedQuery(name = "ReciboDetalle.findByFechaAlta", query = "SELECT r FROM ReciboDetalle r WHERE r.fechaAlta = :fechaAlta"), @NamedQuery(name = "ReciboDetalle.findByFechaModif", query = "SELECT r FROM ReciboDetalle r WHERE r.fechaModif = :fechaModif")})
 public class ReciboDetalle implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

@@ -6,10 +6,7 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,8 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -61,7 +56,7 @@ public class PedidoDetalle implements Serializable {
     private Date fechaModif;
     @JoinColumn(name = "COD_PEDIDO", referencedColumnName = "COD_PEDIDO")
     @ManyToOne
-    private PedidoCabecera codPedido;
+    private PedidoCabecera codPedidoCab;
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
     @ManyToOne
     private Producto codProducto;
@@ -146,11 +141,11 @@ public class PedidoDetalle implements Serializable {
     }
 
     public PedidoCabecera getCodPedido() {
-        return codPedido;
+        return codPedidoCab;
     }
 
-    public void setCodPedido(PedidoCabecera codPedido) {
-        this.codPedido = codPedido;
+    public void setCodPedido(PedidoCabecera codPedidoCab) {
+        this.codPedidoCab = codPedidoCab;
     }
 
     public Producto getCodProducto() {

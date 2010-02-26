@@ -15,8 +15,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,7 +25,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "MOVIMIENTO_CAJA_DETALLE")
-@NamedQueries({@NamedQuery(name = "MovimientoCajaDetalle.findAll", query = "SELECT m FROM MovimientoCajaDetalle m"), @NamedQuery(name = "MovimientoCajaDetalle.findByCodMovimientoCajaDet", query = "SELECT m FROM MovimientoCajaDetalle m WHERE m.codMovimientoCajaDet = :codMovimientoCajaDet"), @NamedQuery(name = "MovimientoCajaDetalle.findBySerieCheque", query = "SELECT m FROM MovimientoCajaDetalle m WHERE m.serieCheque = :serieCheque"), @NamedQuery(name = "MovimientoCajaDetalle.findByNumeroCheque", query = "SELECT m FROM MovimientoCajaDetalle m WHERE m.numeroCheque = :numeroCheque"), @NamedQuery(name = "MovimientoCajaDetalle.findByMonto", query = "SELECT m FROM MovimientoCajaDetalle m WHERE m.monto = :monto"), @NamedQuery(name = "MovimientoCajaDetalle.findByUsuarioAlta", query = "SELECT m FROM MovimientoCajaDetalle m WHERE m.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "MovimientoCajaDetalle.findByUsuarioModif", query = "SELECT m FROM MovimientoCajaDetalle m WHERE m.usuarioModif = :usuarioModif"), @NamedQuery(name = "MovimientoCajaDetalle.findByFechaAlta", query = "SELECT m FROM MovimientoCajaDetalle m WHERE m.fechaAlta = :fechaAlta"), @NamedQuery(name = "MovimientoCajaDetalle.findByFechaModif", query = "SELECT m FROM MovimientoCajaDetalle m WHERE m.fechaModif = :fechaModif")})
 public class MovimientoCajaDetalle implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
