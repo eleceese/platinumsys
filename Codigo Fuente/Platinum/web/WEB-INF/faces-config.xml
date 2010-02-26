@@ -426,4 +426,9 @@
         <managed-bean-class>platinum.popup.popupProductoVenta</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMFacturaVenta</managed-bean-name>
+        <managed-bean-class>platinum.ABMFacturaVenta</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
 </faces-config>

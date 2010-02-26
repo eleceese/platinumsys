@@ -21,7 +21,7 @@
                             <webuijsf:tableRowGroup id="tableRowGroup1" rows="20" sourceData="#{SessionBean1.listaEmpleados}" sourceVar="currentRow">
                                 <webuijsf:tableColumn headerText="Empleado" id="tableColumn1" width="377">
                                     <webuijsf:hyperlink id="hyperlink1"
-                                        onClick="doSave('#{currentRow.value['codEmpleado']}', '#{currentRow.value['apellidoEmpleado']} + ', ' + #{currentRow.value['nombreEmpleado']}')" text="#{currentRow.value['apellidoEmpleado']} + ', ' + #{currentRow.value['nombreEmpleado']}"/>
+                                        onClick="doSave('#{currentRow.value['codEmpleado']}', '#{currentRow.value['apellidoEmpleado']}, #{currentRow.value['nombreEmpleado']}')" text="#{currentRow.value['apellidoEmpleado']}, #{currentRow.value['nombreEmpleado']}"/>
                                 </webuijsf:tableColumn>
                                 <webuijsf:tableColumn headerText="Codigo" id="tableColumn2" width="178">
                                     <webuijsf:staticText id="staticText2" text="#{currentRow.value['codEmpleado']}"/>
