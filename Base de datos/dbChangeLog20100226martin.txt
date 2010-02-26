@@ -1,0 +1,21 @@
+--tipo factura
+alter table factura_cabecera modify tipo_factura number(10);
+
+--Hora factura
+alter table factura_cabecera drop column hora_factura;
+
+--Relacionamos Factura cab. con tipo comprobante
+alter table factura_cabecera
+	add constraint fk_facturacab_tipcompro foreign key (tipo_factura)
+	    references tipo_comprobante(cod_tipo);
+		
+
+--Agregamos las columnas para los descuentos
+alter table factura_cabecera add porc_descuento number(5,2) not null;
+alter table factura_cabecera add monto_descuento number not null;		
+alter table factura_detalle drop column descripcion;
+alter table factura_detalle modify PORCENTAJE_IVA number(5,2);
+
+--Modificamos el estado del pedido
+alter table factura_cabecera modify ESTADO_FACTURA varchar2(15);
+
