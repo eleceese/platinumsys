@@ -12,11 +12,13 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,29 +29,23 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "FACTURA_DETALLE")
-@NamedQueries({@NamedQuery(name = "FacturaDetalle.findAll", query = "SELECT f FROM FacturaDetalle f"), @NamedQuery(name = "FacturaDetalle.findByCodFacturaDetalle", query = "SELECT f FROM FacturaDetalle f WHERE f.codFacturaDetalle = :codFacturaDetalle"), @NamedQuery(name = "FacturaDetalle.findByPrecioUnitario", query = "SELECT f FROM FacturaDetalle f WHERE f.precioUnitario = :precioUnitario"), @NamedQuery(name = "FacturaDetalle.findByCantidad", query = "SELECT f FROM FacturaDetalle f WHERE f.cantidad = :cantidad"), @NamedQuery(name = "FacturaDetalle.findByPorcentajeIva", query = "SELECT f FROM FacturaDetalle f WHERE f.porcentajeIva = :porcentajeIva"), @NamedQuery(name = "FacturaDetalle.findByTotalIva", query = "SELECT f FROM FacturaDetalle f WHERE f.totalIva = :totalIva"), @NamedQuery(name = "FacturaDetalle.findBySubTotal", query = "SELECT f FROM FacturaDetalle f WHERE f.subTotal = :subTotal"), @NamedQuery(name = "FacturaDetalle.findByPorcentajeDescuento", query = "SELECT f FROM FacturaDetalle f WHERE f.porcentajeDescuento = :porcentajeDescuento"), @NamedQuery(name = "FacturaDetalle.findByMontoDescuento", query = "SELECT f FROM FacturaDetalle f WHERE f.montoDescuento = :montoDescuento"), @NamedQuery(name = "FacturaDetalle.findByDescripcion", query = "SELECT f FROM FacturaDetalle f WHERE f.descripcion = :descripcion"), @NamedQuery(name = "FacturaDetalle.findByUsuarioAlta", query = "SELECT f FROM FacturaDetalle f WHERE f.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "FacturaDetalle.findByUsuarioModif", query = "SELECT f FROM FacturaDetalle f WHERE f.usuarioModif = :usuarioModif"), @NamedQuery(name = "FacturaDetalle.findByFechaAlta", query = "SELECT f FROM FacturaDetalle f WHERE f.fechaAlta = :fechaAlta"), @NamedQuery(name = "FacturaDetalle.findByFechaModif", query = "SELECT f FROM FacturaDetalle f WHERE f.fechaModif = :fechaModif")})
+@SequenceGenerator(name = "FACTURA_DETALLE_SEQUENCE", sequenceName = "SQ_DETALLE_FACTURA", initialValue = 1, allocationSize = 1)
 public class FacturaDetalle implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @Column(name = "COD_FACTURA_DETALLE")
-    private BigDecimal codFacturaDetalle;
-    @Column(name = "PRECIO_UNITARIO")
-    private BigInteger precioUnitario;
-    @Column(name = "CANTIDAD")
-    private BigInteger cantidad;
-    @Column(name = "PORCENTAJE_IVA")
-    private BigInteger porcentajeIva;
-    @Column(name = "TOTAL_IVA")
-    private BigInteger totalIva;
-    @Column(name = "SUB_TOTAL")
-    private BigInteger subTotal;
-    @Column(name = "PORCENTAJE_DESCUENTO")
-    private BigInteger porcentajeDescuento;
-    @Column(name = "MONTO_DESCUENTO")
-    private BigInteger montoDescuento;
-    @Column(name = "DESCRIPCION")
-    private String descripcion;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FACTURA_DETALLE_SEQUENCE")
+    @Column(name = "COD_FACTURA_DETALLE", nullable=false)
+    private Long codFacturaDetalle;
+    @Column(name = "PRECIO_UNITARIO", nullable=false)
+    private Long precioUnitario;
+    @Column(name = "CANTIDAD", nullable=false)
+    private Long cantidad;
+    @Column(name = "PORCENTAJE_IVA", nullable=false)
+    private Double porcentajeIva;
+    @Column(name = "TOTAL_IVA", nullable=false)
+    private Long totalIva;
+    @Column(name = "SUB_TOTAL", nullable=false)
+    private Long subTotal;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -60,90 +56,66 @@ public class FacturaDetalle implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @JoinColumn(name = "COD_FACTURA", referencedColumnName = "COD_FACTURA")
-    @ManyToOne
+    @JoinColumn(name = "COD_FACTURA", referencedColumnName = "COD_FACTURA", nullable=false)
+    @ManyToOne(fetch=FetchType.EAGER)
     private FacturaCabecera codFactura;
-    @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
-    @ManyToOne
+    @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO", nullable=false)
+    @ManyToOne(fetch=FetchType.EAGER)
     private Producto codProducto;
 
     public FacturaDetalle() {
     }
 
-    public FacturaDetalle(BigDecimal codFacturaDetalle) {
+    public FacturaDetalle(Long codFacturaDetalle) {
         this.codFacturaDetalle = codFacturaDetalle;
     }
 
-    public BigDecimal getCodFacturaDetalle() {
+    public Long getCodFacturaDetalle() {
         return codFacturaDetalle;
     }
 
-    public void setCodFacturaDetalle(BigDecimal codFacturaDetalle) {
+    public void setCodFacturaDetalle(Long codFacturaDetalle) {
         this.codFacturaDetalle = codFacturaDetalle;
     }
 
-    public BigInteger getPrecioUnitario() {
+    public Long getPrecioUnitario() {
         return precioUnitario;
     }
 
-    public void setPrecioUnitario(BigInteger precioUnitario) {
+    public void setPrecioUnitario(Long precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
 
-    public BigInteger getCantidad() {
+    public Long getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(BigInteger cantidad) {
+    public void setCantidad(Long cantidad) {
         this.cantidad = cantidad;
     }
 
-    public BigInteger getPorcentajeIva() {
+    public Double getPorcentajeIva() {
         return porcentajeIva;
     }
 
-    public void setPorcentajeIva(BigInteger porcentajeIva) {
+    public void setPorcentajeIva(Double porcentajeIva) {
         this.porcentajeIva = porcentajeIva;
     }
 
-    public BigInteger getTotalIva() {
+    public Long getTotalIva() {
         return totalIva;
     }
 
-    public void setTotalIva(BigInteger totalIva) {
+    public void setTotalIva(Long totalIva) {
         this.totalIva = totalIva;
     }
 
-    public BigInteger getSubTotal() {
+    public Long getSubTotal() {
         return subTotal;
     }
 
-    public void setSubTotal(BigInteger subTotal) {
+    public void setSubTotal(Long subTotal) {
         this.subTotal = subTotal;
-    }
-
-    public BigInteger getPorcentajeDescuento() {
-        return porcentajeDescuento;
-    }
-
-    public void setPorcentajeDescuento(BigInteger porcentajeDescuento) {
-        this.porcentajeDescuento = porcentajeDescuento;
-    }
-
-    public BigInteger getMontoDescuento() {
-        return montoDescuento;
-    }
-
-    public void setMontoDescuento(BigInteger montoDescuento) {
-        this.montoDescuento = montoDescuento;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
 
     public String getUsuarioAlta() {

@@ -37,4 +37,26 @@ public class ModelUtil {
         //result
         return r;
     }
+
+    /**
+     * Obtenemos el estado de la factura
+     * @param estado
+     * @return
+     */
+    public static FacturaVentaEstado getFacturaVentaEstado(String estado) {
+        //Variables
+        FacturaVentaEstado r = FacturaVentaEstado.PENDIENTE_COBRO;
+
+        //Verificamos el tipo de estado
+        if (estado.equals(FacturaVentaEstado.ANULADO.toString())) {
+            r = FacturaVentaEstado.ANULADO;
+        }else if (estado.equals(FacturaVentaEstado.COBRADO.toString())) {
+            r = FacturaVentaEstado.COBRADO;
+        }else if (estado.equals(FacturaVentaEstado.PENDIENTE_COBRO.toString())) {
+            r = FacturaVentaEstado.PENDIENTE_COBRO;
+        }
+
+        //result
+        return r;
+    }
 }

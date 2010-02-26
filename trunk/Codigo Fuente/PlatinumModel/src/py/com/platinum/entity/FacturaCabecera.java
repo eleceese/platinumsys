@@ -6,27 +6,27 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.utilsenum.FacturaVentaEstado;
 
 /**
  *
@@ -34,52 +34,52 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "FACTURA_CABECERA")
+@SequenceGenerator(name = "FACTURA_CABECERA_SEQUENCE", sequenceName = "SQ_CABECERA_FACTURA", initialValue = 1, allocationSize = 1)
 public class FacturaCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @Column(name = "COD_FACTURA")
-    private BigDecimal codFactura;
-    @Basic(optional = false)
-    @Column(name = "NUMERO_FACTURA")
-    private BigInteger numeroFactura;
-    @Basic(optional = false)
-    @Column(name = "TIPO_FACTURA")
-    private String tipoFactura;
-    @Basic(optional = false)
-    @Column(name = "FECHA_FACTURA")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FACTURA_CABECERA_SEQUENCE")
+    @Column(name = "COD_FACTURA", nullable=false)
+    private Long codFactura;
+    @Column(name = "NUMERO_FACTURA", nullable=false)
+    private Long numeroFactura;
+    @JoinColumn(name = "TIPO_FACTURA", referencedColumnName = "COD_TIPO", nullable=false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    private TipoComprobante tipoFactura;
+    @Column(name = "FECHA_FACTURA", nullable=false)
     @Temporal(TemporalType.DATE)
     private Date fechaFactura;
-    @Basic(optional = false)
-    @Column(name = "HORA_FACTURA")
-    @Temporal(TemporalType.DATE)
-    private Date horaFactura;
-    @Column(name = "SUBTOTAL_FACTURA")
-    private BigInteger subtotalFactura;
-    @Column(name = "TOTAL_IVA_FACTURA")
-    private BigInteger totalIvaFactura;
-    @Column(name = "TOTAL_FACTURA")
-    private BigInteger totalFactura;
+    @Column(name = "SUBTOTAL_FACTURA", nullable=false)
+    private Long subtotalFactura;
+    @Column(name = "TOTAL_IVA_FACTURA", nullable=false)
+    private Long totalIvaFactura;
+    @Column(name = "TOTAL_FACTURA", nullable=false)
+    private Long totalFactura;
+    @Column(name = "PORC_DESCUENTO")
+    private Long porcDescuento;
+    @Column(name = "MONTO_DESCUENTO")
+    private Long montoDescuento;
     @Column(name = "ESTADO_FACTURA")
-    private String estadoFactura;
+    @Enumerated(EnumType.STRING)
+    private FacturaVentaEstado estadoFactura;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
     private String usuarioModif;
     @Column(name = "FECHA_ALTA")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaAlta;
     @Column(name = "FECHA_MODIF")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModif;
-    @JoinColumn(name = "COD_CLIENTE", referencedColumnName = "COD_CLIENTE")
-    @ManyToOne(optional = false)
+    @JoinColumn(name = "COD_CLIENTE", referencedColumnName = "COD_CLIENTE", nullable=false)
+    @ManyToOne(fetch=FetchType.EAGER)
     private Cliente codCliente;
-    @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
-    @ManyToOne(optional = false)
+    @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO", nullable=false)
+    @ManyToOne(fetch=FetchType.EAGER)
     private Empleado codEmpleado;
     @JoinColumn(name = "COD_PEDIDO", referencedColumnName = "COD_PEDIDO")
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     private PedidoCabecera codPedido;
     @OneToMany(mappedBy = "codFactura", fetch=FetchType.EAGER)
     private Set<NotaCreditoCliCabecera> notaCreditoCliCabecera;
@@ -91,39 +91,38 @@ public class FacturaCabecera implements Serializable {
     public FacturaCabecera() {
     }
 
-    public FacturaCabecera(BigDecimal codFactura) {
+    public FacturaCabecera(Long codFactura) {
         this.codFactura = codFactura;
     }
 
-    public FacturaCabecera(BigDecimal codFactura, BigInteger numeroFactura, String tipoFactura, Date fechaFactura, Date horaFactura) {
+    public FacturaCabecera(Long codFactura, Long numeroFactura, TipoComprobante tipoFactura, Date fechaFactura) {
         this.codFactura = codFactura;
         this.numeroFactura = numeroFactura;
         this.tipoFactura = tipoFactura;
         this.fechaFactura = fechaFactura;
-        this.horaFactura = horaFactura;
     }
 
-    public BigDecimal getCodFactura() {
+    public Long getCodFactura() {
         return codFactura;
     }
 
-    public void setCodFactura(BigDecimal codFactura) {
+    public void setCodFactura(Long codFactura) {
         this.codFactura = codFactura;
     }
 
-    public BigInteger getNumeroFactura() {
+    public Long getNumeroFactura() {
         return numeroFactura;
     }
 
-    public void setNumeroFactura(BigInteger numeroFactura) {
+    public void setNumeroFactura(Long numeroFactura) {
         this.numeroFactura = numeroFactura;
     }
 
-    public String getTipoFactura() {
+    public TipoComprobante getTipoFactura() {
         return tipoFactura;
     }
 
-    public void setTipoFactura(String tipoFactura) {
+    public void setTipoFactura(TipoComprobante tipoFactura) {
         this.tipoFactura = tipoFactura;
     }
 
@@ -135,43 +134,51 @@ public class FacturaCabecera implements Serializable {
         this.fechaFactura = fechaFactura;
     }
 
-    public Date getHoraFactura() {
-        return horaFactura;
-    }
-
-    public void setHoraFactura(Date horaFactura) {
-        this.horaFactura = horaFactura;
-    }
-
-    public BigInteger getSubtotalFactura() {
+    public Long getSubtotalFactura() {
         return subtotalFactura;
     }
 
-    public void setSubtotalFactura(BigInteger subtotalFactura) {
+    public void setSubtotalFactura(Long subtotalFactura) {
         this.subtotalFactura = subtotalFactura;
     }
 
-    public BigInteger getTotalIvaFactura() {
+    public Long getTotalIvaFactura() {
         return totalIvaFactura;
     }
 
-    public void setTotalIvaFactura(BigInteger totalIvaFactura) {
+    public void setTotalIvaFactura(Long totalIvaFactura) {
         this.totalIvaFactura = totalIvaFactura;
     }
 
-    public BigInteger getTotalFactura() {
+    public Long getTotalFactura() {
         return totalFactura;
     }
 
-    public void setTotalFactura(BigInteger totalFactura) {
+    public void setTotalFactura(Long totalFactura) {
         this.totalFactura = totalFactura;
     }
 
-    public String getEstadoFactura() {
+    public Long getMontoDescuento() {
+        return montoDescuento;
+    }
+
+    public void setMontoDescuento(Long montoDescuento) {
+        this.montoDescuento = montoDescuento;
+    }
+
+    public Long getPorcDescuento() {
+        return porcDescuento;
+    }
+
+    public void setPorcDescuento(Long porcDescuento) {
+        this.porcDescuento = porcDescuento;
+    }
+
+    public FacturaVentaEstado getEstadoFactura() {
         return estadoFactura;
     }
 
-    public void setEstadoFactura(String estadoFactura) {
+    public void setEstadoFactura(FacturaVentaEstado estadoFactura) {
         this.estadoFactura = estadoFactura;
     }
 

@@ -11,27 +11,27 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.controllerUtil.ControllerResult;
-import py.com.platinum.entity.PedidoCabecera;
-import py.com.platinum.entity.PedidoDetalle;
+import py.com.platinum.entity.FacturaCabecera;
+import py.com.platinum.entity.FacturaDetalle;
 
 /**
  *
  * @author Martin
  */
-public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
+public class FacturaCabeceraController extends AbstractJpaDao<FacturaCabecera> {
 
-    public PedidoCabeceraController() {
+    public FacturaCabeceraController() {
         super();
     }
 
     @Override
-    public PedidoCabecera findById(Long id) {
-        return (PedidoCabecera) this.findById(PedidoCabecera.class, id);
+    public FacturaCabecera findById(Long id) {
+        return (FacturaCabecera) this.findById(FacturaCabecera.class, id);
     }
 
     @Override
-    public List<PedidoCabecera> getAll(String orderBy) {
-        return this.getAll(PedidoCabecera.class, orderBy);
+    public List<FacturaCabecera> getAll(String orderBy) {
+        return this.getAll(FacturaCabecera.class, orderBy);
     }
 
     /**
@@ -40,14 +40,14 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
      * @param nroFactura
      * @param proveedor
      *
-     * @return lista de PedidoCabeceras que cumplen con la condicion de busqueda
+     * @return lista de FacturaCabeceras que cumplen con la condicion de busqueda
      */
-    public List<PedidoCabecera> getPedidoCabecera(String nroPedido, String cliente, Date fecha) {
+    public List<FacturaCabecera> getFacturaCabecera(String nroFactura, String cliente, Date fecha) {
         //Armamos el sql String
-        String SQL = "SELECT o FROM PedidoCabecera o WHERE o.codPedido = o.codPedido ";
+        String SQL = "SELECT o FROM FacturaCabecera o WHERE o.codFactura = o.codFactura ";
 
-        if (nroPedido != null && !nroPedido.equals("")) {
-            SQL = SQL + " and UPPER(o.numeroPedido) like UPPER(:nroPedido) ";
+        if (nroFactura != null && !nroFactura.equals("")) {
+            SQL = SQL + " and UPPER(o.numeroFactura) like UPPER(:nroFactura) ";
         }
 
         if (cliente != null && !cliente.equals("")) {
@@ -55,18 +55,18 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
         }
 
         if (fecha != null) {
-            SQL = SQL + " and o.fechaPedido = :fecha ";
+            SQL = SQL + " and o.fechaFactura = :fecha ";
         }
 
         //Order By
-        SQL = SQL + " ORDER BY o.fechaPedido desc ";
+        SQL = SQL + " ORDER BY o.fechaFactura desc ";
 
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
 
         //Seteamos los parametros
-        if (nroPedido != null && !nroPedido.equals("")) {
-            q.setParameter("nroPedido", "%" + nroPedido + "%");
+        if (nroFactura != null && !nroFactura.equals("")) {
+            q.setParameter("nroFactura", "%" + nroFactura + "%");
         }
 
         if (cliente != null && !cliente.equals("")) {
@@ -77,7 +77,7 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
             q.setParameter("fecha", fecha );
         }
         //Realizamos la busqueda
-        List<PedidoCabecera> entities = q.getResultList();
+        List<FacturaCabecera> entities = q.getResultList();
         em.close();
 
         //retornamos la lista
@@ -91,7 +91,7 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
      * @param entity
      * @return ControllerResult
      */
-    public ControllerResult crear(PedidoCabecera cabecera, List<PedidoDetalle> detalle) {
+    public ControllerResult crear(FacturaCabecera cabecera, List<FacturaDetalle> detalle) {
         ControllerResult r = new ControllerResult();
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
@@ -105,10 +105,10 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
             if (detalle != null) {
                 for (int i = 0; i < detalle.size(); i++) {
                     //Obtenemos el detalle a insertar
-                    PedidoDetalle det = detalle.get(i);
+                    FacturaDetalle det = detalle.get(i);
 
                     //Asignamos la cabecera al detalle
-                    det.setCodPedido(cabecera);
+                    det.setCodFactura(cabecera);
 
                     //Persistimos
                     em.persist(det);
@@ -145,7 +145,7 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
      * @param detalle
      * @return
      */
-    public ControllerResult actualizar(PedidoCabecera cabecera, List<PedidoDetalle> detalle, List<PedidoDetalle> detalleAeliminar) {
+    public ControllerResult actualizar(FacturaCabecera cabecera, List<FacturaDetalle> detalle, List<FacturaDetalle> detalleAeliminar) {
         ControllerResult r = new ControllerResult();
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
@@ -160,12 +160,12 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
             if (detalle != null) {
                 for (int i = 0; i < detalle.size(); i++) {
                     //Obtenemos el detalle a insertar
-                    PedidoDetalle det = detalle.get(i);
+                    FacturaDetalle det = detalle.get(i);
 
                     //Actualizamos
-                    if (det.getCodPedido() == null) {
+                    if (det.getCodFactura() == null) {
                         //Asignamos la cabecera al detalle
-                        det.setCodPedido(cabecera);
+                        det.setCodFactura(cabecera);
 
                         //Persistir
                         em.persist(det);
@@ -182,7 +182,7 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
             if (detalleAeliminar != null) {
                 for (int i = 0; i < detalleAeliminar.size(); i++) {
                     //Obtenemos el detalle
-                    PedidoDetalle det = detalleAeliminar.get(i);
+                    FacturaDetalle det = detalleAeliminar.get(i);
 
                     //Eliminamos
                     em.remove(em.merge(det));
@@ -220,7 +220,7 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
      * @param detalle
      * @return
      */
-    public ControllerResult eliminar(PedidoCabecera cabecera, List<PedidoDetalle> detalle) {
+    public ControllerResult eliminar(FacturaCabecera cabecera, List<FacturaDetalle> detalle) {
         ControllerResult r = new ControllerResult();
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
@@ -232,7 +232,7 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
             if (detalle != null) {
                 for (int i = 0; i < detalle.size(); i++) {
                     //Obtenemos el detalle
-                    PedidoDetalle det = detalle.get(i);
+                    FacturaDetalle det = detalle.get(i);
 
                     //Eliminamos
                     em.remove(em.merge(det));
@@ -241,7 +241,7 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
 
 
             //Eliminamos la Cabecera
-            cabecera = findById(cabecera.getCodPedido());
+            cabecera = findById(cabecera.getCodFactura());
             em.remove(em.merge(cabecera));
 
             //Confirmamos la transaccion
@@ -269,12 +269,12 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
     }
 
     /**
-     * Verfica si existe nro de pedido
+     * Verfica si existe nro de facrura
      * @param nroFactura
      * @param codFactura
      * @return
      */
-    public boolean existeNroPedido(String nroPedido, Long codPedido) {
+    public boolean existeNroFactura(Long nroFactura, Long codFactura) {
         //Variables
         boolean r;
         String SQL;
@@ -283,25 +283,25 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
         r = false;
 
         //Armamos el SQL
-        SQL = "SELECT o FROM PedidoCabecera o WHERE o.codPedido = o.codPedido " +
-              " and o.numeroPedido  = :nroPedido ";
+        SQL = "SELECT o FROM FacturaCabecera o WHERE o.codFactura = o.codFactura " +
+              " and o.numeroFactura  = :nroFactura ";
 
-        if (codPedido != null) {
-            SQL = SQL + " and o.codPedido != :codPedido ";
+        if (codFactura != null) {
+            SQL = SQL + " and o.codFactura != :codFactura ";
         }
 
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
 
         //Seteamos los parametros
-        q.setParameter("nroPedido", nroPedido );
+        q.setParameter("nroFactura", nroFactura );
 
-        if (codPedido != null ) {
-            q.setParameter("codPedido", codPedido );
+        if (codFactura != null ) {
+            q.setParameter("codFactura", codFactura );
         }
 
         //Realizamos la busqueda
-        List<PedidoCabecera> l = q.getResultList();
+        List<FacturaCabecera> l = q.getResultList();
 
         if (l != null && l.size() > 0) {
             r = !r;
@@ -313,4 +313,5 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
         //result
         return r;
     }
+
 }   
