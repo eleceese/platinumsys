@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package py.com.platinum.entity;
 
 import java.io.Serializable;
@@ -28,6 +27,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.controller.ClienteController;
+import py.com.platinum.controller.PedidoDetalleController;
+import py.com.platinum.controller.ProductoController;
 import py.com.platinum.utilsenum.PedidoVentaEstado;
 
 /**
@@ -36,15 +38,15 @@ import py.com.platinum.utilsenum.PedidoVentaEstado;
  */
 @Entity
 @Table(name = "PEDIDO_CABECERA")
-@SequenceGenerator(name="PEDIDO_CABECERA_SEQUENCE", sequenceName="SQ_CABECERA_PEDIDO")
+@SequenceGenerator(name = "PEDIDO_CABECERA_SEQUENCE", sequenceName = "SQ_CABECERA_PEDIDO", initialValue = 1, allocationSize = 1)
 public class PedidoCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PEDIDO_CABECERA_SEQUENCE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PEDIDO_CABECERA_SEQUENCE")
     @Column(name = "COD_PEDIDO")
     private Long codPedido;
     @JoinColumn(name = "TIPO", referencedColumnName = "COD_TIPO")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private TipoComprobante tipo;
     @Column(name = "NUMERO_PEDIDO")
     private String numeroPedido;
@@ -74,15 +76,15 @@ public class PedidoCabecera implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @JoinColumn(name = "COD_CLIENTE", referencedColumnName = "COD_CLIENTE")
-    @ManyToOne(optional = false)
+    @JoinColumn(name = "COD_CLIENTE", referencedColumnName = "COD_CLIENTE", nullable=false)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Cliente codCliente;
-    @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
-    @ManyToOne(optional = false)
+    @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO", nullable=false)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Empleado codEmpleado;
-    @OneToMany(mappedBy = "codPedidoCab", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "codPedidoCab", fetch = FetchType.EAGER)
     private Set<PedidoDetalle> pedidoDetalle;
-    @OneToMany(mappedBy = "codPedido", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "codPedido", fetch = FetchType.EAGER)
     private Set<FacturaCabecera> facturaCabecera;
 
     public PedidoCabecera() {
@@ -225,7 +227,6 @@ public class PedidoCabecera implements Serializable {
     public List<PedidoDetalle> getPedidoDetalleList() {
         return new ArrayList(Arrays.asList(pedidoDetalle.toArray(new PedidoDetalle[0])));
     }
-
     public void setPedidoDetalle(Set<PedidoDetalle> pedidoDetalle) {
         this.pedidoDetalle = pedidoDetalle;
     }
@@ -274,5 +275,4 @@ public class PedidoCabecera implements Serializable {
     public String toString() {
         return numeroPedido;
     }
-
 }

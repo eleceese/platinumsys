@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -54,11 +55,11 @@ public class PedidoDetalle implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @JoinColumn(name = "COD_PEDIDO", referencedColumnName = "COD_PEDIDO")
-    @ManyToOne
+    @JoinColumn(name = "COD_PEDIDO", referencedColumnName = "COD_PEDIDO", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private PedidoCabecera codPedidoCab;
-    @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
-    @ManyToOne
+    @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Producto codProducto;
 
     public PedidoDetalle() {
