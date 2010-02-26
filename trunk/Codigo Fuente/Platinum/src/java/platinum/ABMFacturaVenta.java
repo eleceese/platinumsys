@@ -24,19 +24,20 @@ import java.util.List;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.convert.CharacterConverter;
-import py.com.platinum.controller.PedidoCabeceraController;
+import py.com.platinum.controller.FacturaCabeceraController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.ClienteController;
 import py.com.platinum.controller.EmpleadoController;
 import py.com.platinum.controller.TipoComprobanteController;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.Empleado;
-import py.com.platinum.entity.PedidoCabecera;
-import py.com.platinum.entity.PedidoDetalle;
+import py.com.platinum.entity.FacturaCabecera;
+import py.com.platinum.entity.FacturaDetalle;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.Cliente;
 import py.com.platinum.entity.TipoComprobante;
 import py.com.platinum.utils.StringUtils;
+import py.com.platinum.utilsenum.FacturaVentaEstado;
 import py.com.platinum.utilsenum.ModelUtil;
 import py.com.platinum.utilsenum.ModuloEnum;
 import py.com.platinum.utilsenum.PedidoVentaEstado;
@@ -52,7 +53,7 @@ import py.com.platinum.utilsenum.PedidoVentaEstado;
  * @version Created on 20-ago-2009, 19:25:56
  * @author MartinJara
  */
-public class ABMPedidoCliente extends AbstractPageBean {
+public class ABMFacturaVenta extends AbstractPageBean {
     // <editor-fold defaultstate="collapsed" desc="Managed Component Definition">
 
     /**
@@ -278,14 +279,14 @@ public class ABMPedidoCliente extends AbstractPageBean {
     public void setRadioButton1(RadioButton rb) {
         this.radioButton1 = rb;
     }
-    private TextField uiTxtNroPedido = new TextField();
+    private TextField uiTxtNroFactura = new TextField();
 
-    public TextField getUiTxtNroPedido() {
-        return uiTxtNroPedido;
+    public TextField getUiTxtNroFactura() {
+        return uiTxtNroFactura;
     }
 
-    public void setUiTxtNroPedido(TextField tf) {
-        this.uiTxtNroPedido = tf;
+    public void setUiTxtNroFactura(TextField tf) {
+        this.uiTxtNroFactura = tf;
     }
     private DropDown uiLstTipoComprobante = new DropDown();
 
@@ -472,20 +473,20 @@ public class ABMPedidoCliente extends AbstractPageBean {
     /**
      * <p>Construct a new Page bean instance.</p>
      */
-    public ABMPedidoCliente() {
+    public ABMFacturaVenta() {
 
         //Tipos de IVA
         uiLstIvaDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("0", "Exento"), new com.sun.webui.jsf.model.Option("5", "IVA 5%"), new com.sun.webui.jsf.model.Option("10", "IVA 10%")});
         uiLstIvaDefaultOptions.setSelectedValue("0");
 
         //Estados de la factura
-        PedidoVentaEstado[] lstEstado = PedidoVentaEstado.values();
+        FacturaVentaEstado[] lstEstado = FacturaVentaEstado.values();
         Option[] lstEstadoOp = new Option[lstEstado.length];
         
         Option o = new Option();
         for (int i = 0; i < lstEstado.length; i++) {
             //Obtenemos el estado
-            PedidoVentaEstado p = lstEstado[i];
+            FacturaVentaEstado p = lstEstado[i];
             
             //Seteamos el value y el label del option
             o.setValue(p.toString());
@@ -499,7 +500,7 @@ public class ABMPedidoCliente extends AbstractPageBean {
         }
 
         uiLstEstadoDefaultOptions.setOptions(lstEstadoOp);
-        uiLstEstadoDefaultOptions.setSelectedValue(PedidoVentaEstado.PENDIENTE.toString());
+        uiLstEstadoDefaultOptions.setSelectedValue(FacturaVentaEstado.PENDIENTE_COBRO.toString());
 
         //Cargamos a las tablas relacionadas
         cargarRelaciones();
@@ -614,7 +615,7 @@ public class ABMPedidoCliente extends AbstractPageBean {
         //Limpiamos los campos de la cabecera
         uiTxtCodCliente.setText(null);
         uiTxtNombreCliente.setText(null);
-        uiTxtNroPedido.setText(null);
+        uiTxtNroFactura.setText(null);
         uiTxtTotalIva.setText("0");
         uiTxtSubTotal.setText("0");
         uiTxtTotal.setText("0");
@@ -753,22 +754,22 @@ public class ABMPedidoCliente extends AbstractPageBean {
             cabecera = lstCabecera[rowId];
 
             //Obetenemos el detalle
-            lstDetalleLIST = cabecera.getPedidoDetalleList();
-            lstDetalle = (PedidoDetalle[]) lstDetalleLIST.toArray(new PedidoDetalle[0]);
+            lstDetalleLIST = cabecera.getFacturaDetalleList();
+            lstDetalle = (FacturaDetalle[]) lstDetalleLIST.toArray(new FacturaDetalle[0]);
 
             //Detalles a eliminar
             lstDetalleEliminar = new ArrayList();
 
             //Obetenemos los atributos de la cabecera
-            uiTxtNroPedido.setText(cabecera.getNumeroPedido());
+            uiTxtNroFactura.setText(cabecera.getNumeroFactura());
             uiTxtCodCliente.setText(cabecera.getCodCliente().getCodCliente());
             uiTxtNombreCliente.setText(cabecera.getCodCliente().getNombreCliente());
-            uiLstEstado.setSelected(cabecera.getEstadoPedido());
-            uiLstTipoComprobante.setSelected(cabecera.getTipo().getCodTipo().toString());
-            uiCalFecha.setSelectedDate(cabecera.getFechaPedido());
-            uiTxtSubTotal.setText(String.valueOf(cabecera.getSubTotal()));
-            uiTxtTotal.setText(String.valueOf(cabecera.getTotal()));
-            uiTxtTotalIva.setText(String.valueOf(cabecera.getTotalIva()));
+            uiLstEstado.setSelected(cabecera.getEstadoFactura());
+            uiLstTipoComprobante.setSelected(cabecera.getTipoFactura().getCodTipo().toString());
+            uiCalFecha.setSelectedDate(cabecera.getFechaFactura());
+            uiTxtSubTotal.setText(String.valueOf(cabecera.getSubtotalFactura()));
+            uiTxtTotal.setText(String.valueOf(cabecera.getTotalFactura()));
+            uiTxtTotalIva.setText(String.valueOf(cabecera.getTotalIvaFactura()));
         }
 
 
@@ -789,11 +790,11 @@ public class ABMPedidoCliente extends AbstractPageBean {
             int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
 
             //Elemento seleccionado
-            PedidoCabecera e = lstCabecera[rowId];
+            FacturaCabecera e = lstCabecera[rowId];
 
             //Eliminados el registro
-            PedidoCabeceraController controller = new PedidoCabeceraController();
-            ControllerResult r = controller.eliminar(e, e.getPedidoDetalleList());
+            FacturaCabeceraController controller = new FacturaCabeceraController();
+            ControllerResult r = controller.eliminar(e, e.getFacturaDetalleList());
 
             //Mensaje
             if (r.getCodRetorno() == -1) {
@@ -820,13 +821,13 @@ public class ABMPedidoCliente extends AbstractPageBean {
         //Si no hay error de validacion insertamos el registro
         if (!errorValidacion) {
             //Nuevo
-            cabecera = new PedidoCabecera();
+            cabecera = new FacturaCabecera();
 
             //Set de los artributos
             cabecera.setCodCliente(Cliente);
-            cabecera.setEstadoPedido(ModelUtil.getPedidoEstado(uiLstEstado.getSelected().toString()));
-            cabecera.setFechaPedido(uiCalFecha.getSelectedDate());
-            cabecera.setNumeroPedido(uiTxtNroPedido.getText().toString());
+            cabecera.setEstadoFactura(ModelUtil.getFacturaVentaEstado(uiLstEstado.getSelected().toString()));
+            cabecera.setFechaFactura(uiCalFecha.getSelectedDate());
+            cabecera.setNumeroFactura(Long.valueOf(uiTxtNroFactura.getText().toString()));
             //TODO: Falta Implementar el modulo de Usuarios, para tomar directamente
             //el usuario de la session
             codEmpleado = new EmpleadoController().findById(Long.valueOf("1"));
@@ -835,13 +836,13 @@ public class ABMPedidoCliente extends AbstractPageBean {
             cabecera.setMontoDescuento(Long.valueOf(uiTxtMontoDescuento.getText().toString()));
 
             //Tipo de comprobante
-            cabecera.setTipo(tipoComprobante);
-            cabecera.setTotalIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
-            cabecera.setSubTotal(Long.valueOf(uiTxtSubTotal.getText().toString()));
-            cabecera.setTotal(Long.valueOf(uiTxtTotal.getText().toString()));
+            cabecera.setTipoFactura(tipoComprobante);
+            cabecera.setTotalIvaFactura(Long.valueOf(uiTxtTotalIva.getText().toString()));
+            cabecera.setSubtotalFactura(Long.valueOf(uiTxtSubTotal.getText().toString()));
+            cabecera.setTotalFactura(Long.valueOf(uiTxtTotal.getText().toString()));
 
             //Insertamos la cebecera y del detalle
-            ControllerResult cr = new PedidoCabeceraController().crear(cabecera, lstDetalleLIST);
+            ControllerResult cr = new FacturaCabeceraController().crear(cabecera, lstDetalleLIST);
 
             //Verificamos el tipo de mensaje
             if (cr.getCodRetorno() == -1) {
@@ -874,20 +875,20 @@ public class ABMPedidoCliente extends AbstractPageBean {
         this.errorValidacion = false;
 
         //Nro. Factura
-        if (this.uiTxtNroPedido.getText() == null) {
+        if (this.uiTxtNroFactura.getText() == null) {
             info("Nro. de factura, campo obligatorio");
             this.errorValidacion = true;
         }else{
-            //Verificamos si la existe el nro de Pedido
-            if (new PedidoCabeceraController().existeNroPedido(cabecera.getNumeroPedido(), cabecera.getCodPedido())) {
-                info("Nro. de Pedido ya ha sido utilizado, ingrese otro numero de Pedido");
+            //Verificamos si la existe el nro de factura
+            if (new FacturaCabeceraController().existeNroFactura(cabecera.getNumeroFactura(), cabecera.getCodFactura())) {
+                info("Nro. de factura ya ha sido utilizado, ingrese otro numero de factura");
                 this.errorValidacion = true;
             }
         }
 
         //Cliente
         if (this.uiTxtCodCliente.getText() == null) {
-            info("Nro. de factura, campo obligatorio");
+            info("Cliente, campo obligatorio");
             this.errorValidacion = true;
         }else{
             //Validamos el codigo del Cliente ingresado
@@ -930,19 +931,19 @@ public class ABMPedidoCliente extends AbstractPageBean {
 
             //Set de los artributos
             cabecera.setCodCliente(Cliente);
-            cabecera.setEstadoPedido(ModelUtil.getPedidoEstado(uiLstEstado.getSelected().toString()));
-            cabecera.setFechaPedido(uiCalFecha.getSelectedDate());
-            cabecera.setNumeroPedido(uiTxtNroPedido.getText().toString());
+            cabecera.setEstadoFactura(ModelUtil.getFacturaVentaEstado(uiLstEstado.getSelected().toString()));
+            cabecera.setFechaFactura(uiCalFecha.getSelectedDate());
+            cabecera.setNumeroFactura(Long.valueOf(uiTxtNroFactura.getText().toString()));
             //Tipo de comprobante
-            cabecera.setTipo(tipoComprobante);
-            cabecera.setTotalIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
-            cabecera.setSubTotal(Long.valueOf(uiTxtSubTotal.getText().toString()));
-            cabecera.setTotal(Long.valueOf(uiTxtTotal.getText().toString()));
+            cabecera.setTipoFactura(tipoComprobante);
+            cabecera.setTotalIvaFactura(Long.valueOf(uiTxtTotalIva.getText().toString()));
+            cabecera.setSubtotalFactura(Long.valueOf(uiTxtSubTotal.getText().toString()));
+            cabecera.setTotalFactura(Long.valueOf(uiTxtTotal.getText().toString()));
             cabecera.setPorcDescuento(Long.valueOf(uiTxtPorcDescuento.getText().toString()));
             cabecera.setMontoDescuento(Long.valueOf(uiTxtMontoDescuento.getText().toString()));
 
             //Insertamos la cebecera y del detalle
-            ControllerResult cr = new PedidoCabeceraController().actualizar(cabecera, lstDetalleLIST, lstDetalleEliminar);
+            ControllerResult cr = new FacturaCabeceraController().actualizar(cabecera, lstDetalleLIST, lstDetalleEliminar);
 
             //Verificamos el tipo de mensaje
             if (cr.getCodRetorno() == -1) {
@@ -984,54 +985,54 @@ public class ABMPedidoCliente extends AbstractPageBean {
         //Result
         return null;
     }
-    private PedidoCabecera cabecera;
-    private PedidoCabecera[] lstCabecera;
-    private PedidoDetalle detalle;
-    private PedidoDetalle[] lstDetalle;
-    private List<PedidoDetalle> lstDetalleLIST;
-    private List<PedidoDetalle> lstDetalleEliminar;
+    private FacturaCabecera cabecera;
+    private FacturaCabecera[] lstCabecera;
+    private FacturaDetalle detalle;
+    private FacturaDetalle[] lstDetalle;
+    private List<FacturaDetalle> lstDetalleLIST;
+    private List<FacturaDetalle> lstDetalleEliminar;
     private Producto producto;
     private Cliente Cliente;
     private TipoComprobante tipoComprobante;
     Empleado codEmpleado = new Empleado();
 
-    public PedidoCabecera getCabecera() {
+    public FacturaCabecera getCabecera() {
         return cabecera;
     }
 
-    public void setCabecera(PedidoCabecera cabecera) {
+    public void setCabecera(FacturaCabecera cabecera) {
         this.cabecera = cabecera;
     }
 
-    public PedidoDetalle getDetalle() {
+    public FacturaDetalle getDetalle() {
         return detalle;
     }
 
-    public void setDetalle(PedidoDetalle detalle) {
+    public void setDetalle(FacturaDetalle detalle) {
         this.detalle = detalle;
     }
 
-    public PedidoCabecera[] getLstCabecera() {
+    public FacturaCabecera[] getLstCabecera() {
         return lstCabecera;
     }
 
-    public void setLstCabecera(PedidoCabecera[] lstCabecera) {
+    public void setLstCabecera(FacturaCabecera[] lstCabecera) {
         this.lstCabecera = lstCabecera;
     }
 
-    public PedidoDetalle[] getLstDetalle() {
+    public FacturaDetalle[] getLstDetalle() {
         return lstDetalle;
     }
 
-    public void setLstDetalle(PedidoDetalle[] lstDetalle) {
+    public void setLstDetalle(FacturaDetalle[] lstDetalle) {
         this.lstDetalle = lstDetalle;
     }
 
-    public List<PedidoDetalle> getLstDetalleLIST() {
+    public List<FacturaDetalle> getLstDetalleLIST() {
         return lstDetalleLIST;
     }
 
-    public void setLstDetalleLIST(List<PedidoDetalle> lstDetalleLIST) {
+    public void setLstDetalleLIST(List<FacturaDetalle> lstDetalleLIST) {
         this.lstDetalleLIST = lstDetalleLIST;
     }
 
@@ -1041,13 +1042,13 @@ public class ABMPedidoCliente extends AbstractPageBean {
      */
     public void buscar() {
         //Verificamos el contenido de los campos de busqueda
-        PedidoCabeceraController c = new PedidoCabeceraController();
+        FacturaCabeceraController c = new FacturaCabeceraController();
         Date pFechaFactura = null;
-        String pNroPedido = null, pCliente = null;
+        String pNroFactura = null, pCliente = null;
 
         //Nro. Pendido
         if (this.uiFilTxtNroFactura.getText() != null) {
-            pNroPedido = this.uiFilTxtNroFactura.getText().toString();
+            pNroFactura = this.uiFilTxtNroFactura.getText().toString();
         }
 
         //Cliente
@@ -1061,7 +1062,7 @@ public class ABMPedidoCliente extends AbstractPageBean {
         }
 
         //Buscamos la lista de registros
-        lstCabecera = (PedidoCabecera[]) c.getPedidoCabecera(pNroPedido, pCliente, pFechaFactura).toArray(new PedidoCabecera[0]);
+        lstCabecera = (FacturaCabecera[]) c.getFacturaCabecera(pNroFactura, pCliente, pFechaFactura).toArray(new FacturaCabecera[0]);
 
     }
 
@@ -1092,17 +1093,16 @@ public class ABMPedidoCliente extends AbstractPageBean {
 
             //Controlamos si es Nuevo Detalle
             if (itemDet == null) {
-                detalle = new PedidoDetalle();
+                detalle = new FacturaDetalle();
             }
 
             //Obtenemos los datos ingresados
             detalle.setCodProducto(producto);
-            detalle.setCantidadPedida(Long.valueOf(uiTxtCantidad.getText().toString()));
-            detalle.setCantidadEntregada(Long.valueOf(uiTxtCantidad.getText().toString()));
+            detalle.setCantidad(Long.valueOf(uiTxtCantidad.getText().toString()));
             detalle.setPrecioUnitario(Long.valueOf(uiTxtPrecioUnitario.getText().toString()));
-            detalle.setPorcIva(Double.valueOf(uiLstIva.getSelected().toString()));
-            detalle.setMontoIva(Long.valueOf(uiTxtMontoIva.getText().toString()));
-            detalle.setTotal(Long.valueOf(uiTxtMontoTotal.getText().toString()));
+            detalle.setPorcentajeIva(Double.valueOf(uiLstIva.getSelected().toString()));
+            detalle.setTotalIva(Long.valueOf(uiTxtMontoIva.getText().toString()));
+            detalle.setSubTotal(Long.valueOf(uiTxtMontoTotal.getText().toString()));
 
             //Agregamos a la lista
             if (itemDet == null) {
@@ -1110,7 +1110,7 @@ public class ABMPedidoCliente extends AbstractPageBean {
             }
 
             //Actualizamos la grilla
-            lstDetalle = (PedidoDetalle[]) lstDetalleLIST.toArray(new PedidoDetalle[0]);
+            lstDetalle = (FacturaDetalle[]) lstDetalleLIST.toArray(new FacturaDetalle[0]);
 
             //Ceramos el item seleccionado
             itemDet = null;
@@ -1214,10 +1214,10 @@ public class ABMPedidoCliente extends AbstractPageBean {
         uiTxtDescProducto.setText(detalle.getCodProducto().getDescripcion());
         uiLstUnidadMedida.setSelected(detalle.getCodProducto().getCodUnidadMedida().getCodUnidadMedida().toString());
         uiTxtPrecioUnitario.setText(detalle.getPrecioUnitario());
-        uiTxtCantidad.setText(detalle.getCantidadPedida());
-        uiLstIva.setSelected(String.valueOf(Double.valueOf(detalle.getPorcIva()).longValue()));
-        uiTxtMontoIva.setText(detalle.getMontoIva());
-        uiTxtMontoTotal.setText(detalle.getTotal());
+        uiTxtCantidad.setText(detalle.getCantidad());
+        uiLstIva.setSelected(String.valueOf(Double.valueOf(detalle.getPorcentajeIva()).longValue()));
+        uiTxtMontoIva.setText(detalle.getTotalIva());
+        uiTxtMontoTotal.setText(detalle.getSubTotal());
 
         //result
         return null;
@@ -1241,7 +1241,7 @@ public class ABMPedidoCliente extends AbstractPageBean {
         lstDetalleLIST.remove(Integer.valueOf(itemDet).intValue());
 
         //Actualizamos la grilla
-        lstDetalle = (PedidoDetalle[]) lstDetalleLIST.toArray(new PedidoDetalle[0]);
+        lstDetalle = (FacturaDetalle[]) lstDetalleLIST.toArray(new FacturaDetalle[0]);
 
         //Calculamos los totales
         calcularTotales();
@@ -1270,13 +1270,13 @@ public class ABMPedidoCliente extends AbstractPageBean {
         //Recorremos el detalle para recalcular los totales
         for (int i = 0; i < lstDetalleLIST.size(); i++) {
             //Obetenemos el detalle
-            PedidoDetalle det = lstDetalleLIST.get(i);
+            FacturaDetalle det = lstDetalleLIST.get(i);
 
             //Sumamos el monto iva
-            totalIva += det.getMontoIva();
+            totalIva += det.getTotalIva();
 
             //Sumamos el monto total
-            total += det.getTotal();
+            total += det.getSubTotal();
 
         }
 
@@ -1333,8 +1333,9 @@ public class ABMPedidoCliente extends AbstractPageBean {
         getSessionBean1().cargarListaTodosUnidadMedidas();
 
         //Cargamos la lista de tipos de comprobantes
-        getSessionBean1().cargarListaTipoComprobantePorModulo(ModuloEnum.PEDIDO_CLIENTE);
+        getSessionBean1().cargarListaTipoComprobantePorModulo(ModuloEnum.VENTA);
 
 
     }
+
 }
