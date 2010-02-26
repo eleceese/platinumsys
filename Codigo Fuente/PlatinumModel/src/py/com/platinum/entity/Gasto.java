@@ -25,7 +25,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "GASTO")
-@NamedQueries({@NamedQuery(name = "Gasto.findAll", query = "SELECT g FROM Gasto g"), @NamedQuery(name = "Gasto.findByCodGasto", query = "SELECT g FROM Gasto g WHERE g.codGasto = :codGasto"), @NamedQuery(name = "Gasto.findByDescripcionGasto", query = "SELECT g FROM Gasto g WHERE g.descripcionGasto = :descripcionGasto"), @NamedQuery(name = "Gasto.findByFechaGasto", query = "SELECT g FROM Gasto g WHERE g.fechaGasto = :fechaGasto"), @NamedQuery(name = "Gasto.findByHoraGasto", query = "SELECT g FROM Gasto g WHERE g.horaGasto = :horaGasto"), @NamedQuery(name = "Gasto.findByMontoGasto", query = "SELECT g FROM Gasto g WHERE g.montoGasto = :montoGasto"), @NamedQuery(name = "Gasto.findByUsuarioAlta", query = "SELECT g FROM Gasto g WHERE g.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "Gasto.findByUsuarioModif", query = "SELECT g FROM Gasto g WHERE g.usuarioModif = :usuarioModif"), @NamedQuery(name = "Gasto.findByFechaAlta", query = "SELECT g FROM Gasto g WHERE g.fechaAlta = :fechaAlta"), @NamedQuery(name = "Gasto.findByFechaModif", query = "SELECT g FROM Gasto g WHERE g.fechaModif = :fechaModif")})
 public class Gasto implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

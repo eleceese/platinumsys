@@ -8,12 +8,16 @@ package py.com.platinum.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -30,7 +34,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "FACTURA_CABECERA")
-@NamedQueries({@NamedQuery(name = "FacturaCabecera.findAll", query = "SELECT f FROM FacturaCabecera f"), @NamedQuery(name = "FacturaCabecera.findByCodFactura", query = "SELECT f FROM FacturaCabecera f WHERE f.codFactura = :codFactura"), @NamedQuery(name = "FacturaCabecera.findByNumeroFactura", query = "SELECT f FROM FacturaCabecera f WHERE f.numeroFactura = :numeroFactura"), @NamedQuery(name = "FacturaCabecera.findByTipoFactura", query = "SELECT f FROM FacturaCabecera f WHERE f.tipoFactura = :tipoFactura"), @NamedQuery(name = "FacturaCabecera.findByFechaFactura", query = "SELECT f FROM FacturaCabecera f WHERE f.fechaFactura = :fechaFactura"), @NamedQuery(name = "FacturaCabecera.findByHoraFactura", query = "SELECT f FROM FacturaCabecera f WHERE f.horaFactura = :horaFactura"), @NamedQuery(name = "FacturaCabecera.findBySubtotalFactura", query = "SELECT f FROM FacturaCabecera f WHERE f.subtotalFactura = :subtotalFactura"), @NamedQuery(name = "FacturaCabecera.findByTotalIvaFactura", query = "SELECT f FROM FacturaCabecera f WHERE f.totalIvaFactura = :totalIvaFactura"), @NamedQuery(name = "FacturaCabecera.findByTotalFactura", query = "SELECT f FROM FacturaCabecera f WHERE f.totalFactura = :totalFactura"), @NamedQuery(name = "FacturaCabecera.findByEstadoFactura", query = "SELECT f FROM FacturaCabecera f WHERE f.estadoFactura = :estadoFactura"), @NamedQuery(name = "FacturaCabecera.findByUsuarioAlta", query = "SELECT f FROM FacturaCabecera f WHERE f.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "FacturaCabecera.findByUsuarioModif", query = "SELECT f FROM FacturaCabecera f WHERE f.usuarioModif = :usuarioModif"), @NamedQuery(name = "FacturaCabecera.findByFechaAlta", query = "SELECT f FROM FacturaCabecera f WHERE f.fechaAlta = :fechaAlta"), @NamedQuery(name = "FacturaCabecera.findByFechaModif", query = "SELECT f FROM FacturaCabecera f WHERE f.fechaModif = :fechaModif")})
 public class FacturaCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -78,12 +81,12 @@ public class FacturaCabecera implements Serializable {
     @JoinColumn(name = "COD_PEDIDO", referencedColumnName = "COD_PEDIDO")
     @ManyToOne
     private PedidoCabecera codPedido;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codFactura")
-    private List<NotaCreditoCliCabecera> notaCreditoCliCabeceraCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codFactura")
-    private List<ReciboDetalle> reciboDetalleCollection;
-    @OneToMany(mappedBy = "codFactura")
-    private List<FacturaDetalle> facturaDetalleCollection;
+    @OneToMany(mappedBy = "codFactura", fetch=FetchType.EAGER)
+    private Set<NotaCreditoCliCabecera> notaCreditoCliCabecera;
+    @OneToMany(mappedBy = "codFactura", fetch=FetchType.EAGER)
+    private Set<ReciboDetalle> reciboDetalle;
+    @OneToMany(mappedBy = "codFactura", fetch=FetchType.EAGER)
+    private Set<FacturaDetalle> facturaDetalle;
 
     public FacturaCabecera() {
     }
@@ -228,28 +231,40 @@ public class FacturaCabecera implements Serializable {
         this.codPedido = codPedido;
     }
 
-    public List<NotaCreditoCliCabecera> getNotaCreditoCliCabeceraCollection() {
-        return notaCreditoCliCabeceraCollection;
+    public Set<NotaCreditoCliCabecera> getNotaCreditoCliCabecera() {
+        return notaCreditoCliCabecera;
     }
 
-    public void setNotaCreditoCliCabeceraCollection(List<NotaCreditoCliCabecera> notaCreditoCliCabeceraCollection) {
-        this.notaCreditoCliCabeceraCollection = notaCreditoCliCabeceraCollection;
+    public List<NotaCreditoCliCabecera> getNotaCreditoCliCabeceraList() {
+        return new ArrayList(Arrays.asList(notaCreditoCliCabecera.toArray(new NotaCreditoCliCabecera[0])));
     }
 
-    public List<ReciboDetalle> getReciboDetalleCollection() {
-        return reciboDetalleCollection;
+    public void setNotaCreditoCliCabecera(Set<NotaCreditoCliCabecera> notaCreditoCliCabecera) {
+        this.notaCreditoCliCabecera = notaCreditoCliCabecera;
     }
 
-    public void setReciboDetalleCollection(List<ReciboDetalle> reciboDetalleCollection) {
-        this.reciboDetalleCollection = reciboDetalleCollection;
+    public Set<ReciboDetalle> getReciboDetalle() {
+        return reciboDetalle;
     }
 
-    public List<FacturaDetalle> getFacturaDetalleCollection() {
-        return facturaDetalleCollection;
+    public List<ReciboDetalle> getReciboDetalleList() {
+        return new ArrayList(Arrays.asList(reciboDetalle.toArray(new ReciboDetalle[0])));
     }
 
-    public void setFacturaDetalleCollection(List<FacturaDetalle> facturaDetalleCollection) {
-        this.facturaDetalleCollection = facturaDetalleCollection;
+    public void setReciboDetalle(Set<ReciboDetalle> reciboDetalle) {
+        this.reciboDetalle = reciboDetalle;
+    }
+
+    public Set<FacturaDetalle> getFacturaDetalle() {
+        return facturaDetalle;
+    }
+
+    public List<FacturaDetalle> getFacturaDetalleList() {
+        return new ArrayList(Arrays.asList(facturaDetalle.toArray(new FacturaDetalle[0])));
+    }
+
+    public void setFacturaDetalle(Set<FacturaDetalle> facturaDetalle) {
+        this.facturaDetalle = facturaDetalle;
     }
 
     @Override
