@@ -69,6 +69,7 @@ public class NotaCreditoCliCabecera implements Serializable {
     @JoinColumn(name = "COD_FACTURA", referencedColumnName = "COD_FACTURA")
     @ManyToOne(optional = false)
     private FacturaCabecera codFactura;
+    
     @OneToMany(mappedBy = "codNotaCreditoCliente")
     private List<ReciboDetalle> reciboDetalleCollection;
 
