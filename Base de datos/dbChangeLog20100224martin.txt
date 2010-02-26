@@ -27,4 +27,6 @@ alter table pedido_cabecera modify ESTADO_PEDIDO varchar2(15);
 
 --PEDIDO_DETALLE eliminamos este constraint
 alter table PEDIDO_DETALLE
-  drop constraint PRODUCTO_PEDIDO_UK cascade
+  drop constraint PRODUCTO_PEDIDO_UK cascade;
+
+drop index PRODUCTO_PEDIDO_UK;
