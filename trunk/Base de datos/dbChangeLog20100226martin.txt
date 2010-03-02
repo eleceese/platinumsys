@@ -18,4 +18,4 @@ alter table factura_detalle modify PORCENTAJE_IVA number(5,2);
 
 --Modificamos el estado del pedido
 alter table factura_cabecera modify ESTADO_FACTURA varchar2(15);
-
+alter table pedido_cabecera drop column numero_pedido;

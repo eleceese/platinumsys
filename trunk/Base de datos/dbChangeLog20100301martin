@@ -1,0 +1,3 @@
+--Agregar establecimiento y boca de expendio
+alter table factura_cabecera add establecimiento varchar2(3) default '001'  not null;
+alter table factura_cabecera add boca_expendio varchar2(3) default '001'  not null;
