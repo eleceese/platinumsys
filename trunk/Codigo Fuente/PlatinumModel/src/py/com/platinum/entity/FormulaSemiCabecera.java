@@ -39,7 +39,7 @@ import javax.persistence.TemporalType;
 @Entity
 @SequenceGenerator(name = "FORMULA_SEMI_CABECERA_SEQUENCE", sequenceName = "SQ_FORMULA_SEMI_CABECERA", initialValue = 1, allocationSize = 1)
 @Table(name = "FORMULA_SEMI_CABECERA")
-@NamedQueries({@NamedQuery(name = "FormulaSemiCabecera.findAll", query = "SELECT f FROM FormulaSemiCabecera f")})
+//@NamedQueries({@NamedQuery(name = "FormulaSemiCabecera.findAll", query = "SELECT f FROM FormulaSemiCabecera f")})
 public class FormulaSemiCabecera implements Serializable {
 
     private static final long serialVersionUID = 1L;

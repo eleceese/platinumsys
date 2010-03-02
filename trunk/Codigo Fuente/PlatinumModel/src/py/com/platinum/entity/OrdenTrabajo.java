@@ -7,18 +7,25 @@ package py.com.platinum.entity;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,9 +35,11 @@ import javax.persistence.TemporalType;
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="OT_SEQUENCE", sequenceName="SQ_CABECERA_ORDEN_TRABAJO", initialValue=1000, allocationSize=1)
 @Table(name = "ORDEN_TRABAJO")
 @NamedQueries({@NamedQuery(name = "OrdenTrabajo.findAll", query = "SELECT o FROM OrdenTrabajo o"), @NamedQuery(name = "OrdenTrabajo.findByNumeroOrdenTrabajo", query = "SELECT o FROM OrdenTrabajo o WHERE o.numeroOrdenTrabajo = :numeroOrdenTrabajo"), @NamedQuery(name = "OrdenTrabajo.findByFechaOt", query = "SELECT o FROM OrdenTrabajo o WHERE o.fechaOt = :fechaOt"), @NamedQuery(name = "OrdenTrabajo.findByFechaInicialOt", query = "SELECT o FROM OrdenTrabajo o WHERE o.fechaInicialOt = :fechaInicialOt"), @NamedQuery(name = "OrdenTrabajo.findByFechaFinOt", query = "SELECT o FROM OrdenTrabajo o WHERE o.fechaFinOt = :fechaFinOt"), @NamedQuery(name = "OrdenTrabajo.findByCantidadOt", query = "SELECT o FROM OrdenTrabajo o WHERE o.cantidadOt = :cantidadOt"), @NamedQuery(name = "OrdenTrabajo.findByCantidadProducidaOt", query = "SELECT o FROM OrdenTrabajo o WHERE o.cantidadProducidaOt = :cantidadProducidaOt"), @NamedQuery(name = "OrdenTrabajo.findByEstadoOt", query = "SELECT o FROM OrdenTrabajo o WHERE o.estadoOt = :estadoOt"), @NamedQuery(name = "OrdenTrabajo.findByCostoEstimadoOt", query = "SELECT o FROM OrdenTrabajo o WHERE o.costoEstimadoOt = :costoEstimadoOt"), @NamedQuery(name = "OrdenTrabajo.findByCostoRealOt", query = "SELECT o FROM OrdenTrabajo o WHERE o.costoRealOt = :costoRealOt"), @NamedQuery(name = "OrdenTrabajo.findByPorcentajeTerminado", query = "SELECT o FROM OrdenTrabajo o WHERE o.porcentajeTerminado = :porcentajeTerminado"), @NamedQuery(name = "OrdenTrabajo.findByCodOrdenTrabjo", query = "SELECT o FROM OrdenTrabajo o WHERE o.codOrdenTrabjo = :codOrdenTrabjo"), @NamedQuery(name = "OrdenTrabajo.findByUsuarioAlta", query = "SELECT o FROM OrdenTrabajo o WHERE o.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "OrdenTrabajo.findByUsuarioModif", query = "SELECT o FROM OrdenTrabajo o WHERE o.usuarioModif = :usuarioModif"), @NamedQuery(name = "OrdenTrabajo.findByFechaAlta", query = "SELECT o FROM OrdenTrabajo o WHERE o.fechaAlta = :fechaAlta"), @NamedQuery(name = "OrdenTrabajo.findByFechaModif", query = "SELECT o FROM OrdenTrabajo o WHERE o.fechaModif = :fechaModif")})
 public class OrdenTrabajo implements Serializable {
+    
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @Column(name = "NUMERO_ORDEN_TRABAJO")
@@ -41,6 +50,9 @@ public class OrdenTrabajo implements Serializable {
     @Column(name = "FECHA_INICIAL_OT")
     @Temporal(TemporalType.DATE)
     private Date fechaInicialOt;
+    @Basic(optional = false)
+    @Column(name = "DESCRIPCION")
+    private String descripcion;
     @Column(name = "FECHA_FIN_OT")
     @Temporal(TemporalType.DATE)
     private Date fechaFinOt;
@@ -50,7 +62,7 @@ public class OrdenTrabajo implements Serializable {
     @Column(name = "CANTIDAD_PRODUCIDA_OT")
     private BigInteger cantidadProducidaOt;
     @Column(name = "ESTADO_OT")
-    private BigInteger estadoOt;
+    private String estadoOt;
     @Column(name = "COSTO_ESTIMADO_OT")
     private BigInteger costoEstimadoOt;
     @Column(name = "COSTO_REAL_OT")
@@ -58,6 +70,7 @@ public class OrdenTrabajo implements Serializable {
     @Column(name = "PORCENTAJE_TERMINADO")
     private Long porcentajeTerminado;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="OT_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_ORDEN_TRABJO")
     private Long codOrdenTrabjo;
@@ -71,10 +84,10 @@ public class OrdenTrabajo implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codOrdenTrabajo")
-    private List<OrdenTrabajoDetalle> ordenTrabajoDetalleCollection;
-    @OneToMany(mappedBy = "codOrdenTrabajo")
-    private List<CostosFijos> costosFijosCollection;
+    @OneToMany(mappedBy = "codOrdenTrabajo", fetch=FetchType.EAGER)
+    private Set<OrdenTrabajoDetalle> ordenTrabajoDetalleCollection;
+    @OneToMany(mappedBy = "codOrdenTrabajo", fetch=FetchType.EAGER)
+    private Set<CostosFijos> costosFijosCollection;
     @JoinColumn(name = "COD_EMPLEADO1", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(optional = false)
     private Empleado codEmpleado1;
@@ -85,9 +98,18 @@ public class OrdenTrabajo implements Serializable {
     @ManyToOne(optional = false)
     private Producto codProductoOt;
 
+
     public OrdenTrabajo() {
     }
 
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
     public OrdenTrabajo(Long codOrdenTrabjo) {
         this.codOrdenTrabjo = codOrdenTrabjo;
     }
@@ -146,11 +168,11 @@ public class OrdenTrabajo implements Serializable {
         this.cantidadProducidaOt = cantidadProducidaOt;
     }
 
-    public BigInteger getEstadoOt() {
+    public String getEstadoOt() {
         return estadoOt;
     }
 
-    public void setEstadoOt(BigInteger estadoOt) {
+    public void setEstadoOt(String estadoOt) {
         this.estadoOt = estadoOt;
     }
 
@@ -218,19 +240,29 @@ public class OrdenTrabajo implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public List<OrdenTrabajoDetalle> getOrdenTrabajoDetalleCollection() {
+    public Set<OrdenTrabajoDetalle> getOrdenTrabajoDetalleCollection() {
         return ordenTrabajoDetalleCollection;
     }
 
-    public void setOrdenTrabajoDetalleCollection(List<OrdenTrabajoDetalle> ordenTrabajoDetalleCollection) {
+    public List<OrdenTrabajoDetalle> getOrdenTrabajoDetalleListList() {
+        return new ArrayList(Arrays.asList(ordenTrabajoDetalleCollection.toArray(new OrdenTrabajoDetalle[0])));
+
+    }
+
+    public void setOrdenTrabajoDetalleCollection(Set<OrdenTrabajoDetalle> ordenTrabajoDetalleCollection) {
         this.ordenTrabajoDetalleCollection = ordenTrabajoDetalleCollection;
     }
 
-    public List<CostosFijos> getCostosFijosCollection() {
+    public Set<CostosFijos> getCostosFijosCollection() {
         return costosFijosCollection;
     }
 
-    public void setCostosFijosCollection(List<CostosFijos> costosFijosCollection) {
+    public List<CostosFijos> getCostosFijosListList() {
+        return new ArrayList(Arrays.asList(costosFijosCollection.toArray(new CostosFijos[0])));
+
+    }
+
+    public void setCostosFijosCollection(Set<CostosFijos> costosFijosCollection) {
         this.costosFijosCollection = costosFijosCollection;
     }
 
@@ -280,7 +312,7 @@ public class OrdenTrabajo implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.OrdenTrabajo[codOrdenTrabjo=" + codOrdenTrabjo + "]";
+        return codOrdenTrabjo.toString();
     }
 
 }

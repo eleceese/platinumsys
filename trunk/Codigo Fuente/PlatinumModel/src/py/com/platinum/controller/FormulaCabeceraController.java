@@ -249,4 +249,21 @@ public class FormulaCabeceraController extends AbstractJpaDao <FormulaCabecera> 
 
 
 
+public static void main (String[] v) {
+        FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
+        FormulaCabecera formulaCabecera = formulaCabeceraController.findById(Long.valueOf("1029"));
+
+
+
+        System.out.println(formulaCabecera.getFormulaDetalleCollection().size());
+    for (int i = 0; i < formulaCabecera.getFormulaDetalleCollection().size(); i++) {
+            FormulaDetalle formulaDetalle = formulaCabecera.getFormulaDetalleCollection().get(i);
+            System.out.println(formulaDetalle.getCodFormulaDetalle().toString()+" "+formulaDetalle.getCodFormulaSemiCabecera().getCodFormulaSemiCabecera().toString());
+    }
+
+
+};
+
+
+
 }
