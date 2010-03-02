@@ -6,35 +6,45 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
+import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
  *
- * @author Martin
+ * @author FerBoy
  */
 @Entity
-@Table(name = "EXISTENCIA")
-@NamedQueries({@NamedQuery(name = "Existencia.findAll", query = "SELECT e FROM Existencia e"), @NamedQuery(name = "Existencia.findByCodExistencia", query = "SELECT e FROM Existencia e WHERE e.existenciaPK.codExistencia = :codExistencia"), @NamedQuery(name = "Existencia.findByCodDeposito", query = "SELECT e FROM Existencia e WHERE e.existenciaPK.codDeposito = :codDeposito"), @NamedQuery(name = "Existencia.findByCantidadExistencia", query = "SELECT e FROM Existencia e WHERE e.cantidadExistencia = :cantidadExistencia"), @NamedQuery(name = "Existencia.findByUsuarioAlta", query = "SELECT e FROM Existencia e WHERE e.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "Existencia.findByUsuarioModif", query = "SELECT e FROM Existencia e WHERE e.usuarioModif = :usuarioModif"), @NamedQuery(name = "Existencia.findByFechaAlta", query = "SELECT e FROM Existencia e WHERE e.fechaAlta = :fechaAlta"), @NamedQuery(name = "Existencia.findByFechaModif", query = "SELECT e FROM Existencia e WHERE e.fechaModif = :fechaModif")})
+@SequenceGenerator(name = "SEQ_EXISTENCIA", sequenceName = "SQ_EXISTENCIA", initialValue = 1, allocationSize = 1)
+@Table(name = "EXISTENCIA", catalog = "", schema = "PLATINUM")
+@NamedQueries({@NamedQuery(name = "Existencia.findAll", query = "SELECT e FROM Existencia e"), @NamedQuery(name = "Existencia.findByCodExistencia", query = "SELECT e FROM Existencia e WHERE e.codExistencia = :codExistencia"), @NamedQuery(name = "Existencia.findByCantidadExistencia", query = "SELECT e FROM Existencia e WHERE e.cantidadExistencia = :cantidadExistencia"), @NamedQuery(name = "Existencia.findByUsuarioAlta", query = "SELECT e FROM Existencia e WHERE e.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "Existencia.findByUsuarioModif", query = "SELECT e FROM Existencia e WHERE e.usuarioModif = :usuarioModif"), @NamedQuery(name = "Existencia.findByFechaAlta", query = "SELECT e FROM Existencia e WHERE e.fechaAlta = :fechaAlta"), @NamedQuery(name = "Existencia.findByFechaModif", query = "SELECT e FROM Existencia e WHERE e.fechaModif = :fechaModif")})
 public class Existencia implements Serializable {
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected ExistenciaPK existenciaPK;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_EXISTENCIA")
+    @Basic(optional = false)
+    @Column(name = "COD_EXISTENCIA", nullable = false, precision = 22)
+    private Long codExistencia;
     @Column(name = "CANTIDAD_EXISTENCIA")
     private BigInteger cantidadExistencia;
-    @Column(name = "USUARIO_ALTA")
+    @Column(name = "USUARIO_ALTA", length = 15)
     private String usuarioAlta;
-    @Column(name = "USUARIO_MODIF")
+    @Column(name = "USUARIO_MODIF", length = 15)
     private String usuarioModif;
     @Column(name = "FECHA_ALTA")
     @Temporal(TemporalType.DATE)
@@ -42,30 +52,26 @@ public class Existencia implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @JoinColumn(name = "COD_DEPOSITO", referencedColumnName = "COD_DEPOSITO", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Deposito deposito;
-    @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
-    @ManyToOne(optional = false)
+    @JoinColumn(name = "COD_DEPOSITO", referencedColumnName = "COD_DEPOSITO", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private Deposito codDeposito;
+    @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Producto codProducto;
 
     public Existencia() {
     }
 
-    public Existencia(ExistenciaPK existenciaPK) {
-        this.existenciaPK = existenciaPK;
+    public Existencia(Long codExistencia) {
+        this.codExistencia = codExistencia;
     }
 
-    public Existencia(BigInteger codExistencia, BigInteger codDeposito) {
-        this.existenciaPK = new ExistenciaPK(codExistencia, codDeposito);
+    public Long getCodExistencia() {
+        return codExistencia;
     }
 
-    public ExistenciaPK getExistenciaPK() {
-        return existenciaPK;
-    }
-
-    public void setExistenciaPK(ExistenciaPK existenciaPK) {
-        this.existenciaPK = existenciaPK;
+    public void setCodExistencia(Long codExistencia) {
+        this.codExistencia = codExistencia;
     }
 
     public BigInteger getCantidadExistencia() {
@@ -108,12 +114,12 @@ public class Existencia implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public Deposito getDeposito() {
-        return deposito;
+    public Deposito getCodDeposito() {
+        return codDeposito;
     }
 
-    public void setDeposito(Deposito deposito) {
-        this.deposito = deposito;
+    public void setCodDeposito(Deposito codDeposito) {
+        this.codDeposito = codDeposito;
     }
 
     public Producto getCodProducto() {
@@ -127,7 +133,7 @@ public class Existencia implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (existenciaPK != null ? existenciaPK.hashCode() : 0);
+        hash += (codExistencia != null ? codExistencia.hashCode() : 0);
         return hash;
     }
 
@@ -138,7 +144,7 @@ public class Existencia implements Serializable {
             return false;
         }
         Existencia other = (Existencia) object;
-        if ((this.existenciaPK == null && other.existenciaPK != null) || (this.existenciaPK != null && !this.existenciaPK.equals(other.existenciaPK))) {
+        if ((this.codExistencia == null && other.codExistencia != null) || (this.codExistencia != null && !this.codExistencia.equals(other.codExistencia))) {
             return false;
         }
         return true;
@@ -146,7 +152,7 @@ public class Existencia implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.Existencia[existenciaPK=" + existenciaPK + "]";
+        return "py.com.platinum.entity.Existencia[codExistencia=" + codExistencia + "]";
     }
 
 }
