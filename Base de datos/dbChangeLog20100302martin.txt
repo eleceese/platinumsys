@@ -1,0 +1,41 @@
+--Relacionamos factura detalle con pedido detalle
+alter table factura_detalle add cod_pedido_detalle number;
+
+alter table factura_detalle 
+   add constraints fk_factura_pedido_det foreign key (cod_pedido_detalle)
+       references pedido_detalle(cod_pedido_detalle);
+
+
+
+	   
+-- Eliminamos constraint en la table SALDO_CLIENTE
+alter table SALDO_CLIENTE
+  drop constraint SALDO_CLIENTE_DOCUMENTO_UK cascade;
+
+drop index SALDO_CLIENTE_DOCUMENTO_UK;
+
+--Eliminamos la columna numero de documento
+alter table saldo_cliente drop column numero_documento;
+
+--Renombramos la columna saldo_cliente a saldo
+alter table SALDO_CLIENTE rename column SALDO_CLIENTE to SALDO;
+
+--Eliminamos Tipo_documento
+alter table saldo_cliente drop column tipo_documento;
+
+--Agregamos tipo y numero de comprobante
+alter table saldo_cliente add tipo_comprobante number(10);
+alter table saldo_cliente add nro_comprobante number;
+
+--Recreamos la sequencia para la tabla saldo_cliente
+drop sequence "sq_saldo_cliente";
+
+-- Create sequence 
+create sequence SQ_SALDO_CLIENTE;
+ 
+--Agregamos fecha de comprobante y vencimiento a la tabla saldo cliente
+alter table saldo_cliente add fecha_comprobante date;
+alter table saldo_cliente add fecha_vencimiento date;
+
+--Agregamos fecha vencimiento a la tabla Factura Venta
+alter table factura_cabecera add fecha_vencimiento date;
