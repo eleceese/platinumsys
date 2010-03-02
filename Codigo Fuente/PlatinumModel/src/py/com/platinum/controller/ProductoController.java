@@ -4,10 +4,16 @@
  */
 package py.com.platinum.controller;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
+import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Deposito;
+import py.com.platinum.entity.Existencia;
 import py.com.platinum.entity.Producto;
 
 /**
@@ -145,6 +151,91 @@ public class ProductoController extends AbstractJpaDao <Producto> {
 //        System.out.println(producto.getDescripcion());
 //        productoController.delete(producto);
 //        };
+
+    @Override
+     public ControllerResult create(Producto p) throws RuntimeException {
+        ControllerResult r = new ControllerResult();
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+
+        try {
+            
+            tx.begin();
+            em.persist(p);
+
+            //// INSERCION DE LAS EXISTENCIAS
+            DepositoController depositoController = new DepositoController();
+            ExistenciaController existenciaController = new ExistenciaController();
+
+
+                List<Deposito> listaDepositos = depositoController.getAll("nombre");
+                Producto producto = p;
+                for (int i = 0; i < listaDepositos.size(); i++) {
+                    Existencia existencia = new Existencia();
+                    Deposito deposito = listaDepositos.get(i);
+                    existencia.setCodProducto(producto);
+                    existencia.setCantidadExistencia(BigInteger.valueOf(Long.valueOf("0")));
+                    existencia.setCodDeposito(deposito);
+                    em.persist(existencia);
+                }
+            
+
+            /// FIN DE INSERCION DE EXISTENCIAS
+            tx.commit();
+            r.setCodRetorno(0);
+            r.setMsg("Se creo correctamente el registro");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            r.setCodRetorno(-1);
+            r.setMsg("Ha ocurrido un error al insertar el Producto");
+            try {
+                tx.rollback();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            em.close();
+            return r;
+        }
+    
+  }
+
+    @Override
+     public ControllerResult delete(Producto p) {
+        ControllerResult r = new ControllerResult();
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            /// ELIMINAMOS LAS EXISTENCIAS DEL PRODUCTO
+            ExistenciaController existenciaController = new ExistenciaController();
+            List<Existencia> existenciaList = existenciaController.getAllFiltered(null, p.getCodProducto());
+            for (int i = 0; i < existenciaList.size(); i++) {
+                Existencia existencia = new Existencia();
+                existencia = existenciaList.get(i);
+                em.remove(em.merge(existencia));
+            }
+            Producto producto = p;
+
+            em.remove(em.merge(producto));
+            em.getTransaction().commit();
+            r.setCodRetorno(0);
+            r.setMsg("Registro eliminado correctamente");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            r.setCodRetorno(-1);
+            r.setMsg("Error en la eliminacion del Registro");
+            try {
+                em.getTransaction().rollback();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            em.close();
+            return r;
+        }
+    }
 
 
 

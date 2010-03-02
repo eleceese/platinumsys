@@ -6,18 +6,26 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,11 +35,12 @@ import javax.persistence.TemporalType;
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="OT_DET_SEQUENCE", sequenceName="SQ_OT_DETALLE", initialValue=1000, allocationSize=1)
 @Table(name = "ORDEN_TRABAJO_DETALLE")
-@NamedQueries({@NamedQuery(name = "OrdenTrabajoDetalle.findAll", query = "SELECT o FROM OrdenTrabajoDetalle o"), @NamedQuery(name = "OrdenTrabajoDetalle.findByCodOrdenTrabajoDet", query = "SELECT o FROM OrdenTrabajoDetalle o WHERE o.codOrdenTrabajoDet = :codOrdenTrabajoDet"), @NamedQuery(name = "OrdenTrabajoDetalle.findByCantidad", query = "SELECT o FROM OrdenTrabajoDetalle o WHERE o.cantidad = :cantidad"), @NamedQuery(name = "OrdenTrabajoDetalle.findByCantidadReal", query = "SELECT o FROM OrdenTrabajoDetalle o WHERE o.cantidadReal = :cantidadReal"), @NamedQuery(name = "OrdenTrabajoDetalle.findByCostoEstimado", query = "SELECT o FROM OrdenTrabajoDetalle o WHERE o.costoEstimado = :costoEstimado"), @NamedQuery(name = "OrdenTrabajoDetalle.findByCostoReal", query = "SELECT o FROM OrdenTrabajoDetalle o WHERE o.costoReal = :costoReal"), @NamedQuery(name = "OrdenTrabajoDetalle.findByObservacion", query = "SELECT o FROM OrdenTrabajoDetalle o WHERE o.observacion = :observacion"), @NamedQuery(name = "OrdenTrabajoDetalle.findByEstado", query = "SELECT o FROM OrdenTrabajoDetalle o WHERE o.estado = :estado"), @NamedQuery(name = "OrdenTrabajoDetalle.findByUsuarioAlta", query = "SELECT o FROM OrdenTrabajoDetalle o WHERE o.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "OrdenTrabajoDetalle.findByUsuarioModif", query = "SELECT o FROM OrdenTrabajoDetalle o WHERE o.usuarioModif = :usuarioModif"), @NamedQuery(name = "OrdenTrabajoDetalle.findByFechaAlta", query = "SELECT o FROM OrdenTrabajoDetalle o WHERE o.fechaAlta = :fechaAlta"), @NamedQuery(name = "OrdenTrabajoDetalle.findByFechaModif", query = "SELECT o FROM OrdenTrabajoDetalle o WHERE o.fechaModif = :fechaModif")})
 public class OrdenTrabajoDetalle implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="OT_DET_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_ORDEN_TRABAJO_DET")
     private Long codOrdenTrabajoDet;
@@ -67,10 +76,10 @@ public class OrdenTrabajoDetalle implements Serializable {
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
     @ManyToOne
     private Producto codProducto;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codOrdenTrabDet")
-    private List<RecursoAsignado> recursoAsignadoCollection;
-    @OneToMany(mappedBy = "codDetOrdenTrabaj")
-    private List<TareaAsignada> tareaAsignadaCollection;
+    @OneToMany(mappedBy = "codOrdenTrabDet",fetch=FetchType.EAGER)
+    private Set<RecursoAsignado> recursoAsignadoCollection;
+    @OneToMany(mappedBy = "codDetOrdenTrabaj",fetch=FetchType.EAGER)
+    private Set<TareaAsignada> tareaAsignadaCollection;
 
     public OrdenTrabajoDetalle() {
     }
@@ -196,20 +205,45 @@ public class OrdenTrabajoDetalle implements Serializable {
         this.codProducto = codProducto;
     }
 
-    public List<RecursoAsignado> getRecursoAsignadoCollection() {
+    public Set<RecursoAsignado> getRecursoAsignadoCollection() {
         return recursoAsignadoCollection;
     }
 
-    public void setRecursoAsignadoCollection(List<RecursoAsignado> recursoAsignadoCollection) {
+    public List<RecursoAsignado> getRecursoAsignadoListList() {
+
+       return new ArrayList(Arrays.asList(recursoAsignadoCollection.toArray(new RecursoAsignado[0])));
+
+    }
+
+    public void setRecursoAsignadoCollection(Set<RecursoAsignado> recursoAsignadoCollection) {
         this.recursoAsignadoCollection = recursoAsignadoCollection;
     }
 
-    public List<TareaAsignada> getTareaAsignadaCollection() {
+    public void setRecursoAsignadoCollectionFromList(List<RecursoAsignado> recursoAsignadoList) {
+        
+        this.recursoAsignadoCollection = new HashSet(recursoAsignadoList);
+        
+        
+    }
+
+
+
+
+    public Set<TareaAsignada> getTareaAsignadaCollection() {
         return tareaAsignadaCollection;
     }
 
-    public void setTareaAsignadaCollection(List<TareaAsignada> tareaAsignadaCollection) {
+    public List<TareaAsignada> getTareaAsignadaListList() {
+       return new ArrayList(Arrays.asList(tareaAsignadaCollection.toArray(new TareaAsignada[0])));
+}
+
+    public void setTareaAsignadaCollection(Set<TareaAsignada> tareaAsignadaCollection) {
         this.tareaAsignadaCollection = tareaAsignadaCollection;
+    }
+
+
+    public void setTareaAsignadaCollectionFromList(List<TareaAsignada> tareaAsignadaList) {
+        this.tareaAsignadaCollection = new HashSet<TareaAsignada>(tareaAsignadaList);
     }
 
     @Override

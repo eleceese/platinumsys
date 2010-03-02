@@ -9,10 +9,12 @@ import java.io.Serializable;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -54,12 +56,15 @@ public class Deposito implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codDeposito")
-    private List<EntradaSalidaCabecera> entradaSalidaCabeceraCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codDeposito")
-    private List<InventarioCabecera> inventarioCabeceraCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codDeposito")
-    private List<Existencia> existenciaCollection;
+    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "codDeposito")
+    @OneToMany(mappedBy = "codDeposito", fetch=FetchType.EAGER)
+    private Set<EntradaSalidaCabecera> entradaSalidaCabeceraCollection;
+    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "codDeposito")
+    @OneToMany(mappedBy = "codDeposito", fetch=FetchType.EAGER)
+    private Set<InventarioCabecera> inventarioCabeceraCollection;
+    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "deposito")
+    @OneToMany(mappedBy = "codDeposito", fetch=FetchType.EAGER)
+    private Set<Existencia> existenciaCollection;
 
     public Deposito() {
     }
@@ -129,27 +134,27 @@ public class Deposito implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public List<EntradaSalidaCabecera> getEntradaSalidaCabeceraCollection() {
+    public Set<EntradaSalidaCabecera> getEntradaSalidaCabeceraCollection() {
         return entradaSalidaCabeceraCollection;
     }
 
-    public void setEntradaSalidaCabeceraCollection(List<EntradaSalidaCabecera> entradaSalidaCabeceraCollection) {
+    public void setEntradaSalidaCabeceraCollection(Set<EntradaSalidaCabecera> entradaSalidaCabeceraCollection) {
         this.entradaSalidaCabeceraCollection = entradaSalidaCabeceraCollection;
     }
 
-    public List<InventarioCabecera> getInventarioCabeceraCollection() {
+    public Set<InventarioCabecera> getInventarioCabeceraCollection() {
         return inventarioCabeceraCollection;
     }
 
-    public void setInventarioCabeceraCollection(List<InventarioCabecera> inventarioCabeceraCollection) {
+    public void setInventarioCabeceraCollection(Set<InventarioCabecera> inventarioCabeceraCollection) {
         this.inventarioCabeceraCollection = inventarioCabeceraCollection;
     }
 
-    public List<Existencia> getExistenciaCollection() {
+    public Set<Existencia> getExistenciaCollection() {
         return existenciaCollection;
     }
 
-    public void setExistenciaCollection(List<Existencia> existenciaCollection) {
+    public void setExistenciaCollection(Set<Existencia> existenciaCollection) {
         this.existenciaCollection = existenciaCollection;
     }
 

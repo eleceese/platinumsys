@@ -308,4 +308,23 @@ public ControllerResult updateCabDet(FormulaSemiCabecera cab, FormulaSemiDetalle
             return r;
         }
     }
+
+
+public static void main (String[] v) {
+        FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
+        FormulaSemiCabecera formulaSemiCabecera = formulaSemiCabeceraController.findById(Long.valueOf("1018"));
+
+
+
+        System.out.println(formulaSemiCabecera.getFormulaSemiDetalleListList().size());
+    for (int i = 0; i < formulaSemiCabecera.getFormulaSemiDetalleListList().size(); i++) {
+            FormulaSemiDetalle formulaSemiDetalle = formulaSemiCabecera.getFormulaSemiDetalleListList().get(i);
+            System.out.println(formulaSemiDetalle.getCodFormulaSemiDetalle().toString());
+    }
+
+
+};
+
+
+
 }

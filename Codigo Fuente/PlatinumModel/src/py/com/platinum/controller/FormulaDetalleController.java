@@ -86,13 +86,36 @@ public class FormulaDetalleController extends AbstractJpaDao <FormulaDetalle> {
 
       }
 
+    public List<FormulaDetalle> getAllFilteredByCabecera(Long codFormula) {
+        //emf.createEntityManager Levanta el contexto del JPA
+        String SQL = "SELECT o FROM FormulaDetalle o WHERE o.codFormula.codFormula = :codFormula";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        q.setParameter("codFormula", codFormula);
+        List<FormulaDetalle> entities = q.getResultList();
+        em.close();
+
+        return entities;
+
+      }
+
+
 public static void main (String[] v) {
         FormulaDetalleController formulaDetalleController = new FormulaDetalleController();
         FormulaDetalle formulaDetalle = new FormulaDetalle();
-        formulaDetalle = formulaDetalleController.findById(Long.valueOf("10"));
-        System.out.println(formulaDetalle.getCodProducto());
-        formulaDetalleController.delete(formulaDetalle);
-        };
+        List<FormulaDetalle> formulaDetalleList = formulaDetalleController.getAllFilteredByCabecera(Long.valueOf("1029"));
+
+        System.out.println(formulaDetalleList.size());
+        for (int i = 0; i < formulaDetalleList.size(); i++) {
+            FormulaDetalle formulaDetalle1 = formulaDetalleList.get(i);
+        
+            System.out.println(formulaDetalle1.getCodFormulaDetalle());
+        }
+        
+
+  };
 
 
 public ControllerResult eliminar(FormulaDetalle entity) {
