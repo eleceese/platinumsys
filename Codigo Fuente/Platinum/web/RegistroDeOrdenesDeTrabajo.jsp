@@ -24,33 +24,33 @@
                             <webuijsf:pageAlert binding="#{RegistroDeOrdenesDeTrabajo.pageAlert1}" id="pageAlert1" rendered="false"/>
                             <h:panelGrid binding="#{RegistroDeOrdenesDeTrabajo.gridPanelBuscar}" id="gridPanelBuscar" style="height: 100%; width: 100%">
                                 <h:panelGrid columns="2" id="gridPanelFiltros" style="height: 96px" width="647">
+                                    <h:panelGrid columns="2" id="gridPanelNum" style="height:30px; width: 100%">
+                                        <webuijsf:label id="label2" text="Num OT"/>
+                                        <h:panelGrid columns="2" id="gridPanelResponsable" style="height: 30px; text-align: left" width="311">
+                                            <webuijsf:textField binding="#{RegistroDeOrdenesDeTrabajo.uiNumOtFil}" columns="40" id="uiNumOtFil" valueChangeListenerExpression="#{RegistroDeOrdenesDeTrabajo.uiNumOtFil_processValueChange}"/>
+                                        </h:panelGrid>
+                                    </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanelProducto" width="359">
-                                        <webuijsf:hyperlink id="linkProducto" style="width: 85px" text="Producto"/>
-                                        <webuijsf:dropDown binding="#{RegistroDeOrdenesDeTrabajo.dropDown1}" id="dropDown1"
+                                        <webuijsf:label id="label3" text="Producto"/>
+                                        <webuijsf:dropDown binding="#{RegistroDeOrdenesDeTrabajo.uiProductoFil}" id="uiProductoFil"
                                             items="#{SessionBean1.listaProductosOp}" width="270"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanelEstado" style="height: 30px" width="239">
                                         <webuijsf:label id="labelEstado" text="Estado OT"/>
-                                        <webuijsf:dropDown id="uiEstadoFIl" items="#{RegistroDeOrdenesDeTrabajo.uiEstadoFIlDefaultOptions.options}" width="150px"/>
+                                        <webuijsf:dropDown binding="#{RegistroDeOrdenesDeTrabajo.uiEstadoFIl}" id="uiEstadoFIl"
+                                            items="#{RegistroDeOrdenesDeTrabajo.uiEstadoFIlDefaultOptions.options}" width="150px"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanelVacio" style="vertical-align: top" width="431">
                                         <webuijsf:label id="label1" style="background-position: top; vertical-align: top" text="Rango de Fecha Apertura"/>
                                         <h:panelGrid columns="1" id="gridPanelVacio1" style="height: 30px; width: 60%">
                                             <h:panelGrid columns="2" id="gridPanelFecha2" style="height: 30px; text-align: left; width: 100%">
                                                 <webuijsf:label id="fechaApertura1" style="width: 10px" text="Desde"/>
-                                                <webuijsf:calendar columns="40" id="uiFechaDesdeFil"/>
+                                                <webuijsf:calendar binding="#{RegistroDeOrdenesDeTrabajo.uiFechaDesdeFil}" columns="40" id="uiFechaDesdeFil"/>
                                             </h:panelGrid>
                                             <h:panelGrid columns="2" id="gridPanelFecha1" style="height: 30px; text-align: left; width: 100%">
                                                 <webuijsf:label id="inicio" style="width: 10px" text="Hasta"/>
-                                                <webuijsf:calendar columns="40" id="uiFechaHastaFil"/>
+                                                <webuijsf:calendar binding="#{RegistroDeOrdenesDeTrabajo.uiFechaHastaFil}" columns="40" id="uiFechaHastaFil"/>
                                             </h:panelGrid>
-                                        </h:panelGrid>
-                                    </h:panelGrid>
-                                    <h:panelGrid columns="2" id="gridPanelResponsable1" style="height:30px; width: 100%">
-                                        <webuijsf:hyperlink id="linkResponsable" style="width: 85px" text="Responsable"/>
-                                        <h:panelGrid columns="2" id="gridPanelResponsable" style="height: 30px; text-align: left" width="311">
-                                            <webuijsf:textField columns="7" id="textField2" valueChangeListenerExpression="#{RegistroDeOrdenesDeTrabajo.textField1_processValueChange}"/>
-                                            <webuijsf:textField columns="40" id="textField1" valueChangeListenerExpression="#{RegistroDeOrdenesDeTrabajo.textField1_processValueChange}"/>
                                         </h:panelGrid>
                                     </h:panelGrid>
                                 </h:panelGrid>
@@ -60,23 +60,26 @@
                                 </h:panelGrid>
                                 <h:panelGrid id="gridPanelTablaBusqueda" style="height: 154px" width="935">
                                     <webuijsf:table augmentTitle="false" id="tableOrdenesTrabajo" paginateButton="true" paginationControls="true"
-                                        title="Ordenes de Trabajo" width="719">
-                                        <webuijsf:tableRowGroup id="tableRowGroup1" rows="20"
-                                            sourceData="#{RegistroDeOrdenesDeTrabajo.defaultTableDataProvider}" sourceVar="currentRow">
-                                            <webuijsf:tableColumn align="center" headerText="select" id="tableColumn5" width="55">
+                                        title="Ordenes de Trabajo" width="576">
+                                        <webuijsf:tableRowGroup id="tableRowGroup1" rows="10"
+                                            sourceData="#{RegistroDeOrdenesDeTrabajo.listaOrdenTrabajoCabeceras}" sourceVar="currentRow">
+                                            <webuijsf:tableColumn align="center" id="tableColumn5" valign="top">
                                                 <webuijsf:radioButton id="radioButton1" label=""/>
                                             </webuijsf:tableColumn>
-                                            <webuijsf:tableColumn align="center" headerText="Codigo" id="tableColumn6" width="30">
-                                                <webuijsf:staticText id="staticText6" text="123123123123"/>
+                                            <webuijsf:tableColumn headerText="Num OT" id="tableColumn6" sort="numeroOrdenTrabajo">
+                                                <webuijsf:staticText id="staticText6" text="#{currentRow.value['numeroOrdenTrabajo']}"/>
                                             </webuijsf:tableColumn>
-                                            <webuijsf:tableColumn headerText="Producto" id="tableColumn7" width="285">
-                                                <webuijsf:staticText id="staticText7" text="Producto"/>
+                                            <webuijsf:tableColumn headerText="FechaApertura" id="tableColumn7" sort="fechaOt">
+                                                <webuijsf:staticText converter="#{SessionBean1.dateTimeConverter}" id="staticText7" text="#{currentRow.value['fechaOt']}"/>
                                             </webuijsf:tableColumn>
-                                            <webuijsf:tableColumn headerText="Estado" id="tableColumn8" width="77">
-                                                <webuijsf:staticText id="staticText5" text="Estado"/>
+                                            <webuijsf:tableColumn headerText="Producto" id="tableColumn8" sort="codProductoOt">
+                                                <webuijsf:staticText id="staticText8" text="#{currentRow.value['codProductoOt']}"/>
                                             </webuijsf:tableColumn>
-                                            <webuijsf:tableColumn headerText="Fecha Apertura" id="tableColumn9" width="88">
-                                                <webuijsf:staticText id="staticText8" text="99/99/9999"/>
+                                            <webuijsf:tableColumn headerText="Cantidad" id="tableColumn9" sort="cantidadOt">
+                                                <webuijsf:staticText id="staticText14" text="#{currentRow.value['cantidadOt']}"/>
+                                            </webuijsf:tableColumn>
+                                            <webuijsf:tableColumn headerText="Estado" id="tableColumn24" sort="estadoOt">
+                                                <webuijsf:staticText id="staticText5" text="#{currentRow.value['estadoOt']}"/>
                                             </webuijsf:tableColumn>
                                         </webuijsf:tableRowGroup>
                                     </webuijsf:table>
@@ -86,59 +89,67 @@
                                     <webuijsf:button actionExpression="#{RegistroDeOrdenesDeTrabajo.buttonEditar_action}" id="buttonEditar" style="width: 65px" text="Ver Detalles"/>
                                 </h:panelGrid>
                             </h:panelGrid>
-                            <h:panelGrid binding="#{RegistroDeOrdenesDeTrabajo.gridPanelCabecera}" id="gridPanelCabecera" style="height: 100%; width: 100%">
+                            <h:panelGrid binding="#{RegistroDeOrdenesDeTrabajo.gridPanelCabecera}" id="gridPanelCabecera" style="height: 100%" width="815">
                                 <h:panelGrid binding="#{RegistroDeOrdenesDeTrabajo.gridPanelCabecera1}" columns="2" id="gridPanelCabecera1" style="height: 72px" width="623">
                                     <h:panelGrid columns="2" id="gridPanelNroOT" width="311">
                                         <webuijsf:label id="labelNroOT" text="Nro OT"/>
-                                        <webuijsf:textField id="nroOT"
+                                        <webuijsf:textField binding="#{RegistroDeOrdenesDeTrabajo.uiNroOT}" id="uiNroOT"
                                             style="background-position: 100% 50%; font-size: 18px; font-weight: bold; text-align: center" text="123123132"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="3" id="gridPanelResponsable2" style="height: 100%; width: 100%">
                                         <webuijsf:hyperlink id="responsable" text="Responsable"/>
-                                        <webuijsf:textField columns="10" id="codigo" text="123"/>
-                                        <webuijsf:textField columns="43" id="nombreEmp1" text="Nombre Empleado"/>
+                                        <webuijsf:textField binding="#{RegistroDeOrdenesDeTrabajo.uiResponsableCodigo}" columns="10" id="uiResponsableCodigo"/>
+                                        <webuijsf:textField binding="#{RegistroDeOrdenesDeTrabajo.uiResponsableNombre}" columns="43" id="uiResponsableNombre"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
                                 <webuijsf:label id="labelDetalleSemiTer2" style="color: rgb(0, 0, 153); font-size: 14px; font-weight: bold" text="Produccion"/>
-                                <webuijsf:tabSet id="tabSet3" lite="true" mini="true" selected="tab3" style="width: 791px">
+                                <webuijsf:tabSet id="tabSet3" lite="true" mini="true" selected="tab3" style="width: 839px">
                                     <webuijsf:tab id="tab3" text="Datos de la Produccion">
                                         <webuijsf:panelLayout id="layoutPanel3" style="height: 276px; position: relative; width: 100%; -rave-layout: grid">
                                             <h:panelGrid columns="2" id="gridPanelCabecera2" style="height: 30px" width="575">
                                                 <h:panelGrid columns="2" id="gridPanelProduccion" style="border-width: 1px; height: 253px" width="407">
-                                                    <webuijsf:hyperlink id="linkCodProducto" text="Codigo Producto"/>
-                                                    <h:panelGrid columns="2" id="gridPanelFormular" style="text-align: left">
-                                                        <webuijsf:textField id="formula"/>
+                                                    <webuijsf:label id="label4" text="Producto"/>
+                                                    <h:panelGrid columns="2" id="gridPanelProducto1" style="text-align: left">
+                                                        <webuijsf:dropDown binding="#{RegistroDeOrdenesDeTrabajo.uiProducto}" id="uiProducto"
+                                                            items="#{SessionBean1.listaProductosOp}" width="200"/>
                                                         <webuijsf:button actionExpression="#{RegistroDeOrdenesDeTrabajo.botonDeFormula_action}"
                                                             binding="#{RegistroDeOrdenesDeTrabajo.botonDeFormula}" id="botonDeFormula" style="width: 96px" text="Calcular!!"/>
                                                     </h:panelGrid>
                                                     <webuijsf:hyperlink id="linkFormula" text="Formula"/>
-                                                    <webuijsf:textField id="codigoProducto"/>
+                                                    <h:panelGrid columns="2" id="gridPanel2" style="height: 100%; width: 100%">
+                                                        <webuijsf:textField binding="#{RegistroDeOrdenesDeTrabajo.uiFormulaCodigo}" columns="7" id="uiFormulaCodigo"/>
+                                                        <webuijsf:textField binding="#{RegistroDeOrdenesDeTrabajo.uiFormulaNombre}" columns="45" id="uiFormulaNombre"/>
+                                                    </h:panelGrid>
                                                     <webuijsf:label id="labelDescrip" text="Descripcion de la Produccion"/>
-                                                    <webuijsf:textArea columns="35" id="descripcionProducto" rows="10"/>
+                                                    <webuijsf:textArea binding="#{RegistroDeOrdenesDeTrabajo.uiDescripcionOt}" columns="35" id="uiDescripcionOt" rows="10"/>
                                                     <webuijsf:label id="labelCantidad" text="Cantidad"/>
-                                                    <webuijsf:textField id="cantidad" text="123123123"/>
+                                                    <webuijsf:textField binding="#{RegistroDeOrdenesDeTrabajo.uiCantidad}" id="uiCantidad"/>
                                                 </h:panelGrid>
                                                 <h:panelGrid id="gridPanelPlanear" style="width: 100%; height: 100%;">
                                                     <webuijsf:label id="labelPla" style="color: #0033cc" text="Planeamiento"/>
                                                     <h:panelGrid columns="2" id="gridPlaneamieto" style="width: 401px" title="Planeamiento" width="383">
                                                         <webuijsf:label id="labelFechaIni" style="width: 15px" text="Fecha Inicial"/>
-                                                        <webuijsf:calendar id="calendar3"/>
+                                                        <webuijsf:calendar binding="#{RegistroDeOrdenesDeTrabajo.uiFechaIni}" id="uiFechaIni"/>
                                                         <webuijsf:label id="labelFechaFin" style="width: 15px" text="Fecha Final"/>
-                                                        <webuijsf:calendar id="calendar4"/>
+                                                        <webuijsf:calendar binding="#{RegistroDeOrdenesDeTrabajo.uiFechaFin}" id="uiFechaFin"/>
                                                     </h:panelGrid>
                                                     <webuijsf:label id="labelProgreso" style="border-width: 1px; color: #0000ff; height: 58px; width: 401px" text="Progreso"/>
                                                     <h:panelGrid columns="2" id="gridEstado" style="border-width: 1px; width: 401px">
                                                         <webuijsf:label id="labelEstado1" style="width: 15px" text="Estado"/>
-                                                        <webuijsf:dropDown id="estado" items="#{RegistroDeOrdenesDeTrabajo.estadoDefaultOptions.options}" width="150px"/>
+                                                        <webuijsf:dropDown binding="#{RegistroDeOrdenesDeTrabajo.uiEstado}" id="uiEstado"
+                                                            items="#{RegistroDeOrdenesDeTrabajo.uiEstadoDefaultOptions.options}" width="150px"/>
                                                         <webuijsf:label id="labelCant" style="width: 15px" text="Cantidad Producida"/>
-                                                        <webuijsf:textField columns="30" id="textField4" style="text-align: right"/>
+                                                        <webuijsf:textField binding="#{RegistroDeOrdenesDeTrabajo.uiCantidadProducida}" columns="30"
+                                                            id="uiCantidadProducida" style="text-align: right"/>
                                                     </h:panelGrid>
                                                     <webuijsf:label id="labelCostos" style="color: #0033cc" text="Costos"/>
                                                     <h:panelGrid columns="2" id="gridCosto" style="border-width: 1px; height: 58px; width: 401px">
                                                         <webuijsf:label id="labelCostoInic" style="width: 15px" text="Costo Previsto"/>
-                                                        <webuijsf:textField columns="30" id="costoPrevisto" style="text-align: right" text="123123"/>
+                                                        <webuijsf:textField binding="#{RegistroDeOrdenesDeTrabajo.uiCostoPrevisto}" columns="30"
+                                                            id="uiCostoPrevisto" style="text-align: right" text="123123"/>
                                                         <webuijsf:label id="labelCostoReal" style="width: 15px" text="Costo Real"/>
-                                                        <webuijsf:textField columns="30" id="costoReal" style="text-align: right" text="123123"/>
+                                                        <webuijsf:textField binding="#{RegistroDeOrdenesDeTrabajo.uiCostoReal}" columns="30" id="uiCostoReal"
+                                                            style="text-align: right" text="123123"/>
                                                     </h:panelGrid>
                                                 </h:panelGrid>
                                             </h:panelGrid>
@@ -147,10 +158,11 @@
                                 </webuijsf:tabSet>
                                 <h:panelGrid binding="#{RegistroDeOrdenesDeTrabajo.buttonsPanelAddUpdate}" columns="2" id="buttonsPanelAddUpdate"
                                     style="height: 24px; margin-left: 540px" width="191">
-                                    <webuijsf:button actionExpression="#{RegistroDeOrdenesDeTrabajo.cancelar_action}" id="cancelar"
+                                    <webuijsf:button actionExpression="#{RegistroDeOrdenesDeTrabajo.uiCancelButton_action}" id="uiCancelButton"
                                         style="font-size: 14px; height: 24px" text="Cancelar"/>
-                                    <webuijsf:button actionExpression="#{RegistroDeOrdenesDeTrabajo.button2_action}"
-                                        binding="#{RegistroDeOrdenesDeTrabajo.button2}" id="button2" style="font-size: 14px; height: 24px" text="Guardar"/>
+                                    <webuijsf:button actionExpression="#{RegistroDeOrdenesDeTrabajo.addRecordButton_action}"
+                                        binding="#{RegistroDeOrdenesDeTrabajo.addRecordButton}" id="addRecordButton" style="font-size: 14px; height: 24px" text="Guardar"/>
+                                    <webuijsf:button actionExpression="#{RegistroDeOrdenesDeTrabajo.button2_action}" id="button2" text="Button"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                             <h:panelGrid binding="#{RegistroDeOrdenesDeTrabajo.gridPanelDetalleOT}" id="gridPanelDetalleOT">

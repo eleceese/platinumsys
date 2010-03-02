@@ -6,19 +6,37 @@ package platinum;
 
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
+import com.sun.webui.jsf.component.Calendar;
 import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.component.PageAlert;
 import com.sun.webui.jsf.component.StaticText;
 import com.sun.webui.jsf.component.TableColumn;
+import com.sun.webui.jsf.component.TextArea;
 import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.event.ValueChangeEvent;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
+import py.com.platinum.controller.EmpleadoController;
+import py.com.platinum.controller.FormulaCabeceraController;
+import py.com.platinum.controller.FormulaSemiCabeceraController;
+import py.com.platinum.controller.OrdenTrabajoCabeceraController;
+import py.com.platinum.controller.ProductoController;
+import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.FormulaCabecera;
+import py.com.platinum.entity.OrdenTrabajo;
+import py.com.platinum.entity.OrdenTrabajoDetalle;
+import py.com.platinum.entity.RecursoAsignado;
+import py.com.platinum.entity.TareaAsignada;
+import py.com.platinum.utils.StringUtils;
 
 
 /**
@@ -45,7 +63,7 @@ public class RegistroDeOrdenesDeTrabajo extends AbstractPageBean {
         radioButtonGroup1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("e", "Entrada"), new com.sun.webui.jsf.model.Option("s", "Salida")});
         referencia1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Orden de Trabajo"), new com.sun.webui.jsf.model.Option("2", "Venta"), new com.sun.webui.jsf.model.Option("3", "Trabajo Diario")});
         uiEstadoFIlDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "En Progreso"), new com.sun.webui.jsf.model.Option("2", "Parada"), new com.sun.webui.jsf.model.Option("3", "Terminado"), new com.sun.webui.jsf.model.Option("4", "Cancelado")});
-        estadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "En Proceso"), new com.sun.webui.jsf.model.Option("2", "Terminado"), new com.sun.webui.jsf.model.Option("3", "En Espera")});
+        uiEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "En Proceso"), new com.sun.webui.jsf.model.Option("2", "Terminado"), new com.sun.webui.jsf.model.Option("3", "En Espera")});
     }
     private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
 
@@ -92,14 +110,14 @@ public class RegistroDeOrdenesDeTrabajo extends AbstractPageBean {
     public void setButtonsPanelAddUpdate(HtmlPanelGrid hpg) {
         this.buttonsPanelAddUpdate = hpg;
     }
-    private Button button2 = new Button();
+    private Button addRecordButton = new Button();
 
-    public Button getButton2() {
-        return button2;
+    public Button getAddRecordButton() {
+        return addRecordButton;
     }
 
-    public void setButton2(Button b) {
-        this.button2 = b;
+    public void setAddRecordButton(Button b) {
+        this.addRecordButton = b;
     }
     private PageAlert pageAlert1 = new PageAlert();
 
@@ -155,14 +173,14 @@ public class RegistroDeOrdenesDeTrabajo extends AbstractPageBean {
     public void setUiEstadoFIlDefaultOptions(SingleSelectOptionsList ssol) {
         this.uiEstadoFIlDefaultOptions = ssol;
     }
-    private SingleSelectOptionsList estadoDefaultOptions = new SingleSelectOptionsList();
+    private SingleSelectOptionsList uiEstadoDefaultOptions = new SingleSelectOptionsList();
 
-    public SingleSelectOptionsList getEstadoDefaultOptions() {
-        return estadoDefaultOptions;
+    public SingleSelectOptionsList getUiEstadoDefaultOptions() {
+        return uiEstadoDefaultOptions;
     }
 
-    public void setEstadoDefaultOptions(SingleSelectOptionsList ssol) {
-        this.estadoDefaultOptions = ssol;
+    public void setUiEstadoDefaultOptions(SingleSelectOptionsList ssol) {
+        this.uiEstadoDefaultOptions = ssol;
     }
     private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
 
@@ -209,14 +227,176 @@ public class RegistroDeOrdenesDeTrabajo extends AbstractPageBean {
     public void setBotonDeFormula(Button b) {
         this.botonDeFormula = b;
     }
-    private DropDown dropDown1 = new DropDown();
+    private DropDown uiProductoFil = new DropDown();
 
-    public DropDown getDropDown1() {
-        return dropDown1;
+    public DropDown getUiProductoFil() {
+        return uiProductoFil;
     }
 
-    public void setDropDown1(DropDown dd) {
-        this.dropDown1 = dd;
+    public void setUiProductoFil(DropDown dd) {
+        this.uiProductoFil = dd;
+    }
+    private DropDown uiEstadoFIl = new DropDown();
+
+    public DropDown getUiEstadoFIl() {
+        return uiEstadoFIl;
+    }
+
+    public void setUiEstadoFIl(DropDown dd) {
+        this.uiEstadoFIl = dd;
+    }
+    private Calendar uiFechaDesdeFil = new Calendar();
+
+    public Calendar getUiFechaDesdeFil() {
+        return uiFechaDesdeFil;
+    }
+
+    public void setUiFechaDesdeFil(Calendar c) {
+        this.uiFechaDesdeFil = c;
+    }
+    private Calendar uiFechaHastaFil = new Calendar();
+
+    public Calendar getUiFechaHastaFil() {
+        return uiFechaHastaFil;
+    }
+
+    public void setUiFechaHastaFil(Calendar c) {
+        this.uiFechaHastaFil = c;
+    }
+    private TextField uiNumOtFil = new TextField();
+
+    public TextField getUiNumOtFil() {
+        return uiNumOtFil;
+    }
+
+    public void setUiNumOtFil(TextField tf) {
+        this.uiNumOtFil = tf;
+    }
+    private TextField uiCostoReal = new TextField();
+
+    public TextField getUiCostoReal() {
+        return uiCostoReal;
+    }
+
+    public void setUiCostoReal(TextField tf) {
+        this.uiCostoReal = tf;
+    }
+    private TextField uiCostoPrevisto = new TextField();
+
+    public TextField getUiCostoPrevisto() {
+        return uiCostoPrevisto;
+    }
+
+    public void setUiCostoPrevisto(TextField tf) {
+        this.uiCostoPrevisto = tf;
+    }
+    private TextField uiCantidadProducida = new TextField();
+
+    public TextField getUiCantidadProducida() {
+        return uiCantidadProducida;
+    }
+
+    public void setUiCantidadProducida(TextField tf) {
+        this.uiCantidadProducida = tf;
+    }
+    private DropDown uiEstado = new DropDown();
+
+    public DropDown getUiEstado() {
+        return uiEstado;
+    }
+
+    public void setUiEstado(DropDown dd) {
+        this.uiEstado = dd;
+    }
+    private Calendar uiFechaFin = new Calendar();
+
+    public Calendar getUiFechaFin() {
+        return uiFechaFin;
+    }
+
+    public void setUiFechaFin(Calendar c) {
+        this.uiFechaFin = c;
+    }
+    private Calendar uiFechaIni = new Calendar();
+
+    public Calendar getUiFechaIni() {
+        return uiFechaIni;
+    }
+
+    public void setUiFechaIni(Calendar c) {
+        this.uiFechaIni = c;
+    }
+    private TextField uiCantidad = new TextField();
+
+    public TextField getUiCantidad() {
+        return uiCantidad;
+    }
+
+    public void setUiCantidad(TextField tf) {
+        this.uiCantidad = tf;
+    }
+    private TextArea uiDescripcionOt = new TextArea();
+
+    public TextArea getUiDescripcionOt() {
+        return uiDescripcionOt;
+    }
+
+    public void setUiDescripcionOt(TextArea ta) {
+        this.uiDescripcionOt = ta;
+    }
+    private TextField uiFormulaCodigo = new TextField();
+
+    public TextField getUiFormulaCodigo() {
+        return uiFormulaCodigo;
+    }
+
+    public void setUiFormulaCodigo(TextField tf) {
+        this.uiFormulaCodigo = tf;
+    }
+    private TextField uiFormulaNombre = new TextField();
+
+    public TextField getUiFormulaNombre() {
+        return uiFormulaNombre;
+    }
+
+    public void setUiFormulaNombre(TextField tf) {
+        this.uiFormulaNombre = tf;
+    }
+    private DropDown uiProducto = new DropDown();
+
+    public DropDown getUiProducto() {
+        return uiProducto;
+    }
+
+    public void setUiProducto(DropDown dd) {
+        this.uiProducto = dd;
+    }
+    private TextField uiResponsableNombre = new TextField();
+
+    public TextField getUiResponsableNombre() {
+        return uiResponsableNombre;
+    }
+
+    public void setUiResponsableNombre(TextField tf) {
+        this.uiResponsableNombre = tf;
+    }
+    private TextField uiResponsableCodigo = new TextField();
+
+    public TextField getUiResponsableCodigo() {
+        return uiResponsableCodigo;
+    }
+
+    public void setUiResponsableCodigo(TextField tf) {
+        this.uiResponsableCodigo = tf;
+    }
+    private TextField uiNroOT = new TextField();
+
+    public TextField getUiNroOT() {
+        return uiNroOT;
+    }
+
+    public void setUiNroOT(TextField tf) {
+        this.uiNroOT = tf;
     }
 
     // </editor-fold>
@@ -325,16 +505,50 @@ public class RegistroDeOrdenesDeTrabajo extends AbstractPageBean {
             this.gridPanelDetalleSemiTerminados.setRendered(false);
         }
 
+buscar_action2();
+
     }
 
-    /**
-     * <p>Callback method that is called after rendering is completed for
-     * this request, if <code>init()</code> was called (regardless of whether
-     * or not this was the page that was actually rendered).  Customize this
-     * method to release resources acquired in the <code>init()</code>,
-     * <code>preprocess()</code>, or <code>prerender()</code> methods (or
-     * acquired during execution of an event handler).</p>
-     */
+    private String buscar_action2() {
+
+        OrdenTrabajo[] listaOrdenTrabajos;
+        OrdenTrabajoCabeceraController ordenTrabajoCabeceraController = new OrdenTrabajoCabeceraController();
+
+        String pNumeroOrdenTrabajo=null, pCodProducto=null, pEstado=null;
+        Date pFechaOt=null;
+
+        if (this.uiNumOtFil.getText()!=null) {
+            pNumeroOrdenTrabajo = this.uiNumOtFil.getText().toString();
+        }
+
+        if (this.uiProductoFil.getSelected()!=null) {
+            pCodProducto = this.uiProductoFil.getSelected().toString();
+        }
+
+        if (this.uiFechaDesdeFil.getSelectedDate()!=null) {
+            pFechaOt= this.uiFechaDesdeFil.getSelectedDate();
+        }
+
+        if (this.uiEstadoFIl.getSelected()!=null) {
+//            pEstado= this.uiEstadoFIl.getSelected().toString();
+            pEstado= "A";
+        }
+
+        listaOrdenTrabajoCabeceras = (OrdenTrabajo[]) ordenTrabajoCabeceraController.getAllFiltered
+                                        (pNumeroOrdenTrabajo,
+                                         pCodProducto,
+                                         pEstado,
+                                         pFechaOt).toArray(new OrdenTrabajo[0]);
+
+        setlistaOrdenTrabajoCabeceras(listaOrdenTrabajoCabeceras);
+        return null;
+
+    }
+
+
+
+
+
     @Override
     public void destroy() {
     }
@@ -368,20 +582,146 @@ public class RegistroDeOrdenesDeTrabajo extends AbstractPageBean {
 
     
 
-    public String button2_action() {
+    public String addRecordButton_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
-        this.addRequestOT=false;
-        this.updateRequestOT=false;
-        this.addDetalleOt=false;
-        this.errorValidacion =true;
 
-            this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Ha ocurrido un error");
-            this.pageAlert1.setSummary("Error en la validacion de Campos");
+        errorValidacion = validarCampos();
+
+        detallesOrdenTrabajo = (OrdenTrabajoDetalle[]) detalleOrdenTrabajoList.toArray(new OrdenTrabajoDetalle[0]);
+        recursosAsignadosOt = (RecursoAsignado[]) recursoAsignadoList.toArray(new RecursoAsignado[0]);
+        tareasAsignadasOt = (TareaAsignada[]) tareaAsignadaList.toArray(new TareaAsignada[0]);
+
+        //Si no hay error de validacion
+        if (! errorValidacion){
+
+            //// CARGA DE LA CABECERA
+          OrdenTrabajo ordenTrabajo = new OrdenTrabajo();
+          ProductoController productoController = new ProductoController();
+          EmpleadoController empleadoController = new EmpleadoController();
+          FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
+
+
+          ordenTrabajo.setNumeroOrdenTrabajo(new Long( this.uiNroOT.getText().toString()));
+          ordenTrabajo.setCodEmpleado1(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
+          ordenTrabajo.setCodEmpleado2(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
+          ordenTrabajo.setCodProductoOt(productoController.findById(Long.valueOf(this.uiProducto.getSelected().toString())));
+          ordenTrabajo.setCantidadOt(new BigInteger(this.uiCantidad.getText().toString()));
+          ordenTrabajo.setCantidadProducidaOt(new BigInteger(this.uiCantidadProducida.getText().toString()));
+          ordenTrabajo.setFechaInicialOt(this.uiFechaIni.getSelectedDate());
+          ordenTrabajo.setFechaFinOt(this.uiFechaFin.getSelectedDate());
+          ordenTrabajo.setCostoEstimadoOt(new BigInteger(this.uiCostoPrevisto.getText().toString()));
+          ordenTrabajo.setCostoRealOt(new BigInteger(this.uiCostoReal.getText().toString()));
+          ordenTrabajo.setEstadoOt("A");
+
+          OrdenTrabajoCabeceraController ordenTrabajoCabeceraController = new OrdenTrabajoCabeceraController();
+          ControllerResult controllerResult = new ControllerResult();
+
+          controllerResult = ordenTrabajoCabeceraController.createCabDet(ordenTrabajo, detallesOrdenTrabajo);
+
+          if (controllerResult.getCodRetorno() != -1) {
+                addRequestOT = false;
+                this.pageAlert1.setType("information");
+        }else{
+
+        this.pageAlert1.setType("error");
+        this.errorValidacion=true;
+
+        }
+
+            this.pageAlert1.setTitle(controllerResult.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
-                      return null;
+          
+       }
+           return null;
+ }
+
+
+        private boolean validarCampos(){
+        //Variables
+        boolean r;
+
+        //Inicializar
+        r = false;
+
+        if (detalleOrdenTrabajoList.size() < 0){
+//            info(uiDetProductoCodigo, "Debe cargar los detalles de productos de la formula");
+            r = true;
+        }
+
+        if (uiResponsableCodigo.getText().toString() == null || uiResponsableCodigo.getText().equals("") ) {
+//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
+            r = true;
+        }
+
+        if (uiResponsableNombre.getText().toString() == null || uiResponsableNombre.getText().equals("") ) {
+//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
+            r = true;
+        }
+
+        if (uiProducto.getSelected() == null || uiProducto.getSelected().equals("") ) {
+//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
+            r = true;
+        }
+
+        if (uiFormulaCodigo.getText().toString() == null || uiFormulaCodigo.getText().equals("") ) {
+//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
+            r = true;
+        }
+
+        if (uiFormulaNombre.getText().toString() == null || uiFormulaNombre.getText().equals("") ) {
+//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
+            r = true;
+        }
+
+        if (uiFormulaNombre.getText().toString() == null || uiFormulaNombre.getText().equals("") ) {
+//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
+            r = true;
+        }
+
+        if (!StringUtils.esNumero(this.uiCantidad.getText().toString()))
+            {   r = true;
+//                this.info(uiCantidad, "La cantidad debe ser campo numerico");
+            }
+
+         if (uiFechaIni.getSelectedDate() == null || uiFechaIni.getSelectedDate().equals("") ) {
+//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
+            r = true;
+        }
+
+
+         if (uiFechaFin.getSelectedDate() == null || uiFechaFin.getSelectedDate().equals("") ) {
+//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
+            r = true;
+        }
+
+
+        if (!StringUtils.esNumero(this.uiCostoPrevisto.getText().toString()))
+            {   r = true;
+//                this.info(uiCantidad, "La cantidad debe ser campo numerico");
+            }
+
+
+        if (!StringUtils.esNumero(this.uiCostoReal.getText().toString()))
+            {   r = true;
+//                this.info(uiCantidad, "La cantidad debe ser campo numerico");
+            }
+
+
+        if (uiEstado.getSelected().toString() == null || uiEstado.getSelected().toString().equals("") ) {
+//            info(uiEstado, "Campo obligatorio, favor ingrese el estado de la formula");
+            r = true;
+        }
+        //result
+
+        return r;
     }
+
+
+
+
 
     public String buscar1_action() {
         // TODO: Replace with your code
@@ -396,8 +736,55 @@ public class RegistroDeOrdenesDeTrabajo extends AbstractPageBean {
         return null;
     }
 
+    //MANEJO DE LOS DETALLES
+
+private OrdenTrabajoDetalle[] detallesOrdenTrabajo;
+private OrdenTrabajoDetalle  detalleOrdenTrabajo;
+private List<OrdenTrabajoDetalle>  detalleOrdenTrabajoList;
+
+private TareaAsignada[] tareasAsignadasOt;
+private TareaAsignada  tareaAsignadaOt;
+private List<TareaAsignada>  tareaAsignadaList;
+
+private RecursoAsignado[] recursosAsignadosOt;
+private RecursoAsignado  recursoAsignadoOt;
+private List<RecursoAsignado>  recursoAsignadoList;
+
+private List<OrdenTrabajoDetalle>  detalleOrdenTrabajoEliminadaList;
+private List<TareaAsignada>  tareaAsignadaEliminadaList;
+private List<RecursoAsignado>  recursoAsignadoEliminadoList;
+
+
+
+
+
     public String buttonNuevo_action() {
         // TODO: Replace with your code
+
+        this.uiNroOT.setText("");
+        this.uiResponsableCodigo.setText("");
+        this.uiResponsableNombre.setText("");
+        this.pageAlert1.setRendered(false);
+        this.uiProducto.setSelected("");
+        this.uiFormulaCodigo.setText("");
+        this.uiFormulaNombre.setText("");
+        this.uiCantidad.setText("");
+        this.uiFechaDesdeFil.setSelectedDate(null);
+        this.uiFechaHastaFil.setSelectedDate(null);
+        this.uiCantidadProducida.setText("");
+        this.uiCostoReal.setText("");
+        this.uiCostoPrevisto.setText("");
+
+        detalleOrdenTrabajoList = new ArrayList();
+        detallesOrdenTrabajo = (OrdenTrabajoDetalle[]) detalleOrdenTrabajoList.toArray(new OrdenTrabajoDetalle[0]);
+
+
+        tareaAsignadaList = new ArrayList();
+        tareasAsignadasOt = (TareaAsignada[]) tareaAsignadaList.toArray(new TareaAsignada[0]);
+
+        recursoAsignadoList = new ArrayList();
+        recursosAsignadosOt = (RecursoAsignado[]) recursoAsignadoList.toArray(new RecursoAsignado[0]);
+
         this.addRequestOT=true;
         this.updateRequestOT=false;
         this.addDetalleOt=false;
@@ -436,6 +823,219 @@ public class RegistroDeOrdenesDeTrabajo extends AbstractPageBean {
         this.errorValidacion =false;
         return null;
     }
+
+
+////// CARGA DE ARRAY ORDENES TRABAJO
+//////     import com.sun.webui.jsf.model.Option;
+
+    OrdenTrabajo[] listaOrdenTrabajoCabeceras;
+
+
+        public OrdenTrabajo[] getlistaOrdenTrabajoCabeceras() {
+        return listaOrdenTrabajoCabeceras;
+    }
+
+    public void setlistaOrdenTrabajoCabeceras(OrdenTrabajo[] listaOrdenTrabajoCabeceras) {
+        this.listaOrdenTrabajoCabeceras = listaOrdenTrabajoCabeceras;
+    }
+
+    public void cargarlistaTodosOrdenTrabajoCabeceras(){
+        OrdenTrabajoCabeceraController ordenTrabajoCabeceraController = new OrdenTrabajoCabeceraController();
+        listaOrdenTrabajoCabeceras = (OrdenTrabajo[]) ordenTrabajoCabeceraController.getAll("estadoOt").toArray(new OrdenTrabajo[0]);
+
+    }
+////// FIN CARGA DE ot cabeceras
+
+    public void uiNumOtFil_processValueChange(ValueChangeEvent vce) {
+    }
+
+    public boolean isAddDetalleOt() {
+        return addDetalleOt;
+    }
+
+    public void setAddDetalleOt(boolean addDetalleOt) {
+        this.addDetalleOt = addDetalleOt;
+    }
+
+    public boolean isAddRequestOT() {
+        return addRequestOT;
+    }
+
+    public void setAddRequestOT(boolean addRequestOT) {
+        this.addRequestOT = addRequestOT;
+    }
+
+    public OrdenTrabajoDetalle getDetalleOrdenTrabajo() {
+        return detalleOrdenTrabajo;
+    }
+
+    public void setDetalleOrdenTrabajo(OrdenTrabajoDetalle detalleOrdenTrabajo) {
+        this.detalleOrdenTrabajo = detalleOrdenTrabajo;
+    }
+
+    public List<OrdenTrabajoDetalle> getDetalleOrdenTrabajoEliminadaList() {
+        return detalleOrdenTrabajoEliminadaList;
+    }
+
+    public void setDetalleOrdenTrabajoEliminadaList(List<OrdenTrabajoDetalle> detalleOrdenTrabajoEliminadaList) {
+        this.detalleOrdenTrabajoEliminadaList = detalleOrdenTrabajoEliminadaList;
+    }
+
+    public List<OrdenTrabajoDetalle> getDetalleOrdenTrabajoList() {
+        return detalleOrdenTrabajoList;
+    }
+
+    public void setDetalleOrdenTrabajoList(List<OrdenTrabajoDetalle> detalleOrdenTrabajoList) {
+        this.detalleOrdenTrabajoList = detalleOrdenTrabajoList;
+    }
+
+    public OrdenTrabajoDetalle[] getDetallesOrdenTrabajo() {
+        return detallesOrdenTrabajo;
+    }
+
+    public void setDetallesOrdenTrabajo(OrdenTrabajoDetalle[] detallesOrdenTrabajo) {
+        this.detallesOrdenTrabajo = detallesOrdenTrabajo;
+    }
+
+    public OrdenTrabajo[] getListaOrdenTrabajoCabeceras() {
+        return listaOrdenTrabajoCabeceras;
+    }
+
+    public void setListaOrdenTrabajoCabeceras(OrdenTrabajo[] listaOrdenTrabajoCabeceras) {
+        this.listaOrdenTrabajoCabeceras = listaOrdenTrabajoCabeceras;
+    }
+
+    public List<RecursoAsignado> getRecursoAsignadoEliminadoList() {
+        return recursoAsignadoEliminadoList;
+    }
+
+    public void setRecursoAsignadoEliminadoList(List<RecursoAsignado> recursoAsignadoEliminadoList) {
+        this.recursoAsignadoEliminadoList = recursoAsignadoEliminadoList;
+    }
+
+    public List<RecursoAsignado> getRecursoAsignadoList() {
+        return recursoAsignadoList;
+    }
+
+    public void setRecursoAsignadoList(List<RecursoAsignado> recursoAsignadoList) {
+        this.recursoAsignadoList = recursoAsignadoList;
+    }
+
+    public RecursoAsignado getRecursoAsignadoOt() {
+        return recursoAsignadoOt;
+    }
+
+    public void setRecursoAsignadoOt(RecursoAsignado recursoAsignadoOt) {
+        this.recursoAsignadoOt = recursoAsignadoOt;
+    }
+
+    public List<TareaAsignada> getTareaAsignadaEliminadaList() {
+        return tareaAsignadaEliminadaList;
+    }
+
+    public void setTareaAsignadaEliminadaList(List<TareaAsignada> tareaAsignadaEliminadaList) {
+        this.tareaAsignadaEliminadaList = tareaAsignadaEliminadaList;
+    }
+
+    public List<TareaAsignada> getTareaAsignadaList() {
+        return tareaAsignadaList;
+    }
+
+    public void setTareaAsignadaList(List<TareaAsignada> tareaAsignadaList) {
+        this.tareaAsignadaList = tareaAsignadaList;
+    }
+
+    public TareaAsignada getTareaAsignadaOt() {
+        return tareaAsignadaOt;
+    }
+
+    public void setTareaAsignadaOt(TareaAsignada tareaAsignadaOt) {
+        this.tareaAsignadaOt = tareaAsignadaOt;
+    }
+
+    public TareaAsignada[] getTareasAsignadasOt() {
+        return tareasAsignadasOt;
+    }
+
+    public void setTareasAsignadasOt(TareaAsignada[] tareasAsignadasOt) {
+        this.tareasAsignadasOt = tareasAsignadasOt;
+    }
+
+    public boolean isUpdateRequestOT() {
+        return updateRequestOT;
+    }
+
+    public void setUpdateRequestOT(boolean updateRequestOT) {
+        this.updateRequestOT = updateRequestOT;
+    }
+
+    public String uiCancelButton_action() {
+        // TODO: Replace with your code
+        return null;
+    }
+
+    public String button2_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+            // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+
+//        errorValidacion = validarCampos();
+
+        detallesOrdenTrabajo = (OrdenTrabajoDetalle[]) detalleOrdenTrabajoList.toArray(new OrdenTrabajoDetalle[0]);
+        recursosAsignadosOt = (RecursoAsignado[]) recursoAsignadoList.toArray(new RecursoAsignado[0]);
+        tareasAsignadasOt = (TareaAsignada[]) tareaAsignadaList.toArray(new TareaAsignada[0]);
+
+        //Si no hay error de validacion
+        if (! errorValidacion){
+
+            //// CARGA DE LA CABECERA
+          OrdenTrabajo ordenTrabajo = new OrdenTrabajo();
+          ProductoController productoController = new ProductoController();
+          EmpleadoController empleadoController = new EmpleadoController();
+          FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
+
+
+          ordenTrabajo.setNumeroOrdenTrabajo(new Long( this.uiNroOT.getText().toString()));
+          ordenTrabajo.setCodEmpleado1(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
+          ordenTrabajo.setCodEmpleado2(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
+          ordenTrabajo.setCodProductoOt(productoController.findById(Long.valueOf(this.uiProducto.getSelected().toString())));
+          ordenTrabajo.setCantidadOt(new BigInteger(this.uiCantidad.getText().toString()));
+          ordenTrabajo.setCantidadProducidaOt(new BigInteger(this.uiCantidadProducida.getText().toString()));
+          ordenTrabajo.setFechaInicialOt(this.uiFechaIni.getSelectedDate());
+          ordenTrabajo.setFechaFinOt(this.uiFechaFin.getSelectedDate());
+          ordenTrabajo.setCostoEstimadoOt(new BigInteger(this.uiCostoPrevisto.getText().toString()));
+          ordenTrabajo.setCostoRealOt(new BigInteger(this.uiCostoReal.getText().toString()));
+          ordenTrabajo.setEstadoOt("A");
+
+          OrdenTrabajoCabeceraController ordenTrabajoCabeceraController = new OrdenTrabajoCabeceraController();
+          ControllerResult controllerResult = new ControllerResult();
+
+          controllerResult = ordenTrabajoCabeceraController.createCabDet(ordenTrabajo, detallesOrdenTrabajo);
+
+          if (controllerResult.getCodRetorno() != -1) {
+                addRequestOT = false;
+                this.pageAlert1.setType("information");
+        }else{
+
+        this.pageAlert1.setType("error");
+        this.errorValidacion=true;
+
+        }
+
+            this.pageAlert1.setTitle(controllerResult.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+
+       }
+
+        return null;
+    }
+
+
+
+
 
 }
 

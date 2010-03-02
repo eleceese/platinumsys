@@ -63,8 +63,7 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-        uiEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("A", "ACTIVO"), new com.sun.webui.jsf.model.Option("I", "INACTIVO")});
-        uiEstadoDefaultOptions.setSelectedValue("A");
+        
         //table1.setWidth();
     }
     private HtmlPanelGrid mainContainer = new HtmlPanelGrid();
@@ -415,6 +414,8 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
      * <p>Construct a new Page bean instance.</p>
      */
     public ABMFormulaSemiTerminado() {
+    uiEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("A", "ACTIVO"), new com.sun.webui.jsf.model.Option("I", "INACTIVO")});
+    uiEstadoDefaultOptions.setSelectedValue("A");
     }
 
     /**
@@ -688,9 +689,7 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
 //        detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
 //        addRequest = true;
 
-        getSessionBean1().setTituloPagina("Nueva Fórmula de Producción");
-        getSessionBean1().setDetallePagina("Crear una fórmula de producción, " +
-                "con su detalle correspondiente de Semiterminados");
+        
         uiProductoCodigo.setText("");
         uiProductoNombre.setText("");
         uiCantidad.setText("");
@@ -869,8 +868,8 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
           formulaSemiCabecera.setCantidad(new BigInteger( this.uiCantidad.getText().toString()));
           formulaSemiCabecera.setDescripcion(this.uiDescripcion.getText().toString());
           formulaSemiCabecera.setFecha(this.uiFecha.getSelectedDate());
-//          formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
-          formulaSemiCabecera.setEstado("A");
+          formulaSemiCabecera.setEstado(this.uiEstado.getSelected().toString());
+          //formulaSemiCabecera.setEstado("A");
 
                             FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
                             ControllerResult controllerResult = new ControllerResult();
@@ -1048,8 +1047,8 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
                 formulaSemiCabecera.setCantidad(new BigInteger( this.uiCantidad.getText().toString()));
                 formulaSemiCabecera.setDescripcion(this.uiDescripcion.getText().toString());
                 formulaSemiCabecera.setFecha(this.uiFecha.getSelectedDate());
-    //          formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
-                formulaSemiCabecera.setEstado("A");
+                formulaSemiCabecera.setEstado(this.uiEstado.getSelected().toString());
+                //formulaSemiCabecera.setEstado("A");
 
                 //// Convertilos los List a Array y enviamos
 
@@ -1365,7 +1364,7 @@ this.uiDetTareaOrden.setText("");
         validarDetalleTarea();
 
         if (!errorValidacion) {
-            if (!editarDetalleRecurso){
+            if (!editarDetalleTarea){
                    Tarea tarea = new TareaController().findById(Long.valueOf(this.uiDetTareaCodigo.getText().toString()));
 
                    tareaFormula = new TareaFormula();
@@ -1396,9 +1395,10 @@ this.uiDetTareaOrden.setText("");
 
     //// agrego la formula eliminada a la lista de formulas Eliminadas
     //// se utiliza luego al actualizar el registro
-    TareaFormula tarForEliminada  = tareaFormulaList.get(Integer.valueOf(itemDet).intValue());
-    tareaFormulaEliminadaList.add(tarForEliminada);
-
+    if (updateRequest) {
+        TareaFormula tarForEliminada  = tareaFormulaList.get(Integer.valueOf(itemDet).intValue());
+        tareaFormulaEliminadaList.add(tarForEliminada);
+    }
     tareaFormulaList.remove(Integer.valueOf(itemDet).intValue());
     tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
     return null;
@@ -1412,9 +1412,11 @@ this.uiDetTareaOrden.setText("");
 
         //// agrego la formula eliminada a la lista de formulas Eliminadas
         //// se utiliza luego al actualizar el registro
+     if (updateRequest) {
         FormulaSemiDetalle fSemiDetEliminada  = detalleFormulaSemiList.get(Integer.valueOf(itemDet).intValue());
         detalleFormulaSemiEliminadaList.add(fSemiDetEliminada);
-
+    }
+   
         detalleFormulaSemiList.remove(Integer.valueOf(itemDet).intValue());
         detallesFormulaSemi = (FormulaSemiDetalle[]) detalleFormulaSemiList.toArray(new FormulaSemiDetalle[0]);
         return null;
@@ -1424,10 +1426,11 @@ this.uiDetTareaOrden.setText("");
     public String detailEditTarea() {
             // esta bandera se usa para determinar el comportamiento del boton guardar detalle
             editarDetalleTarea = true;
-
+        
             TareaFormula tareaFormula = new TareaFormula();
             tareaFormula = tareaFormulaList.get(Integer.valueOf(itemDet).intValue());
-
+        
+            
             this.uiDetTareaCodigo.setText(tareaFormula.getCodTarea().getCodTarea().toString());
             this.uiDetTareaNombre.setText(tareaFormula.getCodTarea().getNombreTarea().toString());
             this.uiDetTareaCantidad.setText(tareaFormula.getCantidadTarea().toString());
