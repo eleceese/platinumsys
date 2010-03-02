@@ -98,6 +98,10 @@ public class FacturaCabeceraController extends AbstractJpaDao<FacturaCabecera> {
         try {
             tx.begin();
 
+            //Obtenemos el numero de la factura
+            Long nroFactura= getNroFactura(cabecera.getEstablecimiento(), cabecera.getBocaExpendio());
+            cabecera.setNumeroFactura(nroFactura);
+
             //Persistimos la Cabecera
             em.persist(cabecera);
 

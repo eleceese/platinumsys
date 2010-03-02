@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -22,10 +23,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.listener.FacturaVentaCabeceraListener;
 import py.com.platinum.utils.StringUtils;
 import py.com.platinum.utilsenum.FacturaVentaEstado;
 
@@ -35,6 +38,7 @@ import py.com.platinum.utilsenum.FacturaVentaEstado;
  */
 @Entity
 @Table(name = "FACTURA_CABECERA")
+@EntityListeners(value=FacturaVentaCabeceraListener.class)
 @SequenceGenerator(name = "FACTURA_CABECERA_SEQUENCE", sequenceName = "SQ_CABECERA_FACTURA", initialValue = 1, allocationSize = 1)
 public class FacturaCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -50,6 +54,9 @@ public class FacturaCabecera implements Serializable {
     @Column(name = "FECHA_FACTURA", nullable=false)
     @Temporal(TemporalType.DATE)
     private Date fechaFactura;
+    @Column(name = "FECHA_VENCIMIENTO")
+    @Temporal(TemporalType.DATE)
+    private Date fechaVencimiento;
     @Column(name = "SUBTOTAL_FACTURA", nullable=false)
     private Long subtotalFactura;
     @Column(name = "TOTAL_IVA_FACTURA", nullable=false)
@@ -116,7 +123,7 @@ public class FacturaCabecera implements Serializable {
     }
 
     public String getNumeroFactura() {
-        return StringUtils.lpad("0", 8, numeroFactura.toString());
+        return StringUtils.lpad(numeroFactura.toString(), 8, "0");
     }
 
     public void setNumeroFactura(Long numeroFactura) {
@@ -137,6 +144,14 @@ public class FacturaCabecera implements Serializable {
 
     public void setFechaFactura(Date fechaFactura) {
         this.fechaFactura = fechaFactura;
+    }
+
+    public Date getFechaVencimiento() {
+        return fechaVencimiento;
+    }
+
+    public void setFechaVencimiento(Date fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
     }
 
     public Long getSubtotalFactura() {

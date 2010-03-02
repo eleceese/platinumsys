@@ -6,17 +6,15 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,32 +25,36 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "SALDO_CLIENTE")
-@NamedQueries({@NamedQuery(name = "SaldoCliente.findAll", query = "SELECT s FROM SaldoCliente s"), @NamedQuery(name = "SaldoCliente.findByCodSaldoCliente", query = "SELECT s FROM SaldoCliente s WHERE s.codSaldoCliente = :codSaldoCliente"), @NamedQuery(name = "SaldoCliente.findByNumeroDocumento", query = "SELECT s FROM SaldoCliente s WHERE s.numeroDocumento = :numeroDocumento"), @NamedQuery(name = "SaldoCliente.findByTipoDocumento", query = "SELECT s FROM SaldoCliente s WHERE s.tipoDocumento = :tipoDocumento"), @NamedQuery(name = "SaldoCliente.findBySaldoCliente", query = "SELECT s FROM SaldoCliente s WHERE s.saldoCliente = :saldoCliente"), @NamedQuery(name = "SaldoCliente.findByTotal", query = "SELECT s FROM SaldoCliente s WHERE s.total = :total"), @NamedQuery(name = "SaldoCliente.findByUsuarioAlta", query = "SELECT s FROM SaldoCliente s WHERE s.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "SaldoCliente.findByUsuarioModif", query = "SELECT s FROM SaldoCliente s WHERE s.usuarioModif = :usuarioModif"), @NamedQuery(name = "SaldoCliente.findByFechaAlta", query = "SELECT s FROM SaldoCliente s WHERE s.fechaAlta = :fechaAlta"), @NamedQuery(name = "SaldoCliente.findByFechaModif", query = "SELECT s FROM SaldoCliente s WHERE s.fechaModif = :fechaModif")})
+@SequenceGenerator(name = "SALDO_CLIENTE_SEQUENCE", sequenceName = "SQ_SALDO_CLIENTE", initialValue = 1, allocationSize = 1)
 public class SaldoCliente implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @Column(name = "COD_SALDO_CLIENTE")
-    private BigDecimal codSaldoCliente;
-    @Basic(optional = false)
-    @Column(name = "NUMERO_DOCUMENTO")
-    private String numeroDocumento;
-    @Basic(optional = false)
-    @Column(name = "TIPO_DOCUMENTO")
-    private String tipoDocumento;
-    @Column(name = "SALDO_CLIENTE")
-    private BigInteger saldoCliente;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SALDO_CLIENTE_SEQUENCE")
+    @Column(name = "COD_SALDO_CLIENTE", nullable=false)
+    private Long codSaldoCliente;
+    @Column(name = "TIPO_COMPROBANTE", nullable=false)
+    private Long tipoComprobante;
+    @Column(name = "NRO_COMPROBANTE", nullable=false)
+    private Long nroComprobante;
+    @Column(name = "FECHA_COMPROBANTE")
+    @Temporal(TemporalType.DATE)
+    private Date fechaComprobante;
+    @Column(name = "FECHA_VENCIMIENTO")
+    @Temporal(TemporalType.DATE)
+    private Date fechaVencimiento;
+    @Column(name = "SALDO")
+    private Long saldo;
     @Column(name = "TOTAL")
-    private BigInteger total;
+    private Long total;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
     private String usuarioModif;
     @Column(name = "FECHA_ALTA")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaAlta;
     @Column(name = "FECHA_MODIF")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModif;
     @JoinColumn(name = "COD_CLIENTE", referencedColumnName = "COD_CLIENTE")
     @ManyToOne(optional = false)
@@ -61,53 +63,63 @@ public class SaldoCliente implements Serializable {
     public SaldoCliente() {
     }
 
-    public SaldoCliente(BigDecimal codSaldoCliente) {
+    public SaldoCliente(Long codSaldoCliente) {
         this.codSaldoCliente = codSaldoCliente;
     }
 
-    public SaldoCliente(BigDecimal codSaldoCliente, String numeroDocumento, String tipoDocumento) {
-        this.codSaldoCliente = codSaldoCliente;
-        this.numeroDocumento = numeroDocumento;
-        this.tipoDocumento = tipoDocumento;
-    }
-
-    public BigDecimal getCodSaldoCliente() {
+    public Long getCodSaldoCliente() {
         return codSaldoCliente;
     }
 
-    public void setCodSaldoCliente(BigDecimal codSaldoCliente) {
+    public void setCodSaldoCliente(Long codSaldoCliente) {
         this.codSaldoCliente = codSaldoCliente;
     }
 
-    public String getNumeroDocumento() {
-        return numeroDocumento;
+    public Long getNroComprobante() {
+        return nroComprobante;
     }
 
-    public void setNumeroDocumento(String numeroDocumento) {
-        this.numeroDocumento = numeroDocumento;
+    public void setNroComprobante(Long nroComprobante) {
+        this.nroComprobante = nroComprobante;
     }
 
-    public String getTipoDocumento() {
-        return tipoDocumento;
+    public Long getTipoComprobante() {
+        return tipoComprobante;
     }
 
-    public void setTipoDocumento(String tipoDocumento) {
-        this.tipoDocumento = tipoDocumento;
+    public void setTipoComprobante(Long tipoComprobante) {
+        this.tipoComprobante = tipoComprobante;
     }
 
-    public BigInteger getSaldoCliente() {
-        return saldoCliente;
+    public Date getFechaVencimiento() {
+        return fechaVencimiento;
     }
 
-    public void setSaldoCliente(BigInteger saldoCliente) {
-        this.saldoCliente = saldoCliente;
+    public void setFechaVencimiento(Date fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
     }
 
-    public BigInteger getTotal() {
+    public Date getFechaComprobante() {
+        return fechaComprobante;
+    }
+
+    public void setFechaComprobante(Date fechaComprobante) {
+        this.fechaComprobante = fechaComprobante;
+    }
+
+    public Long getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(Long saldo) {
+        this.saldo = saldo;
+    }
+
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(BigInteger total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 

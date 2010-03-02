@@ -13,6 +13,7 @@ import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.PedidoCabecera;
 import py.com.platinum.entity.PedidoDetalle;
+import py.com.platinum.utilsenum.PedidoVentaEstado;
 
 /**
  *
@@ -108,7 +109,7 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
                     PedidoDetalle det = detalle.get(i);
 
                     //Asignamos la cabecera al detalle
-                    det.setCodPedido(cabecera);
+                    det.setCodPedidoCab(cabecera);
 
                     //Persistimos
                     em.persist(det);
@@ -163,9 +164,9 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
                     PedidoDetalle det = detalle.get(i);
 
                     //Actualizamos
-                    if (det.getCodPedido() == null) {
+                    if (det.getCodPedidoCab() == null) {
                         //Asignamos la cabecera al detalle
-                        det.setCodPedido(cabecera);
+                        det.setCodPedidoCab(cabecera);
 
                         //Persistir
                         em.persist(det);
@@ -312,5 +313,43 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
 
         //result
         return r;
+    }
+
+
+    /**
+     * Consulta de pedidos por estado y cliente
+     * @param estado
+     * @return
+     */
+    public List<PedidoCabecera> getPedidoCabecera(String cliente, PedidoVentaEstado estado) {
+        //Armamos el sql String
+        String SQL = "SELECT o FROM PedidoCabecera o WHERE o.estadoPedido = :estado ";
+
+
+        if (cliente != null && !cliente.equals("")) {
+            SQL = SQL + " and UPPER( CONCAT(CONCAT(o.codCliente.apellidoCliente, '%'), o.codCliente.nombreCliente)) like UPPER(:cliente) ";
+        }
+
+        //Order By
+        SQL = SQL + " ORDER BY o.fechaPedido desc ";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Seteamos los parametros
+        q.setParameter("estado", estado);
+
+        if (cliente != null && !cliente.equals("")) {
+            q.setParameter("cliente", "%" + cliente + "%");
+        }
+
+        //Realizamos la busqueda
+        List<PedidoCabecera> entities = q.getResultList();
+        
+        em.close();
+
+        //retornamos la lista
+        return entities;
+
     }
 }   
