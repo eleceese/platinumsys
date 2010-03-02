@@ -28,6 +28,7 @@ import py.com.platinum.controller.FacturaCabeceraController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.ClienteController;
 import py.com.platinum.controller.EmpleadoController;
+import py.com.platinum.controller.PedidoCabeceraController;
 import py.com.platinum.controller.TipoComprobanteController;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.Empleado;
@@ -35,12 +36,14 @@ import py.com.platinum.entity.FacturaCabecera;
 import py.com.platinum.entity.FacturaDetalle;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.Cliente;
+import py.com.platinum.entity.PedidoCabecera;
+import py.com.platinum.entity.PedidoDetalle;
 import py.com.platinum.entity.TipoComprobante;
+import py.com.platinum.utils.DateUtils;
 import py.com.platinum.utils.StringUtils;
 import py.com.platinum.utilsenum.FacturaVentaEstado;
 import py.com.platinum.utilsenum.ModelUtil;
 import py.com.platinum.utilsenum.ModuloEnum;
-import py.com.platinum.utilsenum.PedidoVentaEstado;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -98,15 +101,6 @@ public class ABMFacturaVenta extends AbstractPageBean {
 
     public void setUpdateButton(Button b) {
         this.updateButton = b;
-    }
-    private Button deleteButton = new Button();
-
-    public Button getDeleteButton() {
-        return deleteButton;
-    }
-
-    public void setDeleteButton(Button b) {
-        this.deleteButton = b;
     }
     private HtmlPanelGrid addUpdatePanel = new HtmlPanelGrid();
 
@@ -468,6 +462,78 @@ public class ABMFacturaVenta extends AbstractPageBean {
     public void setUiTxtMontoDescuento(TextField tf) {
         this.uiTxtMontoDescuento = tf;
     }
+    private HtmlPanelGrid gridPanelDetLin1 = new HtmlPanelGrid();
+
+    public HtmlPanelGrid getGridPanelDetLin1() {
+        return gridPanelDetLin1;
+    }
+
+    public void setGridPanelDetLin1(HtmlPanelGrid hpg) {
+        this.gridPanelDetLin1 = hpg;
+    }
+    private HtmlPanelGrid gridPanelDetLin2 = new HtmlPanelGrid();
+
+    public HtmlPanelGrid getGridPanelDetLin2() {
+        return gridPanelDetLin2;
+    }
+
+    public void setGridPanelDetLin2(HtmlPanelGrid hpg) {
+        this.gridPanelDetLin2 = hpg;
+    }
+    private Table tableDetalle = new Table();
+
+    public Table getTableDetalle() {
+        return tableDetalle;
+    }
+
+    public void setTableDetalle(Table t) {
+        this.tableDetalle = t;
+    }
+    private TableRowGroup tableRowGroup2 = new TableRowGroup();
+
+    public TableRowGroup getTableRowGroup2() {
+        return tableRowGroup2;
+    }
+
+    public void setTableRowGroup2(TableRowGroup trg) {
+        this.tableRowGroup2 = trg;
+    }
+    private TableColumn tableColumnEditarDet = new TableColumn();
+
+    public TableColumn getTableColumnEditarDet() {
+        return tableColumnEditarDet;
+    }
+
+    public void setTableColumnEditarDet(TableColumn tc) {
+        this.tableColumnEditarDet = tc;
+    }
+    private TableColumn tableColumnEliminarDet = new TableColumn();
+
+    public TableColumn getTableColumnEliminarDet() {
+        return tableColumnEliminarDet;
+    }
+
+    public void setTableColumnEliminarDet(TableColumn tc) {
+        this.tableColumnEliminarDet = tc;
+    }
+    private TextField uiTxtNroPedido = new TextField();
+
+    public TextField getUiTxtNroPedido() {
+        return uiTxtNroPedido;
+    }
+
+    public void setUiTxtNroPedido(TextField tf) {
+        this.uiTxtNroPedido = tf;
+    }
+    private Button uiBtnCargarPedido = new Button();
+
+    public Button getUiBtnCargarPedido() {
+        return uiBtnCargarPedido;
+    }
+
+    public void setUiBtnCargarPedido(Button b) {
+        this.uiBtnCargarPedido = b;
+    }
 
     // </editor-fold>
     /**
@@ -540,8 +606,8 @@ public class ABMFacturaVenta extends AbstractPageBean {
         // Perform application initialization that must complete
         // *after* managed components are initialized
         // TODO - add your own initialization code here
-        getSessionBean1().setTituloPagina("Facturas Compras");
-        getSessionBean1().setDetallePagina("Registro de Facturas - Cliente");
+        getSessionBean1().setTituloPagina("Facturas Venta");
+        getSessionBean1().setDetallePagina("Factura - Cliente");
     }
 
     /**
@@ -709,14 +775,22 @@ public class ABMFacturaVenta extends AbstractPageBean {
         addRequest = true;
         updateDetRequest = true;
         itemDet = null;
-
+        pedido = null;
+        tipoComprobante = null;
+        cliente = null;
+        producto = null;
 
         //Cargar tablas realcionadas
         cargarRelaciones();
 
         //Actualizamos le titulo de la pagina
-        getSessionBean1().setTituloPagina("Nueva Factura Compra");
-        getSessionBean1().setDetallePagina("Registro de Facturas - Cliente");
+        getSessionBean1().setTituloPagina("Nueva Factura Venta");
+        getSessionBean1().setDetallePagina("Factura - Cliente");
+        gridPanelDetLin1.setRendered(true);
+        gridPanelDetLin2.setRendered(true);
+        tableColumnEditarDet.setRendered(true);
+        tableColumnEliminarDet.setRendered(true);
+
 
         //result
         return null;
@@ -738,11 +812,16 @@ public class ABMFacturaVenta extends AbstractPageBean {
         cargarRelaciones();
 
         //Actualizamos le titulo de la pagina
-        getSessionBean1().setTituloPagina("Editar Factura Compra");
-        getSessionBean1().setDetallePagina("Registro de Facturas - Cliente");
-
+        getSessionBean1().setTituloPagina("Ver Detalle Factura Venta");
+        getSessionBean1().setDetallePagina("Facturas - Cliente");
+        gridPanelDetLin1.setRendered(false);
+        gridPanelDetLin2.setRendered(false);
+        tableColumnEditarDet.setRendered(false);
+        tableColumnEliminarDet.setRendered(false);
+        
         //ocultamos el pageAlert
         this.pageAlert1.setRendered(false);
+
 
         if (getTableRowGroup1().getSelectedRowsCount() > 0) {
             RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
@@ -761,7 +840,7 @@ public class ABMFacturaVenta extends AbstractPageBean {
             lstDetalleEliminar = new ArrayList();
 
             //Obetenemos los atributos de la cabecera
-            uiTxtNroFactura.setText(cabecera.getNumeroFactura());
+            uiTxtNroFactura.setText(cabecera.getEstablecimiento() + "-"  + cabecera.getBocaExpendio() + "-" + cabecera.getNumeroFactura());
             uiTxtCodCliente.setText(cabecera.getCodCliente().getCodCliente());
             uiTxtNombreCliente.setText(cabecera.getCodCliente().getNombreCliente());
             uiLstEstado.setSelected(cabecera.getEstadoFactura());
@@ -824,12 +903,13 @@ public class ABMFacturaVenta extends AbstractPageBean {
             cabecera = new FacturaCabecera();
 
             //Set de los artributos
-            cabecera.setCodCliente(Cliente);
+            cabecera.setCodCliente(cliente);
             cabecera.setEstadoFactura(ModelUtil.getFacturaVentaEstado(uiLstEstado.getSelected().toString()));
             cabecera.setFechaFactura(uiCalFecha.getSelectedDate());
-            cabecera.setNumeroFactura(Long.valueOf(uiTxtNroFactura.getText().toString()));
-            //TODO: Falta Implementar el modulo de Usuarios, para tomar directamente
-            //el usuario de la session
+            cabecera.setFechaVencimiento(DateUtils.fechaMas(uiCalFecha.getSelectedDate(), tipoComprobante.getCantDias()));
+            cabecera.setCodPedido(pedido);
+            cabecera.setEstablecimiento(getSessionBean1().getEstablecimiento());
+            cabecera.setBocaExpendio(getSessionBean1().getBocaExpendio());
             codEmpleado = new EmpleadoController().findById(Long.valueOf("1"));
             cabecera.setCodEmpleado(codEmpleado);
             cabecera.setPorcDescuento(Long.valueOf(uiTxtPorcDescuento.getText().toString()));
@@ -853,7 +933,7 @@ public class ABMFacturaVenta extends AbstractPageBean {
                 this.addRequest = false;
                 this.updateDetRequest = false;
                 this.pageAlert1.setType("information");
-
+                uiTxtNroFactura.setText(cabecera.getNumeroFactura());
             }
 
             this.pageAlert1.setTitle(cr.getMsg());
@@ -880,9 +960,9 @@ public class ABMFacturaVenta extends AbstractPageBean {
             this.errorValidacion = true;
         }else{
             //Validamos el codigo del Cliente ingresado
-            Cliente = new ClienteController().findById(Long.valueOf(uiTxtCodCliente.getText().toString()));
+            cliente = new ClienteController().findById(Long.valueOf(uiTxtCodCliente.getText().toString()));
 
-            if (Cliente == null) {
+            if (cliente == null) {
                 info("Codigo de Cliente ingresado no es encontrado, campo obligatorio favor ingrese un codigo correcto");
                 this.errorValidacion = true;
             }
@@ -902,36 +982,44 @@ public class ABMFacturaVenta extends AbstractPageBean {
             }
         }
 
-        //Fecha
+        //Pedido
         if (this.uiCalFecha.getSelectedDate() == null) {
-            info("Fecha Pedido, campo obligatorio");
+            info("Fecha Factura, campo obligatorio");
             this.errorValidacion = true;
         }
 
+        if (uiTxtNroPedido.getText()== null && uiTxtNroPedido.getText().toString().trim().equals("")){
+            errorValidacion = true;
+            info("Debe Seleccionar un Pedido para poder cargar datos de un Pedido");
+        }else{
+            pedido = pedidoController.findById(Long.valueOf(uiTxtNroPedido.getText().toString()));
+            if (pedido == null) {
+                errorValidacion = true;
+                info("Numero de Pedido ingresado incorrecto, favor verifique");
+            }
+        }
     }
 
     public String uiBtnGuardarEditar_action() {
-        //Validamos los campos
-        validarCabecera();
+        //Inicializamos
+        errorValidacion = false;
 
+        //Verificamos el estado del comprobante
+        if (cabecera.getEstadoFactura().toString().equals(FacturaVentaEstado.ANULADO.toString())) {
+            info("La Factura ya fue Anulada");
+            errorValidacion = true;
+        } else if(cabecera.getEstadoFactura().toString().equals(FacturaVentaEstado.COBRADO.toString())){
+            info("La Factura no puede ser Anulada, por que ya fue Cobrada al Cliente");
+            errorValidacion = true;
+        }
+        
         //Si no hay error de validacion insertamos el registro
         if (!errorValidacion) {
 
-            //Set de los artributos
-            cabecera.setCodCliente(Cliente);
-            cabecera.setEstadoFactura(ModelUtil.getFacturaVentaEstado(uiLstEstado.getSelected().toString()));
-            cabecera.setFechaFactura(uiCalFecha.getSelectedDate());
-            cabecera.setNumeroFactura(Long.valueOf(uiTxtNroFactura.getText().toString()));
-            //Tipo de comprobante
-            cabecera.setTipoFactura(tipoComprobante);
-            cabecera.setTotalIvaFactura(Long.valueOf(uiTxtTotalIva.getText().toString()));
-            cabecera.setSubtotalFactura(Long.valueOf(uiTxtSubTotal.getText().toString()));
-            cabecera.setTotalFactura(Long.valueOf(uiTxtTotal.getText().toString()));
-            cabecera.setPorcDescuento(Long.valueOf(uiTxtPorcDescuento.getText().toString()));
-            cabecera.setMontoDescuento(Long.valueOf(uiTxtMontoDescuento.getText().toString()));
+            cabecera.setEstadoFactura(FacturaVentaEstado.ANULADO);
 
             //Insertamos la cebecera y del detalle
-            ControllerResult cr = new FacturaCabeceraController().actualizar(cabecera, lstDetalleLIST, lstDetalleEliminar);
+            ControllerResult cr = new FacturaCabeceraController().update(cabecera);
 
             //Verificamos el tipo de mensaje
             if (cr.getCodRetorno() == -1) {
@@ -980,9 +1068,11 @@ public class ABMFacturaVenta extends AbstractPageBean {
     private List<FacturaDetalle> lstDetalleLIST;
     private List<FacturaDetalle> lstDetalleEliminar;
     private Producto producto;
-    private Cliente Cliente;
+    private Cliente cliente;
     private TipoComprobante tipoComprobante;
-    Empleado codEmpleado = new Empleado();
+    private Empleado codEmpleado  = new Empleado();
+    private PedidoCabecera pedido = new PedidoCabecera();
+    private PedidoCabeceraController pedidoController = new PedidoCabeceraController();
 
     public FacturaCabecera getCabecera() {
         return cabecera;
@@ -1324,6 +1414,67 @@ public class ABMFacturaVenta extends AbstractPageBean {
         getSessionBean1().cargarListaTipoComprobantePorModulo(ModuloEnum.VENTA);
 
 
+    }
+
+    public String uiBtnCargarPedido_action() {
+        //Inicializamos
+        errorValidacion = false;
+
+        if (uiTxtNroPedido.getText()== null && uiTxtNroPedido.getText().toString().trim().equals("")){
+            errorValidacion = true;
+            info("Debe Seleccionar un Pedido para poder cargar datos de un Pedido");
+        }else{
+            
+
+            pedido = pedidoController.findById(Long.valueOf(uiTxtNroPedido.getText().toString()));
+
+            if (pedido == null) {
+                errorValidacion = true;
+                info("Numero de Pedido ingresado incorrecto, favor verifique");
+            }else{
+                /* Cargamos los datos del pedido */
+
+                //Cabecera
+                uiTxtCodCliente.setText(pedido.getCodCliente().getCodCliente());
+                uiTxtNombreCliente.setText(pedido.getCodCliente().getApellidoCliente() + ", " + pedido.getCodCliente().getNombreCliente());
+                uiCalFecha.setSelectedDate(new Date());
+                uiLstEstado.setSelected(FacturaVentaEstado.PENDIENTE_COBRO.toString());
+                uiTxtTotal.setText("0");
+                uiTxtTotalIva.setText("0");
+                uiTxtSubTotal.setText("0");
+
+                //Detalle
+                List<PedidoDetalle> detallePedido = pedido.getPedidoDetalleList();
+
+                lstDetalleLIST = new ArrayList<FacturaDetalle>();
+                
+                //Recorremos la lista de detalle del pedido
+                for (int i = 0; i < detallePedido.size(); i++) {
+                    //Obtenemos el detalle
+                    PedidoDetalle x = detallePedido.get(i);
+
+                    //Creamos el detalle de la factura
+                    detalle = new FacturaDetalle();
+                    detalle.setCantidad(x.getCantidadPedida());
+                    detalle.setCodPedidoDetalle(x);
+                    detalle.setCodProducto(x.getCodProducto());
+                    detalle.setFechaAlta(new Date());
+                    detalle.setPorcentajeIva(x.getPorcIva());
+                    detalle.setPrecioUnitario(x.getPrecioUnitario());
+                    detalle.setSubTotal(x.getTotal());
+                    detalle.setTotalIva(x.getMontoIva());
+
+                    //Agregamos a la lista
+                    lstDetalleLIST.add(detalle);
+                }
+
+                //Actualizamos el array detalle
+                lstDetalle = (FacturaDetalle[]) lstDetalleLIST.toArray(new FacturaDetalle[0]);
+            }
+        }
+
+        //result
+        return null;
     }
 
 }

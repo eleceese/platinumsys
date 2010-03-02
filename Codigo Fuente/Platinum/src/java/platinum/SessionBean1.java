@@ -20,6 +20,7 @@ import py.com.platinum.controller.FormaPagoController;
 import py.com.platinum.controller.DepositoController;
 import py.com.platinum.controller.FormulaSemiCabeceraController;
 import py.com.platinum.controller.MarcaController;
+import py.com.platinum.controller.PedidoCabeceraController;
 import py.com.platinum.controller.PresentacionController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.SeccionController;
@@ -41,6 +42,7 @@ import py.com.platinum.entity.Deposito;
 import py.com.platinum.entity.FormulaSemiCabecera;
 import py.com.platinum.entity.Marca;
 import py.com.platinum.entity.OrdenTrabajo;
+import py.com.platinum.entity.PedidoCabecera;
 import py.com.platinum.entity.Presentacion;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.Seccion;
@@ -50,8 +52,8 @@ import py.com.platinum.entity.Tarea;
 import py.com.platinum.entity.TipoComprobante;
 import py.com.platinum.entity.TipoProducto;
 import py.com.platinum.entity.UnidadMedida;
-import py.com.platinum.utils.StringUtils;
 import py.com.platinum.utilsenum.ModuloEnum;
+import py.com.platinum.utilsenum.PedidoVentaEstado;
 
 /**
  * <p>Session scope data bean for your application.  Create properties
@@ -123,6 +125,8 @@ public class SessionBean1 extends AbstractSessionBean {
 
         dateTimeConverter.setPattern("dd/MM/yyyy");
         dateTimeConverter.setTimeZone(null);
+        dateTimeConverterFull.setPattern("dd/MM/yyyy HH:mm:ss");
+        dateTimeConverterFull.setTimeZone(null);
 
         //El siguiente Metodo Carga la Grilla De Productos al cargar la pagina de productos.
         cargarListaTodosTareas();
@@ -143,7 +147,7 @@ public class SessionBean1 extends AbstractSessionBean {
         cargarListaComision();
         cargarListaCliente();
         cargarListaTipoComprobante();
-
+        cargarListaPedidoVenta(null, PedidoVentaEstado.PENDIENTE);
     }
 
     /**
@@ -194,7 +198,25 @@ public class SessionBean1 extends AbstractSessionBean {
         return (ApplicationBean1) getBean("ApplicationBean1");
     }
     private String tituloPagina;
-    private String detallePagina;   
+    private String detallePagina;
+    private String establecimiento = "001";
+    private String bocaExpendio = "001";
+
+    public String getBocaExpendio() {
+        return bocaExpendio;
+    }
+
+    public void setBocaExpendio(String bocaExpendio) {
+        this.bocaExpendio = bocaExpendio;
+    }
+
+    public String getEstablecimiento() {
+        return establecimiento;
+    }
+
+    public void setEstablecimiento(String establecimiento) {
+        this.establecimiento = establecimiento;
+    }
 
     public String getDetallePagina() {
         return detallePagina;
@@ -614,7 +636,17 @@ public class SessionBean1 extends AbstractSessionBean {
         //Obtenemos la lista de Comision ordenado por nombre del Comision
         listaComision = (Comision[]) ComisionController.getAll("codProducto.descripcion").toArray(new Comision[0]);
     }
+
     private DateTimeConverter dateTimeConverter = new DateTimeConverter();
+    private DateTimeConverter dateTimeConverterFull = new DateTimeConverter();
+
+    public DateTimeConverter getDateTimeConverterFull() {
+        return dateTimeConverterFull;
+    }
+
+    public void setDateTimeConverterFull(DateTimeConverter dateTimeConverterFull) {
+        this.dateTimeConverterFull = dateTimeConverterFull;
+    }
 
     public DateTimeConverter getDateTimeConverter() {
         return dateTimeConverter;
@@ -830,8 +862,8 @@ public class SessionBean1 extends AbstractSessionBean {
     }
 
     public void cargarListaSolictud() {
-        EmpleadoController EmpleadoController = new EmpleadoController();
-        listaEmpleados = (Empleado[]) EmpleadoController.getAll("fecha").toArray(new Empleado[0]);
+        SolicitudInternaController c = new SolicitudInternaController();
+        listaSolicitud = (SolicitudInterna[]) c.getAll("fecha").toArray(new SolicitudInterna[0]);
     }
 
     public void cargarListaSolictud(String estado) {
@@ -961,5 +993,25 @@ public class SessionBean1 extends AbstractSessionBean {
             //agregamos option al array de option - Ciudad
             listaCiudadOption[i] = o;
         }
+    }
+
+    PedidoCabecera[] listaPedidoVenta;
+
+    public PedidoCabecera[] getListaPedidoVenta() {
+        return listaPedidoVenta;
+    }
+
+    public void setListaPedidoVenta(PedidoCabecera[] listaPedidoVenta) {
+        this.listaPedidoVenta = listaPedidoVenta;
+    }
+
+    public void cargarListaPedidoVenta() {
+        PedidoCabeceraController pedidoCabeceraController = new PedidoCabeceraController();
+        listaPedidoVenta = (PedidoCabecera[]) pedidoCabeceraController.getAll("fechaPedido").toArray(new PedidoCabecera[0]);
+    }
+
+    public void cargarListaPedidoVenta(String cliente, PedidoVentaEstado estado) {
+        PedidoCabeceraController c = new PedidoCabeceraController();
+        listaPedidoVenta = (PedidoCabecera[]) c.getPedidoCabecera(cliente, estado).toArray(new PedidoCabecera[0]);
     }
 }
