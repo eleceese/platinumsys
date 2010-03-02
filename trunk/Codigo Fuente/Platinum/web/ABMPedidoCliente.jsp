@@ -74,8 +74,8 @@
                                             <webuijsf:radioButton binding="#{ABMPedidoCliente.radioButton1}" id="radioButton1" label=""
                                                 name="#{ABMPedidoCliente.radioButton1.id}" onClick="delSelect='ok'" selected="#{ABMPedidoCliente.selected}" selectedValue="#{ABMPedidoCliente.selectedValue}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Nro. Factura" id="tableColumn2" width="169">
-                                            <webuijsf:staticText id="staticText2" text="#{currentRow.value['numeroPedido']}"/>
+                                        <webuijsf:tableColumn headerText="Nro. Pedido" id="tableColumn2" width="169">
+                                            <webuijsf:staticText id="staticText2" text="#{currentRow.value['codPedido']}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Cliente" id="tableColumn3">
                                             <webuijsf:staticText id="staticText3" text="#{currentRow.value['codCliente'].apellidoCliente}, #{currentRow.value['codCliente'].nombreCliente}"/>
@@ -100,7 +100,7 @@
                                     <h:panelGrid cellpadding="1" columns="3" id="panelGridCabeceraCompra" style="text-align: left" width="743">
                                         <webuijsf:label id="lblNroFac" text="Nro. Pedido"/>
                                         <h:panelGrid cellpadding="2" cellspacing="2" columns="3" id="panelGridCabCompra1" width="335">
-                                            <webuijsf:textField binding="#{ABMPedidoCliente.uiTxtNroPedido}" id="uiTxtNroPedido" maxLength="20"/>
+                                            <webuijsf:textField binding="#{ABMPedidoCliente.uiTxtNroPedido}" id="uiTxtNroPedido" maxLength="20" onFocus="document.getElementById('form1:uiLstTipoComprobante_list').focus(); return false;"/>
                                             <webuijsf:label for="uiLstTipoComprobante" id="lblTipoFactura" text="Tipo"/>
                                             <webuijsf:dropDown binding="#{ABMPedidoCliente.uiLstTipoComprobante}" id="uiLstTipoComprobante"
                                                 items="#{SessionBean1.listaTipoComprobanteOption}" width="170px"/>

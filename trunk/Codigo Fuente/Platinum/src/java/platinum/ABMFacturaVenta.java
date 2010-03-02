@@ -874,18 +874,6 @@ public class ABMFacturaVenta extends AbstractPageBean {
         //Apagamos la bandera de error
         this.errorValidacion = false;
 
-        //Nro. Factura
-        if (this.uiTxtNroFactura.getText() == null) {
-            info("Nro. de factura, campo obligatorio");
-            this.errorValidacion = true;
-        }else{
-            //Verificamos si la existe el nro de factura
-            if (new FacturaCabeceraController().existeNroFactura(cabecera.getNumeroFactura(), cabecera.getCodFactura())) {
-                info("Nro. de factura ya ha sido utilizado, ingrese otro numero de factura");
-                this.errorValidacion = true;
-            }
-        }
-
         //Cliente
         if (this.uiTxtCodCliente.getText() == null) {
             info("Cliente, campo obligatorio");
