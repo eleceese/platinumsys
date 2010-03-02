@@ -50,6 +50,7 @@ import py.com.platinum.entity.Tarea;
 import py.com.platinum.entity.TipoComprobante;
 import py.com.platinum.entity.TipoProducto;
 import py.com.platinum.entity.UnidadMedida;
+import py.com.platinum.utils.StringUtils;
 import py.com.platinum.utilsenum.ModuloEnum;
 
 /**
@@ -193,7 +194,7 @@ public class SessionBean1 extends AbstractSessionBean {
         return (ApplicationBean1) getBean("ApplicationBean1");
     }
     private String tituloPagina;
-    private String detallePagina;
+    private String detallePagina;   
 
     public String getDetallePagina() {
         return detallePagina;

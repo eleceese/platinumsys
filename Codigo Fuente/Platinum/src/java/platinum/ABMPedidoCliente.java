@@ -590,8 +590,8 @@ public class ABMPedidoCliente extends AbstractPageBean {
         } else if (errorValidacion) {
             addUpdatePanel.setRendered(true);
         } else if (!updateDetRequest) {
-            getSessionBean1().setTituloPagina("Facturas Compras");
-            getSessionBean1().setDetallePagina("Registro de Facturas - Cliente");
+            getSessionBean1().setTituloPagina("Pedido Cliente");
+            getSessionBean1().setDetallePagina("Registro de Pedido - Cliente");
             gridPanelBuscar.setRendered(true);
             table1.setRendered(true);
             buttonPanel.setRendered(true);
@@ -716,7 +716,8 @@ public class ABMPedidoCliente extends AbstractPageBean {
         //Actualizamos le titulo de la pagina
         getSessionBean1().setTituloPagina("Nueva Factura Compra");
         getSessionBean1().setDetallePagina("Registro de Facturas - Cliente");
-
+        this.uiBtnCancelar.setText("Cancelar");
+        this.uiBtnGuardarNuevo.setRendered(false);
         //result
         return null;
     }
@@ -732,6 +733,8 @@ public class ABMPedidoCliente extends AbstractPageBean {
         updateRequest = true;
         updateDetRequest = true;
         itemDet = null;
+        this.uiBtnGuardarNuevo.setRendered(false);
+        this.uiBtnCancelar.setText("Cancelar");
 
         //Cargamos los datos de las relaciones con esta entidad
         cargarRelaciones();
@@ -760,7 +763,6 @@ public class ABMPedidoCliente extends AbstractPageBean {
             lstDetalleEliminar = new ArrayList();
 
             //Obetenemos los atributos de la cabecera
-            uiTxtNroPedido.setText(cabecera.getNumeroPedido());
             uiTxtCodCliente.setText(cabecera.getCodCliente().getCodCliente());
             uiTxtNombreCliente.setText(cabecera.getCodCliente().getNombreCliente());
             uiLstEstado.setSelected(cabecera.getEstadoPedido());
@@ -826,7 +828,6 @@ public class ABMPedidoCliente extends AbstractPageBean {
             cabecera.setCodCliente(Cliente);
             cabecera.setEstadoPedido(ModelUtil.getPedidoEstado(uiLstEstado.getSelected().toString()));
             cabecera.setFechaPedido(uiCalFecha.getSelectedDate());
-            cabecera.setNumeroPedido(uiTxtNroPedido.getText().toString());
             //TODO: Falta Implementar el modulo de Usuarios, para tomar directamente
             //el usuario de la session
             codEmpleado = new EmpleadoController().findById(Long.valueOf("1"));
@@ -849,10 +850,10 @@ public class ABMPedidoCliente extends AbstractPageBean {
                 errorValidacion = true;
             } else {
                 // Apagamos la bandera de nuevo registro
-                this.addRequest = false;
-                this.updateDetRequest = false;
                 this.pageAlert1.setType("information");
-
+                this.uiBtnCancelar.setText("Atras");
+                this.uiBtnGuardarNuevo.setRendered(false);
+                this.uiTxtNroPedido.setText(cabecera.getCodPedido());
             }
 
             this.pageAlert1.setTitle(cr.getMsg());
@@ -872,18 +873,6 @@ public class ABMPedidoCliente extends AbstractPageBean {
     private void validarCabecera() {
         //Apagamos la bandera de error
         this.errorValidacion = false;
-
-        //Nro. Factura
-        if (this.uiTxtNroPedido.getText() == null) {
-            info("Nro. de factura, campo obligatorio");
-            this.errorValidacion = true;
-        }else{
-            //Verificamos si la existe el nro de Pedido
-            if (new PedidoCabeceraController().existeNroPedido(cabecera.getNumeroPedido(), cabecera.getCodPedido())) {
-                info("Nro. de Pedido ya ha sido utilizado, ingrese otro numero de Pedido");
-                this.errorValidacion = true;
-            }
-        }
 
         //Cliente
         if (this.uiTxtCodCliente.getText() == null) {
@@ -932,7 +921,7 @@ public class ABMPedidoCliente extends AbstractPageBean {
             cabecera.setCodCliente(Cliente);
             cabecera.setEstadoPedido(ModelUtil.getPedidoEstado(uiLstEstado.getSelected().toString()));
             cabecera.setFechaPedido(uiCalFecha.getSelectedDate());
-            cabecera.setNumeroPedido(uiTxtNroPedido.getText().toString());
+            
             //Tipo de comprobante
             cabecera.setTipo(tipoComprobante);
             cabecera.setTotalIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
@@ -950,8 +939,6 @@ public class ABMPedidoCliente extends AbstractPageBean {
                 errorValidacion = true;
             } else {
                 // Apagamos la bandera de Editar registro
-                this.updateRequest = false;
-                this.updateDetRequest = false;
                 this.pageAlert1.setType("information");
             }
 
@@ -971,6 +958,9 @@ public class ABMPedidoCliente extends AbstractPageBean {
         addRequest = false;
         updateRequest = false;
         updateDetRequest = false;
+        errorValidacion = false;
+        this.pageAlert1.setRendered(false);
+        
         return null;
     }
 
