@@ -74,14 +74,20 @@
                                             <webuijsf:radioButton binding="#{ABMFacturaVenta.radioButton1}" id="radioButton1" label=""
                                                 name="#{ABMFacturaVenta.radioButton1.id}" onClick="delSelect='ok'" selected="#{ABMFacturaVenta.selected}" selectedValue="#{ABMFacturaVenta.selectedValue}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Nro. Factura" id="tableColumn2" width="169">
+                                        <webuijsf:tableColumn headerText="Tipo" id="tableColumnTipoComprobante" width="96">
+                                            <webuijsf:staticText id="staticTextTipo" text="#{currentRow.value['tipoFactura'].descTipo}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="Nro. Factura" id="tableColumn2" width="130">
                                             <webuijsf:staticText id="staticText2" text="#{currentRow.value['establecimiento']} - #{currentRow.value['bocaExpendio']} - #{currentRow.value['numeroFactura']}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Cliente" id="tableColumn3">
                                             <webuijsf:staticText id="staticText3" text="#{currentRow.value['codCliente'].apellidoCliente}, #{currentRow.value['codCliente'].nombreCliente}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Fecha" id="tableColumn4" width="96">
+                                        <webuijsf:tableColumn headerText="Emisión" id="tableColumn4" width="96">
                                             <webuijsf:staticText converter="#{SessionBean1.dateTimeConverter}" id="staticText4" text="#{currentRow.value['fechaFactura']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="Vencimiento" id="tableColumnVencimiento" width="96">
+                                            <webuijsf:staticText converter="#{SessionBean1.dateTimeConverter}" id="staticText4" text="#{currentRow.value['fechaVencimiento']}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Estado" id="tableColumn5" width="112">
                                             <webuijsf:staticText converter="#{ABMFacturaVenta.characterConverter1}" id="staticText8" text="#{currentRow.value['estadoFactura']}"/>
@@ -92,15 +98,13 @@
                                     <webuijsf:button actionExpression="#{ABMFacturaVenta.addButton_action}" binding="#{ABMFacturaVenta.addButton}"
                                         id="addButton" text="Nuevo"/>
                                     <webuijsf:button actionExpression="#{ABMFacturaVenta.updateButton_action}" binding="#{ABMFacturaVenta.updateButton}"
-                                        id="updateButton" text="Editar"/>
-                                    <webuijsf:button actionExpression="#{ABMFacturaVenta.deleteButton_action}" binding="#{ABMFacturaVenta.deleteButton}"
-                                        id="deleteButton" onClick="javascript:return confirmar()" text="Eliminar"/>
+                                        id="updateButton" text="Ver Detalle"/>
                                 </h:panelGrid>
                                 <h:panelGrid binding="#{ABMFacturaVenta.addUpdatePanel}" columns="1" id="addUpdatePanel">
                                     <h:panelGrid cellpadding="1" columns="3" id="panelGridCabeceraCompra" style="text-align: left" width="743">
                                         <webuijsf:label id="lblNroFac" text="Nro. Factura"/>
                                         <h:panelGrid cellpadding="2" cellspacing="2" columns="3" id="panelGridCabCompra1" width="335">
-                                            <webuijsf:textField binding="#{ABMFacturaVenta.uiTxtNroFactura}" id="uiTxtNroPedido" maxLength="20" onClick="document.getElementById('form1:uiLstTipoComprobante_list').focus(); return false;"/>
+                                            <webuijsf:textField binding="#{ABMFacturaVenta.uiTxtNroFactura}" id="uiTxtNroFactura" maxLength="20" onClick="document.getElementById('form1:uiLstTipoComprobante_list').focus(); return false;"/>
                                             <webuijsf:label for="uiLstTipoComprobante" id="lblTipoFactura" text="Tipo"/>
                                             <webuijsf:dropDown binding="#{ABMFacturaVenta.uiLstTipoComprobante}" id="uiLstTipoComprobante"
                                                 items="#{SessionBean1.listaTipoComprobanteOption}" width="170px"/>
@@ -143,20 +147,26 @@
                                             <webuijsf:textField binding="#{ABMFacturaVenta.uiTxtTotal}" columns="20" id="uiTxtTotal"
                                                 onFocus="document.getElementById('form1:uiBtnCancelar').focus(); return false;" style="text-align: right"/>
                                         </h:panelGrid>
+                                        <webuijsf:hyperlink id="lnkPedido" onClick="doPopup('form1:uiTxtNroPedido_field')" target="popup" text="Numero Pedido" url="/faces/popup/popupPedidoVenta.jsp"/>
+                                        <h:panelGrid columns="2" id="gridPanelPedido" width="191">
+                                            <webuijsf:textField binding="#{ABMFacturaVenta.uiTxtNroPedido}" columns="15" id="uiTxtNroPedido" maxLength="15" onFocus="document.getElementById('form1:uiBtnCargarPedido').focus(); return false;"/>
+                                            <webuijsf:button actionExpression="#{ABMFacturaVenta.uiBtnCargarPedido_action}"
+                                                binding="#{ABMFacturaVenta.uiBtnCargarPedido}" id="uiBtnCargarPedido" text="Cargar Pedido"/>
+                                        </h:panelGrid>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanel1"
                                         style="direction: rtl; height: 48px; line-height: normal; margin-left: 540px; text-align: right; vertical-align: bottom" width="182">
                                         <webuijsf:button actionExpression="#{ABMFacturaVenta.uiBtnGuardarNuevo_action}"
                                             binding="#{ABMFacturaVenta.uiBtnGuardarNuevo}" id="uiBtnGuardarNuevo" style="font-size: 14px" text="Guardar"/>
                                         <webuijsf:button actionExpression="#{ABMFacturaVenta.uiBtnGuardarEditar_action}"
-                                            binding="#{ABMFacturaVenta.uiBtnGuardarEditar}" id="uiBtnGuardarEditar" rendered="false" style="font-size: 14px" text="Guardar"/>
+                                            binding="#{ABMFacturaVenta.uiBtnGuardarEditar}" id="uiBtnGuardarEditar" rendered="false" style="font-size: 14px" text="Anular"/>
                                         <webuijsf:button actionExpression="#{ABMFacturaVenta.uiBtnCancelar_action}" binding="#{ABMFacturaVenta.uiBtnCancelar}"
                                             id="uiBtnCancelar" style="font-size: 14px" text="Cancelar"/>
                                     </h:panelGrid>
                                     <webuijsf:messageGroup id="messageGroup1" style="width: 719px"/>
                                     <h:panelGrid id="gridPanel2" style="width: 100%; height: 100%;">
                                         <webuijsf:label id="label5" style="font-size: 16px" text="Detalle Factura"/>
-                                        <h:panelGrid columns="7" id="gridPanelDetLin1" style="height: 24px" width="743">
+                                        <h:panelGrid binding="#{ABMFacturaVenta.gridPanelDetLin1}" columns="7" id="gridPanelDetLin1" style="height: 24px" width="743">
                                             <webuijsf:hyperlink id="hyperlink2"
                                                 onClick="doPopup('form1:uiTxtCodProducto_field', 'form1:uiTxtDescProducto_field', 'form1:uiTxtPrecioUnitario_field')"
                                                 target="popup" text="Producto" url="/faces/popup/popupProductoVenta.jsp"/>
@@ -172,7 +182,7 @@
                                                 onClick="document.getElementById('form1:uiTxtPrecioUnitario_field').focus(); return false;"
                                                 onFocus="document.getElementById('form1:uiTxtPrecioUnitario_field').focus(); return false;" width="110"/>
                                         </h:panelGrid>
-                                        <h:panelGrid columns="10" id="gridPanelDetLin2" style="height: 24px" width="719">
+                                        <h:panelGrid binding="#{ABMFacturaVenta.gridPanelDetLin2}" columns="10" id="gridPanelDetLin2" style="height: 24px" width="719">
                                             <webuijsf:label id="lblCantida" text="Cantidad"/>
                                             <webuijsf:textField binding="#{ABMFacturaVenta.uiTxtCantidad}" columns="10" id="uiTxtCantidad"
                                                 onBlur="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )" style="text-align: right"/>
@@ -190,8 +200,9 @@
                                             <webuijsf:button actionExpression="#{ABMFacturaVenta.uiBtnAgregarDet_action}" id="uiBtnAgregarDet" text="Agregar"/>
                                             <webuijsf:button actionExpression="#{ABMFacturaVenta.uiBtnCancelarDetalle_action}" id="uiBtnCancelarDetalle" text="Cancelar"/>
                                         </h:panelGrid>
-                                        <webuijsf:table augmentTitle="false" id="tableDetalle" title="Detalle" width="720">
-                                            <webuijsf:tableRowGroup id="tableRowGroup2" rows="5" sourceData="#{ABMFacturaVenta.lstDetalle}" sourceVar="currentRow">
+                                        <webuijsf:table augmentTitle="false" binding="#{ABMFacturaVenta.tableDetalle}" id="tableDetalle" title="Detalle" width="720">
+                                            <webuijsf:tableRowGroup binding="#{ABMFacturaVenta.tableRowGroup2}" id="tableRowGroup2" rows="5"
+                                                sourceData="#{ABMFacturaVenta.lstDetalle}" sourceVar="currentRow">
                                                 <webuijsf:tableColumn headerText="Cod. Producto" id="tableColumn1">
                                                     <webuijsf:staticText id="staticText1" text="#{currentRow.value['codProducto'].codProducto}"/>
                                                 </webuijsf:tableColumn>
@@ -213,13 +224,14 @@
                                                 <webuijsf:tableColumn headerText="Total" id="tableColumn9">
                                                     <webuijsf:staticText id="staticText9" text="#{currentRow.value['subTotal']}"/>
                                                 </webuijsf:tableColumn>
-                                                <webuijsf:tableColumn align="center" id="tableColumnEditarDet" width="40">
+                                                <webuijsf:tableColumn align="center" binding="#{ABMFacturaVenta.tableColumnEditarDet}" id="tableColumnEditarDet" width="40">
                                                     <webuijsf:imageHyperlink actionExpression="#{ABMFacturaVenta.updateDetAction}" id="uilnkEditarDetalle"
                                                         imageURL="/resources/img/edit_16x16.gif" text="">
                                                         <f:setPropertyActionListener target="#{ABMFacturaVenta.itemDet}" value="#{currentRow.tableRow.rowId}"/>
                                                     </webuijsf:imageHyperlink>
                                                 </webuijsf:tableColumn>
-                                                <webuijsf:tableColumn align="center" id="tableColumnEliminarDet" width="40">
+                                                <webuijsf:tableColumn align="center" binding="#{ABMFacturaVenta.tableColumnEliminarDet}"
+                                                    id="tableColumnEliminarDet" width="40">
                                                     <webuijsf:imageHyperlink actionExpression="#{ABMFacturaVenta.deleteDetAction}" id="uilnkEliminarDetalle"
                                                         imageURL="/resources/img/delete.png" text="">
                                                         <f:setPropertyActionListener target="#{ABMFacturaVenta.itemDet}" value="#{currentRow.tableRow.rowId}"/>

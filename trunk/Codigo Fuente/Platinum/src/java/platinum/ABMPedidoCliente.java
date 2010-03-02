@@ -539,8 +539,8 @@ public class ABMPedidoCliente extends AbstractPageBean {
         // Perform application initialization that must complete
         // *after* managed components are initialized
         // TODO - add your own initialization code here
-        getSessionBean1().setTituloPagina("Facturas Compras");
-        getSessionBean1().setDetallePagina("Registro de Facturas - Cliente");
+        getSessionBean1().setTituloPagina("Pedido Cliente");
+        getSessionBean1().setDetallePagina("Registro de Pedido - Cliente");
     }
 
     /**
@@ -714,8 +714,8 @@ public class ABMPedidoCliente extends AbstractPageBean {
         cargarRelaciones();
 
         //Actualizamos le titulo de la pagina
-        getSessionBean1().setTituloPagina("Nueva Factura Compra");
-        getSessionBean1().setDetallePagina("Registro de Facturas - Cliente");
+        getSessionBean1().setTituloPagina("Nuevo Pedido Venta");
+        getSessionBean1().setDetallePagina("Registro de Pedido - Cliente");
         this.uiBtnCancelar.setText("Cancelar");
         this.uiBtnGuardarNuevo.setRendered(false);
         //result
@@ -740,8 +740,8 @@ public class ABMPedidoCliente extends AbstractPageBean {
         cargarRelaciones();
 
         //Actualizamos le titulo de la pagina
-        getSessionBean1().setTituloPagina("Editar Factura Compra");
-        getSessionBean1().setDetallePagina("Registro de Facturas - Cliente");
+        getSessionBean1().setTituloPagina("Editar Pedido Cliente");
+        getSessionBean1().setDetallePagina("Registro de Pedido - Cliente");
 
         //ocultamos el pageAlert
         this.pageAlert1.setRendered(false);
@@ -1088,7 +1088,7 @@ public class ABMPedidoCliente extends AbstractPageBean {
             //Obtenemos los datos ingresados
             detalle.setCodProducto(producto);
             detalle.setCantidadPedida(Long.valueOf(uiTxtCantidad.getText().toString()));
-            detalle.setCantidadEntregada(Long.valueOf(uiTxtCantidad.getText().toString()));
+            detalle.setCantidadEntregada(Long.valueOf("0"));
             detalle.setPrecioUnitario(Long.valueOf(uiTxtPrecioUnitario.getText().toString()));
             detalle.setPorcIva(Double.valueOf(uiLstIva.getSelected().toString()));
             detalle.setMontoIva(Long.valueOf(uiTxtMontoIva.getText().toString()));

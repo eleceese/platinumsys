@@ -275,6 +275,29 @@ function calcularMonto(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal, ui
 }
 
 
+function doPopup(destination1) {
+    popup = window.open("", "popup", "height=500,width=500,toolbar=no, menubar=no,scrollbars=yes");
+
+    if( destination1 != null ){
+        destinationElement1=document.getElementById(destination1);
+    }else{
+        destinationElement1=null;
+    }
+
+    popup.focus();
+}
+
+function setVal(val1){
+    if (destinationElement1 != null){
+        destinationElement1.value = val1;
+    }
+}
+
+function doSave(val1) {
+    window.opener.setVal(val1);
+    window.close();
+}
+
 /**
  * script para validar fechas en una caja de texto.
  */
