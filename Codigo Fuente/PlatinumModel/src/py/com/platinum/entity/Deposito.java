@@ -58,7 +58,7 @@ public class Deposito implements Serializable {
     private List<EntradaSalidaCabecera> entradaSalidaCabeceraCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "codDeposito")
     private List<InventarioCabecera> inventarioCabeceraCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "deposito")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codDeposito")
     private List<Existencia> existenciaCollection;
 
     public Deposito() {

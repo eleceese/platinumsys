@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -61,6 +62,8 @@ public class PedidoDetalle implements Serializable {
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Producto codProducto;
+    @OneToOne(mappedBy = "codPedidoDetalle", fetch=FetchType.EAGER)
+    private FacturaDetalle facturaDetalle;
 
     public PedidoDetalle() {
     }
@@ -141,11 +144,11 @@ public class PedidoDetalle implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public PedidoCabecera getCodPedido() {
+    public PedidoCabecera getCodPedidoCab() {
         return codPedidoCab;
     }
 
-    public void setCodPedido(PedidoCabecera codPedidoCab) {
+    public void setCodPedidoCab(PedidoCabecera codPedidoCab) {
         this.codPedidoCab = codPedidoCab;
     }
 
@@ -173,6 +176,13 @@ public class PedidoDetalle implements Serializable {
         this.porcIva = porcIva;
     }
 
+    public FacturaDetalle getFacturaDetalle() {
+        return facturaDetalle;
+    }
+
+    public void setFacturaDetalle(FacturaDetalle facturaDetalle) {
+        this.facturaDetalle = facturaDetalle;
+    }
 
     @Override
     public int hashCode() {
