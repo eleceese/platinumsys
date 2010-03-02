@@ -449,6 +449,8 @@ public class ABMFormulaTerminado extends AbstractPageBean {
      * <p>Construct a new Page bean instance.</p>
      */
     public ABMFormulaTerminado() {
+     uiEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("A", "Activo"), new com.sun.webui.jsf.model.Option("I", "Inactivo")});
+        uiEstadoDefaultOptions.setSelectedValue("A");
     }
 
     /**
@@ -487,8 +489,7 @@ public class ABMFormulaTerminado extends AbstractPageBean {
         // TODO - add your own initialization code here
         getSessionBean1().setTituloPagina("Fórmulas de Producción");
         getSessionBean1().setDetallePagina("Productos Terminados");
-        uiEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("A", "Activo"), new com.sun.webui.jsf.model.Option("I", "Inactivo")});
-        uiEstadoDefaultOptions.setSelectedValue("A");
+       
 
     }
 
@@ -668,6 +669,7 @@ public class ABMFormulaTerminado extends AbstractPageBean {
     }
 
 
+
     public String addButton_action() {
 
         detalleFormulaList = new ArrayList();
@@ -790,8 +792,8 @@ public class ABMFormulaTerminado extends AbstractPageBean {
           formulaCabecera.setCantidad(new BigInteger( this.uiCantidad.getText().toString()));
           formulaCabecera.setDescripcion(this.uiDescripcion.getText().toString());
           formulaCabecera.setFecha(this.uiFecha.getSelectedDate());
-//          formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
-          formulaCabecera.setEstado("A");
+          formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
+          //formulaCabecera.setEstado("A");
 
           detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
 
@@ -852,7 +854,6 @@ public class ABMFormulaTerminado extends AbstractPageBean {
         ControllerResult controllerResult = new ControllerResult();
         FormulaCabecera formulaCabecera = new FormulaCabecera();
         FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
-        validarCampos();
 
 
         if (! errorValidacion){
@@ -864,8 +865,8 @@ public class ABMFormulaTerminado extends AbstractPageBean {
                             formulaCabecera.setCantidad(new BigInteger( this.uiCantidad.getText().toString()));
                             formulaCabecera.setDescripcion(this.uiDescripcion.getText().toString());
                             formulaCabecera.setFecha(this.uiFecha.getSelectedDate());
-                //          formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
-                            formulaCabecera.setEstado("A");
+                            formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
+                            //formulaCabecera.setEstado("A");
             FormulaDetalle[] detallesFormulaEliminada = (FormulaDetalle[]) detalleFormulaEliminadaList.toArray(new FormulaDetalle[0]);
             detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
 
@@ -1166,8 +1167,12 @@ public String detailRemove() {
 
     //// agrego la formula eliminada a la lista de formulas Eliminadas
     //// se utiliza luego al actualizar el registro
-    FormulaDetalle fDetEliminada  = detalleFormulaList.get(Integer.valueOf(itemDet).intValue());
-    detalleFormulaEliminadaList.add(fDetEliminada);
+
+    if (updateRequest) {
+       FormulaDetalle fDetEliminada  = detalleFormulaList.get(Integer.valueOf(itemDet).intValue());
+       detalleFormulaEliminadaList.add(fDetEliminada);
+
+    }
 
     detalleFormulaList.remove(Integer.valueOf(itemDet).intValue());
     detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);

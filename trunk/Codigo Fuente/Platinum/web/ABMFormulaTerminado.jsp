@@ -12,9 +12,9 @@
                 <webuijsf:head id="head1">
                     <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <script>
-                        function ABMProveedores() {
+                        function ABMOrdenesTrabajo() {
                             var table = document.getElementById("form1:tablaFormulas");
-                            table.ABMProveedores();}
+                            table.ABMOrdenesTrabajo();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
@@ -90,14 +90,14 @@
                                         <webuijsf:tableColumn headerText="Cod Formula" id="tableColumn2" sort="codFormula" width="112">
                                             <webuijsf:staticText id="staticText2" text="#{currentRow.value['codFormula']}"/>
                                         </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="Descripcion" id="tableColumn5" sort="descripcion" width="336">
+                                            <webuijsf:staticText id="staticText8" text="#{currentRow.value['descripcion']}"/>
+                                        </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Producto" id="tableColumn3" sort="codProducto">
                                             <webuijsf:staticText id="staticText3" text="#{currentRow.value['codProducto']}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Cantidad" id="tableColumn4" sort="cantidad" width="97">
                                             <webuijsf:staticText id="staticText4" text="#{currentRow.value['cantidad']}"/>
-                                        </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Descripcion" id="tableColumn5" sort="descripcion" width="336">
-                                            <webuijsf:staticText id="staticText8" text="#{currentRow.value['descripcion']}"/>
                                         </webuijsf:tableColumn>
                                     </webuijsf:tableRowGroup>
                                 </webuijsf:table>

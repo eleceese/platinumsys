@@ -18,6 +18,7 @@ import py.com.platinum.controller.ComisionController;
 import py.com.platinum.controller.EmpleadoController;
 import py.com.platinum.controller.FormaPagoController;
 import py.com.platinum.controller.DepositoController;
+import py.com.platinum.controller.FormulaCabeceraController;
 import py.com.platinum.controller.FormulaSemiCabeceraController;
 import py.com.platinum.controller.MarcaController;
 import py.com.platinum.controller.PedidoCabeceraController;
@@ -39,6 +40,7 @@ import py.com.platinum.entity.Comision;
 import py.com.platinum.entity.Empleado;
 import py.com.platinum.entity.FormaPago;
 import py.com.platinum.entity.Deposito;
+import py.com.platinum.entity.FormulaCabecera;
 import py.com.platinum.entity.FormulaSemiCabecera;
 import py.com.platinum.entity.Marca;
 import py.com.platinum.entity.OrdenTrabajo;
@@ -129,11 +131,13 @@ public class SessionBean1 extends AbstractSessionBean {
         dateTimeConverterFull.setTimeZone(null);
 
         //El siguiente Metodo Carga la Grilla De Productos al cargar la pagina de productos.
+        cargarListaTodosProductos();
         cargarListaTodosTareas();
+        cargarListaTodosFormulaCabecerasTer();
+        cargarListaTodosEmpleados();
         cargarListaTodosFormulaCabecerasSemiTer();
         cargarListaTodosProductosSemiterminados();
         cargarListaTodosInsumosMaterias();
-        cargarListaTodosProductos();
         cargarListaTodosMarcas();
         cargarListaTodosTipoProductos();
         cargarListaTodosPresentacions();
@@ -264,6 +268,42 @@ public class SessionBean1 extends AbstractSessionBean {
             option.setLabel(p.getDescripcion());
             option.setValue(p.getCodProducto().toString());
             listaProductosOp[i] = option;
+        }
+
+    }
+
+
+    ////// CARGA DE COMBO BOX PRODUCTOS TERMINADOS
+    Producto[] listaProductosTerminados;
+    Option [] listaProductosTerminadosOp;
+
+    public Option[] getListaProductosTerminadosOp() {
+        return listaProductosTerminadosOp;
+    }
+
+    public void setListaProductosTerminadosOp(Option[] listaProductosTerminadosOp) {
+        this.listaProductosTerminadosOp = listaProductosTerminadosOp;
+    }
+
+    public Producto[] getListaProductosTerminados() {
+        return listaProductosTerminados;
+    }
+
+    public void setListaProductosTerminados(Producto[] listaProductosTerminados) {
+        this.listaProductosTerminados = listaProductosTerminados;
+    }
+
+    public void cargarListaTodosProductosTerminados() {
+        ProductoController productoController = new ProductoController();
+        listaProductosTerminados = (Producto[]) productoController.getAllFiltered(null,null,"Terminado",null).toArray(new Producto[0]);
+        listaProductosTerminadosOp = new Option[listaProductosTerminados.length];
+        Option option;
+        for (int i = 0; i < listaProductosTerminados.length; i++) {
+            Producto p = listaProductosTerminados[i];
+            option = new Option();
+            option.setLabel(p.getDescripcion());
+            option.setValue(p.getCodProducto().toString());
+            listaProductosTerminadosOp[i] = option;
         }
 
     }
@@ -832,6 +872,43 @@ public class SessionBean1 extends AbstractSessionBean {
         }
     }
 ////// FIN CARGA DE COMBO BOX DE ORDENES DE TRABAJO
+////// CARGA DE COMBO BOX Formulas TERMINADOS
+//////     import com.sun.webui.jsf.model.Option;
+
+    FormulaCabecera[] listaFormulaCabecerasTer;
+    Option[] listaFormulaCabecerasTerOp;
+
+    public Option[] getListaFormulaCabecerasTerOp() {
+        return listaFormulaCabecerasSemiTerOp;
+    }
+
+    public void setListaFormulaCabecerasTerOp(Option[] listaFormulaCabecerasTerOp) {
+        this.listaFormulaCabecerasTerOp = listaFormulaCabecerasTerOp;
+    }
+
+    public FormulaCabecera[] getListaFormulaCabecerasTer() {
+        return listaFormulaCabecerasTer;
+    }
+
+    public void setListaFormulaCabecerasTer(FormulaCabecera[] listaFormulaCabecerasTer) {
+        this.listaFormulaCabecerasTer = listaFormulaCabecerasTer;
+    }
+
+    public void cargarListaTodosFormulaCabecerasTer(){
+        FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
+        listaFormulaCabecerasTer = (FormulaCabecera[]) formulaCabeceraController.getAll("descripcion").toArray(new FormulaCabecera[0]);
+        listaFormulaCabecerasTerOp = new Option [listaFormulaCabecerasTer.length];
+        Option option;
+        for (int i = 0; i < listaFormulaCabecerasTer.length; i++) {
+            FormulaCabecera p = listaFormulaCabecerasTer[i];
+            option = new Option();
+            option.setLabel(p.getDescripcion());
+            option.setValue(p.getCodFormula().toString());
+            listaFormulaCabecerasTerOp[i] = option;
+        }
+    }
+////// FIN CARGA DE COMBO BOX DE ORDENES DE TRABAJO
+
     OrdenTrabajo[] listaOtCab;
     Option[] listaOtCabOp;
 

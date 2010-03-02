@@ -129,7 +129,7 @@
     <managed-bean>
         <managed-bean-name>RegistroDeOrdenesDeTrabajo</managed-bean-name>
         <managed-bean-class>platinum.RegistroDeOrdenesDeTrabajo</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
+        <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
         <managed-bean-name>RegistroAperturaCaja</managed-bean-name>
@@ -404,6 +404,26 @@
     <managed-bean>
         <managed-bean-name>popup$popupTareas</managed-bean-name>
         <managed-bean-class>platinum.popup.popupTareas</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMOrdenesTrabajo</managed-bean-name>
+        <managed-bean-class>platinum.ABMOrdenesTrabajo</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupTareas_1</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupTareas_1</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupFormulasTerminados</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupFormulasTerminados</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupProductosTerminados</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupProductosTerminados</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>

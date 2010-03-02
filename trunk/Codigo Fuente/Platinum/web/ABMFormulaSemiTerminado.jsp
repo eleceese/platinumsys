@@ -12,9 +12,9 @@
                 <webuijsf:head id="head1">
                     <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <script>
-                        function ABMProveedores() {
+                        function ABMOrdenesTrabajo() {
                             var table = document.getElementById("form1:tableFormulas");
-                            table.ABMProveedores();}
+                            table.ABMOrdenesTrabajo();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
@@ -50,7 +50,8 @@
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
                         <div>
-                            <h:panelGrid binding="#{ABMFormulaSemiTerminado.mainContainer}" id="mainContainer" style="height: 96px; left: 264px; top: 192px; position: absolute; width: 96px">
+                            <h:panelGrid binding="#{ABMFormulaSemiTerminado.mainContainer}" id="mainContainer"
+                                style="height: 96px; left: 264px; top: 192px; position: absolute" width="912">
                                 <h:panelGrid binding="#{ABMFormulaSemiTerminado.gridPanelBuscar}" columns="3" id="gridPanelBuscar">
                                     <h:panelGrid columns="2" id="gridPanelCodigoFil1">
                                         <webuijsf:label id="label1Filtro1" text="Codigo"/>
@@ -75,7 +76,7 @@
                                 }
                                 </script>
                                 <webuijsf:table augmentTitle="false" binding="#{ABMFormulaSemiTerminado.tableFormulas}" id="tableFormulas" paginateButton="true"
-                                    paginationControls="true" title="Fórmulas de Producción" width="600">
+                                    paginationControls="true" title="Fórmulas de Producción" width="863">
                                     <webuijsf:tableRowGroup aboveColumnFooter="true" binding="#{ABMFormulaSemiTerminado.tableFormulasRW}"
                                         emptyDataMsg="No se recupero ningun registro..." id="tableFormulasRW" rows="10"
                                         selected="#{ABMFormulaSemiTerminado.selectedState}" sourceData="#{ABMFormulaSemiTerminado.listaFormulaSemiCabeceras}" sourceVar="currentRow">
@@ -85,17 +86,17 @@
                                                 name="#{ABMFormulaSemiTerminado.radioButton1.id}" onClick="delSelect='ok'"
                                                 selected="#{ABMFormulaSemiTerminado.selected}" selectedValue="#{ABMFormulaSemiTerminado.selectedValue}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Cod Formula" id="tableColumn2" sort="codFormulaSemiCabecera">
+                                        <webuijsf:tableColumn headerText="Cod" id="tableColumn2" sort="codFormulaSemiCabecera" width="81">
                                             <webuijsf:staticText id="staticText2" text="#{currentRow.value['codFormulaSemiCabecera']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="Descripcion" id="tableColumn5" sort="descripcion">
+                                            <webuijsf:staticText id="staticText9" text="#{currentRow.value['descripcion']}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Producto" id="tableColumn3" sort="codProducto">
                                             <webuijsf:staticText id="staticText3" text="#{currentRow.value['codProducto']}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Cantidad" id="tableColumn4" sort="cantidad" width="132">
+                                        <webuijsf:tableColumn headerText="Cantidad" id="tableColumn4" width="68">
                                             <webuijsf:staticText id="staticText4" text="#{currentRow.value['cantidad']}"/>
-                                        </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Descripcion" id="tableColumn5" sort="descripcion">
-                                            <webuijsf:staticText id="staticText9" text="#{currentRow.value['descripcion']}"/>
                                         </webuijsf:tableColumn>
                                     </webuijsf:tableRowGroup>
                                 </webuijsf:table>
