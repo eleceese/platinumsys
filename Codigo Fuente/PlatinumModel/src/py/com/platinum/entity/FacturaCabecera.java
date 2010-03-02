@@ -26,6 +26,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.utils.StringUtils;
 import py.com.platinum.utilsenum.FacturaVentaEstado;
 
 /**
@@ -62,6 +63,10 @@ public class FacturaCabecera implements Serializable {
     @Column(name = "ESTADO_FACTURA")
     @Enumerated(EnumType.STRING)
     private FacturaVentaEstado estadoFactura;
+    @Column(name = "ESTABLECIMIENTO")
+    private String establecimiento;
+    @Column(name = "BOCA_EXPENDIO")
+    private String bocaExpendio;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -110,8 +115,8 @@ public class FacturaCabecera implements Serializable {
         this.codFactura = codFactura;
     }
 
-    public Long getNumeroFactura() {
-        return numeroFactura;
+    public String getNumeroFactura() {
+        return StringUtils.lpad("0", 8, numeroFactura.toString());
     }
 
     public void setNumeroFactura(Long numeroFactura) {
@@ -180,6 +185,22 @@ public class FacturaCabecera implements Serializable {
 
     public void setEstadoFactura(FacturaVentaEstado estadoFactura) {
         this.estadoFactura = estadoFactura;
+    }
+
+    public String getBocaExpendio() {
+        return bocaExpendio;
+    }
+
+    public void setBocaExpendio(String boca_expendio) {
+        this.bocaExpendio = boca_expendio;
+    }
+
+    public String getEstablecimiento() {
+        return establecimiento;
+    }
+
+    public void setEstablecimiento(String establecimiento) {
+        this.establecimiento = establecimiento;
     }
 
     public String getUsuarioAlta() {

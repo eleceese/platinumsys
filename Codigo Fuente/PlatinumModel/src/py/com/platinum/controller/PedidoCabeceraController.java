@@ -47,7 +47,7 @@ public class PedidoCabeceraController extends AbstractJpaDao<PedidoCabecera> {
         String SQL = "SELECT o FROM PedidoCabecera o WHERE o.codPedido = o.codPedido ";
 
         if (nroPedido != null && !nroPedido.equals("")) {
-            SQL = SQL + " and UPPER(o.numeroPedido) like UPPER(:nroPedido) ";
+            SQL = SQL + " and UPPER(o.codPedido) like UPPER(:nroPedido) ";
         }
 
         if (cliente != null && !cliente.equals("")) {
