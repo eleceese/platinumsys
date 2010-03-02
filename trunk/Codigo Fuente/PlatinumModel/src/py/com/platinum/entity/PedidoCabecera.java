@@ -48,8 +48,6 @@ public class PedidoCabecera implements Serializable {
     @JoinColumn(name = "TIPO", referencedColumnName = "COD_TIPO")
     @ManyToOne(fetch = FetchType.EAGER)
     private TipoComprobante tipo;
-    @Column(name = "NUMERO_PEDIDO")
-    private String numeroPedido;
     @Column(name = "FECHA_PEDIDO")
     @Temporal(TemporalType.DATE)
     private Date fechaPedido;
@@ -94,9 +92,8 @@ public class PedidoCabecera implements Serializable {
         this.codPedido = codPedido;
     }
 
-    public PedidoCabecera(Long codPedido, String numeroPedido, Date fechaPedido) {
+    public PedidoCabecera(Long codPedido, Date fechaPedido) {
         this.codPedido = codPedido;
-        this.numeroPedido = numeroPedido;
         this.fechaPedido = fechaPedido;
     }
 
@@ -106,14 +103,6 @@ public class PedidoCabecera implements Serializable {
 
     public void setCodPedido(Long codPedido) {
         this.codPedido = codPedido;
-    }
-
-    public String getNumeroPedido() {
-        return numeroPedido;
-    }
-
-    public void setNumeroPedido(String numeroPedido) {
-        this.numeroPedido = numeroPedido;
     }
 
     public Date getFechaPedido() {
@@ -273,6 +262,6 @@ public class PedidoCabecera implements Serializable {
 
     @Override
     public String toString() {
-        return numeroPedido;
+        return codPedido.toString();
     }
 }

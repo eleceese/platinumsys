@@ -269,49 +269,46 @@ public class FacturaCabeceraController extends AbstractJpaDao<FacturaCabecera> {
     }
 
     /**
-     * Verfica si existe nro de facrura
-     * @param nroFactura
-     * @param codFactura
-     * @return
+     * Retorna Nro de facrura, a utilizar para el establecimiento y boca de
+     * expendio que se recibe por parametro
+     * @param establecimiento
+     * @param bocaExpendio
+     * @return Numero de Factura
      */
-    public boolean existeNroFactura(Long nroFactura, Long codFactura) {
+    public Long getNroFactura(String establecimiento, String bocaExpendio) {
         //Variables
-        boolean r;
+        Long r;
         String SQL;
 
         //Inicializamos
-        r = false;
+        r = new Long("0");
 
         //Armamos el SQL
-        SQL = "SELECT o FROM FacturaCabecera o WHERE o.codFactura = o.codFactura " +
-              " and o.numeroFactura  = :nroFactura ";
-
-        if (codFactura != null) {
-            SQL = SQL + " and o.codFactura != :codFactura ";
-        }
+        SQL = " SELECT MAX(o.numeroFactura) " +
+              " FROM FacturaCabecera o " +
+              "WHERE o.establecimiento = :establecimiento " +
+              "  and o.bocaExpendio    = :bocaExpendio    ";
 
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
 
         //Seteamos los parametros
-        q.setParameter("nroFactura", nroFactura );
+        q.setParameter("establecimiento", establecimiento );
+        q.setParameter("bocaExpendio", bocaExpendio );
 
-        if (codFactura != null ) {
-            q.setParameter("codFactura", codFactura );
-        }
 
         //Realizamos la busqueda
-        List<FacturaCabecera> l = q.getResultList();
+        r = (Long) q.getSingleResult();
 
-        if (l != null && l.size() > 0) {
-            r = !r;
+        if (r == null) {
+            r = new Long("0");
         }
 
         //Cerar campos el entity manager
         em.close();
 
         //result
-        return r;
+        return r + 1;
     }
 
 }   
