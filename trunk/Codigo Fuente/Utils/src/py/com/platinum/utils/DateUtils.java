@@ -377,6 +377,6 @@ public class DateUtils {
     }
 
 //    public static void main(String [] args){
-//        System.out.println(DateUtil.toString(new Date(), "dd/MM/yyyy hh:mm"));
+//        System.out.println(DateUtils.fechaMas(new Date(), 1));
 //    }
 }
