@@ -3,7 +3,7 @@ create table tipo_comprobante
 (
        cod_tipo number(10) not null,
        desc_tipo varchar2(50) not null,
-       cant_días number(5) not null,
+       cant_dias number(5) not null,
 	   modulo varchar2(30) not null,
        constraint pk_tipo_comprobante primary key (cod_tipo)
 );
