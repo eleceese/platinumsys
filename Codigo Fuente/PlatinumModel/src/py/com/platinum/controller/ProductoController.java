@@ -210,7 +210,7 @@ public class ProductoController extends AbstractJpaDao <Producto> {
 
             /// ELIMINAMOS LAS EXISTENCIAS DEL PRODUCTO
             ExistenciaController existenciaController = new ExistenciaController();
-            List<Existencia> existenciaList = existenciaController.getAllFiltered(null, p.getCodProducto());
+            List<Existencia> existenciaList = existenciaController.getAllFiltered(null, p.getCodProducto(), null);
             for (int i = 0; i < existenciaList.size(); i++) {
                 Existencia existencia = new Existencia();
                 existencia = existenciaList.get(i);
@@ -222,7 +222,7 @@ public class ProductoController extends AbstractJpaDao <Producto> {
             em.getTransaction().commit();
             r.setCodRetorno(0);
             r.setMsg("Registro eliminado correctamente");
-        } catch (Exception ex) {
+        } catch (Exception ex) { 
             ex.printStackTrace();
             r.setCodRetorno(-1);
             r.setMsg("Error en la eliminacion del Registro");

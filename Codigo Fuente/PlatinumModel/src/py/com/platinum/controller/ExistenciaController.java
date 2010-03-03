@@ -138,27 +138,10 @@ public class ExistenciaController extends AbstractJpaDao<Existencia> {
       }
 
 public static void main (String[] v) {
-        ExistenciaController existenciaController = new ExistenciaController();
-        
-        ProductoController productoController = new ProductoController();
-        DepositoController depositoController = new DepositoController();
+ExistenciaController existenciaController = new ExistenciaController();
+Existencia existencia = existenciaController.getExistencia(null, Long.valueOf("0") ,Long.valueOf("1"));
+System.out.println(existencia.getCodExistencia().toString());
 
-        List<Producto> productoList = productoController.getAll("descripcion");
-        for (int i = 0; i < productoList.size(); i++) {
-
-                List<Deposito> listaDepositos = depositoController.getAll("nombre");
-                for (int j = 0; j < listaDepositos.size(); j++) {
-                    Existencia existencia = new Existencia();
-                    Producto producto = productoList.get(i);
-                    existencia.setCodProducto(producto);
-                    existencia.setCantidadExistencia(BigInteger.valueOf(Long.valueOf("0")));
-                    Deposito deposito = listaDepositos.get(j);
-                    existencia.setCodDeposito(deposito);
-
-                    existenciaController.create(existencia);
-                }
-
-        }
- }
+}
 
 }

@@ -23,7 +23,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -87,6 +86,9 @@ public class FacturaCabecera implements Serializable {
     @JoinColumn(name = "COD_CLIENTE", referencedColumnName = "COD_CLIENTE", nullable=false)
     @ManyToOne(fetch=FetchType.EAGER)
     private Cliente codCliente;
+    @JoinColumn(name = "COD_DEPOSITO", referencedColumnName = "COD_DEPOSITO", nullable=false)
+    @ManyToOne(fetch=FetchType.EAGER)
+    private Deposito codDeposito;
     @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO", nullable=false)
     @ManyToOne(fetch=FetchType.EAGER)
     private Empleado codEmpleado;
@@ -256,6 +258,14 @@ public class FacturaCabecera implements Serializable {
 
     public void setCodCliente(Cliente codCliente) {
         this.codCliente = codCliente;
+    }
+
+    public Deposito getCodDeposito() {
+        return codDeposito;
+    }
+
+    public void setCodDeposito(Deposito codDeposito) {
+        this.codDeposito = codDeposito;
     }
 
     public Empleado getCodEmpleado() {
