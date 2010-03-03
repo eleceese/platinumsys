@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.faces.FacesException;
+import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlPanelGrid;
+import javax.faces.context.FacesContext;
 import javax.faces.convert.CharacterConverter;
 import py.com.platinum.controller.FacturaCabeceraController;
 import py.com.platinum.controller.ProductoController;
@@ -989,10 +991,7 @@ public class ABMFacturaVenta extends AbstractPageBean {
             this.errorValidacion = true;
         }
 
-        if (uiTxtNroPedido.getText()== null && uiTxtNroPedido.getText().toString().trim().equals("")){
-            errorValidacion = true;
-            info("Debe Seleccionar un Pedido para poder cargar datos de un Pedido");
-        }else{
+        if (uiTxtNroPedido.getText()!= null ){
             pedido = pedidoController.findById(Long.valueOf(uiTxtNroPedido.getText().toString()));
             if (pedido == null) {
                 errorValidacion = true;
@@ -1049,6 +1048,8 @@ public class ABMFacturaVenta extends AbstractPageBean {
         addRequest = false;
         updateRequest = false;
         updateDetRequest = false;
+        errorValidacion = false;
+        this.pageAlert1.setRendered(false);
         return null;
     }
 
@@ -1476,6 +1477,24 @@ public class ABMFacturaVenta extends AbstractPageBean {
 
         //result
         return null;
+    }
+
+    public void uiFilCalFechaPedido_validate(FacesContext context, UIComponent component, Object value) {
+        //Variables
+        String msg = null;
+
+        if (value == null) {
+            msg = "Fecha campo Obligatorio";
+        }else{
+            try {
+                Date f = (Date) value;
+                msg = "******************"  + f.toString();
+            } catch (Exception e) {
+                msg = "Valor incorrecto para la fecha";
+            }
+        }
+        System.out.println(msg);
+        info(msg);
     }
 
 }

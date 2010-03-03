@@ -300,7 +300,6 @@ function calcularMonto(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal, ui
 /**
  * script para validar fechas en una caja de texto.
  */
-
 /**
  * definimos las varables globales que van a contener la fecha completa, cada una de sus partes
  * y los dias correspondientes al mes de febrero segun sea el año bisiesto o no
@@ -313,13 +312,14 @@ var a, mes, dia, anyo, febrero;
  */
 function anyoBisiesto(anyo)
 {
+    var fin;
     /**
      * si el año introducido es de dos cifras lo pasamos al periodo de 1900. Ejemplo: 25 > 1925
      */
     if (anyo < 100)
-        var fin = anyo + 1900;
+        fin = anyo + 1900;
     else
-        var fin = anyo ;
+        fin = anyo ;
 
     /*
      * primera condicion: si el resto de dividir el año entre 4 no es cero > el año no es bisiesto
@@ -360,25 +360,32 @@ function anyoBisiesto(anyo)
  * funcion principal de validacion de la fecha
  * argumento fecha > cadena de texto de la fecha introducida por el usuario
  */
-function validar()
+function validarFecha(fec)
 {
+
+    alert("Validar fecha");
+
     /**
      * obtenemos la fecha introducida y la separamos en dia, mes y año
      */
-    a=document.forms[0].fecha.value;
+    a = document.getElementById(fec).value;
+
+    alert("Val" + a);
     dia=a.split("/")[0];
     mes=a.split("/")[1];
     anyo=a.split("/")[2];
     
     if( (isNaN(dia)==true) || (isNaN(mes)==true) || (isNaN(anyo)==true) )
     {
-        alert("LA fecha introducida debe estar formada sólo por números");
+        alert("La fecha introducida debe estar formada sólo por números");
         return;
     }
-    if(anyoBisiesto(anyo))
+    
+    if(anyoBisiesto(anyo)){
         febrero=29;
-    else
+    }else{
         febrero=28;
+    }
     /**
      * si el mes introducido es negativo, 0 o mayor que 12 > alertamos y detenemos ejecucion
      */

@@ -953,8 +953,6 @@ public class ABMPedidoCliente extends AbstractPageBean {
     }
 
     public String uiBtnCancelar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
         addRequest = false;
         updateRequest = false;
         updateDetRequest = false;
