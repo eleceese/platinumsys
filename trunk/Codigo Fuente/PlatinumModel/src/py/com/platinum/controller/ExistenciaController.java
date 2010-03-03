@@ -8,6 +8,7 @@ package py.com.platinum.controller;
 import java.math.BigInteger;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.entity.Deposito;
@@ -55,7 +56,7 @@ public class ExistenciaController extends AbstractJpaDao<Existencia> {
         return this.getAll(Existencia.class, orderBy);
      }
 
-    public List<Existencia> getAllFiltered(Long codExistencia, Long codProducto) {
+    public List<Existencia> getAllFiltered(Long codExistencia, Long codProducto, Long codDeposito) {
         //emf.createEntityManager Levanta el contexto del JPA
         String SQL = "SELECT o FROM Existencia o WHERE o.codExistencia = o.codExistencia";
 
@@ -64,9 +65,12 @@ public class ExistenciaController extends AbstractJpaDao<Existencia> {
         }
 
         if (codProducto != null && !codProducto.equals("")) {
-            SQL = SQL + " and UPPER(o.codExistencia.codProducto) like upper(:codProducto)";
+            SQL = SQL + " and UPPER(o.codExistencia.codProducto.CodProducto) like upper(:codProducto)";
         }
 
+        if (codDeposito != null && !codDeposito.equals("")) {
+            SQL = SQL + " and UPPER(o.codExistencia.codDeposito.codDeposito) like upper(:codDeposito)";
+        }
          EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
 
@@ -78,9 +82,57 @@ public class ExistenciaController extends AbstractJpaDao<Existencia> {
             q.setParameter("codProducto", codProducto);
         }
 
+        if (codDeposito != null  && !codDeposito.equals("")) {
+            q.setParameter("codDeposito", codDeposito);
+        }
+
         
         List<Existencia> entities = q.getResultList();
         em.close();
+
+        return entities;
+
+      }
+    public Existencia getExistencia(Long codExistencia, Long codProducto, Long codDeposito) {
+        //emf.createEntityManager Levanta el contexto del JPA
+        String SQL = "SELECT o FROM Existencia o WHERE o.codExistencia = o.codExistencia";
+
+        if (codExistencia != null && !codExistencia.equals("")) {
+            SQL = SQL + " and UPPER(o.codExistencia) = upper(:codExistencia)";
+        }
+
+        if (codProducto != null && !codProducto.equals("")) {
+            SQL = SQL + " and UPPER(o.codExistencia.codProducto.CodProducto) like upper(:codProducto)";
+        }
+
+        if (codDeposito != null && !codDeposito.equals("")) {
+            SQL = SQL + " and UPPER(o.codExistencia.codDeposito.codDeposito) like upper(:codDeposito)";
+        }
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        if (codExistencia != null  && !codExistencia.equals("")) {
+            q.setParameter("codExistencia", codExistencia);
+        }
+
+        if (codProducto != null  && !codProducto.equals("")) {
+            q.setParameter("codProducto", codProducto);
+        }
+
+        if (codDeposito != null  && !codDeposito.equals("")) {
+            q.setParameter("codDeposito", codDeposito);
+        }
+
+
+        Existencia entities = null;
+        try {
+            entities = (Existencia) q.getSingleResult();
+            em.close();
+
+        } catch (NoResultException e) {
+            e.printStackTrace();
+        }
 
         return entities;
 
