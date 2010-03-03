@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,6 +26,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.listener.FacturaCompraCabeceraListener;
 
 /**
  *
@@ -32,6 +34,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "FACTURA_COMPRA_CAB")
+@EntityListeners(value=FacturaCompraCabeceraListener.class)
 @SequenceGenerator(name="FAC_COMP_CAB_SEQUENCE", sequenceName="SQ_FACTURA_COMPRA_CAB", initialValue=1, allocationSize=1)
 public class FacturaCompraCab implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -71,6 +74,9 @@ public class FacturaCompraCab implements Serializable {
     @JoinColumn(name = "COD_ENT_SAL", referencedColumnName = "COD_ENTRADA_SALIDA")
     @ManyToOne
     private EntradaSalidaCabecera codEntSal;
+    @JoinColumn(name = "COD_DEPOSITO", referencedColumnName = "COD_DEPOSITO", nullable=false)
+    @ManyToOne(fetch=FetchType.EAGER)
+    private Deposito codDeposito;
     @JoinColumn(name = "COD_PROVEEDOR", referencedColumnName = "COD_PROVEEDOR")
     @ManyToOne
     private Proveedor codProveedor;
@@ -156,6 +162,14 @@ public class FacturaCompraCab implements Serializable {
 
     public void setTotal(long total) {
         this.total = total;
+    }
+
+    public Deposito getCodDeposito() {
+        return codDeposito;
+    }
+
+    public void setCodDeposito(Deposito codDeposito) {
+        this.codDeposito = codDeposito;
     }
 
     public String getUsuarioAlta() {
