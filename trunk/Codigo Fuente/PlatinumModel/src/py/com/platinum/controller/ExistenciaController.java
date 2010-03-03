@@ -60,29 +60,29 @@ public class ExistenciaController extends AbstractJpaDao<Existencia> {
         //emf.createEntityManager Levanta el contexto del JPA
         String SQL = "SELECT o FROM Existencia o WHERE o.codExistencia = o.codExistencia";
 
-        if (codExistencia != null && !codExistencia.equals("")) {
-            SQL = SQL + " and UPPER(o.codExistencia) = upper(:codExistencia)";
+        if (codExistencia != null) {
+            SQL = SQL + " and o.codExistencia = :codExistencia";
         }
 
-        if (codProducto != null && !codProducto.equals("")) {
-            SQL = SQL + " and UPPER(o.codExistencia.codProducto.CodProducto) like upper(:codProducto)";
+        if (codProducto != null) {
+            SQL = SQL + " and UPPER(o.codExistencia.codProducto.codProducto = :codProducto";
         }
 
-        if (codDeposito != null && !codDeposito.equals("")) {
-            SQL = SQL + " and UPPER(o.codExistencia.codDeposito.codDeposito) like upper(:codDeposito)";
+        if (codDeposito != null) {
+            SQL = SQL + " and o.codExistencia.codDeposito.codDeposito = :codDeposito";
         }
          EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
 
-        if (codExistencia != null  && !codExistencia.equals("")) {
+        if (codExistencia != null) {
             q.setParameter("codExistencia", codExistencia);
         }
 
-        if (codProducto != null  && !codProducto.equals("")) {
+        if (codProducto != null) {
             q.setParameter("codProducto", codProducto);
         }
 
-        if (codDeposito != null  && !codDeposito.equals("")) {
+        if (codDeposito != null) {
             q.setParameter("codDeposito", codDeposito);
         }
 
@@ -97,33 +97,32 @@ public class ExistenciaController extends AbstractJpaDao<Existencia> {
         //emf.createEntityManager Levanta el contexto del JPA
         String SQL = "SELECT o FROM Existencia o WHERE o.codExistencia = o.codExistencia";
 
-        if (codExistencia != null && !codExistencia.equals("")) {
-            SQL = SQL + " and UPPER(o.codExistencia) = upper(:codExistencia)";
+        if (codExistencia != null) {
+            SQL = SQL + " and o.codExistencia = :codExistencia";
         }
 
-        if (codProducto != null && !codProducto.equals("")) {
-            SQL = SQL + " and UPPER(o.codExistencia.codProducto.CodProducto) like upper(:codProducto)";
+        if (codProducto != null) {
+            SQL = SQL + " and o.codExistencia.codProducto.CodProducto = :codProducto";
         }
 
-        if (codDeposito != null && !codDeposito.equals("")) {
-            SQL = SQL + " and UPPER(o.codExistencia.codDeposito.codDeposito) like upper(:codDeposito)";
+        if (codDeposito != null) {
+            SQL = SQL + " and o.codExistencia.codDeposito.codDeposito = :codDeposito";
         }
 
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
 
-        if (codExistencia != null  && !codExistencia.equals("")) {
+        if (codExistencia != null) {
             q.setParameter("codExistencia", codExistencia);
         }
 
-        if (codProducto != null  && !codProducto.equals("")) {
+        if (codProducto != null) {
             q.setParameter("codProducto", codProducto);
         }
 
-        if (codDeposito != null  && !codDeposito.equals("")) {
+        if (codDeposito != null) {
             q.setParameter("codDeposito", codDeposito);
         }
-
 
         Existencia entities = null;
         try {
