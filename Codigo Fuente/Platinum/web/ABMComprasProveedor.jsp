@@ -100,9 +100,7 @@
                                     <webuijsf:button actionExpression="#{ABMComprasProveedor.addButton_action}" binding="#{ABMComprasProveedor.addButton}"
                                         id="addButton" text="Nuevo"/>
                                     <webuijsf:button actionExpression="#{ABMComprasProveedor.updateButton_action}" binding="#{ABMComprasProveedor.updateButton}"
-                                        id="updateButton" text="Editar"/>
-                                    <webuijsf:button actionExpression="#{ABMComprasProveedor.deleteButton_action}" binding="#{ABMComprasProveedor.deleteButton}"
-                                        id="deleteButton" onClick="javascript:return confirmar()" text="Eliminar"/>
+                                        id="updateButton" text="Ver Detalle"/>
                                 </h:panelGrid>
                                 <h:panelGrid binding="#{ABMComprasProveedor.addUpdatePanel}" columns="1" id="addUpdatePanel">
                                     <h:panelGrid cellpadding="1" columns="3" id="panelGridCabeceraCompra" style="text-align: left" width="743">
@@ -152,14 +150,14 @@
                                         <webuijsf:button actionExpression="#{ABMComprasProveedor.uiBtnGuardarNuevo_action}"
                                             binding="#{ABMComprasProveedor.uiBtnGuardarNuevo}" id="uiBtnGuardarNuevo" style="font-size: 14px" text="Guardar"/>
                                         <webuijsf:button actionExpression="#{ABMComprasProveedor.uiBtnGuardarEditar_action}"
-                                            binding="#{ABMComprasProveedor.uiBtnGuardarEditar}" id="uiBtnGuardarEditar" rendered="false" style="font-size: 14px" text="Guardar"/>
+                                            binding="#{ABMComprasProveedor.uiBtnGuardarEditar}" id="uiBtnGuardarEditar" rendered="false" style="font-size: 14px" text="Anular"/>
                                         <webuijsf:button actionExpression="#{ABMComprasProveedor.uiBtnCancelar_action}"
                                             binding="#{ABMComprasProveedor.uiBtnCancelar}" id="uiBtnCancelar" style="font-size: 14px" text="Cancelar"/>
                                     </h:panelGrid>
                                     <webuijsf:messageGroup id="messageGroup1" style="width: 719px"/>
                                     <h:panelGrid id="gridPanel2" style="width: 100%; height: 100%;">
                                         <webuijsf:label id="label5" style="font-size: 16px" text="Detalle Factura"/>
-                                        <h:panelGrid columns="7" id="gridPanelDetLin1" style="height: 24px" width="743">
+                                        <h:panelGrid binding="#{ABMComprasProveedor.gridPanelDetLin1}" columns="7" id="gridPanelDetLin1" style="height: 24px" width="743">
                                             <webuijsf:hyperlink id="hyperlink2"
                                                 onClick="doPopup('form1:uiTxtCodProducto_field', 'form1:uiTxtDescProducto_field')" target="popup"
                                                 text="Producto" url="/faces/popup/popupProductos.jsp"/>
@@ -175,7 +173,7 @@
                                                 onClick="document.getElementById('form1:uiTxtPrecioUnitario_field').focus(); return false;"
                                                 onFocus="document.getElementById('form1:uiTxtPrecioUnitario_field').focus(); return false;" width="110"/>
                                         </h:panelGrid>
-                                        <h:panelGrid columns="10" id="gridPanelDetLin2" style="height: 24px" width="719">
+                                        <h:panelGrid binding="#{ABMComprasProveedor.gridPanelDetLin2}" columns="10" id="gridPanelDetLin2" style="height: 24px" width="719">
                                             <webuijsf:label id="lblPrecio" text="Precio"/>
                                             <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtPrecioUnitario}" columns="12" id="uiTxtPrecioUnitario"
                                                 onChange="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )" style="margin-left: -20px; text-align: left"/>
@@ -219,13 +217,15 @@
                                                 <webuijsf:tableColumn headerText="Total" id="tableColumn9">
                                                     <webuijsf:staticText id="staticText9" text="#{currentRow.value['total']}"/>
                                                 </webuijsf:tableColumn>
-                                                <webuijsf:tableColumn align="center" id="tableColumnEditarDet" width="40">
+                                                <webuijsf:tableColumn align="center" binding="#{ABMComprasProveedor.tableColumnEditarDet}"
+                                                    id="tableColumnEditarDet" width="40">
                                                     <webuijsf:imageHyperlink actionExpression="#{ABMComprasProveedor.updateDetAction}" id="uilnkEditarDetalle"
                                                         imageURL="/resources/img/edit_16x16.gif" text="">
                                                         <f:setPropertyActionListener target="#{ABMComprasProveedor.itemDet}" value="#{currentRow.tableRow.rowId}"/>
                                                     </webuijsf:imageHyperlink>
                                                 </webuijsf:tableColumn>
-                                                <webuijsf:tableColumn align="center" id="tableColumnEliminarDet" width="40">
+                                                <webuijsf:tableColumn align="center" binding="#{ABMComprasProveedor.tableColumnEliminarDet}"
+                                                    id="tableColumnEliminarDet" width="40">
                                                     <webuijsf:imageHyperlink actionExpression="#{ABMComprasProveedor.deleteDetAction}" id="uilnkEliminarDetalle"
                                                         imageURL="/resources/img/delete.png" text="">
                                                         <f:setPropertyActionListener target="#{ABMComprasProveedor.itemDet}" value="#{currentRow.tableRow.rowId}"/>

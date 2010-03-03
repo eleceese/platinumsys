@@ -4,7 +4,8 @@
     Created on : 20-ago-2009, 19:25:55
     Author     : MartinJara
 -->
-<jsp:root version="2.1" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:webuijsf="http://www.sun.com/webui/webuijsf">
+<jsp:root version="2.1" xmlns:df="http://java.sun.com/jsf/dynamicfaces" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:webuijsf="http://www.sun.com/webui/webuijsf">
     <jsp:directive.page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"/>
     <f:view>
         <webuijsf:page id="page1">
@@ -55,8 +56,8 @@
                                         <webuijsf:textField binding="#{ABMFacturaVenta.uiFilTxtCliente}" columns="35" id="uiFilTxtCliente"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanelEmailFiltro">
-                                        <webuijsf:label id="label3Filtro" text="Fecha Pedido"/>
-                                        <webuijsf:calendar binding="#{ABMFacturaVenta.uiFilCalFechaPedido}" columns="15" id="uiFilCalFechaPedido"/>
+                                        <webuijsf:label id="label3Filtro" text="Fecha Factura"/>
+                                        <webuijsf:calendar binding="#{ABMFacturaVenta.uiFilCalFechaPedido}" columns="15" id="uiFilCalFechaPedido" validatorExpression="#{ABMFacturaVenta.uiFilCalFechaPedido_validate}"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
                                 <h:panelGrid binding="#{ABMFacturaVenta.gridPanelBtnBuscar}" columns="2" id="gridPanelBtnBuscar" style="height: 100%" width="191">
@@ -163,7 +164,7 @@
                                         <webuijsf:button actionExpression="#{ABMFacturaVenta.uiBtnCancelar_action}" binding="#{ABMFacturaVenta.uiBtnCancelar}"
                                             id="uiBtnCancelar" style="font-size: 14px" text="Cancelar"/>
                                     </h:panelGrid>
-                                    <webuijsf:messageGroup id="messageGroup1" style="width: 719px"/>
+                                    <webuijsf:messageGroup id="messageGroup1" showGlobalOnly="true" style="width: 719px"/>
                                     <h:panelGrid id="gridPanel2" style="width: 100%; height: 100%;">
                                         <webuijsf:label id="label5" style="font-size: 16px" text="Detalle Factura"/>
                                         <h:panelGrid binding="#{ABMFacturaVenta.gridPanelDetLin1}" columns="7" id="gridPanelDetLin1" style="height: 24px" width="743">
@@ -174,13 +175,12 @@
                                             <webuijsf:textField binding="#{ABMFacturaVenta.uiTxtDescProducto}" columns="30" id="uiTxtDescProducto" onFocus="document.getElementById('form1:uiLstUnidadMedida_list').focus(); return false;"/>
                                             <webuijsf:label id="lblPrecio" text="Precio"/>
                                             <webuijsf:textField binding="#{ABMFacturaVenta.uiTxtPrecioUnitario}" columns="15" id="uiTxtPrecioUnitario"
-                                                onChange="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )"
                                                 onFocus="document.getElementById('form1:uiLstUnidadMedida_list').focus(); return false;" style="margin-left: -20px; text-align: left"/>
                                             <webuijsf:label id="lblUnidadMedida" text="Unidad Medida"/>
                                             <webuijsf:dropDown binding="#{ABMFacturaVenta.uiLstUnidadMedida}" id="uiLstUnidadMedida"
                                                 items="#{SessionBean1.listaUnidadMedidasOp}"
-                                                onClick="document.getElementById('form1:uiTxtPrecioUnitario_field').focus(); return false;"
-                                                onFocus="document.getElementById('form1:uiTxtPrecioUnitario_field').focus(); return false;" width="110"/>
+                                                onClick="document.getElementById('form1:uiTxtCantidad_field').focus(); return false;"
+                                                onFocus="document.getElementById('form1:uiTxtCantidad_field').focus(); return false;" width="110"/>
                                         </h:panelGrid>
                                         <h:panelGrid binding="#{ABMFacturaVenta.gridPanelDetLin2}" columns="10" id="gridPanelDetLin2" style="height: 24px" width="719">
                                             <webuijsf:label id="lblCantida" text="Cantidad"/>

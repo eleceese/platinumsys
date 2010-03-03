@@ -99,15 +99,6 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setUpdateButton(Button b) {
         this.updateButton = b;
     }
-    private Button deleteButton = new Button();
-
-    public Button getDeleteButton() {
-        return deleteButton;
-    }
-
-    public void setDeleteButton(Button b) {
-        this.deleteButton = b;
-    }
     private HtmlPanelGrid addUpdatePanel = new HtmlPanelGrid();
 
     public HtmlPanelGrid getAddUpdatePanel() {
@@ -459,6 +450,42 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setUiTxtNroSolicitud(TextField tf) {
         this.uiTxtNroSolicitud = tf;
     }
+    private HtmlPanelGrid gridPanelDetLin1 = new HtmlPanelGrid();
+
+    public HtmlPanelGrid getGridPanelDetLin1() {
+        return gridPanelDetLin1;
+    }
+
+    public void setGridPanelDetLin1(HtmlPanelGrid hpg) {
+        this.gridPanelDetLin1 = hpg;
+    }
+    private HtmlPanelGrid gridPanelDetLin2 = new HtmlPanelGrid();
+
+    public HtmlPanelGrid getGridPanelDetLin2() {
+        return gridPanelDetLin2;
+    }
+
+    public void setGridPanelDetLin2(HtmlPanelGrid hpg) {
+        this.gridPanelDetLin2 = hpg;
+    }
+    private TableColumn tableColumnEditarDet = new TableColumn();
+
+    public TableColumn getTableColumnEditarDet() {
+        return tableColumnEditarDet;
+    }
+
+    public void setTableColumnEditarDet(TableColumn tc) {
+        this.tableColumnEditarDet = tc;
+    }
+    private TableColumn tableColumnEliminarDet = new TableColumn();
+
+    public TableColumn getTableColumnEliminarDet() {
+        return tableColumnEliminarDet;
+    }
+
+    public void setTableColumnEliminarDet(TableColumn tc) {
+        this.tableColumnEliminarDet = tc;
+    }
 
     // </editor-fold>
     /**
@@ -471,8 +498,8 @@ public class ABMComprasProveedor extends AbstractPageBean {
         uiLstIvaDefaultOptions.setSelectedValue("0");
 
         //Estados de la factura
-        uiLstEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("P", "Pendiente"), new com.sun.webui.jsf.model.Option("C", "Confirmado")});
-        uiLstEstadoDefaultOptions.setSelectedValue("P");
+        uiLstEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("C", "Confirmado"), new com.sun.webui.jsf.model.Option("A", "Anulado")});
+        uiLstEstadoDefaultOptions.setSelectedValue("C");
         
         //Cargamos a las tablas relacionadas
         cargarRelaciones();
@@ -679,6 +706,10 @@ public class ABMComprasProveedor extends AbstractPageBean {
         updateDetRequest = true;
         itemDet = null;
 
+        gridPanelDetLin1.setRendered(true);
+        gridPanelDetLin2.setRendered(true);
+        tableColumnEditarDet.setRendered(true);
+        tableColumnEliminarDet.setRendered(true);
 
         //Cargar tablas realcionadas
         cargarRelaciones();
@@ -702,6 +733,11 @@ public class ABMComprasProveedor extends AbstractPageBean {
         updateRequest = true;
         updateDetRequest = true;
         itemDet = null;
+
+        gridPanelDetLin1.setRendered(false);
+        gridPanelDetLin2.setRendered(false);
+        tableColumnEditarDet.setRendered(false);
+        tableColumnEliminarDet.setRendered(false);
 
         //Cargamos los datos de las relaciones con esta entidad
         cargarRelaciones();
@@ -797,6 +833,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
             cabecera.setEstado(uiLstEstado.getSelected().toString());
             cabecera.setFecha(uiCalFecha.getSelectedDate());
             cabecera.setNroFactura(uiTxtNroFac.getText().toString());
+            cabecera.setCodDeposito(getSessionBean1().getCodDeposito());
             //Tipo de comprobante
             cabecera.setTipo(tipoComprobante);
             cabecera.setTotaIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
@@ -886,15 +923,16 @@ public class ABMComprasProveedor extends AbstractPageBean {
         if (!errorValidacion) {
 
             //Set de los artributos
-            cabecera.setCodProveedor(proveedor);
-            cabecera.setEstado(uiLstEstado.getSelected().toString());
-            cabecera.setFecha(uiCalFecha.getSelectedDate());
-            cabecera.setNroFactura(uiTxtNroFac.getText().toString());
-            //Tipo de comprobante
-            cabecera.setTipo(tipoComprobante);
-            cabecera.setTotaIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
-            cabecera.setSubTotal(Long.valueOf(uiTxtSubTotal.getText().toString()));
-            cabecera.setTotal(Long.valueOf(uiTxtTotal.getText().toString()));
+//            cabecera.setCodProveedor(proveedor);
+            cabecera.setEstado("A");
+//            cabecera.setEstado(uiLstEstado.getSelected().toString());
+//            cabecera.setFecha(uiCalFecha.getSelectedDate());
+//            cabecera.setNroFactura(uiTxtNroFac.getText().toString());
+//            //Tipo de comprobante
+//            cabecera.setTipo(tipoComprobante);
+//            cabecera.setTotaIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
+//            cabecera.setSubTotal(Long.valueOf(uiTxtSubTotal.getText().toString()));
+//            cabecera.setTotal(Long.valueOf(uiTxtTotal.getText().toString()));
 
             //Insertamos la cebecera y del detalle
             ControllerResult cr = new FacturaCompraCabController().actualizar(cabecera, lstDetalleLIST, lstDetalleEliminar);
@@ -921,11 +959,14 @@ public class ABMComprasProveedor extends AbstractPageBean {
     }
 
     public String uiBtnCancelar_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
+        //Apagamos las banderas
         addRequest = false;
         updateRequest = false;
         updateDetRequest = false;
+        errorValidacion = false;
+        this.pageAlert1.setRendered(false);
+
+        //result
         return null;
     }
 
