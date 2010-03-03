@@ -7,9 +7,9 @@ package py.com.platinum.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +19,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.listener.FacturaCompraDetalleListener;
 
 /**
  *
@@ -26,6 +27,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "FACTURA_COMPRA_DET")
+@EntityListeners(value=FacturaCompraDetalleListener.class)
 @SequenceGenerator(name="FAC_COMP_DET_SEQUENCE", sequenceName="SQ_FACTURA_COMPRA_DET", initialValue=1, allocationSize=1)
 public class FacturaCompraDet implements Serializable {
     private static final long serialVersionUID = 1L;
