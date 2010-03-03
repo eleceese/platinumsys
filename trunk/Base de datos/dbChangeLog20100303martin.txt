@@ -1,0 +1,6 @@
+--Agregamos cod deposito
+alter table factura_compra_cab add COD_DEPOSITO NUMBER;
+
+alter table factura_compra_cab
+add constraint fk_factura_compracab_deposito foreign key (cod_deposito)
+references deposito(cod_deposito);
