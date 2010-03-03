@@ -130,6 +130,8 @@ public class SessionBean1 extends AbstractSessionBean {
         dateTimeConverterFull.setPattern("dd/MM/yyyy HH:mm:ss");
         dateTimeConverterFull.setTimeZone(null);
 
+        codDeposito = new DepositoController().findById(Long.valueOf("1"));
+
         //El siguiente Metodo Carga la Grilla De Productos al cargar la pagina de productos.
         cargarListaTodosProductos();
         cargarListaTodosTareas();
@@ -205,6 +207,15 @@ public class SessionBean1 extends AbstractSessionBean {
     private String detallePagina;
     private String establecimiento = "001";
     private String bocaExpendio = "001";
+    private Deposito codDeposito;
+
+    public Deposito getCodDeposito() {
+        return codDeposito;
+    }
+
+    public void setCodDeposito(Deposito codDeposito) {
+        this.codDeposito = codDeposito;
+    }
 
     public String getBocaExpendio() {
         return bocaExpendio;

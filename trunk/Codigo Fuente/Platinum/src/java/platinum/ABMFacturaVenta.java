@@ -914,7 +914,8 @@ public class ABMFacturaVenta extends AbstractPageBean {
             cabecera.setCodEmpleado(codEmpleado);
             cabecera.setPorcDescuento(Long.valueOf(uiTxtPorcDescuento.getText().toString()));
             cabecera.setMontoDescuento(Long.valueOf(uiTxtMontoDescuento.getText().toString()));
-
+            cabecera.setCodDeposito(getSessionBean1().getCodDeposito());
+            
             //Tipo de comprobante
             cabecera.setTipoFactura(tipoComprobante);
             cabecera.setTotalIvaFactura(Long.valueOf(uiTxtTotalIva.getText().toString()));

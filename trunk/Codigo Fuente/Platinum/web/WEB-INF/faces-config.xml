@@ -162,11 +162,6 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>pp</managed-bean-name>
-        <managed-bean-class>platinum.pp</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
         <managed-bean-name>LSTRanking</managed-bean-name>
         <managed-bean-class>platinum.LSTRanking</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
