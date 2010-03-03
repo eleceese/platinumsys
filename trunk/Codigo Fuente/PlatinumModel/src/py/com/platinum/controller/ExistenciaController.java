@@ -102,7 +102,7 @@ public class ExistenciaController extends AbstractJpaDao<Existencia> {
         }
 
         if (codProducto != null) {
-            SQL = SQL + " and o.codExistencia.codProducto.CodProducto = :codProducto";
+            SQL = SQL + " and o.codExistencia.codProducto.codProducto = :codProducto";
         }
 
         if (codDeposito != null) {
