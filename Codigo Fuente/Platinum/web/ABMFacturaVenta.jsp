@@ -57,7 +57,7 @@
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanelEmailFiltro">
                                         <webuijsf:label id="label3Filtro" text="Fecha Factura"/>
-                                        <webuijsf:calendar binding="#{ABMFacturaVenta.uiFilCalFechaPedido}" columns="15" id="uiFilCalFechaPedido" validatorExpression="#{ABMFacturaVenta.uiFilCalFechaPedido_validate}"/>
+                                        <webuijsf:calendar binding="#{ABMFacturaVenta.uiFilCalFechaFactura}" columns="15" id="uiFilCalFechaPedido"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
                                 <h:panelGrid binding="#{ABMFacturaVenta.gridPanelBtnBuscar}" columns="2" id="gridPanelBtnBuscar" style="height: 100%" width="191">
@@ -138,7 +138,7 @@
                                             <webuijsf:label id="label1" text="Porc. Descuento"/>
                                         </h:panelGrid>
                                         <h:panelGrid columns="3" id="gridPanelDescuento2" style="height: 24px" width="383">
-                                            <webuijsf:textField binding="#{ABMFacturaVenta.uiTxtPorcDescuento}" columns="7" id="uiTxtPorcDescuento" onBlur="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )"/>
+                                            <webuijsf:textField binding="#{ABMFacturaVenta.uiTxtPorcDescuento}" columns="7" id="uiTxtPorcDescuento" onBlur="calcularMonto7('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )"/>
                                             <webuijsf:label id="label2" text="Monto Descuento"/>
                                             <webuijsf:textField binding="#{ABMFacturaVenta.uiTxtMontoDescuento}" id="uiTxtMontoDescuento"
                                                 onFocus="document.getElementById('form1:uiBtnCancelar').focus(); return false;" style="text-align: right"/>
@@ -185,11 +185,11 @@
                                         <h:panelGrid binding="#{ABMFacturaVenta.gridPanelDetLin2}" columns="10" id="gridPanelDetLin2" style="height: 24px" width="719">
                                             <webuijsf:label id="lblCantida" text="Cantidad"/>
                                             <webuijsf:textField binding="#{ABMFacturaVenta.uiTxtCantidad}" columns="10" id="uiTxtCantidad"
-                                                onBlur="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )" style="text-align: right"/>
+                                                onBlur="calcularMonto7('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )" style="text-align: right"/>
                                             <webuijsf:label id="lblPorcIVA" text="Tipo de Impuesto"/>
                                             <webuijsf:dropDown binding="#{ABMFacturaVenta.uiLstIva}" id="uiLstIva"
                                                 items="#{ABMFacturaVenta.uiLstIvaDefaultOptions.options}"
-                                                onChange="calcularMonto('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )"
+                                                onChange="calcularMonto7('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )"
                                                 selected="#{ABMFacturaVenta.uiLstIvaDefaultOptions.selectedValue}" width="70"/>
                                             <webuijsf:label id="lblMontoIva" text="Monto IVA"/>
                                             <webuijsf:textField binding="#{ABMFacturaVenta.uiTxtMontoIva}" columns="12" id="uiTxtMontoIva"

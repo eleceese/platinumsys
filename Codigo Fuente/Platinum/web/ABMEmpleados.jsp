@@ -12,6 +12,11 @@
                 <webuijsf:head id="head1">
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
                     <script>
+                        function initAllRows() {
+                            var table = document.getElementById("form1:table1");
+                            table.initAllRows();}
+                    </script>
+                    <script>
                         var delSelect;
                         function confirmar() {
                             if (delSelect!=null){

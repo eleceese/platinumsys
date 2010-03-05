@@ -4,7 +4,6 @@
  */
 package platinum;
 
-import com.ctc.wstx.util.StringUtil;
 import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
@@ -17,7 +16,6 @@ import com.sun.webui.jsf.component.TableColumn;
 import com.sun.webui.jsf.component.TableRowGroup;
 import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.event.TableSelectPhaseListener;
-import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,9 +23,7 @@ import java.util.List;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.convert.CharacterConverter;
-import javax.faces.event.ValueChangeEvent;
 import py.com.platinum.controller.FacturaCompraCabController;
-import py.com.platinum.controller.FacturaCompraDetController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.ProveedorController;
 import py.com.platinum.controller.SolicitudInternaController;
@@ -881,7 +877,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
 
         //Proveedor
         if (this.uiTxtCodProveedor.getText() == null) {
-            info("Nro. de factura, campo obligatorio");
+            info("Proveedor, campo obligatorio");
             this.errorValidacion = true;
         }else{
             //Validamos el codigo del proveedor ingresado
@@ -891,6 +887,19 @@ public class ABMComprasProveedor extends AbstractPageBean {
                 info("Codigo de Proveedor ingresado no es encontrado, campo obligatorio favor ingrese un codigo correcto");
                 this.errorValidacion = true;
             }
+        }
+
+        //Verificamos si el numero de factura ya existe
+        if(this.uiTxtNroFac.getText() != null && proveedor != null){
+            FacturaCompraCabController c = new FacturaCompraCabController();
+            //Realizamos la busqueda
+            boolean existe = c.existeNumeroFactura(this.uiTxtNroFac.getText().toString(), proveedor.getCodProveedor());
+            
+            if (existe) {
+                info("Numero de Factura ya existe para el proveedor ingresado, favor verifique");
+                this.errorValidacion = true;    
+            }
+
         }
 
         //Tipo de Comprobante

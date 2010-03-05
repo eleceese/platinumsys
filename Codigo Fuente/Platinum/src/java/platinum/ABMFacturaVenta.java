@@ -239,14 +239,14 @@ public class ABMFacturaVenta extends AbstractPageBean {
     public void setUiFilTxtNroFactura(TextField tf) {
         this.uiFilTxtNroFactura = tf;
     }
-    private Calendar uiFilCalFechaPedido = new Calendar();
+    private Calendar uiFilCalFechaFactura = new Calendar();
 
-    public Calendar getUiFilCalFechaPedido() {
-        return uiFilCalFechaPedido;
+    public Calendar getUiFilCalFechaFactura() {
+        return uiFilCalFechaFactura;
     }
 
-    public void setUiFilCalFechaPedido(Calendar c) {
-        this.uiFilCalFechaPedido = c;
+    public void setUiFilCalFechaFactura(Calendar c) {
+        this.uiFilCalFechaFactura = c;
     }
     private TextField uiFilTxtCliente = new TextField();
 
@@ -690,6 +690,7 @@ public class ABMFacturaVenta extends AbstractPageBean {
         uiTxtPorcDescuento.setText("0");
         uiTxtMontoDescuento.setText("0");
         uiCalFecha.setSelectedDate(null);
+        uiTxtNroPedido.setText(null);
 
         //Limpiamos los campos del detalle
         limpiarCamposDetalle();
@@ -774,6 +775,7 @@ public class ABMFacturaVenta extends AbstractPageBean {
     public String addButton_action() {
         //Inicializamos las variables
         lstDetalleLIST = new ArrayList();
+        lstDetalle = (FacturaDetalle[]) lstDetalleLIST.toArray(new FacturaDetalle[0]);
         addRequest = true;
         updateDetRequest = true;
         itemDet = null;
@@ -809,6 +811,7 @@ public class ABMFacturaVenta extends AbstractPageBean {
         updateRequest = true;
         updateDetRequest = true;
         itemDet = null;
+        lstDetalleEliminar = new ArrayList<FacturaDetalle>();
 
         //Cargamos los datos de las relaciones con esta entidad
         cargarRelaciones();
@@ -1137,8 +1140,8 @@ public class ABMFacturaVenta extends AbstractPageBean {
         }
 
         //Fecha
-        if (this.uiFilCalFechaPedido.getSelectedDate() != null) {
-            pFechaFactura = this.uiFilCalFechaPedido.getSelectedDate();
+        if (this.uiFilCalFechaFactura.getSelectedDate() != null) {
+            pFechaFactura = this.uiFilCalFechaFactura.getSelectedDate();
         }
 
         //Buscamos la lista de registros
@@ -1153,7 +1156,7 @@ public class ABMFacturaVenta extends AbstractPageBean {
         //Ceramos los campos de busqueda
         this.uiFilTxtNroFactura.setText(null);
         this.uiFilTxtCliente.setText(null);
-        this.uiFilCalFechaPedido.setSelectedDate(null);
+        this.uiFilCalFechaFactura.setSelectedDate(null);
 
         //Realizamos la busuqueda
         buscar();
@@ -1441,9 +1444,9 @@ public class ABMFacturaVenta extends AbstractPageBean {
                 uiTxtNombreCliente.setText(pedido.getCodCliente().getApellidoCliente() + ", " + pedido.getCodCliente().getNombreCliente());
                 uiCalFecha.setSelectedDate(new Date());
                 uiLstEstado.setSelected(FacturaVentaEstado.PENDIENTE_COBRO.toString());
-                uiTxtTotal.setText("0");
-                uiTxtTotalIva.setText("0");
-                uiTxtSubTotal.setText("0");
+                uiTxtTotal.setText(pedido.getTotal());
+                uiTxtTotalIva.setText(pedido.getTotalIva());
+                uiTxtSubTotal.setText(pedido.getSubTotal());
 
                 //Detalle
                 List<PedidoDetalle> detallePedido = pedido.getPedidoDetalleList();
@@ -1478,23 +1481,4 @@ public class ABMFacturaVenta extends AbstractPageBean {
         //result
         return null;
     }
-
-    public void uiFilCalFechaPedido_validate(FacesContext context, UIComponent component, Object value) {
-        //Variables
-        String msg = null;
-
-        if (value == null) {
-            msg = "Fecha campo Obligatorio";
-        }else{
-            try {
-                Date f = (Date) value;
-                msg = "******************"  + f.toString();
-            } catch (Exception e) {
-                msg = "Valor incorrecto para la fecha";
-            }
-        }
-        System.out.println(msg);
-        info(msg);
-    }
-
 }
