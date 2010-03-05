@@ -7,15 +7,19 @@ package py.com.platinum.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.listener.NotaCreditoProvDetalleListener;
 
 /**
  *
@@ -23,32 +27,33 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "NOTA_CREDITO_PROV_DET")
+@EntityListeners(value=NotaCreditoProvDetalleListener.class)
+@SequenceGenerator(name="NC_PROV_DET_SEQUENCE", sequenceName="SQ_NOTA_CREDITO_PROV_DET", initialValue=1, allocationSize=1)
 public class NotaCreditoProvDet implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final Long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="NC_PROV_DET_SEQUENCE")
     @Column(name = "COD_NOT_CRE_DET")
     private Long codNotCreDet;
     @Column(name = "PRECIO_UNI")
-    private long precioUni;
+    private Long precioUni;
     @Column(name = "CANTIDAD")
-    private long cantidad;
+    private Long cantidad;
     @Column(name = "PORC_IVA")
-    private short porcIva;
+    private Double porcIva;
     @Column(name = "MONTO_IVA")
-    private long montoIva;
-    @Column(name = "SUB_TOTAL")
-    private long subTotal;
+    private Long montoIva;
     @Column(name = "TOTAL")
-    private long total;
+    private Long total;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
     private String usuarioModif;
     @Column(name = "FECHA_ALTA")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaAlta;
     @Column(name = "FECHA_MODIF")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModif;
     @JoinColumn(name = "COD_NOT_CRE_CAB", referencedColumnName = "COD_NOT_CRE_CAB")
     @ManyToOne
@@ -64,13 +69,12 @@ public class NotaCreditoProvDet implements Serializable {
         this.codNotCreDet = codNotCreDet;
     }
 
-    public NotaCreditoProvDet(Long codNotCreDet, long precioUni, long cantidad, short porcIva, long montoIva, long subTotal, long total) {
+    public NotaCreditoProvDet(Long codNotCreDet, Long precioUni, Long cantidad, Double porcIva, Long montoIva, Long total) {
         this.codNotCreDet = codNotCreDet;
         this.precioUni = precioUni;
         this.cantidad = cantidad;
         this.porcIva = porcIva;
         this.montoIva = montoIva;
-        this.subTotal = subTotal;
         this.total = total;
     }
 
@@ -82,51 +86,43 @@ public class NotaCreditoProvDet implements Serializable {
         this.codNotCreDet = codNotCreDet;
     }
 
-    public long getPrecioUni() {
+    public Long getPrecioUni() {
         return precioUni;
     }
 
-    public void setPrecioUni(long precioUni) {
+    public void setPrecioUni(Long precioUni) {
         this.precioUni = precioUni;
     }
 
-    public long getCantidad() {
+    public Long getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(long cantidad) {
+    public void setCantidad(Long cantidad) {
         this.cantidad = cantidad;
     }
 
-    public short getPorcIva() {
+    public Double getPorcIva() {
         return porcIva;
     }
 
-    public void setPorcIva(short porcIva) {
+    public void setPorcIva(Double porcIva) {
         this.porcIva = porcIva;
     }
 
-    public long getMontoIva() {
+    public Long getMontoIva() {
         return montoIva;
     }
 
-    public void setMontoIva(long montoIva) {
+    public void setMontoIva(Long montoIva) {
         this.montoIva = montoIva;
     }
 
-    public long getSubTotal() {
-        return subTotal;
-    }
-
-    public void setSubTotal(long subTotal) {
-        this.subTotal = subTotal;
-    }
-
-    public long getTotal() {
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(long total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 

@@ -13,6 +13,7 @@ import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.FacturaCompraCab;
 import py.com.platinum.entity.FacturaCompraDet;
+import py.com.platinum.utilsenum.FacturaCompraEstado;
 
 /**
  *
@@ -170,7 +171,7 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
 
                         //Persistir
                         em.persist(det);
-                        
+
                     } else {
                         //Actualizamos
                         em.merge(det);
@@ -267,5 +268,78 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
             //Result
             return r;
         }
+    }
+
+    /**
+     * Verifca que si el nro de facutra ya existe, el control se realiza por
+     * codigo de proveedor
+     * 
+     * @param nroFactura
+     * @param codProveedor
+     * @return true si se encontro mas de un registro, false en caso de no encontrar
+     */
+    public boolean existeNumeroFactura(String nroFactura, Long codProveedor) {
+        //Variables
+        boolean r = false;
+
+        //Armamos el sql String
+        String SQL = " SELECT o " +
+                "   FROM FacturaCompraCab o " +
+                "  WHERE o.nroFactura = :nroFactura " +
+                "    AND o.codProveedor.codProveedor = :codProveedor " +
+                "    AND o.estado != :estado ";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Seteamos los parametros
+        q.setParameter("nroFactura", nroFactura);
+        q.setParameter("codProveedor", codProveedor);
+        q.setParameter("estado", "A");
+
+        //Realizamos la busqueda
+        List<FacturaCompraCab> entities = q.getResultList();
+        em.close();
+
+        //Verificamos si ya existe
+        if (entities.size() > 0) {
+            r = !r;
+        }
+
+        //retornamos la lista
+        return r;
+
+    }
+
+    public List<FacturaCompraCab> getFacturaCompraCab(String proveedor, FacturaCompraEstado estado) {
+        //Armamos el sql String
+        String SQL = "SELECT o FROM FacturaCompraCab o WHERE o.estado = :estado ";
+
+
+        if (proveedor != null && !proveedor.equals("")) {
+            SQL = SQL + " and UPPER( o.codProveedor.nombreProveedor ) like UPPER(:proveedor) ";
+        }
+
+        //Order By
+        SQL = SQL + " ORDER BY o.fecha desc ";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Seteamos los parametros
+        q.setParameter("estado", estado.toString());
+
+        if (proveedor != null && !proveedor.equals("")) {
+            q.setParameter("proveedor", "%" + proveedor + "%");
+        }
+
+        //Realizamos la busqueda
+        List<FacturaCompraCab> entities = q.getResultList();
+
+        em.close();
+
+        //retornamos la lista
+        return entities;
+
     }
 }   

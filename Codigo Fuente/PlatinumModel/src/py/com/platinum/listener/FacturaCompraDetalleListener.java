@@ -10,9 +10,7 @@ import javax.persistence.PostPersist;
 import py.com.platinum.controller.ExistenciaController;
 import py.com.platinum.controller.SolicitudInternaController;
 import py.com.platinum.entity.Existencia;
-import py.com.platinum.entity.FacturaCompraCab;
 import py.com.platinum.entity.FacturaCompraDet;
-import py.com.platinum.entity.FacturaDetalle;
 import py.com.platinum.entity.SolicitudInterna;
 
 /**
