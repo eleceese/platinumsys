@@ -8,20 +8,24 @@ package py.com.platinum.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.listener.NotaCreditoProvCabeceraListener;
+import py.com.platinum.utilsenum.NotaCreditoEstado;
 
 /**
  *
@@ -29,24 +33,37 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "NOTA_CREDITO_PROV_CAB")
+@EntityListeners(value=NotaCreditoProvCabeceraListener.class)
+@SequenceGenerator(name="NC_PROV_CAB_SEQUENCE", sequenceName="SQ_NOTA_CREDITO_PROV_CAB", initialValue=1, allocationSize=1)
 public class NotaCreditoProvCab implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final Long serialVersionUID = 1L;
     @Id
     @Column(name = "COD_NOT_CRE_CAB")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="NC_PROV_CAB_SEQUENCE")
     private Long codNotCreCab;
     @Column(name = "FECHA")
     @Temporal(TemporalType.DATE)
     private Date fecha;
     @Column(name = "NRO_NOTA_CREDITO")
     private String nroNotaCredito;
+    @JoinColumn(name = "TIPO", referencedColumnName = "COD_TIPO")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private TipoComprobante tipo;
     @Column(name = "ESTADO")
-    private String estado;
+    @Enumerated(EnumType.STRING)
+    private NotaCreditoEstado estado;
+    @Column(name = "ESTABLECIMIENTO")
+    private String establecimiento;
+    @Column(name = "BOCA_EXPENDIO")
+    private String bocaExpendio;
     @Column(name = "TOTAL")
-    private long total;
-    @Column(name = "IVA")
-    private long iva;
+    private Long total;
+    @Column(name = "SUB_TOTAL")
+    private Long subTotal;
+    @Column(name = "TOTAL_IVA")
+    private Long totalIva;
     @Column(name = "SALDO_FAC")
-    private long saldoFac;
+    private Long saldoFac;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -65,7 +82,10 @@ public class NotaCreditoProvCab implements Serializable {
     @JoinColumn(name = "COD_PROVEEDOR", referencedColumnName = "COD_PROVEEDOR")
     @ManyToOne
     private Proveedor codProveedor;
-
+    @JoinColumn(name = "COD_DEPOSITO", referencedColumnName = "COD_DEPOSITO", nullable=false)
+    @ManyToOne(fetch=FetchType.EAGER)
+    private Deposito codDeposito;
+    
     public NotaCreditoProvCab() {
     }
 
@@ -73,13 +93,13 @@ public class NotaCreditoProvCab implements Serializable {
         this.codNotCreCab = codNotCreCab;
     }
 
-    public NotaCreditoProvCab(Long codNotCreCab, Date fecha, String nroNotaCredito, String estado, long total, long iva, long saldoFac) {
+    public NotaCreditoProvCab(Long codNotCreCab, Date fecha, String nroNotaCredito, NotaCreditoEstado estado, Long total, Long totalIva, Long saldoFac) {
         this.codNotCreCab = codNotCreCab;
         this.fecha = fecha;
         this.nroNotaCredito = nroNotaCredito;
         this.estado = estado;
         this.total = total;
-        this.iva = iva;
+        this.totalIva = totalIva;
         this.saldoFac = saldoFac;
     }
 
@@ -107,35 +127,67 @@ public class NotaCreditoProvCab implements Serializable {
         this.nroNotaCredito = nroNotaCredito;
     }
 
-    public String getEstado() {
+    public TipoComprobante getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoComprobante tipo) {
+        this.tipo = tipo;
+    }
+
+    public NotaCreditoEstado getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(NotaCreditoEstado estado) {
         this.estado = estado;
     }
 
-    public long getTotal() {
+    public String getBocaExpendio() {
+        return bocaExpendio;
+    }
+
+    public void setBocaExpendio(String bocaExpendio) {
+        this.bocaExpendio = bocaExpendio;
+    }
+
+    public String getEstablecimiento() {
+        return establecimiento;
+    }
+
+    public void setEstablecimiento(String establecimiento) {
+        this.establecimiento = establecimiento;
+    }
+
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(long total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 
-    public long getIva() {
-        return iva;
+    public Long getSubTotal() {
+        return subTotal;
     }
 
-    public void setIva(long iva) {
-        this.iva = iva;
+    public void setSubTotal(Long subTotal) {
+        this.subTotal = subTotal;
     }
 
-    public long getSaldoFac() {
+    public Long getTotalIva() {
+        return totalIva;
+    }
+
+    public void setTotalIva(Long totalIva) {
+        this.totalIva = totalIva;
+    }
+
+    public Long getSaldoFac() {
         return saldoFac;
     }
 
-    public void setSaldoFac(long saldoFac) {
+    public void setSaldoFac(Long saldoFac) {
         this.saldoFac = saldoFac;
     }
 
@@ -193,6 +245,14 @@ public class NotaCreditoProvCab implements Serializable {
 
     public void setCodProveedor(Proveedor codProveedor) {
         this.codProveedor = codProveedor;
+    }
+
+    public Deposito getCodDeposito() {
+        return codDeposito;
+    }
+
+    public void setCodDeposito(Deposito codDeposito) {
+        this.codDeposito = codDeposito;
     }
 
     @Override

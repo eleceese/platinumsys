@@ -62,20 +62,22 @@ public class FacturaVentaCabeceraListener {
 
         }
 
-        //Persistimos el comprobante en el Entity SaldoCliente
-        saldoCliente = new SaldoCliente();
-        saldoCliente.setCodCliente(cab.getCodCliente());
-        saldoCliente.setUsuarioAlta(cab.getUsuarioAlta());
-        saldoCliente.setFechaAlta(new Date());
-        saldoCliente.setNroComprobante(cab.getCodFactura());
-        saldoCliente.setTipoComprobante(cab.getTipoFactura().getCodTipo());
-        saldoCliente.setSaldo(cab.getTotalFactura());
-        saldoCliente.setTotal(cab.getTotalFactura());
-        saldoCliente.setFechaComprobante(cab.getFechaFactura());
-        saldoCliente.setFechaVencimiento(DateUtils.fechaMas(cab.getFechaFactura(), cab.getTipoFactura().getCantDias()));
-        //Persistimos
-        saldoClienteController.create(saldoCliente);
-
+        //Verificamos si es contado el comprobante no insertamos en la tabla de saldo
+        if (cab.getTipoFactura().getCantDias() > 0) {
+            //Persistimos el comprobante en el Entity SaldoCliente
+            saldoCliente = new SaldoCliente();
+            saldoCliente.setCodCliente(cab.getCodCliente());
+            saldoCliente.setUsuarioAlta(cab.getUsuarioAlta());
+            saldoCliente.setFechaAlta(new Date());
+            saldoCliente.setNroComprobante(cab.getCodFactura());
+            saldoCliente.setTipoComprobante(cab.getTipoFactura().getCodTipo());
+            saldoCliente.setSaldo(cab.getTotalFactura());
+            saldoCliente.setTotal(cab.getTotalFactura());
+            saldoCliente.setFechaComprobante(cab.getFechaFactura());
+            saldoCliente.setFechaVencimiento(DateUtils.fechaMas(cab.getFechaFactura(), cab.getTipoFactura().getCantDias()));
+            //Persistimos
+            saldoClienteController.create(saldoCliente);
+        }
     }
 
     @PostUpdate
@@ -86,15 +88,18 @@ public class FacturaVentaCabeceraListener {
 
         //Si la factura fue anulada
         if (cab.getEstadoFactura().toString().equals(FacturaVentaEstado.ANULADO.toString())) {
-            //Obtenemos el comprobante de la tabla factura
-            saldoCliente = saldoClienteController.getSaldoCliente(cab.getTipoFactura().getCodTipo(), cab.getCodFactura());
+            //Si el comprobante es a Credito, actualizamos el saldo del cliente
+            if (cab.getTipoFactura().getCantDias() > 0) {
+                //Obtenemos el comprobante de la tabla factura
+                saldoCliente = saldoClienteController.getSaldoCliente(cab.getTipoFactura().getCodTipo(), cab.getCodFactura());
 
-            //Ceramos los totales
-            saldoCliente.setTotal(Long.valueOf("0"));
-            saldoCliente.setSaldo(Long.valueOf("0"));
+                //Ceramos los totales
+                saldoCliente.setTotal(Long.valueOf("0"));
+                saldoCliente.setSaldo(Long.valueOf("0"));
 
-            //Actualizamos
-            saldoClienteController.update(saldoCliente);
+                //Actualizamos
+                saldoClienteController.update(saldoCliente);    
+            }
 
             //Actualizamos el detalle
             List<FacturaDetalle> lstDet = cab.getFacturaDetalleList();
@@ -117,6 +122,20 @@ public class FacturaVentaCabeceraListener {
 
                 //Actualizamos
                 existenciaController.update(existencia);
+            }
+
+            /* Si la factura tiene un pedido de venta relacionado, actualizamos
+               el estado del pedido
+             */
+            if (cab.getCodPedido() != null) {
+                //Obtenemos el Pedido
+                pedidoCabecera = cab.getCodPedido();
+
+                //Actualizamos el estado
+                pedidoCabecera.setEstadoPedido(PedidoVentaEstado.PENDIENTE);
+
+                //Actualizamos
+                pedidoCabeceraController.update(pedidoCabecera);
             }
 
         }

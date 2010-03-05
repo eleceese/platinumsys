@@ -59,4 +59,24 @@ public class ModelUtil {
         //result
         return r;
     }
+
+    /**
+     * Obtenemos el tipo de Estado
+     * @param estado
+     * @return
+     */
+    public static NotaCreditoEstado getNotaCreditoEstado(String estado) {
+        //Variables
+        NotaCreditoEstado r = NotaCreditoEstado.APLICADO;
+
+        //Verificamos el tipo de estado
+        if (estado.equals(NotaCreditoEstado.ANULADO.toString())) {
+            r = NotaCreditoEstado.ANULADO;
+        }else if (estado.equals(NotaCreditoEstado.APLICADO.toString())) {
+            r = NotaCreditoEstado.APLICADO;
+        }
+
+        //result
+        return r;
+    }
 }
