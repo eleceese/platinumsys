@@ -4,3 +4,34 @@ alter table factura_compra_cab add COD_DEPOSITO NUMBER;
 alter table factura_compra_cab
 add constraint fk_factura_compracab_deposito foreign key (cod_deposito)
 references deposito(cod_deposito);
+
+--Nota de credito detalle tipo de dato, porc. iva
+alter table nota_credito_prov_det modify PORC_IVA number(5,2);
+
+--Estado nota de credito cabecera
+alter table nota_credito_prov_cab modify estado varchar2(15);
+
+--Subtotal en la cabecera
+alter table nota_credito_prov_cab add sub_total number(15);
+
+--Agregamos cod deposito
+alter table nota_credito_prov_cab add COD_DEPOSITO NUMBER;
+
+alter table nota_credito_prov_cab
+add constraint fk_notacreprovcab_deposito foreign key (cod_deposito)
+references deposito(cod_deposito);
+
+--Agregar establecimiento y boca de expendio
+alter table nota_credito_prov_cab add establecimiento varchar2(3) default '001'  not null;
+alter table nota_credito_prov_cab add boca_expendio varchar2(3) default '001'  not null;
+
+--nota_credito_prov_cab
+alter table nota_credito_prov_cab add tipo number(10);
+
+--Relacionamos nota_credito_prov_cab con tipo comprobante
+alter table nota_credito_prov_cab
+	add constraint fk_notacredprovcab_tipcompro foreign key (tipo)
+	    references tipo_comprobante(cod_tipo);
+		
+--eliminamos column dep nota cred. prov
+alter table nota_credito_prov_det drop column sub_total;
