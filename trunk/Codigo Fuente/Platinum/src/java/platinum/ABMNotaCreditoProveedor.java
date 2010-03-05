@@ -24,22 +24,23 @@ import java.util.List;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.convert.CharacterConverter;
-import py.com.platinum.controller.PedidoCabeceraController;
+import py.com.platinum.controller.FacturaCompraCabController;
+import py.com.platinum.controller.NotaCreditoProvCabController;
 import py.com.platinum.controller.ProductoController;
-import py.com.platinum.controller.ClienteController;
-import py.com.platinum.controller.EmpleadoController;
+import py.com.platinum.controller.ProveedorController;
 import py.com.platinum.controller.TipoComprobanteController;
 import py.com.platinum.controllerUtil.ControllerResult;
-import py.com.platinum.entity.Empleado;
-import py.com.platinum.entity.PedidoCabecera;
-import py.com.platinum.entity.PedidoDetalle;
+import py.com.platinum.entity.FacturaCompraCab;
+import py.com.platinum.entity.FacturaCompraDet;
+import py.com.platinum.entity.NotaCreditoProvCab;
+import py.com.platinum.entity.NotaCreditoProvDet;
 import py.com.platinum.entity.Producto;
-import py.com.platinum.entity.Cliente;
+import py.com.platinum.entity.Proveedor;
 import py.com.platinum.entity.TipoComprobante;
 import py.com.platinum.utils.StringUtils;
 import py.com.platinum.utilsenum.ModelUtil;
 import py.com.platinum.utilsenum.ModuloEnum;
-import py.com.platinum.utilsenum.PedidoVentaEstado;
+import py.com.platinum.utilsenum.NotaCreditoEstado;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -52,7 +53,7 @@ import py.com.platinum.utilsenum.PedidoVentaEstado;
  * @version Created on 20-ago-2009, 19:25:56
  * @author MartinJara
  */
-public class ABMPedidoCliente extends AbstractPageBean {
+public class ABMNotaCreditoProveedor extends AbstractPageBean {
     // <editor-fold defaultstate="collapsed" desc="Managed Component Definition">
 
     /**
@@ -98,15 +99,6 @@ public class ABMPedidoCliente extends AbstractPageBean {
     public void setUpdateButton(Button b) {
         this.updateButton = b;
     }
-    private Button deleteButton = new Button();
-
-    public Button getDeleteButton() {
-        return deleteButton;
-    }
-
-    public void setDeleteButton(Button b) {
-        this.deleteButton = b;
-    }
     private HtmlPanelGrid addUpdatePanel = new HtmlPanelGrid();
 
     public HtmlPanelGrid getAddUpdatePanel() {
@@ -116,14 +108,14 @@ public class ABMPedidoCliente extends AbstractPageBean {
     public void setAddUpdatePanel(HtmlPanelGrid hpg) {
         this.addUpdatePanel = hpg;
     }
-    private TextField uiTxtNombreCliente = new TextField();
+    private TextField uiTxtNombreProveedor = new TextField();
 
-    public TextField getUiTxtNombreCliente() {
-        return uiTxtNombreCliente;
+    public TextField getUiTxtNombreProveedor() {
+        return uiTxtNombreProveedor;
     }
 
-    public void setUiTxtNombreCliente(TextField tf) {
-        this.uiTxtNombreCliente = tf;
+    public void setUiTxtNombreProveedor(TextField tf) {
+        this.uiTxtNombreProveedor = tf;
     }
     private TextField emailAddressField = new TextField();
 
@@ -242,23 +234,23 @@ public class ABMPedidoCliente extends AbstractPageBean {
     public void setUiFilTxtNroFactura(TextField tf) {
         this.uiFilTxtNroFactura = tf;
     }
-    private Calendar uiFilCalFechaPedido = new Calendar();
+    private Calendar uiFilCalFechaFactura = new Calendar();
 
-    public Calendar getUiFilCalFechaPedido() {
-        return uiFilCalFechaPedido;
+    public Calendar getUiFilCalFechaFactura() {
+        return uiFilCalFechaFactura;
     }
 
-    public void setUiFilCalFechaPedido(Calendar c) {
-        this.uiFilCalFechaPedido = c;
+    public void setUiFilCalFechaFactura(Calendar c) {
+        this.uiFilCalFechaFactura = c;
     }
-    private TextField uiFilTxtCliente = new TextField();
+    private TextField uiFilTxtProveedor = new TextField();
 
-    public TextField getUiFilTxtCliente() {
-        return uiFilTxtCliente;
+    public TextField getUiFilTxtProveedor() {
+        return uiFilTxtProveedor;
     }
 
-    public void setUiFilTxtCliente(TextField tf) {
-        this.uiFilTxtCliente = tf;
+    public void setUiFilTxtProveedor(TextField tf) {
+        this.uiFilTxtProveedor = tf;
     }
     private TableColumn tableColumn11 = new TableColumn();
 
@@ -278,14 +270,14 @@ public class ABMPedidoCliente extends AbstractPageBean {
     public void setRadioButton1(RadioButton rb) {
         this.radioButton1 = rb;
     }
-    private TextField uiTxtNroPedido = new TextField();
+    private TextField uiTxtNroFac = new TextField();
 
-    public TextField getUiTxtNroPedido() {
-        return uiTxtNroPedido;
+    public TextField getUiTxtNroFac() {
+        return uiTxtNroFac;
     }
 
-    public void setUiTxtNroPedido(TextField tf) {
-        this.uiTxtNroPedido = tf;
+    public void setUiTxtNroFac(TextField tf) {
+        this.uiTxtNroFac = tf;
     }
     private DropDown uiLstTipoComprobante = new DropDown();
 
@@ -305,14 +297,14 @@ public class ABMPedidoCliente extends AbstractPageBean {
     public void setUiLstEstado(DropDown dd) {
         this.uiLstEstado = dd;
     }
-    private TextField uiTxtCodCliente = new TextField();
+    private TextField uiTxtCodProveedor = new TextField();
 
-    public TextField getUiTxtCodCliente() {
-        return uiTxtCodCliente;
+    public TextField getUiTxtCodProveedor() {
+        return uiTxtCodProveedor;
     }
 
-    public void setUiTxtCodCliente(TextField tf) {
-        this.uiTxtCodCliente = tf;
+    public void setUiTxtCodProveedor(TextField tf) {
+        this.uiTxtCodProveedor = tf;
     }
     private TextField uiTxtTotalIva = new TextField();
 
@@ -449,57 +441,84 @@ public class ABMPedidoCliente extends AbstractPageBean {
     public void setCharacterConverter1(CharacterConverter cc) {
         this.characterConverter1 = cc;
     }
-    private TextField uiTxtPorcDescuento = new TextField();
+    private HtmlPanelGrid gridPanelDetLin1 = new HtmlPanelGrid();
 
-    public TextField getUiTxtPorcDescuento() {
-        return uiTxtPorcDescuento;
+    public HtmlPanelGrid getGridPanelDetLin1() {
+        return gridPanelDetLin1;
     }
 
-    public void setUiTxtPorcDescuento(TextField tf) {
-        this.uiTxtPorcDescuento = tf;
+    public void setGridPanelDetLin1(HtmlPanelGrid hpg) {
+        this.gridPanelDetLin1 = hpg;
     }
-    private TextField uiTxtMontoDescuento = new TextField();
+    private HtmlPanelGrid gridPanelDetLin2 = new HtmlPanelGrid();
 
-    public TextField getUiTxtMontoDescuento() {
-        return uiTxtMontoDescuento;
+    public HtmlPanelGrid getGridPanelDetLin2() {
+        return gridPanelDetLin2;
     }
 
-    public void setUiTxtMontoDescuento(TextField tf) {
-        this.uiTxtMontoDescuento = tf;
+    public void setGridPanelDetLin2(HtmlPanelGrid hpg) {
+        this.gridPanelDetLin2 = hpg;
+    }
+    private TableColumn tableColumnEditarDet = new TableColumn();
+
+    public TableColumn getTableColumnEditarDet() {
+        return tableColumnEditarDet;
+    }
+
+    public void setTableColumnEditarDet(TableColumn tc) {
+        this.tableColumnEditarDet = tc;
+    }
+    private TableColumn tableColumnEliminarDet = new TableColumn();
+
+    public TableColumn getTableColumnEliminarDet() {
+        return tableColumnEliminarDet;
+    }
+
+    public void setTableColumnEliminarDet(TableColumn tc) {
+        this.tableColumnEliminarDet = tc;
+    }
+    private TextField uiTxtNroFactura = new TextField();
+
+    public TextField getUiTxtNroFactura() {
+        return uiTxtNroFactura;
+    }
+
+    public void setUiTxtNroFactura(TextField tf) {
+        this.uiTxtNroFactura = tf;
     }
 
     // </editor-fold>
     /**
      * <p>Construct a new Page bean instance.</p>
      */
-    public ABMPedidoCliente() {
+    public ABMNotaCreditoProveedor() {
 
-        //Tipos de IVA
+        //Tipos de IVa
         uiLstIvaDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("0", "Exento"), new com.sun.webui.jsf.model.Option("5", "IVA 5%"), new com.sun.webui.jsf.model.Option("10", "IVA 10%")});
         uiLstIvaDefaultOptions.setSelectedValue("0");
 
-        //Estados de la factura
-        PedidoVentaEstado[] lstEstado = PedidoVentaEstado.values();
+        //Estados
+        NotaCreditoEstado[] lstEstado = NotaCreditoEstado.values();
         Option[] lstEstadoOp = new Option[lstEstado.length];
-        
+
         Option o = new Option();
         for (int i = 0; i < lstEstado.length; i++) {
             //Obtenemos el estado
-            PedidoVentaEstado p = lstEstado[i];
-            
+            NotaCreditoEstado p = lstEstado[i];
+
             //Seteamos el value y el label del option
             o.setValue(p.toString());
             o.setLabel(p.toString());
-            
+
             //Agregamos a la lista
             lstEstadoOp[i] = o;
-            
+
             //Cerar
             o = new Option();
         }
 
         uiLstEstadoDefaultOptions.setOptions(lstEstadoOp);
-        uiLstEstadoDefaultOptions.setSelectedValue(PedidoVentaEstado.PENDIENTE.toString());
+        uiLstEstadoDefaultOptions.setSelectedValue(NotaCreditoEstado.APLICADO.toString());
 
         //Cargamos a las tablas relacionadas
         cargarRelaciones();
@@ -539,8 +558,8 @@ public class ABMPedidoCliente extends AbstractPageBean {
         // Perform application initialization that must complete
         // *after* managed components are initialized
         // TODO - add your own initialization code here
-        getSessionBean1().setTituloPagina("Pedido Cliente");
-        getSessionBean1().setDetallePagina("Registro de Pedido - Cliente");
+        getSessionBean1().setTituloPagina("Nota Credito Proveedor");
+        getSessionBean1().setDetallePagina("Registro de Nota Credito - Proveedor");
     }
 
     /**
@@ -590,8 +609,8 @@ public class ABMPedidoCliente extends AbstractPageBean {
         } else if (errorValidacion) {
             addUpdatePanel.setRendered(true);
         } else if (!updateDetRequest) {
-            getSessionBean1().setTituloPagina("Pedido Cliente");
-            getSessionBean1().setDetallePagina("Registro de Pedido - Cliente");
+            getSessionBean1().setTituloPagina("Nota Credito Proveedor");
+            getSessionBean1().setDetallePagina("Registro de Nota Credito - Proveedor");
             gridPanelBuscar.setRendered(true);
             table1.setRendered(true);
             buttonPanel.setRendered(true);
@@ -606,20 +625,17 @@ public class ABMPedidoCliente extends AbstractPageBean {
 
     }
 
-
     /**
      * Limpiar campos
      */
     private void limpiarCamposCabecera() {
         //Limpiamos los campos de la cabecera
-        uiTxtCodCliente.setText(null);
-        uiTxtNombreCliente.setText(null);
-        uiTxtNroPedido.setText(null);
+        uiTxtCodProveedor.setText(null);
+        uiTxtNombreProveedor.setText(null);
+        uiTxtNroFac.setText(null);
         uiTxtTotalIva.setText("0");
         uiTxtSubTotal.setText("0");
         uiTxtTotal.setText("0");
-        uiTxtPorcDescuento.setText("0");
-        uiTxtMontoDescuento.setText("0");
         uiCalFecha.setSelectedDate(null);
 
         //Limpiamos los campos del detalle
@@ -690,7 +706,6 @@ public class ABMPedidoCliente extends AbstractPageBean {
         RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
         return tablePhaseListener.isSelected(rowKey);
     }
-    
     private boolean addRequest = false;
     private boolean updateRequest = false;
     private boolean updateDetRequest = false;
@@ -704,22 +719,23 @@ public class ABMPedidoCliente extends AbstractPageBean {
      */
     public String addButton_action() {
         //Inicializamos las variables
-        lstDetalleLIST = new ArrayList<PedidoDetalle>();
-        lstDetalle = (PedidoDetalle[]) lstDetalleLIST.toArray(new PedidoDetalle[0]);
-        lstDetalleEliminar = new ArrayList<PedidoDetalle>();
+        lstDetalleLIST = new ArrayList();
         addRequest = true;
         updateDetRequest = true;
         itemDet = null;
 
+        gridPanelDetLin1.setRendered(true);
+        gridPanelDetLin2.setRendered(true);
+        tableColumnEditarDet.setRendered(true);
+        tableColumnEliminarDet.setRendered(true);
 
         //Cargar tablas realcionadas
         cargarRelaciones();
 
         //Actualizamos le titulo de la pagina
-        getSessionBean1().setTituloPagina("Nuevo Pedido Venta");
-        getSessionBean1().setDetallePagina("Registro de Pedido - Cliente");
-        this.uiBtnCancelar.setText("Cancelar");
-        this.uiBtnGuardarNuevo.setRendered(false);
+        getSessionBean1().setTituloPagina("Nueva Nota Credito Proveedor");
+        getSessionBean1().setDetallePagina("Registro de Nota Credito - Proveedor");
+
         //result
         return null;
     }
@@ -735,16 +751,18 @@ public class ABMPedidoCliente extends AbstractPageBean {
         updateRequest = true;
         updateDetRequest = true;
         itemDet = null;
-        lstDetalleEliminar = new ArrayList<PedidoDetalle>();
-        this.uiBtnGuardarNuevo.setRendered(false);
-        this.uiBtnCancelar.setText("Cancelar");
+
+        gridPanelDetLin1.setRendered(false);
+        gridPanelDetLin2.setRendered(false);
+        tableColumnEditarDet.setRendered(false);
+        tableColumnEliminarDet.setRendered(false);
 
         //Cargamos los datos de las relaciones con esta entidad
         cargarRelaciones();
 
         //Actualizamos le titulo de la pagina
-        getSessionBean1().setTituloPagina("Editar Pedido Cliente");
-        getSessionBean1().setDetallePagina("Registro de Pedido - Cliente");
+        getSessionBean1().setTituloPagina("Nota Credito - Proveedor");
+        getSessionBean1().setDetallePagina("Registro de Nota Credito - Proveedor");
 
         //ocultamos el pageAlert
         this.pageAlert1.setRendered(false);
@@ -759,18 +777,19 @@ public class ABMPedidoCliente extends AbstractPageBean {
             cabecera = lstCabecera[rowId];
 
             //Obetenemos el detalle
-            lstDetalleLIST = cabecera.getPedidoDetalleList();
-            lstDetalle = (PedidoDetalle[]) lstDetalleLIST.toArray(new PedidoDetalle[0]);
+            lstDetalleLIST = cabecera.getNotaCreditoProvDet();
+            lstDetalle = (NotaCreditoProvDet[]) lstDetalleLIST.toArray(new NotaCreditoProvDet[0]);
 
             //Detalles a eliminar
             lstDetalleEliminar = new ArrayList();
 
             //Obetenemos los atributos de la cabecera
-            uiTxtCodCliente.setText(cabecera.getCodCliente().getCodCliente());
-            uiTxtNombreCliente.setText(cabecera.getCodCliente().getNombreCliente());
-            uiLstEstado.setSelected(cabecera.getEstadoPedido());
+            uiTxtNroFac.setText(cabecera.getNroNotaCredito());
+            uiTxtCodProveedor.setText(cabecera.getCodProveedor().getCodProveedor());
+            uiTxtNombreProveedor.setText(cabecera.getCodProveedor().getNombreProveedor());
+            uiLstEstado.setSelected(cabecera.getEstado());
             uiLstTipoComprobante.setSelected(cabecera.getTipo().getCodTipo().toString());
-            uiCalFecha.setSelectedDate(cabecera.getFechaPedido());
+            uiCalFecha.setSelectedDate(cabecera.getFecha());
             uiTxtSubTotal.setText(String.valueOf(cabecera.getSubTotal()));
             uiTxtTotal.setText(String.valueOf(cabecera.getTotal()));
             uiTxtTotalIva.setText(String.valueOf(cabecera.getTotalIva()));
@@ -781,43 +800,6 @@ public class ABMPedidoCliente extends AbstractPageBean {
         return null;
     }
 
-    public String deleteButton_action() {
-        //Ocultamos el pageAlert
-        this.pageAlert1.setRendered(false);
-
-        // Si la cantidad de registros en la grilla es mayor a 0
-        // Eliminamos el elemento seleccionado
-        if (getTableRowGroup1().getSelectedRowsCount() > 0) {
-            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
-
-            //Posicion en la grilla del elemento seleccionado
-            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
-
-            //Elemento seleccionado
-            PedidoCabecera e = lstCabecera[rowId];
-
-            //Eliminados el registro
-            PedidoCabeceraController controller = new PedidoCabeceraController();
-            ControllerResult r = controller.eliminar(e, e.getPedidoDetalleList());
-
-            //Mensaje
-            if (r.getCodRetorno() == -1) {
-                this.pageAlert1.setType("error");
-                this.pageAlert1.setTitle("Error al eliminar el Registro");
-            } else {
-                this.pageAlert1.setType("information");
-                this.pageAlert1.setTitle("El Registro se a Eliminado correctamente");
-            }
-
-            this.pageAlert1.setSummary("");
-            this.pageAlert1.setDetail("");
-            this.pageAlert1.setRendered(true);
-        }
-
-        //Result
-        return null;
-    }
-
     public String uiBtnGuardarNuevo_action() {
         //Validamos los campos
         validarCabecera();
@@ -825,19 +807,20 @@ public class ABMPedidoCliente extends AbstractPageBean {
         //Si no hay error de validacion insertamos el registro
         if (!errorValidacion) {
             //Nuevo
-            cabecera = new PedidoCabecera();
+            cabecera = new NotaCreditoProvCab();
 
             //Set de los artributos
-            cabecera.setCodCliente(Cliente);
-            cabecera.setEstadoPedido(ModelUtil.getPedidoEstado(uiLstEstado.getSelected().toString()));
-            cabecera.setFechaPedido(uiCalFecha.getSelectedDate());
-            //TODO: Falta Implementar el modulo de Usuarios, para tomar directamente
-            //el usuario de la session
-            codEmpleado = new EmpleadoController().findById(Long.valueOf("1"));
-            cabecera.setCodEmpleado(codEmpleado);
-            cabecera.setPorcDescuento(Long.valueOf(uiTxtPorcDescuento.getText().toString()));
-            cabecera.setMontoDescuento(Long.valueOf(uiTxtMontoDescuento.getText().toString()));
-
+            cabecera.setCodProveedor(proveedor);
+            cabecera.setEstado(ModelUtil.getNotaCreditoEstado(uiLstEstado.getSelected().toString()));
+            cabecera.setFecha(uiCalFecha.getSelectedDate());
+            cabecera.setNroNotaCredito(uiTxtNroFac.getText().toString());
+            cabecera.setCodDeposito(getSessionBean1().getCodDeposito());
+            cabecera.setCodFacturaCab(facturaCompraCab);
+            cabecera.setSaldoFac(facturaCompraCab.getTotal());
+            cabecera.setEstablecimiento(getSessionBean1().getEstablecimiento());
+            cabecera.setBocaExpendio(getSessionBean1().getBocaExpendio());
+            cabecera.setCodDeposito(facturaCompraCab.getCodDeposito());
+            
             //Tipo de comprobante
             cabecera.setTipo(tipoComprobante);
             cabecera.setTotalIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
@@ -845,7 +828,7 @@ public class ABMPedidoCliente extends AbstractPageBean {
             cabecera.setTotal(Long.valueOf(uiTxtTotal.getText().toString()));
 
             //Insertamos la cebecera y del detalle
-            ControllerResult cr = new PedidoCabeceraController().crear(cabecera, lstDetalleLIST);
+            ControllerResult cr = new NotaCreditoProvCabController().crear(cabecera, lstDetalleLIST);
 
             //Verificamos el tipo de mensaje
             if (cr.getCodRetorno() == -1) {
@@ -853,10 +836,10 @@ public class ABMPedidoCliente extends AbstractPageBean {
                 errorValidacion = true;
             } else {
                 // Apagamos la bandera de nuevo registro
+                this.addRequest = false;
+                this.updateDetRequest = false;
                 this.pageAlert1.setType("information");
-                this.uiBtnCancelar.setText("Atras");
-                this.uiBtnGuardarNuevo.setRendered(false);
-                this.uiTxtNroPedido.setText(cabecera.getCodPedido());
+
             }
 
             this.pageAlert1.setTitle(cr.getMsg());
@@ -877,26 +860,45 @@ public class ABMPedidoCliente extends AbstractPageBean {
         //Apagamos la bandera de error
         this.errorValidacion = false;
 
-        //Cliente
-        if (this.uiTxtCodCliente.getText() == null) {
-            info("Nro. de factura, campo obligatorio");
+        //Nro. Factura
+        if (this.uiTxtNroFac.getText() == null) {
+            info("Nro. de Nota Credito, campo obligatorio");
             this.errorValidacion = true;
-        }else{
-            //Validamos el codigo del Cliente ingresado
-            Cliente = new ClienteController().findById(Long.valueOf(uiTxtCodCliente.getText().toString()));
+        }
 
-            if (Cliente == null) {
-                info("Codigo de Cliente ingresado no es encontrado, campo obligatorio favor ingrese un codigo correcto");
+        //Proveedor
+        if (this.uiTxtCodProveedor.getText() == null) {
+            info("Proveedor, campo obligatorio");
+            this.errorValidacion = true;
+        } else {
+            //Validamos el codigo del proveedor ingresado
+            proveedor = new ProveedorController().findById(Long.valueOf(uiTxtCodProveedor.getText().toString()));
+
+            if (proveedor == null) {
+                info("Codigo de Proveedor ingresado no es encontrado, campo obligatorio favor ingrese un codigo correcto");
                 this.errorValidacion = true;
             }
+        }
+
+        //Verificamos si el numero de factura ya existe
+        if (this.uiTxtNroFac.getText() != null && proveedor != null) {
+            NotaCreditoProvCabController c = new NotaCreditoProvCabController();
+            //Realizamos la busqueda
+            boolean existe = c.existeNumeroNotaCredito(this.uiTxtNroFac.getText().toString(), proveedor.getCodProveedor());
+
+            if (existe) {
+                info("Numero de Nota Credito ya existe para el proveedor ingresado, favor verifique");
+                this.errorValidacion = true;
+            }
+
         }
 
         //Tipo de Comprobante
         if (this.uiLstTipoComprobante.getSelected() == null) {
             info("Tipo de Comprobante, campo obligatorio");
             this.errorValidacion = true;
-        }else{
-            //Validamos el codigo del Cliente ingresado
+        } else {
+            //Validamos el codigo del proveedor ingresado
             tipoComprobante = new TipoComprobanteController().findById(Long.valueOf(this.uiLstTipoComprobante.getSelected().toString()));
 
             if (tipoComprobante == null) {
@@ -907,61 +909,48 @@ public class ABMPedidoCliente extends AbstractPageBean {
 
         //Fecha
         if (this.uiCalFecha.getSelectedDate() == null) {
-            info("Fecha Pedido, campo obligatorio");
+            info("Fecha Nota Credito, campo obligatorio");
             this.errorValidacion = true;
         }
 
     }
 
     public String uiBtnGuardarEditar_action() {
-        //Validamos los campos
-        validarCabecera();
+        //Set de los artributos
+        cabecera.setEstado(NotaCreditoEstado.ANULADO);
 
-        //Si no hay error de validacion insertamos el registro
-        if (!errorValidacion) {
+        //Insertamos la cebecera y del detalle
+        ControllerResult cr = new NotaCreditoProvCabController().update(cabecera);
 
-            //Set de los artributos
-            cabecera.setCodCliente(Cliente);
-            cabecera.setEstadoPedido(ModelUtil.getPedidoEstado(uiLstEstado.getSelected().toString()));
-            cabecera.setFechaPedido(uiCalFecha.getSelectedDate());
-            
-            //Tipo de comprobante
-            cabecera.setTipo(tipoComprobante);
-            cabecera.setTotalIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
-            cabecera.setSubTotal(Long.valueOf(uiTxtSubTotal.getText().toString()));
-            cabecera.setTotal(Long.valueOf(uiTxtTotal.getText().toString()));
-            cabecera.setPorcDescuento(Long.valueOf(uiTxtPorcDescuento.getText().toString()));
-            cabecera.setMontoDescuento(Long.valueOf(uiTxtMontoDescuento.getText().toString()));
-
-            //Insertamos la cebecera y del detalle
-            ControllerResult cr = new PedidoCabeceraController().actualizar(cabecera, lstDetalleLIST, lstDetalleEliminar);
-
-            //Verificamos el tipo de mensaje
-            if (cr.getCodRetorno() == -1) {
-                this.pageAlert1.setType("error");
-                errorValidacion = true;
-            } else {
-                // Apagamos la bandera de Editar registro
-                this.pageAlert1.setType("information");
-            }
-
-            this.pageAlert1.setTitle(cr.getMsg());
-            this.pageAlert1.setSummary("");
-            this.pageAlert1.setDetail("");
-            this.pageAlert1.setRendered(true);
+        //Verificamos el tipo de mensaje
+        if (cr.getCodRetorno() == -1) {
+            this.pageAlert1.setType("error");
+            errorValidacion = true;
+        } else {
+            // Apagamos la bandera de Editar registro
+            this.updateRequest = false;
+            this.updateDetRequest = false;
+            this.pageAlert1.setType("information");
         }
+
+        this.pageAlert1.setTitle(cr.getMsg());
+        this.pageAlert1.setSummary("");
+        this.pageAlert1.setDetail("");
+        this.pageAlert1.setRendered(true);
 
         //result
         return null;
     }
 
     public String uiBtnCancelar_action() {
+        //Apagamos las banderas
         addRequest = false;
         updateRequest = false;
         updateDetRequest = false;
         errorValidacion = false;
         this.pageAlert1.setRendered(false);
-        
+
+        //result
         return null;
     }
 
@@ -975,54 +964,55 @@ public class ABMPedidoCliente extends AbstractPageBean {
         //Result
         return null;
     }
-    private PedidoCabecera cabecera;
-    private PedidoCabecera[] lstCabecera;
-    private PedidoDetalle detalle;
-    private PedidoDetalle[] lstDetalle;
-    private List<PedidoDetalle> lstDetalleLIST;
-    private List<PedidoDetalle> lstDetalleEliminar;
+    private NotaCreditoProvCab cabecera;
+    private NotaCreditoProvCab[] lstCabecera;
+    private NotaCreditoProvDet detalle;
+    private NotaCreditoProvDet[] lstDetalle;
+    private List<NotaCreditoProvDet> lstDetalleLIST;
+    private List<NotaCreditoProvDet> lstDetalleEliminar;
     private Producto producto;
-    private Cliente Cliente;
+    private Proveedor proveedor;
     private TipoComprobante tipoComprobante;
-    Empleado codEmpleado = new Empleado();
+    private FacturaCompraCab facturaCompraCab;
+    private FacturaCompraCabController facturaCompraCabController;
 
-    public PedidoCabecera getCabecera() {
+    public NotaCreditoProvCab getCabecera() {
         return cabecera;
     }
 
-    public void setCabecera(PedidoCabecera cabecera) {
+    public void setCabecera(NotaCreditoProvCab cabecera) {
         this.cabecera = cabecera;
     }
 
-    public PedidoDetalle getDetalle() {
+    public NotaCreditoProvDet getDetalle() {
         return detalle;
     }
 
-    public void setDetalle(PedidoDetalle detalle) {
+    public void setDetalle(NotaCreditoProvDet detalle) {
         this.detalle = detalle;
     }
 
-    public PedidoCabecera[] getLstCabecera() {
+    public NotaCreditoProvCab[] getLstCabecera() {
         return lstCabecera;
     }
 
-    public void setLstCabecera(PedidoCabecera[] lstCabecera) {
+    public void setLstCabecera(NotaCreditoProvCab[] lstCabecera) {
         this.lstCabecera = lstCabecera;
     }
 
-    public PedidoDetalle[] getLstDetalle() {
+    public NotaCreditoProvDet[] getLstDetalle() {
         return lstDetalle;
     }
 
-    public void setLstDetalle(PedidoDetalle[] lstDetalle) {
+    public void setLstDetalle(NotaCreditoProvDet[] lstDetalle) {
         this.lstDetalle = lstDetalle;
     }
 
-    public List<PedidoDetalle> getLstDetalleLIST() {
+    public List<NotaCreditoProvDet> getLstDetalleLIST() {
         return lstDetalleLIST;
     }
 
-    public void setLstDetalleLIST(List<PedidoDetalle> lstDetalleLIST) {
+    public void setLstDetalleLIST(List<NotaCreditoProvDet> lstDetalleLIST) {
         this.lstDetalleLIST = lstDetalleLIST;
     }
 
@@ -1032,27 +1022,28 @@ public class ABMPedidoCliente extends AbstractPageBean {
      */
     public void buscar() {
         //Verificamos el contenido de los campos de busqueda
-        PedidoCabeceraController c = new PedidoCabeceraController();
+        NotaCreditoProvCabController c = new NotaCreditoProvCabController();
         Date pFechaFactura = null;
-        String pNroPedido = null, pCliente = null;
+        String pNroFactura = null, pProveedor = null;
 
-        //Nro. Pendido
+
+        //Nro. Factura
         if (this.uiFilTxtNroFactura.getText() != null) {
-            pNroPedido = this.uiFilTxtNroFactura.getText().toString();
+            pNroFactura = this.uiFilTxtNroFactura.getText().toString();
         }
 
-        //Cliente
-        if (this.uiFilTxtCliente.getText() != null) {
-            pCliente = this.uiFilTxtCliente.getText().toString();
+        //Proveedor
+        if (this.uiFilTxtProveedor.getText() != null) {
+            pProveedor = this.uiFilTxtProveedor.getText().toString();
         }
 
         //Fecha
-        if (this.uiFilCalFechaPedido.getSelectedDate() != null) {
-            pFechaFactura = this.uiFilCalFechaPedido.getSelectedDate();
+        if (this.uiFilCalFechaFactura.getSelectedDate() != null) {
+            pFechaFactura = this.uiFilCalFechaFactura.getSelectedDate();
         }
 
         //Buscamos la lista de registros
-        lstCabecera = (PedidoCabecera[]) c.getPedidoCabecera(pNroPedido, pCliente, pFechaFactura).toArray(new PedidoCabecera[0]);
+        lstCabecera = (NotaCreditoProvCab[]) c.getNotaCreditoProvCab(pNroFactura, pProveedor, pFechaFactura).toArray(new NotaCreditoProvCab[0]);
 
     }
 
@@ -1062,8 +1053,8 @@ public class ABMPedidoCliente extends AbstractPageBean {
 
         //Ceramos los campos de busqueda
         this.uiFilTxtNroFactura.setText(null);
-        this.uiFilTxtCliente.setText(null);
-        this.uiFilCalFechaPedido.setSelectedDate(null);
+        this.uiFilTxtProveedor.setText(null);
+        this.uiFilCalFechaFactura.setSelectedDate(null);
 
         //Realizamos la busuqueda
         buscar();
@@ -1083,14 +1074,13 @@ public class ABMPedidoCliente extends AbstractPageBean {
 
             //Controlamos si es Nuevo Detalle
             if (itemDet == null) {
-                detalle = new PedidoDetalle();
+                detalle = new NotaCreditoProvDet();
             }
 
             //Obtenemos los datos ingresados
             detalle.setCodProducto(producto);
-            detalle.setCantidadPedida(Long.valueOf(uiTxtCantidad.getText().toString()));
-            detalle.setCantidadEntregada(Long.valueOf("0"));
-            detalle.setPrecioUnitario(Long.valueOf(uiTxtPrecioUnitario.getText().toString()));
+            detalle.setCantidad(Long.valueOf(uiTxtCantidad.getText().toString()));
+            detalle.setPrecioUni(Long.valueOf(uiTxtPrecioUnitario.getText().toString()));
             detalle.setPorcIva(Double.valueOf(uiLstIva.getSelected().toString()));
             detalle.setMontoIva(Long.valueOf(uiTxtMontoIva.getText().toString()));
             detalle.setTotal(Long.valueOf(uiTxtMontoTotal.getText().toString()));
@@ -1101,7 +1091,7 @@ public class ABMPedidoCliente extends AbstractPageBean {
             }
 
             //Actualizamos la grilla
-            lstDetalle = (PedidoDetalle[]) lstDetalleLIST.toArray(new PedidoDetalle[0]);
+            lstDetalle = (NotaCreditoProvDet[]) lstDetalleLIST.toArray(new NotaCreditoProvDet[0]);
 
             //Ceramos el item seleccionado
             itemDet = null;
@@ -1177,7 +1167,6 @@ public class ABMPedidoCliente extends AbstractPageBean {
             info("Tipo de IVA, Campo obligatorio favor ingrese un valor");
             errorValidacion = true;
         }
-
     }
 
     //Detalle selecciondo de la Grilla
@@ -1204,8 +1193,8 @@ public class ABMPedidoCliente extends AbstractPageBean {
         uiTxtCodProducto.setText(detalle.getCodProducto().getCodProducto());
         uiTxtDescProducto.setText(detalle.getCodProducto().getDescripcion());
         uiLstUnidadMedida.setSelected(detalle.getCodProducto().getCodUnidadMedida().getCodUnidadMedida().toString());
-        uiTxtPrecioUnitario.setText(detalle.getPrecioUnitario());
-        uiTxtCantidad.setText(detalle.getCantidadPedida());
+        uiTxtPrecioUnitario.setText(detalle.getPrecioUni());
+        uiTxtCantidad.setText(detalle.getCantidad());
         uiLstIva.setSelected(String.valueOf(Double.valueOf(detalle.getPorcIva()).longValue()));
         uiTxtMontoIva.setText(detalle.getMontoIva());
         uiTxtMontoTotal.setText(detalle.getTotal());
@@ -1232,7 +1221,7 @@ public class ABMPedidoCliente extends AbstractPageBean {
         lstDetalleLIST.remove(Integer.valueOf(itemDet).intValue());
 
         //Actualizamos la grilla
-        lstDetalle = (PedidoDetalle[]) lstDetalleLIST.toArray(new PedidoDetalle[0]);
+        lstDetalle = (NotaCreditoProvDet[]) lstDetalleLIST.toArray(new NotaCreditoProvDet[0]);
 
         //Calculamos los totales
         calcularTotales();
@@ -1249,19 +1238,16 @@ public class ABMPedidoCliente extends AbstractPageBean {
      */
     private void calcularTotales() {
         //Variables
-        double porcDescuento;
-        long total, totalIva, totalDescuento;
+        long total, totalIva;
 
         //Inicializamos
         total = 0;
         totalIva = 0;
-        totalDescuento = 0;
-        porcDescuento  = Double.valueOf(uiTxtPorcDescuento.getText().toString());
 
         //Recorremos el detalle para recalcular los totales
         for (int i = 0; i < lstDetalleLIST.size(); i++) {
             //Obetenemos el detalle
-            PedidoDetalle det = lstDetalleLIST.get(i);
+            NotaCreditoProvDet det = lstDetalleLIST.get(i);
 
             //Sumamos el monto iva
             totalIva += det.getMontoIva();
@@ -1273,13 +1259,8 @@ public class ABMPedidoCliente extends AbstractPageBean {
 
         //Actualizamos los totales de la cabecera
         uiTxtSubTotal.setText(String.valueOf(total - totalIva));
-        uiTxtTotalIva.setText(String.valueOf(totalIva));
-
-        //Aplicamos el descuento
-        totalDescuento = (long) ((total + totalIva) * porcDescuento / 100);
-        total = total + totalIva - totalDescuento;
         uiTxtTotal.setText(String.valueOf(total));
-        uiTxtMontoDescuento.setText(String.valueOf(totalDescuento));
+        uiTxtTotalIva.setText(String.valueOf(totalIva));
     }
 
     /**
@@ -1314,18 +1295,80 @@ public class ABMPedidoCliente extends AbstractPageBean {
      * Carga los datos de las tablas relacionadas a esta entidad
      */
     private void cargarRelaciones() {
-        //Cargamos la lista de Productos
-        getSessionBean1().cargarListaTodosProductos();
-
-        //Cargamos la lista de Clientees
-        getSessionBean1().cargarListaCliente();
-
         //Cargamos la lista de unidades de medida
         getSessionBean1().cargarListaTodosUnidadMedidas();
 
+        //Cargamos la lista de Productos
+        getSessionBean1().cargarListaTodosProductos();
+
+        //Cargamos la lista de Proveedores
+        getSessionBean1().cargarListaTodosProveedores();
+
         //Cargamos la lista de tipos de comprobantes
-        getSessionBean1().cargarListaTipoComprobantePorModulo(ModuloEnum.PEDIDO_CLIENTE);
+        getSessionBean1().cargarListaTipoComprobantePorModulo(ModuloEnum.PAGO_PROVEEDOR);
 
 
+    }
+
+    public String uiBtnCargarFactura_action() {
+        //Inicializamos
+        errorValidacion = false;
+        updateDetRequest = true;
+        if (uiTxtNroFactura.getText()== null && uiTxtNroFactura.getText().toString().trim().equals("")){
+            errorValidacion = true;
+            info("Debe Seleccionar una Factura para poder cargar datos");
+        }else{
+            //Inicializamos el controller
+            facturaCompraCabController = new FacturaCompraCabController();
+
+            //Obtenemos la Factura
+            facturaCompraCab = facturaCompraCabController.findById(Long.valueOf(uiTxtNroFactura.getText().toString()));
+
+            if (facturaCompraCab == null) {
+                errorValidacion = true;
+                info("Numero de Factura ingresado incorrecto, favor verifique");
+            }else{
+                /* Cargamos los datos del pedido */
+
+                //Cabecera
+                uiTxtCodProveedor.setText(facturaCompraCab.getCodProveedor().getCodProveedor());
+                uiTxtNombreProveedor.setText(facturaCompraCab.getCodProveedor().getNombreProveedor());
+                uiCalFecha.setSelectedDate(new Date());
+                uiLstEstado.setSelected(facturaCompraCab.getEstado());
+                uiTxtTotal.setText(facturaCompraCab.getTotal());
+                uiTxtTotalIva.setText(facturaCompraCab.getTotaIva());
+                uiTxtSubTotal.setText(facturaCompraCab.getSubTotal());
+
+                //Detalle
+                List<FacturaCompraDet> detalleFactura = facturaCompraCab.getFacturaCompraDetList();
+
+                lstDetalleLIST = new ArrayList<NotaCreditoProvDet>();
+
+                //Recorremos la lista de detalle del pedido
+                for (int i = 0; i < detalleFactura.size(); i++) {
+                    //Obtenemos el detalle
+                    FacturaCompraDet x = detalleFactura.get(i);
+
+                    //Creamos el detalle de la factura
+                    detalle = new NotaCreditoProvDet();
+                    detalle.setCantidad(x.getCantidad());
+                    detalle.setCodProducto(x.getCodProducto());
+                    detalle.setFechaAlta(new Date());
+                    detalle.setPorcIva(x.getPorcIva());
+                    detalle.setPrecioUni(x.getPrecioUni());
+                    detalle.setTotal(x.getTotal());
+                    detalle.setMontoIva(x.getMontoIva());
+
+                    //Agregamos a la lista
+                    lstDetalleLIST.add(detalle);
+                }
+
+                //Actualizamos el array detalle
+                lstDetalle = (NotaCreditoProvDet[]) lstDetalleLIST.toArray(new NotaCreditoProvDet[0]);
+            }
+        }
+
+        //result
+        return null;
     }
 }

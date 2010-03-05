@@ -174,7 +174,7 @@ function doSave(val1, val2,val3,val4,val5) {
 }
 
 
-function calcularMonto(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal ) {
+function calcularMonto5(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal ) {
     /*Inicializamos las variables*/
     ePrecio     = null;
     eCantidad   = null;
@@ -228,7 +228,7 @@ function calcularMonto(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal ) {
     }
 }
 
-function calcularMonto(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal, uiPorcDescuento, uiMontoDescuento ) {
+function calcularMonto7(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal, uiPorcDescuento, uiMontoDescuento ) {
     /*Inicializamos las variables*/
     ePrecio     = null;
     eCantidad   = null;

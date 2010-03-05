@@ -451,4 +451,14 @@
         <managed-bean-class>platinum.popup.popupPedidoVenta</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMNotaCreditoProveedor</managed-bean-name>
+        <managed-bean-class>platinum.ABMNotaCreditoProveedor</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupFacturaCompra</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupFacturaCompra</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 </faces-config>
