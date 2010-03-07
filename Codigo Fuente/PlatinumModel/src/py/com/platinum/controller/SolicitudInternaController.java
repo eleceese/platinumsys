@@ -2,47 +2,120 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package py.com.platinum.controller;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
+import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Deposito;
+import py.com.platinum.entity.Existencia;
 import py.com.platinum.entity.SolicitudInterna;
 
 /**
  *
- * @author Martin
+ * @author FerBoy
  */
-public class SolicitudInternaController extends AbstractJpaDao<SolicitudInterna> {
+public class SolicitudInternaController extends AbstractJpaDao <SolicitudInterna> {
+
+    public boolean existe(Long codSolicitud){
+
+        String SQL = "SELECT o FROM SolicitudInterna o WHERE o.codSolicitud = :codSolicitud";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        q.setParameter("codSolicitud", codSolicitud);
+
+        List<SolicitudInterna> entities = q.getResultList();
+        em.close();
+
+        if (entities.size() > 0){
+        return true;}
+        else
+        {return false;}
+
+
+    }
+
 
     public SolicitudInternaController() {
         super();
     }
 
-
     @Override
     public SolicitudInterna findById(Long id) {
-                return (SolicitudInterna) this.findById(SolicitudInterna.class, id);
+        return (SolicitudInterna) this.findById(SolicitudInterna.class, id);
     }
 
-       @Override
+    @Override
     public List<SolicitudInterna> getAll(String orderBy) {
         return this.getAll(SolicitudInterna.class, orderBy);
-     }
+    }
+
+    public List<SolicitudInterna> getAllFiltered(Long codSolicitud) {
+        //emf.createEntityManager Levanta el contexto del JPA
+        String SQL = "SELECT o FROM SolicitudInterna o WHERE o.codSolicitud = o.codSolicitud";
+
+        if (codSolicitud != null && !codSolicitud.equals("99999") && !codSolicitud.equals("")) {
+            SQL = SQL + " and UPPER(o.codSolicitud) like upper(:codSolicitud)";
+        }
+//
+//        if (descripcion != null && !descripcion.equals("")) {
+//            SQL = SQL + " and UPPER(o.descripcion) like upper(:descripcion)";
+//        }
+//
+//        if (tipoSolicitudInterna != null && !tipoSolicitudInterna.equals("Todos") && !tipoSolicitudInterna.equals("")) {
+//            SQL = SQL + " and UPPER(o.codTipoSolicitudInterna.descripcion) like upper(:tipoSolicitudInterna)";
+//        }
+//
+//
+//        if (presentacion != null && !presentacion.equals("99999") && !presentacion.equals("")) {
+//            SQL = SQL + " and UPPER(o.codPresentacion.codPresentacion) = upper(:presentacion)";
+//        }
 
 
-    /**
-     * Este metodo realiza la consulta de acuerdo a los campos de filtro, la
-     * busqueda se realiza en forma aproximada con el uso del operador like
-     * @param codigo
-     * @param descripcion
-     *
-     * @return lista de SolicitudInternas que cumplen con la condicion de busqueda
-     */
-    public List<SolicitudInterna> getSolicitudInternas(String producto, Date fechaDesde, Date fechaHasta, String estado) {
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        if (codSolicitud != null && !codSolicitud.equals("99999") && !codSolicitud.equals("")) {
+            q.setParameter("codSolicitud", codSolicitud);
+        }
+//
+//        if (descripcion != null && !descripcion.equals("")) {
+//            q.setParameter("descripcion", "%"+descripcion+"%");
+//        }
+//
+//        if (tipoSolicitudInterna != null && !tipoSolicitudInterna.equals("Todos") && !tipoSolicitudInterna.equals("")) {
+//            q.setParameter("tipoSolicitudInterna", "%"+tipoSolicitudInterna+"%");
+//        }
+//
+//        if (presentacion != null && !presentacion.equals("99999") && !presentacion.equals("")) {
+//            q.setParameter("presentacion", presentacion);
+//        }
+
+        List<SolicitudInterna> entities = q.getResultList();
+        em.close();
+
+        return entities;
+
+      }
+
+    
+//public static void main (String[] v) {
+//        SolicitudInternaController SolicitudInternaController = new SolicitudInternaController();
+//        SolicitudInterna SolicitudInterna = new SolicitudInterna();
+//        SolicitudInterna = SolicitudInternaController.findById(Long.valueOf("1000"));
+//        System.out.println(SolicitudInterna.getDescripcion());
+//        SolicitudInternaController.delete(SolicitudInterna);
+//        };
+
+public List<SolicitudInterna> getSolicitudInternas(String producto, Date fechaDesde, Date fechaHasta, String estado) {
         //Armamos el sql String
         String SQL = "SELECT o FROM SolicitudInterna o WHERE o.codSolicitud = o.codSolicitud";
 
@@ -94,4 +167,6 @@ public class SolicitudInternaController extends AbstractJpaDao<SolicitudInterna>
 
       }
 
-}   
+
+
+}
