@@ -59,15 +59,20 @@ public class SolicitudInterna implements Serializable {
     @Basic(optional = false)
     @Column(name = "OBSERVACION")
     private String observacion;
+    @Column(name = "USUARIO_APROBACION")
+    private String usuarioAprobacion;
+    @Column(name = "FECHA_APROBACION")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaAprobacion;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
     private String usuarioModif;
     @Column(name = "FECHA_ALTA")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaAlta;
     @Column(name = "FECHA_MODIF")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModif;
     @OneToMany(mappedBy = "codSolicitud", fetch=FetchType.EAGER)
     private Set<EntradaSalidaCabecera> entradaSalidaCabecera;
@@ -159,6 +164,22 @@ public class SolicitudInterna implements Serializable {
 
     public void setUsuarioAlta(String usuarioAlta) {
         this.usuarioAlta = usuarioAlta;
+    }
+
+    public Date getFechaAprobacion() {
+        return fechaAprobacion;
+    }
+
+    public void setFechaAprobacion(Date fechaAprobacion) {
+        this.fechaAprobacion = fechaAprobacion;
+    }
+
+    public String getUsuarioAprobacion() {
+        return usuarioAprobacion;
+    }
+
+    public void setUsuarioAprobacion(String usuarioAprobacion) {
+        this.usuarioAprobacion = usuarioAprobacion;
     }
 
     public String getUsuarioModif() {
