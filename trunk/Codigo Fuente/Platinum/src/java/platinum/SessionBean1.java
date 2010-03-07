@@ -7,6 +7,8 @@ package platinum;
 
 import com.sun.rave.web.ui.appbase.AbstractSessionBean;
 import com.sun.webui.jsf.model.Option;
+import java.util.ArrayList;
+import java.util.List;
 import javax.faces.FacesException;
 import javax.faces.convert.DateTimeConverter;
 import py.com.platinum.controller.BancoController;
@@ -22,12 +24,15 @@ import py.com.platinum.controller.FacturaCompraCabController;
 import py.com.platinum.controller.FormulaCabeceraController;
 import py.com.platinum.controller.FormulaSemiCabeceraController;
 import py.com.platinum.controller.MarcaController;
+import py.com.platinum.controller.OrdenTrabajoCabeceraController;
+import py.com.platinum.controller.OrdenTrabajoDetalleController;
 import py.com.platinum.controller.PedidoCabeceraController;
 import py.com.platinum.controller.PresentacionController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.SeccionController;
 import py.com.platinum.controller.ProveedorController;
 import py.com.platinum.controller.SolicitudInternaController;
+import py.com.platinum.controller.TareaAsignadaController;
 import py.com.platinum.controller.TareaController;
 import py.com.platinum.controller.TipoComprobanteController;
 import py.com.platinum.controller.TipoProductoController;
@@ -46,13 +51,16 @@ import py.com.platinum.entity.FormulaCabecera;
 import py.com.platinum.entity.FormulaSemiCabecera;
 import py.com.platinum.entity.Marca;
 import py.com.platinum.entity.OrdenTrabajo;
+import py.com.platinum.entity.OrdenTrabajoDetalle;
 import py.com.platinum.entity.PedidoCabecera;
 import py.com.platinum.entity.Presentacion;
+import py.com.platinum.entity.ProduccionDiaria;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.Seccion;
 import py.com.platinum.entity.Proveedor;
 import py.com.platinum.entity.SolicitudInterna;
 import py.com.platinum.entity.Tarea;
+import py.com.platinum.entity.TareaAsignada;
 import py.com.platinum.entity.TipoComprobante;
 import py.com.platinum.entity.TipoProducto;
 import py.com.platinum.entity.UnidadMedida;
@@ -136,7 +144,10 @@ public class SessionBean1 extends AbstractSessionBean {
         codDeposito = new DepositoController().findById(Long.valueOf("1"));
 
         //El siguiente Metodo Carga la Grilla De Productos al cargar la pagina de productos.
+        cargarListaTodasTareasAsignadasProdDiaria();
+        cargarListaTodosOrdenTrabajoDetallesProdDiaria();
         cargarListaTodosProductos();
+        cargarListaTodosOTCab();
         cargarListaTodosTareas();
         cargarListaTodosFormulaCabecerasTer();
         cargarListaTodosEmpleados();
@@ -733,6 +744,16 @@ public class SessionBean1 extends AbstractSessionBean {
         listaCliente = (Cliente[]) ClienteController.getAll("apellidoCliente, o.nombreCliente").toArray(new Cliente[0]);
     }
     Empleado[] listaEmpleados;
+    Option[] listaEmpleadosOp;
+
+    public Option[] getListaEmpleadosOp() {
+        return listaEmpleadosOp;
+    }
+
+    public void setListaEmpleadosOp(Option[] listaEmpleadosOp) {
+        this.listaEmpleadosOp = listaEmpleadosOp;
+    }
+
 
     public Empleado[] getListaEmpleados() {
         return listaEmpleados;
@@ -745,6 +766,16 @@ public class SessionBean1 extends AbstractSessionBean {
     public void cargarListaTodosEmpleados() {
         EmpleadoController EmpleadoController = new EmpleadoController();
         listaEmpleados = (Empleado[]) EmpleadoController.getAll("apellidoEmpleado").toArray(new Empleado[0]);
+
+        listaEmpleadosOp = new Option[listaEmpleados.length];
+        Option option;
+        for (int i = 0; i < listaEmpleados.length; i++) {
+            Empleado em = listaEmpleados[i];
+            option = new Option();
+            option.setLabel(em.getNombreEmpleado()+" "+em.getApellidoEmpleado());
+            option.setValue(em.getCodEmpleado().toString());
+            listaEmpleadosOp[i] = option;
+        }
     }
     ////// CARGA DE COMBO BOX Tareas
 //////     import com.sun.webui.jsf.model.Option;
@@ -943,6 +974,18 @@ public class SessionBean1 extends AbstractSessionBean {
         this.listaOtCabOp = listaOtCabOp;
     }
 
+        public void cargarListaTodosOTCab() {
+        OrdenTrabajoCabeceraController c = new OrdenTrabajoCabeceraController();
+        listaOtCab = (OrdenTrabajo[]) c.getAllFiltered(null,null, null, null).toArray(new OrdenTrabajo[0]);
+
+    }
+
+
+
+
+
+
+
     SolicitudInterna[] listaSolicitud;
 
     public SolicitudInterna[] getListaSolicitud() {
@@ -1106,6 +1149,82 @@ public class SessionBean1 extends AbstractSessionBean {
         PedidoCabeceraController c = new PedidoCabeceraController();
         listaPedidoVenta = (PedidoCabecera[]) c.getPedidoCabecera(cliente, estado).toArray(new PedidoCabecera[0]);
     }
+
+////////////////////// UTILIZADOS EN LA GESTION DE PRODUCCION DIARIA ////////////////////
+
+    List<OrdenTrabajoDetalle>  ordenTrabajoDetallesProdDiaria = new ArrayList();
+    OrdenTrabajoDetalle[]  ordenTrabajoDetalleArray = new OrdenTrabajoDetalle[0];
+
+    public OrdenTrabajoDetalle[] getOrdenTrabajoDetalleArray() {
+        return ordenTrabajoDetalleArray;
+    }
+
+    public void setOrdenTrabajoDetalleArray(OrdenTrabajoDetalle[] ordenTrabajoDetalleArray) {
+        this.ordenTrabajoDetalleArray = ordenTrabajoDetalleArray;
+    }
+
+    public List<OrdenTrabajoDetalle> getOrdenTrabajoDetallesProdDiaria() {
+        return ordenTrabajoDetallesProdDiaria;
+    }
+
+    public void setOrdenTrabajoDetalles(List<OrdenTrabajoDetalle> ordenTrabajoDetallesProdDiaria) {
+        this.ordenTrabajoDetallesProdDiaria = ordenTrabajoDetallesProdDiaria;
+    }
+
+    public void cargarListaTodosOrdenTrabajoDetallesProdDiaria(){
+
+    ordenTrabajoDetallesProdDiaria = new OrdenTrabajoDetalleController().getAllFiltered(null, null,null);
+
+    }
+
+     List<TareaAsignada>  tareasAsignadasProDiaria = new ArrayList();
+    TareaAsignada[]  tareasAsignadasArray = new TareaAsignada[0];
+
+    public List<TareaAsignada> getTareasAsignadasProDiaria() {
+        return tareasAsignadasProDiaria;
+    }
+
+    public void setTareasAsignadasProDiaria(List<TareaAsignada> tareasAsignadasProDiaria) {
+        this.tareasAsignadasProDiaria = tareasAsignadasProDiaria;
+    }
+
+    public TareaAsignada[] getTareasAsignadasArray() {
+        return tareasAsignadasArray;
+    }
+
+    public void setTareasAsignadasArray(TareaAsignada[] tareasAsignadasArray) {
+        this.tareasAsignadasArray = tareasAsignadasArray;
+    }
+
+   public void cargarListaTodasTareasAsignadasProdDiaria(){
+
+    tareasAsignadasProDiaria = new TareaAsignadaController().getAllFiltered(null, null,null);
+
+    }
+
+ private Long idOTProdDiaria;
+ private Long idOTDetProdDiaria;
+
+    public Long getIdOTDetProdDiaria() {
+        return idOTDetProdDiaria;
+    }
+
+    public void setIdOTDetProdDiaria(Long idOTDetProdDiaria) {
+        this.idOTDetProdDiaria = idOTDetProdDiaria;
+    }
+ 
+    public Long getIdOTProdDiaria() {
+        return idOTProdDiaria;
+    }
+
+    public void setIdOTProdDiaria(Long idOTProdDiaria) {
+        this.idOTProdDiaria = idOTProdDiaria;
+    }
+
+
+
+//////////////////////////////////
+
 
     FacturaCompraCab[] listaFacturaCompra;
 

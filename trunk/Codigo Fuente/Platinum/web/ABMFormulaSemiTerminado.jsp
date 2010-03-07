@@ -12,9 +12,9 @@
                 <webuijsf:head id="head1">
                     <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <script>
-                        function ABMOrdenesTrabajo() {
+                        function initAllRows() {
                             var table = document.getElementById("form1:tableFormulas");
-                            table.ABMOrdenesTrabajo();}
+                            table.initAllRows();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
@@ -195,7 +195,7 @@
                                     <webuijsf:message for="uiDetProductoCodigo" id="message4" showDetail="false" showSummary="true"/>
                                     <h:panelGrid binding="#{ABMFormulaSemiTerminado.gridPanelTareas}" id="gridPanelTareas" style="width: 100%; height: 100%;">
                                         <webuijsf:label id="lblDetTareas" style="font-size: 16px" text="Detalle Tareas"/>
-                                        <h:panelGrid columns="7" id="gridPanelAddDetTarea" style="height: 48px" width="623">
+                                        <h:panelGrid columns="9" id="gridPanelAddDetTarea" style="height: 48px" width="695">
                                             <webuijsf:hyperlink id="hlTarea" onClick="doPopup('form1:uiDetTareaCodigo_field', 'form1:uiDetTareaNombre_field')"
                                                 target="popup" text="Tarea" url="/faces/popup/popupTareas.jsp"/>
                                             <h:panelGrid columns="2" id="gridPanel2" style="width: 100%; height: 100%;">
@@ -206,6 +206,7 @@
                                             <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiDetTareaCantidad}" columns="10" id="uiDetTareaCantidad"/>
                                             <webuijsf:label id="lblOrden" text="Orden"/>
                                             <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiDetTareaOrden}" columns="5" id="uiDetTareaOrden"/>
+                                            <webuijsf:checkbox binding="#{ABMFormulaSemiTerminado.uiDetTareaFin}" id="uiDetTareaFin" label="Final"/>
                                             <webuijsf:button actionExpression="#{ABMFormulaSemiTerminado.buttonAddDetTar_action}" id="buttonAddDetTar" text="Agregar"/>
                                         </h:panelGrid>
                                         <webuijsf:table augmentTitle="false" id="tableTareas" paginateButton="true" paginationControls="true" width="647">
@@ -221,6 +222,9 @@
                                                 </webuijsf:tableColumn>
                                                 <webuijsf:tableColumn headerText="Orden" id="tableColumn11" sort="ordenTarea" width="90">
                                                     <webuijsf:staticText id="staticText10" text="#{currentRow.value['ordenTarea']}"/>
+                                                </webuijsf:tableColumn>
+                                                <webuijsf:tableColumn align="center" headerText="Final" id="tableColumn8">
+                                                    <webuijsf:staticText id="staticText1" text="#{currentRow.value['tareaFin']}"/>
                                                 </webuijsf:tableColumn>
                                                 <webuijsf:tableColumn align="center" id="tableColumn15" valign="top">
                                                     <webuijsf:imageHyperlink actionExpression="#{ABMFormulaSemiTerminado.detailEditTarea}"

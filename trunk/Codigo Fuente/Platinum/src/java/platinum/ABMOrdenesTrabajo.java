@@ -39,17 +39,20 @@ import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
 import py.com.platinum.controller.EmpleadoController;
+import py.com.platinum.controller.ExistenciaController;
 import py.com.platinum.controller.FormulaCabeceraController;
 import py.com.platinum.controller.FormulaDetalleController;
 import py.com.platinum.controller.FormulaSemiCabeceraController;
 import py.com.platinum.controller.FormulaSemiDetalleController;
 import py.com.platinum.controller.OrdenTrabajoCabeceraController;
 import py.com.platinum.controller.ProductoController;
+import py.com.platinum.controller.SolicitudInternaController;
 import py.com.platinum.controller.TareaController;
 import py.com.platinum.controller.TareaFormulaController;
 import py.com.platinum.controller.TipoProductoController;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.Empleado;
+import py.com.platinum.entity.Existencia;
 import py.com.platinum.entity.FormulaCabecera;
 import py.com.platinum.entity.FormulaDetalle;
 import py.com.platinum.entity.FormulaSemiCabecera;
@@ -58,6 +61,7 @@ import py.com.platinum.entity.OrdenTrabajo;
 import py.com.platinum.entity.OrdenTrabajoDetalle;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.RecursoAsignado;
+import py.com.platinum.entity.SolicitudInterna;
 import py.com.platinum.entity.Tarea;
 import py.com.platinum.entity.TareaAsignada;
 import py.com.platinum.entity.TareaFormula;
@@ -181,7 +185,7 @@ public class ABMOrdenesTrabajo extends AbstractPageBean {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
 
-        long multiplicador;
+        Double multiplicador;
 
         if (!validarFormula()) {
             FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
@@ -197,7 +201,7 @@ public class ABMOrdenesTrabajo extends AbstractPageBean {
             TareaFormula tareaFormulaSeleccionada = new TareaFormula();
 
             formulaSeleccionada = formulaCabeceraController.findById(Long.valueOf(this.uiFormulaCodigo.getText().toString()));
-            multiplicador = Long.valueOf(this.uiCantidad.getText().toString()) / Long.valueOf(formulaSeleccionada.getCantidad().toString());
+            multiplicador = Double.valueOf(this.uiCantidad.getText().toString()) / Long.valueOf(formulaSeleccionada.getCantidad().toString());
 
             List<FormulaDetalle> formulaDetalleSeleccionadoList = formulaDetalleController.getAllFilteredByCabecera(formulaSeleccionada.getCodFormula());
 
@@ -211,7 +215,10 @@ public class ABMOrdenesTrabajo extends AbstractPageBean {
                    Empleado empleado = new EmpleadoController().findById(Long.valueOf(this.uiResponsableCodigo.getText().toString()));
                    detalleOrdenTrabajo.setCodProducto(producto);
                    detalleOrdenTrabajo.setCodEmpleado(empleado);
-                   detalleOrdenTrabajo.setCantidad(Long.valueOf(formulaDetalleSeleccionada.getCantidad().toString())* multiplicador );
+                   Double redondeado = Math.ceil(Long.valueOf(formulaDetalleSeleccionada.getCantidad().toString())* multiplicador);
+                   detalleOrdenTrabajo.setCantidad(redondeado.longValue());
+                   if (formulaDetalleSeleccionada.getSemiFin() != null && formulaDetalleSeleccionada.getSemiFin().equals("S")) {detalleOrdenTrabajo.setSemiFin("S");}
+                   detalleOrdenTrabajo.setCantidadReal(Long.valueOf("0"));
                    detalleOrdenTrabajo.setEstado("A");
                    detalleOrdenTrabajo.setRecursoAsignadoCollection(new HashSet());
                    detalleOrdenTrabajo.setTareaAsignadaCollection(new HashSet());
@@ -229,7 +236,10 @@ public class ABMOrdenesTrabajo extends AbstractPageBean {
                                     recursoAsignado.setCodRecurso(idAuxiliar);
                                     recursoAsignado.setFecha(this.uiFechaIni.getSelectedDate());
                                     recursoAsignado.setCodProducto(formulaSemiDetalle.getCodProducto());
-                                    recursoAsignado.setCantidad(Long.valueOf(formulaSemiDetalle.getCantidad().toString())* multiplicador);
+                                    redondeado = Math.ceil(Long.valueOf(formulaSemiDetalle.getCantidad().toString())* multiplicador.doubleValue());
+                                    recursoAsignado.setCantidad(redondeado.longValue());
+                                    recursoAsignado.setCantidadReal(Long.valueOf("0"));
+
                                     detalleOrdenTrabajo.getRecursoAsignadoCollection().add(recursoAsignado);
                     }
 
@@ -240,14 +250,14 @@ public class ABMOrdenesTrabajo extends AbstractPageBean {
                         TareaAsignada tareaAsignada = new TareaAsignada();
                         tareaAsignada.setCodTareaAsignada(idAuxiliar);
                         tareaAsignada.setCodTarea(tareaFormula.getCodTarea());
-                        tareaAsignada.setCantidad(Long.valueOf(tareaFormula.getCantidadTarea().toString()) * multiplicador);
+                        redondeado = Math.ceil(Long.valueOf(tareaFormula.getCantidadTarea().toString()) * multiplicador.longValue());
+                        tareaAsignada.setCantidad(redondeado.longValue());
+                        tareaAsignada.setCantidadReal(Long.valueOf("0"));
+                        if (tareaFormula.getTareaFin() != null && tareaFormula.getTareaFin().equals("S")) {tareaAsignada.setTareaFin("S");}
                         tareaAsignada.setOrdenTarea(Long.valueOf(tareaFormula.getOrdenTarea().toString()));
                         detalleOrdenTrabajo.getTareaAsignadaCollection().add(tareaAsignada);
-
-                   }
-
-
-                }
+                  }
+           }
        }
 
         return null;
@@ -263,10 +273,10 @@ public class ABMOrdenesTrabajo extends AbstractPageBean {
             r = true;
         }
 
-        if (uiNroOT.getText().toString() == null || uiNroOT.getText().equals("") ) {
-        info("Campo obligatorio, favor ingrese el Numero de OT");
-            r = true;
-        }
+//        if (uiNroOT.getText().toString() == null || uiNroOT.getText().equals("") ) {
+//        info("Campo obligatorio, favor ingrese el Numero de OT");
+//            r = true;
+//        }
 
         if (uiResponsableCodigo.getText().toString() == null || uiResponsableCodigo.getText().equals("") ) {
         info("Campo obligatorio, favor ingrese el Responsable");
@@ -318,6 +328,8 @@ private List<OrdenTrabajoDetalle>  detalleOrdenTrabajoEliminadaList;
 private List<TareaAsignada>  tareaAsignadaEliminadaList;
 private List<RecursoAsignado>  recursoAsignadoEliminadoList;
 
+private List<SolicitudInterna> solicitudesList;
+private SolicitudInterna[] solicitudesAGenerarse;
 
 
     private boolean validarCampos(){
@@ -332,10 +344,10 @@ private List<RecursoAsignado>  recursoAsignadoEliminadoList;
             r = true;
         }
 
-        if (uiNroOT.getText().toString() == null || uiNroOT.getText().equals("") ) {
-        info("Campo obligatorio, favor ingrese el Numero de OT");
-            r = true;
-        }
+//        if (uiNroOT.getText().toString() == null || uiNroOT.getText().equals("") ) {
+//        info("Campo obligatorio, favor ingrese el Numero de OT");
+//            r = true;
+//        }
         if (uiResponsableCodigo.getText().toString() == null || uiResponsableCodigo.getText().equals("") ) {
         info("Campo obligatorio, favor ingrese el Responsable");
             r = true;
@@ -691,6 +703,18 @@ private List<RecursoAsignado>  recursoAsignadoEliminadoList;
     }
     private TableRowGroup tablaSemiterminadosRW = new TableRowGroup();
 
+
+
+    public SolicitudInterna[] getSolicitudesAGenerarse() {
+        return solicitudesAGenerarse;
+    }
+
+    public void setSolicitudesAGenerarse(SolicitudInterna[] solicitudesAGenerarse) {
+        this.solicitudesAGenerarse = solicitudesAGenerarse;
+    }
+
+
+
     public TableRowGroup getTablaSemiterminadosRW() {
         return tablaSemiterminadosRW;
     }
@@ -950,6 +974,60 @@ private List<RecursoAsignado>  recursoAsignadoEliminadoList;
     public void setRadioButton1(RadioButton rb) {
         this.radioButton1 = rb;
     }
+    private Button uiButtonActivarOtDet = new Button();
+
+    public Button getUiButtonActivarOtDet() {
+        return uiButtonActivarOtDet;
+    }
+
+    public void setUiButtonActivarOtDet(Button b) {
+        this.uiButtonActivarOtDet = b;
+    }
+    private HtmlPanelGrid gridPanelDetalleSemiTerRecursos1 = new HtmlPanelGrid();
+
+    public HtmlPanelGrid getGridPanelDetalleSemiTerRecursos1() {
+        return gridPanelDetalleSemiTerRecursos1;
+    }
+
+    public void setGridPanelDetalleSemiTerRecursos1(HtmlPanelGrid hpg) {
+        this.gridPanelDetalleSemiTerRecursos1 = hpg;
+    }
+    private HtmlPanelGrid gridPanelDetalleSemiTerTareas1 = new HtmlPanelGrid();
+
+    public HtmlPanelGrid getGridPanelDetalleSemiTerTareas1() {
+        return gridPanelDetalleSemiTerTareas1;
+    }
+
+    public void setGridPanelDetalleSemiTerTareas1(HtmlPanelGrid hpg) {
+        this.gridPanelDetalleSemiTerTareas1 = hpg;
+    }
+    private HtmlPanelGrid gridPanelGenerarSolicitudes = new HtmlPanelGrid();
+
+    public HtmlPanelGrid getGridPanelGenerarSolicitudes() {
+        return gridPanelGenerarSolicitudes;
+    }
+
+    public void setGridPanelGenerarSolicitudes(HtmlPanelGrid hpg) {
+        this.gridPanelGenerarSolicitudes = hpg;
+    }
+    private Checkbox uiDetSemiTerFin = new Checkbox();
+
+    public Checkbox getUiDetSemiTerFin() {
+        return uiDetSemiTerFin;
+    }
+
+    public void setUiDetSemiTerFin(Checkbox c) {
+        this.uiDetSemiTerFin = c;
+    }
+    private Checkbox uiSemiTerDetFin = new Checkbox();
+
+    public Checkbox getUiSemiTerDetFin() {
+        return uiSemiTerDetFin;
+    }
+
+    public void setUiSemiTerDetFin(Checkbox c) {
+        this.uiSemiTerDetFin = c;
+    }
 
     // </editor-fold>
     /**
@@ -1028,6 +1106,7 @@ private List<RecursoAsignado>  recursoAsignadoEliminadoList;
     private boolean errorValidacion = false;
     private boolean addDetalleOt = false;
     private boolean editarDetalleOt = false;
+    private boolean generarSolicitudes = false;
 
     private boolean  editarDetalleSemiterRecurso = false;
     private boolean editarDetalleSemiterTarea = false;
@@ -1042,13 +1121,27 @@ private List<RecursoAsignado>  recursoAsignadoEliminadoList;
         if (addRequestOT) {
 
             this.gridPanelBuscar.setRendered(false);
+            this.uiNroOT.setDisabled(true);
             this.gridPanelDatosCabecera.setRendered(true);
             this.gridPanelDetalleOT.setRendered(true);
             this.gridPanelDetalleSemiter.setRendered(false);
             //               this.gridPanelDetalleSemiTerminados.setRendered(false);
+        } else if(generarSolicitudes){
+
+           this.gridPanelBuscar.setRendered(false);
+           this.gridPanelDatosCabecera.setRendered(false);
+           this.gridPanelDetalleOT.setRendered(false);
+           this.gridPanelDetalleSemiter.setRendered(true);
+
+                this.gridPanelDetalleSemiTerRecursos1.setRendered(false);
+                this.gridPanelDetalleSemiTerTareas1.setRendered(false);
+                this.gridPanelGenerarSolicitudes.setRendered(true);
+
+
 
         } else if (updateRequestOT) {
 
+            this.gridPanelBuscar.setRendered(false);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelDatosCabecera.setRendered(true);
             this.gridPanelDetalleOT.setRendered(true);
@@ -1070,7 +1163,12 @@ private List<RecursoAsignado>  recursoAsignadoEliminadoList;
            this.gridPanelDatosCabecera.setRendered(false);
            this.gridPanelDetalleOT.setRendered(false);
            this.gridPanelDetalleSemiter.setRendered(true);
-           
+
+                this.gridPanelDetalleSemiTerRecursos1.setRendered(true);
+                this.gridPanelDetalleSemiTerTareas1.setRendered(true);
+                this.gridPanelGenerarSolicitudes.setRendered(false);
+
+
         } else {
 
             this.gridPanelBuscar.setRendered(true);
@@ -1143,7 +1241,7 @@ buscar_action2();
 
     public String uiButtonNuevoRegistro_action() {
         // TODO: Replace with your code
-            this.uiNroOT.setText("");
+        this.uiNroOT.setText("");
         this.uiResponsableCodigo.setText("");
         this.uiResponsableNombre.setText("");
         this.pageAlert1.setRendered(false);
@@ -1151,10 +1249,10 @@ buscar_action2();
         this.uiFormulaCodigo.setText("");
         this.uiFormulaNombre.setText("");
         this.uiCantidad.setText("");
-        this.uiFechaDesdeFil.setSelectedDate(null);
-        this.uiFechaHastaFil.setSelectedDate(null);
-        this.uiCantidadProducida.setText("");
-        this.uiCostoReal.setText("");
+        this.uiCantidadProducida.setText("0");
+        this.uiFechaDesdeFil.setSelectedDate(new Date());
+        this.uiFechaHastaFil.setSelectedDate(new Date());
+        this.uiCostoReal.setText("0");
         this.uiCostoPrevisto.setText("");
 
         this.uiButtonGuardarRegistro.setRendered(true);
@@ -1207,7 +1305,7 @@ buscar_action2();
           FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
 
 
-          ordenTrabajo.setNumeroOrdenTrabajo(new Long( this.uiNroOT.getText().toString()));
+//          ordenTrabajo.setNumeroOrdenTrabajo(new Long( this.uiNroOT.getText().toString()));
           ordenTrabajo.setCodEmpleado1(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
           ordenTrabajo.setCodEmpleado2(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
           ordenTrabajo.setCodProductoOt(productoController.findById(Long.valueOf(this.uiProducto.getSelected().toString())));
@@ -1260,7 +1358,7 @@ buscar_action2();
           FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
 
 
-          ordenTrabajo.setNumeroOrdenTrabajo(new Long( this.uiNroOT.getText().toString()));
+//          ordenTrabajo.setNumeroOrdenTrabajo(new Long( this.uiNroOT.getText().toString()));
           ordenTrabajo.setCodEmpleado1(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
           ordenTrabajo.setCodEmpleado2(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
           ordenTrabajo.setCodProductoOt(productoController.findById(Long.valueOf(this.uiProducto.getSelected().toString())));
@@ -1332,18 +1430,36 @@ buscar_action2();
                    detalleOrdenTrabajoList.add(detalleOrdenTrabajo);
 
             }else{
-//                   Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetProductoCodigo.getText().toString()));
+//          Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetProductoCodigo.getText().toString()));
 
-//                   detalleFormulaSemi  = detalleFormulaSemiList.get(Integer.valueOf(itemDet).intValue());
-//                   detalleFormulaSemi.setCodProducto(producto);
-//                   detalleFormulaSemi.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetProductoCantidad.getText().toString())));
-//                   editarDetalleRecurso = false;
+                detalleOrdenTrabajo = new OrdenTrabajoDetalle();
+                detalleOrdenTrabajo  = detalleOrdenTrabajoList.get(Integer.valueOf(itemDet).intValue());
 
-            }
+               if (detalleOrdenTrabajo.getRecursoAsignadoListList().size() > 0 || detalleOrdenTrabajo.getTareaAsignadaListList().size() > 0) {
+                            info("La sub-orden tiene detalles. Se debe actualizar desde la vista Detalles");
+
+               }else{
+
+                   Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetSemiTerCodProd.getText().toString()));
+                   Empleado empleado = new EmpleadoController().findById(Long.valueOf(this.uiResponsableCodigo.getText().toString()));
+
+                   // Durante la edicion del producto ya no se podra actualizar el producto
+                   //detalleOrdenTrabajo.setCodProducto(producto);
+                   
+                   detalleOrdenTrabajo.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetSemiTerCant.getText().toString())).longValue());
+                   detalleOrdenTrabajo.setEstado("A");
+                   detalleOrdenTrabajo.setCodEmpleado(empleado);
+
+               }
+
+            editarDetalleOt = false;
+
+
+           }
+           this.uiDetSemiTerCodProd.setDisabled(false);
            detallesOrdenTrabajo = (OrdenTrabajoDetalle[]) detalleOrdenTrabajoList.toArray(new OrdenTrabajoDetalle[0]);
            limpiarDetalleOt();
-
-        }
+    }
 
 
         return null;
@@ -1367,11 +1483,21 @@ this.uiSemiTerCabCantProd.setText("");
 
 }
 
+
     public void validarDetalleOt(){
         this.errorValidacion= false;
-        if (uiDetSemiTerCodProd.getText() == null || uiDetSemiTerCodProd.getText().equals("") ) {
-        this.errorValidacion= true;
-        info("Verifique el detalle, debe ingresar el Codigo de Producto");
+                if (uiDetSemiTerCodProd.getText() == null || uiDetSemiTerCodProd.getText().equals("") ) {
+                this.errorValidacion= true;
+                info("Verifique el detalle, debe ingresar el Codigo de Producto");
+        }else if(!editarDetalleOt){
+                for (int i = 0; i < detalleOrdenTrabajoList.size(); i++) {
+                        OrdenTrabajoDetalle detOt = detalleOrdenTrabajoList.get(i);
+                        if (detOt.getCodProducto().getCodProducto().toString().equals(uiDetSemiTerCodProd.getText().toString())) {
+                            this.errorValidacion= true;
+                            info("El Semiterminado ya fue asignado");
+                            break;
+                        }
+                }
         }
 
         if (uiResponsableCodigo.getText() == null || uiResponsableCodigo.getText().equals("") ) {
@@ -1389,11 +1515,11 @@ this.uiSemiTerCabCantProd.setText("");
 
      public String uiEditDetLynk_action() {
 
-             editarDetalleOt = true;
+            editarDetalleOt = true;
 
             OrdenTrabajoDetalle ordenTrabajoDetalle = new OrdenTrabajoDetalle();
             ordenTrabajoDetalle = detalleOrdenTrabajoList.get(Integer.valueOf(itemDet).intValue());
-
+            this.uiDetSemiTerCodProd.setDisabled(true);
             this.uiDetSemiTerCodProd.setText(ordenTrabajoDetalle.getCodProducto().getCodProducto().toString());
             this.uiDetSemiTerProdDesc.setText(ordenTrabajoDetalle.getCodProducto().getDescripcion().toString());
             this.uiDetSemiTerCant.setText(String.valueOf(ordenTrabajoDetalle.getCantidad()));
@@ -1408,18 +1534,23 @@ this.uiSemiTerCabCantProd.setText("");
         // case name where null will return to the same page.
 
     editarDetalleOt = false;
+    OrdenTrabajoDetalle detalleOrdenTrabajo = detalleOrdenTrabajoList.get(Integer.valueOf(itemDet).intValue());
+        if (detalleOrdenTrabajo.getRecursoAsignadoListList().size() > 0 || detalleOrdenTrabajo.getTareaAsignadaListList().size() > 0) {
+            info("No se puede eliminar el Detalle de semiterminado porque contiene Recursos y Tareas");
 
-    //// agrego la formula eliminada a la lista de formulas Eliminadas
-    //// se utiliza luego al actualizar el registro
-    if (updateRequestOT) {
-//        OrdenTrabajo ordenTrabaj  = tareaFormulaList.get(Integer.valueOf(itemDet).intValue());
-//        tareaFormulaEliminadaList.add(tarForEliminada);
-    }
-    detalleOrdenTrabajoList.remove(Integer.valueOf(itemDet).intValue());
-    detallesOrdenTrabajo = (OrdenTrabajoDetalle[]) detalleOrdenTrabajoList.toArray(new OrdenTrabajoDetalle[0]);
+        } else {
+
+                if (updateRequestOT) {
+                    detalleOrdenTrabajoEliminadaList.add(detalleOrdenTrabajo);
+
+                }
+
+                detalleOrdenTrabajoList.remove(Integer.valueOf(itemDet).intValue());
+                detallesOrdenTrabajo = (OrdenTrabajoDetalle[]) detalleOrdenTrabajoList.toArray(new OrdenTrabajoDetalle[0]);
 
 
-        return null;
+        }
+    return null;
     }
 
 
@@ -1455,6 +1586,12 @@ this.uiSemiTerCabCantProd.setText("");
 
         detalleOrdenTrabajo = detalleOrdenTrabajoList.get(Integer.valueOf(itemDetalleOt).intValue());
 
+        if (detalleOrdenTrabajo.getEstado().toString().equals("P") ) {
+            this.uiSemiTerCabActivoCheck.setSelected(true);
+        } else {
+            this.uiSemiTerCabActivoCheck.setSelected(false);
+        }
+
         this.uiSemiTerCabProductoCod.setText(detalleOrdenTrabajo.getCodProducto().getCodProducto().toString());
         this.uiSemiTerCabProductoDesc.setText(detalleOrdenTrabajo.getCodProducto().getDescripcion().toString());
         
@@ -1466,7 +1603,15 @@ this.uiSemiTerCabCantProd.setText("");
 
         tareaAsignadaMostradaList = detalleOrdenTrabajo.getTareaAsignadaListList();
         tareasAsignadasOt = (TareaAsignada[]) tareaAsignadaMostradaList.toArray(new TareaAsignada[0]);
-        
+
+        if (detalleOrdenTrabajo.getCodOrdenTrabajo() != null) {
+            this.uiButtonActivarOtDet.setRendered(true);
+
+        } else {
+            this.uiButtonActivarOtDet.setRendered(false);
+
+        }
+
         return null;
     }
 
@@ -1475,8 +1620,19 @@ this.uiSemiTerCabCantProd.setText("");
     public void validarDetalleProducto(){
         this.errorValidacion= false;
         if (uiSemiTerDetCodRecurso.getText() == null || uiSemiTerDetCodRecurso.getText().equals("") ) {
-        this.errorValidacion= true;
-        info("Verifique el detalle");
+                        this.errorValidacion= true;
+                        info("Verifique el detalle");
+        }else if((!editarDetalleSemiterRecurso)){
+            /// una vez qe existe el codigo validamos que ya no se haya cargado
+                for (int i = 0; i < recursoAsignadoMostradoList.size(); i++) {
+                        RecursoAsignado rec = recursoAsignadoMostradoList.get(i);
+                        if (rec.getCodProducto().getCodProducto().toString().equals(uiSemiTerDetCodRecurso.getText().toString()) ) {
+                           this.errorValidacion= true;
+                            info("El Recurso ya fue asignado");
+                            break;
+                        }
+                }
+                    
         }
 
         if (uiSemiTerDetCantRecurso.getText() == null || uiSemiTerDetCantRecurso.getText().equals("") ) {
@@ -1488,8 +1644,18 @@ this.uiSemiTerCabCantProd.setText("");
     public void validarDetalleTarea(){
         this.errorValidacion= false;
         if (uiSemiTerDetCodTarea.getText() == null || uiSemiTerDetCodTarea.getText().equals("") ) {
-        this.errorValidacion= true;
-        info("Verifique el detalle");
+            this.errorValidacion= true;
+            info("Verifique el detalle");
+        }else if(!editarDetalleSemiterTarea){
+                for (int i = 0; i < tareaAsignadaMostradaList.size(); i++) {
+                        TareaAsignada tar = tareaAsignadaMostradaList.get(i);
+                        if (tar.getCodTarea().getCodTarea().toString().equals(uiSemiTerDetCodTarea.getText().toString()) ) {
+                            this.errorValidacion= true;
+                            info("La tarea ya fue asignada");
+                            break;
+                        }
+                }
+
         }
 
         if (uiSemiTerDetCantTarea.getText() == null || uiSemiTerDetCantTarea.getText().equals("") ) {
@@ -1508,28 +1674,26 @@ this.uiSemiTerCabCantProd.setText("");
 
             if (!editarDetalleSemiterRecurso){
 
-                   Producto producto = new ProductoController().findById(Long.valueOf(this.uiSemiTerDetCodRecurso.getText().toString()));
+                Producto producto = new ProductoController().findById(Long.valueOf(this.uiSemiTerDetCodRecurso.getText().toString()));
                    idAuxiliar ++;
                    recursoAsignadoOt = new RecursoAsignado();
                    recursoAsignadoOt.setCodProducto(producto);
-                   detalleOrdenTrabajo.setCantidad(Long.valueOf(this.uiSemiTerDetCantRecurso.getText().toString()));
                    recursoAsignadoOt.setCantidad(Long.valueOf(this.uiSemiTerDetCantRecurso.getText().toString()));
+                   recursoAsignadoOt.setCantidadReal(Long.valueOf("0"));
                    recursoAsignadoOt.setCodRecurso(idAuxiliar);
                    recursoAsignadoOt.setFecha(this.uiFechaIni.getSelectedDate());
                    recursoAsignadoMostradoList.add(recursoAsignadoOt);
-//                   detalleOrdenTrabajo.getRecursoAsignadoCollection().add(recursoAsignadoOt);
-
-//         detalleOrdenTrabajo.setTareaAsignadaCollection(new HashSet(tareaAsignadaMostradaList));
-//        detalleOrdenTrabajo.setRecursoAsignadoCollection(new HashSet(recursoAsignadoMostradoList));
 
             }else{
+                   recursoAsignadoOt = new RecursoAsignado();
+                   recursoAsignadoOt  = recursoAsignadoMostradoList.get(Integer.valueOf(itemDet).intValue());
+                   Producto producto = new ProductoController().findById(Long.valueOf(this.uiSemiTerDetCodRecurso.getText().toString()));
+                   recursoAsignadoOt.setCantidad(Long.valueOf(this.uiSemiTerDetCantRecurso.getText().toString()));
+                   
+                   //Durante la edicion ya no se podra editar el  codigo de producto
+                   //recursoAsignadoOt.setCodProducto(producto);
 
-//                Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetProductoCodigo.getText().toString()));
-//
-//                   detalleFormulaSemi  = detalleFormulaSemiList.get(Integer.valueOf(itemDet).intValue());
-//                   detalleFormulaSemi.setCodProducto(producto);
-//                   detalleFormulaSemi.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetProductoCantidad.getText().toString())));
-//                   editarDetalleRecurso = false;
+                    editarDetalleSemiterRecurso = false;
 
             }
 
@@ -1537,12 +1701,31 @@ this.uiSemiTerCabCantProd.setText("");
 
             detalleOrdenTrabajo.setRecursoAsignadoCollectionFromList(recursoAsignadoMostradoList);
             recursosAsignadosOt = (RecursoAsignado[]) recursoAsignadoMostradoList.toArray(new RecursoAsignado[0]);
-//           limpiarDetalleProducto();
+            limpiarDetalleOtRecurso();
+            this.uiSemiTerDetCodRecurso.setDisabled(false);
+
 
         }
 
         return null;
     }
+
+    public void limpiarDetalleOtRecurso(){
+        this.uiSemiTerDetCodRecurso.setText("");
+        this.uiSemiTerDetDescRecurso.setText("");
+        this.uiSemiTerDetCantRecurso.setText("");
+    }
+
+
+    public void limpiarDetalleOtTarea(){
+        this.uiSemiTerDetCodTarea.setText("");
+        this.uiSemiTerDetDescTarea.setText("");
+        this.uiSemiTerDetCantTarea.setText("");
+
+    }
+
+
+
 
   public String uiButtonSemiTerAddDetalleTarea_action() {
         // TODO: Replace with your code
@@ -1556,31 +1739,28 @@ this.uiSemiTerCabCantProd.setText("");
                    tareaAsignadaOt = new TareaAsignada();
                    tareaAsignadaOt.setCodTarea(tarea);
                    tareaAsignadaOt.setCantidad(Long.valueOf(this.uiSemiTerDetCantTarea.getText().toString()));
+                   tareaAsignadaOt.setCantidad(Long.valueOf("0"));
                    tareaAsignadaOt.setCodTareaAsignada(idAuxiliar);
+                   if (uiSemiTerDetFin.isChecked()) {
+                    tareaAsignadaOt.setTareaFin("S");
+                   }
                    tareaAsignadaMostradaList.add(tareaAsignadaOt);
-                   
-
-//                   detalleOrdenTrabajo.getTareaAsignadaCollection().add(tareaAsignadaOt);
-
-                 
             }else{
-//                  Tarea tarea = new TareaController().findById(Long.valueOf(this.uiDetTareaCodigo.getText().toString()));
+                   Tarea tarea = new TareaController().findById(Long.valueOf(this.uiSemiTerDetCodTarea.getText().toString()));
+                   tareaAsignadaOt = new TareaAsignada();
+                   tareaAsignadaOt  = tareaAsignadaMostradaList.get(Integer.valueOf(itemDet).intValue());
+                   
+                   //Durante la edicion ya no se podra editar el codigo de tarea...
+                   //tareaAsignadaOt.setCodTarea(tarea);
 
-//                  tareaFormula  = tareaFormulaList.get(Integer.valueOf(itemDet).intValue());
-//                  tareaFormula.setCodTarea(tarea);
-//                  tareaFormula.setCantidadTarea(BigInteger.valueOf(Long.valueOf(this.uiDetTareaCantidad.getText().toString())));
-//                  tareaFormula.setOrdenTarea(BigInteger.valueOf(Long.valueOf(this.uiDetTareaOrden.getText().toString())));
-//            }
-//            tareasAsignadasOt = (TareaAsignada[]) tareaAsignadaMostradaList.toArray(new TareaAsignada[0]);
-//            limpiarDetalleTarea();
-//         }
-
+                   tareaAsignadaOt.setCantidad(Long.valueOf(this.uiSemiTerDetCantTarea.getText().toString()));
             }
             detalleOrdenTrabajo.setTareaAsignadaCollectionFromList(tareaAsignadaMostradaList);
             tareasAsignadasOt = (TareaAsignada[]) tareaAsignadaMostradaList.toArray(new TareaAsignada[0]);
-            Integer numero = detalleOrdenTrabajo.getTareaAsignadaCollection().size();
-            Integer numero2 = detalleOrdenTrabajo.getTareaAsignadaCollection().size();
-       }
+            limpiarDetalleOtTarea();
+            this.uiSemiTerDetCodTarea.setDisabled(false);
+
+        }
 
         return null;
 }
@@ -1590,9 +1770,11 @@ this.uiSemiTerCabCantProd.setText("");
         // case name where null will return to the same page.
 
          editarDetalleSemiterTarea = true;
+        this.uiSemiTerDetCodTarea.setDisabled(true);
+
 
          TareaAsignada tareaAsignada = new TareaAsignada();
-         tareaAsignada = tareaAsignadaMostradaList.get(Integer.valueOf(itemDetalleOt).intValue());
+         tareaAsignada = tareaAsignadaMostradaList.get(Integer.valueOf(itemDet).intValue());
 
          this.uiSemiTerDetCodTarea.setText(tareaAsignada.getCodTarea().getCodTarea().toString());
 //         this.uiSemiTerDet.setText(tareaAsignada.getCodTarea().getNombreTarea().toString());
@@ -1603,7 +1785,15 @@ this.uiSemiTerCabCantProd.setText("");
     public String uiSemiTerDetRemoveTareaLink_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
-        tareaAsignadaMostradaList.remove(Integer.valueOf(itemDetalleOt).intValue());
+
+        TareaAsignada tareaAsignada = tareaAsignadaMostradaList.get(Integer.valueOf(itemDet).intValue());
+
+        if (updateRequestOT) {
+
+            tareaAsignadaEliminadaList.add(tareaAsignada);
+        }
+
+        tareaAsignadaMostradaList.remove(Integer.valueOf(itemDet).intValue());
         tareasAsignadasOt = (TareaAsignada[]) tareaAsignadaMostradaList.toArray(new TareaAsignada[0]);
 
         return null;
@@ -1615,9 +1805,10 @@ this.uiSemiTerCabCantProd.setText("");
       
 
         editarDetalleSemiterRecurso = true;
+        this.uiSemiTerDetCodRecurso.setDisabled(true);
 
          RecursoAsignado recursoAsignado = new RecursoAsignado();
-         recursoAsignado = recursoAsignadoMostradoList.get(Integer.valueOf(itemDetalleOt).intValue());
+         recursoAsignado = recursoAsignadoMostradoList.get(Integer.valueOf(itemDet).intValue());
 
          this.uiSemiTerDetCodRecurso.setText(recursoAsignado.getCodProducto().getCodProducto().toString());
          this.uiSemiTerDetDescRecurso.setText(recursoAsignado.getCodProducto().getDescripcion().toString());
@@ -1630,7 +1821,15 @@ this.uiSemiTerCabCantProd.setText("");
     public String uiSemiTerRemoveRecursoLink_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
-        recursoAsignadoMostradoList.remove(Integer.valueOf(itemDetalleOt).intValue());
+
+        if (updateRequestOT) {
+
+            RecursoAsignado recursoAsignado = recursoAsignadoMostradoList.get(Integer.valueOf(itemDet).intValue());
+            recursoAsignadoEliminadoList.add(recursoAsignado);
+
+            
+        }
+        recursoAsignadoMostradoList.remove(Integer.valueOf(itemDet).intValue());
         recursosAsignadosOt = (RecursoAsignado[]) recursoAsignadoMostradoList.toArray(new RecursoAsignado[0]);
 
 
@@ -1639,6 +1838,76 @@ this.uiSemiTerCabCantProd.setText("");
         return null;
     }
 
+
+public String uiButtonActivarOtDet_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+     
+   
+
+    if (recursoAsignadoMostradoList.size() > 0 && tareaAsignadaMostradaList.size()> 0) {
+
+        if (validarActivacion()) {
+
+             this.uiSemiTerCabActivoCheck.setSelected(true);
+             detalleOrdenTrabajo.setEstado("P");
+
+            solicitudesList = new ArrayList();
+            SolicitudInternaController solicitudInternaController = new SolicitudInternaController();
+
+            ExistenciaController existenciaController = new ExistenciaController();
+            List<RecursoAsignado> recursos = recursoAsignadoMostradoList;
+            for (int i = 0; i < recursos.size(); i++) {
+                RecursoAsignado recursoAsignado = recursos.get(i);
+                Producto productoAsignado = recursoAsignado.getCodProducto();
+                Existencia existencia = existenciaController.getExistencia(null, productoAsignado.getCodProducto(),Long.valueOf(3));
+
+                if (recursoAsignado.getCantidad() > Long.valueOf(existencia.getCantidadExistencia().toString()) ) {
+
+                    SolicitudInterna solicitud = new SolicitudInterna();
+                    solicitud.setCodProducto(productoAsignado);
+                    solicitud.setCantidad(recursoAsignado.getCantidad() - Long.valueOf(existencia.getCantidadExistencia().toString()));
+                    solicitud.setCodEmpleado(recursoAsignado.getCodOrdenTrabDet().getCodEmpleado());
+                    solicitud.setEstado("P");
+                    solicitud.setFecha(new Date());
+                    solicitud.setObservacion(recursoAsignado.getCodOrdenTrabDet().getCodOrdenTrabajo().getDescripcion().toString());
+                    solicitudesList.add(solicitud);
+                }
+
+            }
+
+            if (solicitudesList.size() > 0) {
+                    solicitudesAGenerarse = (SolicitudInterna[]) solicitudesList.toArray(new SolicitudInterna[0]);
+                    generarSolicitudes = true;
+           }
+
+        } else {
+
+
+
+        }
+
+
+
+
+    } else {
+
+
+    }
+
+ 
+
+    return null;
+    }
+
+
+    private boolean validarActivacion(){
+        boolean r = true;
+        if (this.uiSemiTerCabActivoCheck.isChecked()) {
+            r = false;
+        }
+        return r;
+    }
 
 
 
@@ -1789,6 +2058,15 @@ this.uiSemiTerCabCantProd.setText("");
         this.updateRequestOT = updateRequestOT;
     }
 
+    private String itemSolicitud;
+
+    public String getItemSolicitud() {
+        return itemSolicitud;
+    }
+
+    public void setItemSolicitud(String itemSolicitud) {
+        this.itemSolicitud = itemSolicitud;
+    }
 
 
     private String itemDet;
@@ -1877,7 +2155,7 @@ private long idEditado;
 
 
          //// CARGA DE CAMPOS DE LA PAGINA
-         this.uiNroOT.setText(ordenTrabajo.getNumeroOrdenTrabajo().toString() );
+         this.uiNroOT.setText(ordenTrabajo.getCodOrdenTrabjo().toString() );
          this.uiResponsableCodigo.setText(ordenTrabajo.getCodEmpleado1().getCodEmpleado().toString());
          this.uiResponsableNombre.setText(ordenTrabajo.getCodEmpleado1().getNombreEmpleado()+" "+ ordenTrabajo.getCodEmpleado1().getApellidoEmpleado());
          this.uiProducto.setSelected(ordenTrabajo.getCodProductoOt().getCodProducto());
@@ -1917,7 +2195,7 @@ private long idEditado;
                              FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
 
 
-                              ordenDeTrabajo.setNumeroOrdenTrabajo(new Long( this.uiNroOT.getText().toString()));
+//                              ordenDeTrabajo.setNumeroOrdenTrabajo(new Long( this.uiNroOT.getText().toString()));
                               ordenDeTrabajo.setCodEmpleado1(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
                               ordenDeTrabajo.setCodEmpleado2(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
                               ordenDeTrabajo.setCodProductoOt(productoController.findById(Long.valueOf(this.uiProducto.getSelected().toString())));
@@ -1939,8 +2217,70 @@ private long idEditado;
                               controllerResult = ordenTrabajoCabeceraController.updateCabDet(ordenDeTrabajo, detallesOrdenTrabajo, ordenTrabajoDetallesEliminados, tareaAsignadasEliminadas, recursoAsignadosEliminados);
 
         }
-            return null;
+
+        if (controllerResult.getCodRetorno() != -1) {
+                addRequestOT = false;
+                updateRequestOT = false;
+                verDetalleSemiter = false;
+                generarSolicitudes = false;
+                
+                this.pageAlert1.setType("information");
+
+                getSessionBean1().setTituloPagina("Registro de Ordenes de Trabajo");
+                getSessionBean1().setDetallePagina("Seleccione la OT deseada");
+
+        }else{
+            this.pageAlert1.setType("error");
+            this.errorValidacion=true;
+        }
+
+            this.pageAlert1.setTitle(controllerResult.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+
+        return null;
 
     }
+
+    public String uiLinkGenerarSolicitud_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        ControllerResult controllerResult = new ControllerResult();
+
+        SolicitudInterna solicitudInternaAGenerarse = new SolicitudInterna();
+        solicitudInternaAGenerarse = solicitudesList.get(Integer.valueOf(itemSolicitud).intValue());
+
+        SolicitudInternaController solicitudInternaController = new SolicitudInternaController();
+        controllerResult = solicitudInternaController.create(solicitudInternaAGenerarse);
+
+        if (controllerResult.getCodRetorno() != -1) {
+            solicitudesList.remove(Integer.valueOf(itemSolicitud).intValue());
+            solicitudesAGenerarse = (SolicitudInterna[]) solicitudesList.toArray(new SolicitudInterna[0]);
+
+        }else{
+
+        }
+        return null;
+    }
+
+    public String uiButtonSolicitudVolver_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+
+
+        this.addRequestOT=false;
+        this.updateRequestOT=false;
+        this.addDetalleOt=false;
+        this.errorValidacion =false;
+        this.verDetalleSemiter = true;
+        this.generarSolicitudes = false;
+        return null;
+    }
+
+    public void uiDetSemiTerCant_processValueChange(ValueChangeEvent event) {
+    }
+
+    
 }
 

@@ -42,6 +42,10 @@
                     <file>${libs.hibernate-persistence.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
+                <library>
+                    <file>${libs.dynamicfaces_1686429988291665633.classpath}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
             </web-module-libraries>
             <web-module-additional-libraries>
                 <library>

@@ -8,6 +8,7 @@ import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.Calendar;
+import com.sun.webui.jsf.component.Checkbox;
 import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.component.ImageHyperlink;
 import com.sun.webui.jsf.component.PageAlert;
@@ -407,6 +408,15 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
 
     public void setImageHyperlink5(ImageHyperlink ih) {
         this.imageHyperlink5 = ih;
+    }
+    private Checkbox uiDetTareaFin = new Checkbox();
+
+    public Checkbox getUiDetTareaFin() {
+        return uiDetTareaFin;
+    }
+
+    public void setUiDetTareaFin(Checkbox c) {
+        this.uiDetTareaFin = c;
     }
 
     // </editor-fold>
@@ -1224,6 +1234,21 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
         if (detalleFormulaSemiList.size() < 1){
             info(uiDetProductoCodigo, "Debe cargar los detalles de productos de la formula");
             r = true;
+        }else{
+                  boolean b = false;
+                  for (int i = 0; i < tareaFormulaList.size(); i++) {
+                        TareaFormula tare = tareaFormulaList.get(i);
+                        if (tare.getTareaFin() != null && tare.getTareaFin().toString().equals("S"))
+                        {
+                            b = true;
+                            break;
+                        }
+                 }
+            if (!b){
+                r = true;
+                info(uiDetTareaCodigo, "Favor verifique que exista una tarea de finalizacion");
+            }
+           
         }
 
 
@@ -1304,6 +1329,23 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
         this.errorValidacion= true;
         info(uiDetTareaCodigo, "Verifique el detalle");
         }
+
+
+        if (this.uiDetTareaFin.isChecked()) {
+            boolean b = false;
+                  for (int i = 0; i < tareaFormulaList.size(); i++) {
+                        TareaFormula tare = tareaFormulaList.get(i);
+                        if (tare.getTareaFin() != null && tare.getTareaFin().toString().equals("S") && !tare.getCodTarea().getCodTarea().toString().equals(this.uiDetTareaCodigo.getText().toString()))   {
+                            b = true;
+                            break;
+                        }
+                 }
+            if (b){
+                this.errorValidacion= true;
+                info(uiDetTareaCodigo, "Ya existe una tarea de finalizacion de la Formula");
+            }
+        }
+
     }
 
 public void limpiarDetalleProducto(){
@@ -1371,7 +1413,8 @@ this.uiDetTareaOrden.setText("");
                    tareaFormula.setCodTarea(tarea);
                    tareaFormula.setCantidadTarea(BigInteger.valueOf(Long.valueOf(this.uiDetTareaCantidad.getText().toString())));
                    tareaFormula.setOrdenTarea(BigInteger.valueOf(Long.valueOf(this.uiDetTareaOrden.getText().toString())));
-                   tareaFormulaList.add(tareaFormula); 
+                   if (this.uiDetTareaFin.isChecked()) {tareaFormula.setTareaFin("S");}
+                   tareaFormulaList.add(tareaFormula);
             }else{
                   Tarea tarea = new TareaController().findById(Long.valueOf(this.uiDetTareaCodigo.getText().toString()));
                   

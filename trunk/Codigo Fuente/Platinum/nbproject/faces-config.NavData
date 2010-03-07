@@ -2,22 +2,24 @@
 <Scene Scope="Project" version="2">
     <Scope Scope="Faces Configuration Only"/>
     <Scope Scope="Project">
+        <Node id="popup/popupTareaAsignadaOTProdDiaria.jsp" x="400" y="1650" zoom="true"/>
+        <Node id="RegistroProDiaria_1.jsp" x="1900" y="750" zoom="true"/>
         <Node id="ABMFormaPagos.jsp" x="900" y="300" zoom="true"/>
         <Node id="popup/popupProductosSemiter.jsp" x="150" y="1650" zoom="true"/>
         <Node id="popup/popupTareas.jsp" x="2150" y="600" zoom="true"/>
         <Node id="LSTExistenciaProducto.jsp" x="1650" y="300" zoom="true"/>
-        <Node id="ABMComisiones.jsp" x="1650" y="150" zoom="true"/>
         <Node id="popupproductos.jsp" x="650" y="1200" zoom="true"/>
+        <Node id="ABMComisiones.jsp" x="1650" y="150" zoom="true"/>
         <Node id="LSTExtractoCtaCliente.jsp" x="1150" y="450" zoom="true"/>
         <Node id="ABMClientes.jsp" x="1150" y="150" zoom="true"/>
         <Node id="ABMProvs.jsp" x="1900" y="600" zoom="true"/>
         <Node id="ABMTareas.jsp" x="900" y="750" zoom="true"/>
-        <Node id="ABMGenerarComisionMensual.jsp" x="1150" y="300" zoom="true"/>
         <Node id="LSTEstadisticaPerdidasEnProduccion.jsp" x="1150" y="600" zoom="true"/>
-        <Node id="ABMOrdenesTrabajo.jsp" x="1150" y="1200" zoom="true"/>
+        <Node id="ABMGenerarComisionMensual.jsp" x="1150" y="300" zoom="true"/>
         <Node id="ABMProveedores.jsp" x="1400" y="300" zoom="true"/>
-        <Node id="ABMReciboCobro.jsp" x="150" y="750" zoom="true"/>
+        <Node id="ABMOrdenesTrabajo.jsp" x="1150" y="1200" zoom="true"/>
         <Node id="ABMFormulaTerminado.jsp" x="900" y="900" zoom="true"/>
+        <Node id="ABMReciboCobro.jsp" x="150" y="750" zoom="true"/>
         <Node id="ABMNotaCreditoProveedor.jsp" x="2650" y="150" zoom="true"/>
         <Node id="ABMProductos.jsp" x="2400" y="150" zoom="true"/>
         <Node id="popupproductos_1.jsp" x="1900" y="150" zoom="true"/>
@@ -33,8 +35,8 @@
         <Node id="ABMCalculoDeCostosFinales.jsp" x="1400" y="450" zoom="true"/>
         <Node id="ABMEmpleados.jsp" x="650" y="300" zoom="true"/>
         <Node id="LSTValoresEnDeposito.jsp" x="2400" y="300" zoom="true"/>
-        <Node id="LSTRanking.jsp" x="900" y="450" zoom="true"/>
         <Node id="ABMDeposito.jsp" x="900" y="1200" zoom="true"/>
+        <Node id="LSTRanking.jsp" x="900" y="450" zoom="true"/>
         <Node id="RegistroMovDeposito.jsp" x="2150" y="150" zoom="true"/>
         <Node id="ABMTipoProductos.jsp" x="150" y="900" zoom="true"/>
         <Node id="popup/popupFormulasSemiter.jsp" x="2900" y="150" zoom="true"/>
@@ -58,6 +60,7 @@
         <Node id="LSTLibroIVACompra.jsp" x="400" y="750" zoom="true"/>
         <Node id="ABMCajas.jsp" x="650" y="900" zoom="true"/>
         <Node id="ABMSecciones.jsp" x="400" y="450" zoom="true"/>
+        <Node id="popup/popupDetalleOTProdDiaria.jsp" x="150" y="1800" zoom="true"/>
         <Node id="PopupBancos.jsp" x="150" y="150" zoom="true"/>
         <Node id="RegistroAperturaCaja.jsp" x="650" y="450" zoom="true"/>
         <Node id="Inicio.jsp" x="650" y="150" zoom="true"/>
@@ -80,6 +83,7 @@
         <Node id="ABMSolicitudesInternas.jsp" x="900" y="600" zoom="true"/>
         <Node id="ABMPerdidasProduccion.jsp" x="1150" y="1050" zoom="true"/>
         <Node id="RegistroProDiaria.jsp" x="1900" y="300" zoom="true"/>
+        <Node id="popup/popupOts.jsp" x="3150" y="150" zoom="true"/>
         <Node id="popup/popupProductosTerminados.jsp" x="900" y="1350" zoom="true"/>
         <Node id="popup/popupProveedores.jsp" x="2650" y="300" zoom="true"/>
     </Scope>

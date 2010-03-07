@@ -149,7 +149,7 @@
     <managed-bean>
         <managed-bean-name>RegistroProDiaria</managed-bean-name>
         <managed-bean-class>platinum.RegistroProDiaria</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
+        <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
         <managed-bean-name>RegistroDeInventarioCierre</managed-bean-name>
@@ -449,6 +449,26 @@
     <managed-bean>
         <managed-bean-name>popup$popupPedidoVenta</managed-bean-name>
         <managed-bean-class>platinum.popup.popupPedidoVenta</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>RegistroProDiaria_1</managed-bean-name>
+        <managed-bean-class>platinum.RegistroProDiaria_1</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupDetalleOTProdDiaria</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupDetalleOTProdDiaria</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupTareaAsignadaOTProdDiaria</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupTareaAsignadaOTProdDiaria</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupOts</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupOts</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
