@@ -10,11 +10,14 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,11 +27,13 @@ import javax.persistence.TemporalType;
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="PRODUCCION_DIARIA_SEQUENCE", sequenceName="SEQ_PRODUCCION_DIARIA", initialValue=1, allocationSize=1)
 @Table(name = "PRODUCCION_DIARIA")
 @NamedQueries({@NamedQuery(name = "ProduccionDiaria.findAll", query = "SELECT p FROM ProduccionDiaria p"), @NamedQuery(name = "ProduccionDiaria.findByCodProduccionDiaria", query = "SELECT p FROM ProduccionDiaria p WHERE p.codProduccionDiaria = :codProduccionDiaria"), @NamedQuery(name = "ProduccionDiaria.findByCantidad", query = "SELECT p FROM ProduccionDiaria p WHERE p.cantidad = :cantidad"), @NamedQuery(name = "ProduccionDiaria.findByFecha", query = "SELECT p FROM ProduccionDiaria p WHERE p.fecha = :fecha"), @NamedQuery(name = "ProduccionDiaria.findByTiempoInvertido", query = "SELECT p FROM ProduccionDiaria p WHERE p.tiempoInvertido = :tiempoInvertido"), @NamedQuery(name = "ProduccionDiaria.findByUsuarioAlta", query = "SELECT p FROM ProduccionDiaria p WHERE p.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "ProduccionDiaria.findByUsuarioModif", query = "SELECT p FROM ProduccionDiaria p WHERE p.usuarioModif = :usuarioModif"), @NamedQuery(name = "ProduccionDiaria.findByFechaAlta", query = "SELECT p FROM ProduccionDiaria p WHERE p.fechaAlta = :fechaAlta"), @NamedQuery(name = "ProduccionDiaria.findByFechaModif", query = "SELECT p FROM ProduccionDiaria p WHERE p.fechaModif = :fechaModif")})
 public class ProduccionDiaria implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PRODUCCION_DIARIA_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_PRODUCCION_DIARIA")
     private Long codProduccionDiaria;

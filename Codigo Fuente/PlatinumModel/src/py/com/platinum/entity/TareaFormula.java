@@ -44,6 +44,9 @@ public class TareaFormula implements Serializable {
     @Basic(optional = false)
     @Column(name = "ORDEN_TAREA")
     private BigInteger ordenTarea;
+    @Basic(optional = true)
+    @Column(name = "TAREA_FIN")
+    private String tareaFin;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -60,6 +63,16 @@ public class TareaFormula implements Serializable {
     @JoinColumn(name = "COD_TAREA", referencedColumnName = "COD_TAREA")
     @ManyToOne(optional = false)
     private Tarea codTarea;
+
+    public String getTareaFin() {
+        return tareaFin;
+    }
+
+    public void setTareaFin(String tareaFin) {
+        this.tareaFin = tareaFin;
+    }
+
+
 
     public void setCodFormulaSemiCabecera(FormulaSemiCabecera codFormulaSemiCabecera) {
         this.codFormulaSemiCabecera = codFormulaSemiCabecera;

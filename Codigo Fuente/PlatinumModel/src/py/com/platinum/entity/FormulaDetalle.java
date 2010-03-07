@@ -43,6 +43,8 @@ public class FormulaDetalle implements Serializable {
     @Basic(optional = false)
     @Column(name = "COD_FORMULA_DETALLE")
     private Long codFormulaDetalle;
+    @Column(name = "SEMI_FIN")
+    private String semiFin;
     @Column(name = "CANTIDAD")
     private BigInteger cantidad;
     @Column(name = "USUARIO_ALTA")
@@ -64,6 +66,14 @@ public class FormulaDetalle implements Serializable {
     @JoinColumn(name = "CODIGO_FORMULA_SEMITER", referencedColumnName = "COD_FORMULA_SEMI_CABECERA")
     @ManyToOne(optional = false)
     private FormulaSemiCabecera codFormulaSemiCabecera;
+
+    public String getSemiFin() {
+        return semiFin;
+    }
+
+    public void setSemiFin(String semiFin) {
+        this.semiFin = semiFin;
+    }
 
     public FormulaSemiCabecera getCodFormulaSemiCabecera() {
         return codFormulaSemiCabecera;

@@ -138,9 +138,12 @@ public class ExistenciaController extends AbstractJpaDao<Existencia> {
       }
 
 public static void main (String[] v) {
-ExistenciaController existenciaController = new ExistenciaController();
-Existencia existencia = existenciaController.getExistencia(null, Long.valueOf("0") ,Long.valueOf("1"));
-System.out.println(existencia.getCodExistencia().toString());
+        ExistenciaController existenciaController = new ExistenciaController();
+        DepositoController depositoController = new DepositoController();
+        Deposito deposito = depositoController.findById(Long.valueOf("3"));
+        Existencia existencia = existenciaController.getExistencia(null, Long.valueOf("1022"),Long.valueOf("3"));
+        System.out.println(deposito.getCodDeposito().toString());
+        System.out.println(existencia.getCantidadExistencia().toString());
 
 }
 

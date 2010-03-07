@@ -53,6 +53,8 @@ public class OrdenTrabajoDetalle implements Serializable {
     private Long costoEstimado;
     @Column(name = "COSTO_REAL")
     private Long costoReal;
+    @Column(name = "SEMI_FIN")
+    private String semiFin;
     @Column(name = "OBSERVACION")
     private String observacion;
     @Column(name = "ESTADO")
@@ -80,6 +82,16 @@ public class OrdenTrabajoDetalle implements Serializable {
     private Set<RecursoAsignado> recursoAsignadoCollection;
     @OneToMany(mappedBy = "codDetOrdenTrabaj",fetch=FetchType.EAGER)
     private Set<TareaAsignada> tareaAsignadaCollection;
+
+    public String getSemiFin() {
+        return semiFin;
+    }
+
+    public void setSemiFin(String semiFin) {
+        this.semiFin = semiFin;
+    }
+
+
 
     public OrdenTrabajoDetalle() {
     }
@@ -268,7 +280,7 @@ public class OrdenTrabajoDetalle implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.OrdenTrabajoDetalle[codOrdenTrabajoDet=" + codOrdenTrabajoDet + "]";
+        return codOrdenTrabajoDet.toString();
     }
 
 }

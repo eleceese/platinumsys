@@ -118,40 +118,43 @@ public class OrdenTrabajoCabeceraController extends AbstractJpaDao <OrdenTrabajo
         EntityTransaction tx = em.getTransaction();
 
         OrdenTrabajoDetalle[] detallesOt = det;
-        OrdenTrabajo OrdenTrabajo = cab;
+        OrdenTrabajo ordenTrabajo = cab;
 
         try {
             tx.begin();
 
           //// CARGA DE LA CABECERA
-            em.persist(OrdenTrabajo);
+            em.persist(ordenTrabajo);
           //// FIN DE LA CARGA DE LA CABECERA
 
             //// CARGA DE LOS DETALLES
 
             for (int i = 0; i < detallesOt.length; i++) {
-
+                    ordenTrabajo = cab;
                     OrdenTrabajoDetalle oDet = new OrdenTrabajoDetalle();
                     oDet = detallesOt[i];
-                    oDet.setCodOrdenTrabajo(OrdenTrabajo);
+                    oDet.setCodOrdenTrabajo(ordenTrabajo);
                     em.persist(oDet);
 
                     ///// CARGA DE LOS RECURSOS Y TAREAS DE LOS DETALLES
                     List<RecursoAsignado> recursoAsignadoList = oDet.getRecursoAsignadoListList();
-                    OrdenTrabajoDetalle oDetInsertada = oDet;
+                    OrdenTrabajoDetalle oDetInsertada = (oDet);
                     for (int j = 0; j < recursoAsignadoList.size(); j++) {
-                            RecursoAsignado recursoAsignado = recursoAsignadoList.get(j);
+
+                            RecursoAsignado recursoAsignado = new RecursoAsignado ();
+                            recursoAsignado = recursoAsignadoList.get(j);
                             recursoAsignado.setCodOrdenTrabDet(oDetInsertada);
-                            em.persist(recursoAsignado);
+                            em.persist(em.merge(recursoAsignado));
                     }
                     //// CARGA DE LOS RECURSOS
 
                     /// CARGA DE LAS TAREAS
                     List<TareaAsignada> tareaAsignadaList = oDet.getTareaAsignadaListList();
                     for (int j = 0; j < tareaAsignadaList.size(); j++) {
-                        TareaAsignada tareaAsignada = tareaAsignadaList.get(j);
+                        TareaAsignada tareaAsignada = new TareaAsignada();
+                        tareaAsignada = tareaAsignadaList.get(j);
                         tareaAsignada.setCodDetOrdenTrabaj(oDetInsertada);
-                        em.persist(tareaAsignada);
+                        em.persist(em.merge(tareaAsignada));
                     }
                     /// FIN CARGA DE LAS TAREAS
             }
