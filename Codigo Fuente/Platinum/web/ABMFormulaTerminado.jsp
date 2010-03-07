@@ -12,9 +12,9 @@
                 <webuijsf:head id="head1">
                     <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <script>
-                        function ABMOrdenesTrabajo() {
+                        function initAllRows() {
                             var table = document.getElementById("form1:tablaFormulas");
-                            table.ABMOrdenesTrabajo();}
+                            table.initAllRows();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
@@ -165,12 +165,13 @@
                                             <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleFormula}" columns="45" id="uiDetalleFormula"/>
                                             <webuijsf:label id="label1" text="Cantidad"/>
                                             <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleCant}" id="uiDetalleCant"/>
+                                            <webuijsf:checkbox binding="#{ABMFormulaTerminado.uiDetalleFin}" id="uiDetalleFin" label="Fin"/>
                                             <webuijsf:button actionExpression="#{ABMFormulaTerminado.uiButtonAgregarDetalle_action}" id="uiButtonAgregarDetalle" text="Agregar"/>
                                             <webuijsf:message for="uiDetalleProdDesc" id="message4" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
                                         <webuijsf:table augmentTitle="false" binding="#{ABMFormulaTerminado.tableDetalleFormula}" id="tableDetalleFormula" width="647">
                                             <webuijsf:tableRowGroup binding="#{ABMFormulaTerminado.tableRowGroupDetalleFormula}"
-                                                id="tableRowGroupDetalleFormula" rows="5" sourceData="#{ABMFormulaTerminado.detallesFormula}" sourceVar="currentRow">
+                                                id="tableRowGroupDetalleFormula" rows="10" sourceData="#{ABMFormulaTerminado.detallesFormula}" sourceVar="currentRow">
                                                 <webuijsf:tableColumn headerText="Codigo" id="tableColumn1" sort="codProducto">
                                                     <webuijsf:staticText id="staticText1" text="#{currentRow.value['codProducto'].codProducto}"/>
                                                 </webuijsf:tableColumn>
@@ -183,8 +184,11 @@
                                                 <webuijsf:tableColumn headerText="Formula" id="tableColumn9" sort="codFormula">
                                                     <webuijsf:staticText id="staticText6" text="#{currentRow.value['codFormulaSemiCabecera'].descripcion}"/>
                                                 </webuijsf:tableColumn>
-                                                <webuijsf:tableColumn headerText="Cantidad" id="tableColumn19" sort="codFormula">
+                                                <webuijsf:tableColumn headerText="Cantidad" id="tableColumn19" sort="codFormulaSemiCabecera">
                                                     <webuijsf:staticText id="staticText16" text="#{currentRow.value['codFormulaSemiCabecera'].cantidad}"/>
+                                                </webuijsf:tableColumn>
+                                                <webuijsf:tableColumn align="center" headerText="Fin" id="tableColumn6">
+                                                    <webuijsf:staticText id="staticText5" text="#{currentRow.value['semiFin']}"/>
                                                 </webuijsf:tableColumn>
                                                 <webuijsf:tableColumn align="center" id="tableColumn7">
                                                     <webuijsf:imageHyperlink actionExpression="#{ABMFormulaTerminado.detailEdit}"

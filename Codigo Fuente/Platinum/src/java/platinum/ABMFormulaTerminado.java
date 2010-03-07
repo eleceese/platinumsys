@@ -8,6 +8,7 @@ import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.Calendar;
+import com.sun.webui.jsf.component.Checkbox;
 import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.component.Hyperlink;
 import com.sun.webui.jsf.component.ImageHyperlink;
@@ -442,6 +443,15 @@ public class ABMFormulaTerminado extends AbstractPageBean {
 
     public void setUpdateRecordButton(Button b) {
         this.updateRecordButton = b;
+    }
+    private Checkbox uiDetalleFin = new Checkbox();
+
+    public Checkbox getUiDetalleFin() {
+        return uiDetalleFin;
+    }
+
+    public void setUiDetalleFin(Checkbox c) {
+        this.uiDetalleFin = c;
     }
 
     // </editor-fold>
@@ -981,8 +991,28 @@ private boolean validarCampos(){
          errorValidacion = false;
 
             if (detallesFormula.length < 1){
+                       errorValidacion = true;
+                       this.info(uiDetalleProdDesc, "Debe agregar los detalles de la formula");
+            }else{
+               long cont = 0;
+                for (int i = 0; i < detalleFormulaList.size(); i++) {
+                    FormulaDetalle formulaDetalle = detalleFormulaList.get(i);
+                    if (formulaDetalle.getSemiFin() != null && formulaDetalle.getSemiFin().toString().equals("S")) {
+                        cont++;
+                    }
+                }
+                if (cont == 0) {
                         errorValidacion = true;
-                       this.info(uiDetalleProdDesc, "Debe agregar los detalles de la formula");}
+                        this.info(uiDetalleProdDesc, "Debe agregar un detalle de finalizacion");
+
+                } else if(cont > 1) {
+                        errorValidacion = true;
+                        this.info(uiDetalleProdDesc, "Existe mas de un detalle de finalizacion");
+                }
+
+            }
+
+
 
              if (this.uiProductoCodigo.getText() == null ||
                     this.uiProductoCodigo.getText().toString() == null ||
@@ -1102,6 +1132,8 @@ private FormulaCabecera cabeceraFormula;
                             FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabecera();
                             formulaSemiCabecera = formulaSemiCabeceraController.findById(Long.valueOf(Long.valueOf(this.uiDetalleCodFormula.getText().toString())));
 
+
+
                 //           FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabeceraController().findById(Long.valueOf(this.uiDetalleCodFormula.getText().toString()));
 
 
@@ -1109,6 +1141,9 @@ private FormulaCabecera cabeceraFormula;
                            detalleFormula.setCodProducto(producto);
                            detalleFormula.setCodFormulaSemiCabecera(formulaSemiCabecera);
                            detalleFormula.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetalleCant.getText().toString())));
+                             if (uiDetalleFin.isChecked()) {
+                                detalleFormula.setSemiFin("S");
+                            }
                            detalleFormulaList.add(detalleFormula);
 
 
