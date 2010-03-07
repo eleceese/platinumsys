@@ -10,11 +10,14 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,11 +27,13 @@ import javax.persistence.TemporalType;
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="RECURSO_ASIGNADO_SEQUENCE", sequenceName="SQ_RECURSO_ASIGNADO", initialValue=1, allocationSize=1)
 @Table(name = "RECURSO_ASIGNADO")
 @NamedQueries({@NamedQuery(name = "RecursoAsignado.findAll", query = "SELECT r FROM RecursoAsignado r"), @NamedQuery(name = "RecursoAsignado.findByCodRecurso", query = "SELECT r FROM RecursoAsignado r WHERE r.codRecurso = :codRecurso"), @NamedQuery(name = "RecursoAsignado.findByCantidad", query = "SELECT r FROM RecursoAsignado r WHERE r.cantidad = :cantidad"), @NamedQuery(name = "RecursoAsignado.findByCantidadReal", query = "SELECT r FROM RecursoAsignado r WHERE r.cantidadReal = :cantidadReal"), @NamedQuery(name = "RecursoAsignado.findByFecha", query = "SELECT r FROM RecursoAsignado r WHERE r.fecha = :fecha"), @NamedQuery(name = "RecursoAsignado.findByUsuarioAlta", query = "SELECT r FROM RecursoAsignado r WHERE r.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "RecursoAsignado.findByUsuarioModif", query = "SELECT r FROM RecursoAsignado r WHERE r.usuarioModif = :usuarioModif"), @NamedQuery(name = "RecursoAsignado.findByFechaAlta", query = "SELECT r FROM RecursoAsignado r WHERE r.fechaAlta = :fechaAlta"), @NamedQuery(name = "RecursoAsignado.findByFechaModif", query = "SELECT r FROM RecursoAsignado r WHERE r.fechaModif = :fechaModif")})
 public class RecursoAsignado implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="RECURSO_ASIGNADO_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_RECURSO")
     private Long codRecurso;
