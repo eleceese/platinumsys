@@ -4,17 +4,11 @@
  */
 package py.com.platinum.controller;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
-import py.com.platinum.controllerUtil.ControllerResult;
-import py.com.platinum.entity.Deposito;
-import py.com.platinum.entity.Existencia;
 import py.com.platinum.entity.SolicitudInterna;
 
 /**
@@ -142,6 +136,74 @@ public List<SolicitudInterna> getSolicitudInternas(String producto, Date fechaDe
         Query q = em.createQuery(SQL);
 
         //Seteamos los parametros
+        if (producto != null && !producto.equals("")) {
+            q.setParameter("producto", "%" + producto + "%");
+        }
+
+        if (fechaDesde != null ) {
+            q.setParameter("fechaDesde", fechaDesde );
+        }
+
+        if (fechaHasta != null ) {
+            q.setParameter("fechaHasta", fechaHasta );
+        }
+
+        if (estado != null && !estado.trim().equals("")) {
+            q.setParameter("estado", estado );
+        }
+
+        //Realizamos la busqueda
+        List<SolicitudInterna> entities = q.getResultList();
+        em.close();
+
+        //retornamos la lista
+        return entities;
+
+      }
+
+public List<SolicitudInterna> getSolicitudInternas(String responsable, String producto, Date fechaDesde, Date fechaHasta, String estado) {
+        //Armamos el sql String
+        String SQL = "SELECT o FROM SolicitudInterna o WHERE o.codSolicitud = o.codSolicitud";
+
+        if (responsable != null && !responsable.equals("")) {
+            SQL = SQL + " and UPPER(o.codEmpleado.apellidoEmpleado) like UPPER(:apellido)";
+        }
+
+        if (responsable != null && !responsable.equals("")) {
+            SQL = SQL + " and UPPER(o.codEmpleado.nombreEmpleado) like UPPER(:nombre)";
+        }
+
+        if (producto != null && !producto.equals("")) {
+            SQL = SQL + " and UPPER(o.codProducto.descripcion) like UPPER(:producto)";
+        }
+
+        if (fechaDesde != null) {
+            SQL = SQL + " and o.fecha >= :fechaDesde  ";
+        }
+
+        if (fechaHasta != null) {
+            SQL = SQL + " and o.fecha <= :fechaHasta ";
+        }
+
+        if (estado != null && !estado.trim().equals("")) {
+            SQL = SQL + " and upper(o.estado) = upper(:estado) ";
+        }
+
+        //Order by
+        SQL = SQL + " order by o.fecha desc ";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Seteamos los parametros
+        if (responsable != null && !responsable.equals("")) {
+            q.setParameter("apellido", responsable);
+        }
+
+        if (responsable != null && !responsable.equals("")) {
+            q.setParameter("nombre", responsable);
+        }
+
         if (producto != null && !producto.equals("")) {
             q.setParameter("producto", "%" + producto + "%");
         }

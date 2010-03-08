@@ -986,7 +986,7 @@ public class SessionBean1 extends AbstractSessionBean {
 
 
 
-    SolicitudInterna[] listaSolicitud;
+    private SolicitudInterna[] listaSolicitud;
 
     public SolicitudInterna[] getListaSolicitud() {
         return listaSolicitud;
