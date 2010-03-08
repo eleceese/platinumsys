@@ -4,6 +4,8 @@ delete from factura_detalle;
 delete from factura_cabecera;
 delete from pedido_detalle;
 delete from pedido_cabecera;
+delete from nota_credito_prov_det;
+delete from nota_credito_prov_cab;
 delete from factura_compra_det;
 delete from factura_compra_cab;
 delete from factura_detalle;
@@ -23,10 +25,10 @@ delete from tipo_comprobante;
 delete from ciudad;
 
 --Tipo Producto
-insert into tipo_producto (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (0, 'Ninguno', 'N', '', '', null, null);
-insert into tipo_producto (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (1, 'Terminado', 'N', '', '', null, null);
-insert into tipo_producto (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (2, 'SemiTerminado', 'N', '', '', null, null);
-insert into tipo_producto (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (3, 'Insumo', 'N', '', '', null, null);
+insert into tipo_producto (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (1, 'Generico', 'N', '', '', null, null);
+insert into tipo_producto (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (2, 'Terminado', 'N', '', '', null, null);
+insert into tipo_producto (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (3, 'SemiTerminado', 'N', '', '', null, null);
+insert into tipo_producto (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (4, 'Insumo', 'N', '', '', null, null);
 
 --Unidad Medida
 insert into unidad_medida (COD_UNIDAD_MEDIDA, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (0, 'Unidad', '', '', null, null);
@@ -35,20 +37,19 @@ insert into unidad_medida (COD_UNIDAD_MEDIDA, DESCRIPCION, USUARIO_ALTA, USUARIO
 insert into unidad_medida (COD_UNIDAD_MEDIDA, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (2, 'Litros', '', '', null, null);
 
 --Presentacion
-insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (0, 'Sin Presentacion', '', '', null, null);
 insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (1, 'Caja', '', '', null, null);
 insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (2, 'Botella', '', '', null, null);
 insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (3, 'Bolsa', '', '', null, null);
 
 --Marcas
-insert into marca (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (1, 'HP', '', '', null, null);
+insert into marca (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (1, 'SIN MARCA', '', '', null, null);
 insert into marca (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (2, 'Dell', '', '', null, null);
 insert into marca (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (3, 'Applet', '', '', null, null);
 insert into marca (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (5, 'Acer', '', '', null, null);
 insert into marca (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (6, 'Toshiba', '', '', null, null);
-insert into marca (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (4, 'ECO', '', '', null, null);
-insert into marca (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (4, 'AVON', '', '', null, null);
-insert into marca (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (4, 'DUTSON', '', '', null, null);
+insert into marca (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (7, 'ECO', '', '', null, null);
+insert into marca (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (8, 'AVON', '', '', null, null);
+insert into marca (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (9, 'DUTSON', '', '', null, null);
 
 --Tipos de Comprobantes
 insert into tipo_comprobante values (1, 'Factura Contado - Compra', 0, 'COMPRA');

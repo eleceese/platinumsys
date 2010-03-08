@@ -11,6 +11,26 @@
             <webuijsf:html id="html1">
                 <webuijsf:head id="head1">
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
+                    <webuijsf:script id="scriptPopUp" type="text/javascript" url="/js/utilJS.js"/>
+                    <script>
+                        function initAllRows() {
+                            var table = document.getElementById("form1:table1");
+                            table.initAllRows();}
+                    </script>
+                    <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
+                    <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
+                    <script>
+                        var delSelect;
+                        function confirmar() {
+                            if (delSelect!=null){
+                                if(!confirm("¿Está seguro de eliminar el Registro seleccionado?")) {
+                                    return false;
+                                }else{
+                                    return true;
+                                }
+                            }
+                        }
+                    </script>
                 </webuijsf:head>
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
@@ -25,46 +45,49 @@
                                 <h:panelGrid binding="#{ABMSolicitudesInternas.gridPanelBuscar}" columns="2" id="gridPanelBuscar">
                                     <h:panelGrid columns="2" id="gridPanelUserFiltro">
                                         <webuijsf:label id="label1Filtro" text="Responsable"/>
-                                        <webuijsf:textField binding="#{ABMSolicitudesInternas.userNameFiltro}" columns="40" id="userNameFiltro"/>
+                                        <webuijsf:textField binding="#{ABMSolicitudesInternas.uiTxtFilResponsable}" columns="40" id="uiTxtFilResponsable"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanelEmailFiltro">
                                         <webuijsf:label id="label3Filtro" text="Producto"/>
-                                        <webuijsf:textField binding="#{ABMSolicitudesInternas.emailAddressFiltro}" columns="40" id="emailAddressFiltro"/>
+                                        <webuijsf:textField binding="#{ABMSolicitudesInternas.uiTxtFilProducto}" columns="40" id="uiTxtFilProducto"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanelFecDesde">
                                         <webuijsf:label id="lblFecDesde" text="Fecha Desde"/>
-                                        <webuijsf:calendar dateFormatPattern="dd/MM/yyyy" id="fechaDesde"/>
+                                        <webuijsf:calendar binding="#{ABMSolicitudesInternas.uiCalFechaDesde}" dateFormatPattern="dd/MM/yyyy"
+                                            dateFormatPatternHelp="dd/MM/yyyy" id="uiCalFechaDesde"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanelFecHasta">
                                         <webuijsf:label id="lblFecHasta" text="Fecha Hasta"/>
-                                        <webuijsf:calendar dateFormatPattern="dd/MM/yyyy" id="fechaHasta"/>
+                                        <webuijsf:calendar binding="#{ABMSolicitudesInternas.uiCalFechaHasta}" dateFormatPattern="dd/MM/yyyy"
+                                            dateFormatPatternHelp="dd/MM/yyyy" id="uiCalFechaHasta"/>
                                     </h:panelGrid>
-                                    <webuijsf:button binding="#{ABMSolicitudesInternas.buscarButton}" id="buscarButton" text="Buscar"/>
-                                    <webuijsf:button binding="#{ABMSolicitudesInternas.todosButton}" id="todosButton" text="Todos"/>
+                                </h:panelGrid>
+                                <h:panelGrid columns="2" id="gridPanelBtnBuscar" style="height: 100%" width="191">
+                                    <webuijsf:button actionExpression="#{ABMSolicitudesInternas.uiBtnBuscar_action}" id="uiBtnBuscar" text="Buscar"/>
+                                    <webuijsf:button actionExpression="#{ABMSolicitudesInternas.uiBtnTodos_action}" id="uiBtnTodos" text="Todos"/>
                                 </h:panelGrid>
                                 <webuijsf:pageAlert binding="#{ABMSolicitudesInternas.pageAlert1}" rendered="false" style="height: 72px"/>
-                                <script>
-                                    function ABMSolicitudesInternasAprobacion() {
-                                        var table = document.getElementById("form1:table1");
-                                        table.ABMSolicitudesInternasAprobacion();
-                                    }
-                                </script>
-                                <webuijsf:table augmentTitle="false" binding="#{ABMSolicitudesInternas.table1}" clearSortButton="true" id="table1"
-                                    paginateButton="true" paginationControls="true" sortPanelToggleButton="true" title="Solicitudes Internas" width="600">
+                                <webuijsf:table augmentTitle="false" binding="#{ABMSolicitudesInternas.table1}" id="table1" title="Solicitudes Internas" width="647">
                                     <webuijsf:tableRowGroup binding="#{ABMSolicitudesInternas.tableRowGroup1}" emptyDataMsg="No se recupero ningun registro..."
                                         id="tableRowGroup1" rows="10" selected="#{ABMSolicitudesInternas.selectedState}"
-                                        sourceData="#{ABMSolicitudesInternas.defaultTableDataProvider}" sourceVar="currentRow">
-                                        <webuijsf:tableColumn align="center" id="tableColumn5" spacerColumn="true" width="30">
-                                            <webuijsf:radioButton id="radioButton1" label=""/>
+                                        sourceData="#{SessionBean1.listaSolicitud}" sourceVar="currentRow">
+                                        <webuijsf:tableColumn align="center" alignKey="" id="tableColumn5" onClick="setTimeout('initAllRows()',0)"
+                                            selectId="#{ABMSolicitudesInternas.radioButton1.id}" valign="middle" width="40">
+                                            <webuijsf:radioButton binding="#{ABMSolicitudesInternas.radioButton1}" id="radioButton1" label=""
+                                                name="#{ABMSolicitudesInternas.radioButton1.id}" onClick="delSelect='ok'"
+                                                selected="#{ABMSolicitudesInternas.selected}" selectedValue="#{ABMSolicitudesInternas.selectedValue}" style="height: 18px"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Nro. Solicitud" id="tableColumn2" width="75">
-                                            <webuijsf:staticText id="staticText2" text="123"/>
+                                        <webuijsf:tableColumn headerText="Nro. Solicitud" id="tableColumn1">
+                                            <webuijsf:staticText id="staticText1" text="#{currentRow.value['codSolicitud']}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Responsable" id="tableColumn3" width="425">
-                                            <webuijsf:staticText id="staticText3" text="Formula Tapa 20 Hojas"/>
+                                        <webuijsf:tableColumn headerText="Empleado" id="tableColumn2" width="271">
+                                            <webuijsf:staticText id="staticText2" text="#{currentRow.value['codEmpleado']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="Fecha" id="tableColumn3" width="108">
+                                            <webuijsf:staticText converter="#{SessionBean1.dateTimeConverter}" id="staticText3" text="#{currentRow.value['fecha']}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Estado" id="tableColumn4">
-                                            <webuijsf:staticText id="staticText4" text="Activo"/>
+                                            <webuijsf:staticText id="staticText4" text="#{currentRow.value['estado']}"/>
                                         </webuijsf:tableColumn>
                                     </webuijsf:tableRowGroup>
                                 </webuijsf:table>
@@ -74,41 +97,46 @@
                                     <webuijsf:button actionExpression="#{ABMSolicitudesInternas.updateButton_action}"
                                         binding="#{ABMSolicitudesInternas.updateButton}" id="updateButton" text="Editar"/>
                                     <webuijsf:button actionExpression="#{ABMSolicitudesInternas.deleteButton_action}"
-                                        binding="#{ABMSolicitudesInternas.deleteButton}" id="deleteButton" text="Eliminar"/>
+                                        binding="#{ABMSolicitudesInternas.deleteButton}" id="deleteButton" onClick="javascript:return confirm" text="Eliminar"/>
                                 </h:panelGrid>
                                 <h:panelGrid binding="#{ABMSolicitudesInternas.addUpdatePanel}" columns="1" id="addUpdatePanel">
                                     <h:panelGrid columns="2" id="detalle">
                                         <webuijsf:hyperlink id="hlkResponsable" onClick="doPopup('form1:txtCodCliente_field', 'form1:txtApellidoNombre_field')"
                                             target="popup" text="Solicitante" url="/faces/popupEmpleados.jsp"/>
-                                        <h:panelGrid columns="2" id="gridPanelResponsable">
-                                            <webuijsf:textField columns="50" id="txtResponsable"/>
-                                            <webuijsf:message id="message1" showDetail="false" showSummary="true"/>
+                                        <h:panelGrid columns="3" id="gridPanelResponsable">
+                                            <webuijsf:textField binding="#{ABMSolicitudesInternas.uiTxtCodEmpleado}" columns="10" id="uiTxtCodEmpleado"/>
+                                            <webuijsf:textField binding="#{ABMSolicitudesInternas.uiTxtNombreEmpleado}" columns="50" id="uiTxtNombreEmpleado"/>
+                                            <webuijsf:message for="uiTxtResponsable" id="message1" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
                                         <webuijsf:label id="labelfec" text="Fecha"/>
                                         <h:panelGrid columns="2" id="gridPanelfecvi">
-                                            <webuijsf:calendar dateFormatPattern="dd/MM/yyyy" id="cal1"/>
-                                            <webuijsf:message id="message3cal" showDetail="false" showSummary="true"/>
+                                            <webuijsf:calendar binding="#{ABMSolicitudesInternas.uiCalFecha}" columns="10" dateFormatPattern="dd/MM/yyyy"
+                                                dateFormatPatternHelp="dd/MM/yyyy" id="uiCalFecha"/>
+                                            <webuijsf:message for="uiCalFecha" id="message3cal" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
                                         <webuijsf:hyperlink id="hyperlink1" onClick="doPopup('form1:txtCodCliente_field', 'form1:txtApellidoNombre_field')"
                                             target="popup" text="Producto" url="/faces/popupproductos.jsp"/>
-                                        <h:panelGrid columns="2" id="gridPanelUser">
-                                            <webuijsf:textField binding="#{ABMSolicitudesInternas.userNameField}" columns="50" id="userNameField"/>
+                                        <h:panelGrid columns="3" id="gridPanelProducto">
+                                            <webuijsf:textField binding="#{ABMSolicitudesInternas.uiTxtCodProducto}" columns="10" id="uiTxtCodProducto"/>
+                                            <webuijsf:textField binding="#{ABMSolicitudesInternas.uiTxtDescProducto}" columns="50" id="uiTxtDescProducto"/>
                                             <webuijsf:message id="msgProducto" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
-                                        <webuijsf:label for="emailAddressField" id="label3" text="Cant. Solicitud"/>
+                                        <webuijsf:label for="uiTxtCantidad" id="label3" text="Cant. Solicitud"/>
                                         <h:panelGrid columns="2" id="gridPanelEmail">
-                                            <webuijsf:textField binding="#{ABMSolicitudesInternas.emailAddressField}" columns="10" id="emailAddressField"/>
-                                            <webuijsf:message for="emailAddressField" id="message3" showDetail="false" showSummary="true"/>
+                                            <webuijsf:textField binding="#{ABMSolicitudesInternas.uiTxtCantidad}" columns="10" id="uiTxtCantidad"/>
+                                            <webuijsf:message for="uiTxtCantidad" id="message3" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
-                                        <webuijsf:label id="labelesta" text="Estado"/>
-                                        <h:panelGrid columns="2" id="gridPanelestado">
-                                            <webuijsf:dropDown id="dropDown1" items="#{ABMSolicitudesInternas.dropDown1DefaultOptions.options}" selected="#{ABMSolicitudesInternas.dropDown1DefaultOptions.selectedValue}"/>
-                                            <webuijsf:message id="message3esta" showDetail="false" showSummary="true"/>
+                                        <webuijsf:label binding="#{ABMSolicitudesInternas.lblEstado}" id="lblEstado" text="Estado"/>
+                                        <h:panelGrid binding="#{ABMSolicitudesInternas.gridPanelEstado}" columns="2" id="gridPanelEstado">
+                                            <webuijsf:dropDown binding="#{ABMSolicitudesInternas.uiLstEstado}" id="uiLstEstado"
+                                                items="#{ABMSolicitudesInternas.uiLstEstadoDefaultOptions.options}"
+                                                selected="#{ABMSolicitudesInternas.uiLstEstadoDefaultOptions.selectedValue}" width="100"/>
+                                            <webuijsf:message for="uiLstEstado" id="message3esta" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
                                         <webuijsf:label id="label2" text="Observación"/>
                                         <h:panelGrid columns="2" id="gridPanelPassword">
-                                            <webuijsf:textArea columns="50" id="textArea1" rows="5"/>
-                                            <webuijsf:message id="message2" showDetail="false" showSummary="true"/>
+                                            <webuijsf:textArea binding="#{ABMSolicitudesInternas.uiTxtObservacion}" columns="50" id="uiTxtObservacion" rows="5"/>
+                                            <webuijsf:message for="uiTxtObservacion" id="message2" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
                                     </h:panelGrid>
                                     <webuijsf:tabSet binding="#{ABMSolicitudesInternas.tabSetDatosAprobacion}" id="tabSetDatosAprobacion" lite="true"
@@ -116,21 +144,21 @@
                                         <webuijsf:tab id="tab1" text="Datos de la Aprobación">
                                             <h:panelGrid columns="2" id="palGriApro4">
                                                 <webuijsf:label id="lblResponsable" text="Responsable"/>
-                                                <webuijsf:textField columns="40" disabled="true" id="txtNomRespApro"/>
+                                                <webuijsf:textField binding="#{ABMSolicitudesInternas.uiTxtUsuarioAprobacion}" columns="50" disabled="true" id="uiTxtUsuarioAprobacion"/>
                                                 <webuijsf:label id="label1" text="Fecha"/>
-                                                <webuijsf:textField columns="15" disabled="true" id="textField1"/>
+                                                <webuijsf:textField binding="#{ABMSolicitudesInternas.uiTxtFechaAprobacion}" columns="15" disabled="true" id="uiTxtFechaAprobacion"/>
                                                 <webuijsf:label id="label4" text="Cantidad Aprobada"/>
-                                                <webuijsf:textField columns="10" disabled="true" id="textField2"/>
+                                                <webuijsf:textField binding="#{ABMSolicitudesInternas.uiTxtCantidadAprobada}" columns="10" disabled="true" id="uiTxtCantidadAprobada"/>
                                             </h:panelGrid>
                                         </webuijsf:tab>
                                     </webuijsf:tabSet>
                                     <h:panelGrid binding="#{ABMSolicitudesInternas.gridPanelButtonDet}" columns="2" id="gridPanelButtonDet" style="direction: rtl; line-height: normal; text-align: right; vertical-align: bottom">
-                                        <webuijsf:button actionExpression="#{ABMSolicitudesInternas.cancelButton_action}"
-                                            binding="#{ABMSolicitudesInternas.cancelButton}" id="cancelButton" style="font-size: 14px" text="Cancelar"/>
-                                        <webuijsf:button actionExpression="#{ABMSolicitudesInternas.addRecordButton_action}"
-                                            binding="#{ABMSolicitudesInternas.addRecordButton}" id="addRecordButton" style="font-size: 14px" text="Guardar"/>
-                                        <webuijsf:button actionExpression="#{ABMSolicitudesInternas.updateRecordButton_action}"
-                                            binding="#{ABMSolicitudesInternas.updateRecordButton}" id="updateRecordButton" rendered="false"
+                                        <webuijsf:button actionExpression="#{ABMSolicitudesInternas.uiBtnCancelar_action}"
+                                            binding="#{ABMSolicitudesInternas.uiBtnCancelar}" id="uiBtnCancelar" style="font-size: 14px" text="Cancelar"/>
+                                        <webuijsf:button actionExpression="#{ABMSolicitudesInternas.uiBtnGuardarNuevo_action}"
+                                            binding="#{ABMSolicitudesInternas.uiBtnGuardarNuevo}" id="uiBtnGuardarNuevo" style="font-size: 14px" text="Guardar"/>
+                                        <webuijsf:button actionExpression="#{ABMSolicitudesInternas.uiBtnGuardarEditar_action}"
+                                            binding="#{ABMSolicitudesInternas.uiBtnGuardarEditar}" id="uiBtnGuardarEditar" rendered="false"
                                             style="font-size: 14px" text="Guardar"/>
                                     </h:panelGrid>
                                 </h:panelGrid>

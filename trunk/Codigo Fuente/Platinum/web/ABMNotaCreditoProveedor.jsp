@@ -112,7 +112,7 @@
                                                 selected="#{ABMNotaCreditoProveedor.uiLstEstadoDefaultOptions.selectedValue}" width="120px"/>
                                         </h:panelGrid>
                                         <webuijsf:hyperlink id="hyperlink1"
-                                            onClick="doPopup('form1:uiTxtCodProveedor_field', 'form1:uiTxtNombreProveedor_field')" target="popup"
+                                            onClick="doPopup('form1:uiTxtCodProveedor_field', 'form1:uiTxtNombreProveedor_field');" target="popup"
                                             text="Proveedor" url="/faces/popup/popupProveedores.jsp"/>
                                         <h:panelGrid columns="2" id="gridPanelProveedor" width="335">
                                             <webuijsf:textField binding="#{ABMNotaCreditoProveedor.uiTxtCodProveedor}" columns="10" id="uiTxtCodProveedor" maxLength="15"/>

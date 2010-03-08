@@ -35,3 +35,6 @@ alter table nota_credito_prov_cab
 		
 --eliminamos column dep nota cred. prov
 alter table nota_credito_prov_det drop column sub_total;
+
+--renombramos la columna
+alter table nota_credito_prov_cab rename column iva to TOTAL_IVA;

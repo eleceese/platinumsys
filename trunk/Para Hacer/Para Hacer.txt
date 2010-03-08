@@ -1,0 +1,20 @@
+1. Nota credito proveedor
+
+	- Controlar cantidad no sea mayor a la cantidad de la factura
+	
+2. Cantidad en stock no supere cantidad pedido o venta
+   
+    en pedido, se cargar peroc con un Alert
+	en factura no permitir 
+	
+3. Validacion de fechas de los comprobantes, sea <= fecha actual
+
+4. Numeracion de Factaura Venta, mostrar el numero antes de imprimir o guardar.
+
+
+5. Agregar columna cantidad de cuotas en la tabla tipo_comprobante, esto va a implicar agregar nro de cuota en la tabla saldo de cliente
+
+6. Filtrar lista de producto en factura proveedor, insumo, meteria prima.
+
+
+
