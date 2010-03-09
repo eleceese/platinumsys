@@ -38,3 +38,6 @@ alter table nota_credito_prov_det drop column sub_total;
 
 --renombramos la columna
 alter table nota_credito_prov_cab rename column iva to TOTAL_IVA;
+
+--Creamos la sequencia para la table existencia
+create sequence SQ_EXISTENCIA;
