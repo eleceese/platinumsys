@@ -75,7 +75,7 @@ public class SolicitudInterna implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModif;
     @OneToMany(mappedBy = "codSolicitud", fetch=FetchType.EAGER)
-    private Set<EntradaSalidaCabecera> entradaSalidaCabecera;
+    private Set<EntradaSalidaDetalle> entradaSalidaDetalle;
     @OneToMany(mappedBy = "nroSolicitud", fetch=FetchType.EAGER)
     private Set<FacturaCompraDet> facturaCompraDet;
     @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
@@ -206,12 +206,12 @@ public class SolicitudInterna implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public Set<EntradaSalidaCabecera> getEntradaSalidaCabecera() {
-        return entradaSalidaCabecera;
+    public Set<EntradaSalidaDetalle> getEntradaSalidaDetalle() {
+        return entradaSalidaDetalle;
     }
 
-    public void setEntradaSalidaCabecera(Set<EntradaSalidaCabecera> entradaSalidaCabecera) {
-        this.entradaSalidaCabecera = entradaSalidaCabecera;
+    public void setEntradaSalidaDetalle(Set<EntradaSalidaDetalle> entradaSalidaDetalle) {
+        this.entradaSalidaDetalle = entradaSalidaDetalle;
     }
 
     public Set<FacturaCompraDet> getFacturaCompraDet() {
@@ -260,7 +260,7 @@ public class SolicitudInterna implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.SolicitudInterna[codSolicitud=" + codSolicitud + "]";
+        return codSolicitud.toString();
     }
 
 }

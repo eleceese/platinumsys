@@ -12,11 +12,15 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,13 +31,15 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "ENTRADA_SALIDA_DETALLE")
-@NamedQueries({@NamedQuery(name = "EntradaSalidaDetalle.findAll", query = "SELECT e FROM EntradaSalidaDetalle e"), @NamedQuery(name = "EntradaSalidaDetalle.findByCodEntSalDetalle", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.codEntSalDetalle = :codEntSalDetalle"), @NamedQuery(name = "EntradaSalidaDetalle.findByCantidadEntSal", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.cantidadEntSal = :cantidadEntSal"), @NamedQuery(name = "EntradaSalidaDetalle.findByObservacion", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.observacion = :observacion"), @NamedQuery(name = "EntradaSalidaDetalle.findByEstadoDetalleEntSal", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.estadoDetalleEntSal = :estadoDetalleEntSal"), @NamedQuery(name = "EntradaSalidaDetalle.findByTipoEntradaSalida", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.tipoEntradaSalida = :tipoEntradaSalida"), @NamedQuery(name = "EntradaSalidaDetalle.findByUsuarioAlta", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "EntradaSalidaDetalle.findByUsuarioModif", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.usuarioModif = :usuarioModif"), @NamedQuery(name = "EntradaSalidaDetalle.findByFechaAlta", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.fechaAlta = :fechaAlta"), @NamedQuery(name = "EntradaSalidaDetalle.findByFechaModif", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.fechaModif = :fechaModif")})
+@SequenceGenerator(name="ENTRADA_SALIDA_DETALLE_SEQUENCE", sequenceName="SQ_DETALLE_ENTRADA_SALIDA", initialValue=5, allocationSize=1)
+@NamedQueries({@NamedQuery(name = "EntradaSalidaDetalle.findAll", query = "SELECT e FROM EntradaSalidaDetalle e"), @NamedQuery(name = "EntradaSalidaDetalle.findByCodEntSalDetalle", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.codEntSalDetalle = :codEntSalDetalle"), @NamedQuery(name = "EntradaSalidaDetalle.findByCodOrdenTrabajoDetalle", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.codOrdenTrabajoDetalle = :codOrdenTrabajoDetalle"), @NamedQuery(name = "EntradaSalidaDetalle.findByCantidadEntSal", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.cantidadEntSal = :cantidadEntSal"), @NamedQuery(name = "EntradaSalidaDetalle.findByObservacion", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.observacion = :observacion"), @NamedQuery(name = "EntradaSalidaDetalle.findByEstadoDetalleEntSal", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.estadoDetalleEntSal = :estadoDetalleEntSal"), @NamedQuery(name = "EntradaSalidaDetalle.findByTipoEntradaSalida", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.tipoEntradaSalida = :tipoEntradaSalida"), @NamedQuery(name = "EntradaSalidaDetalle.findByUsuarioAlta", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "EntradaSalidaDetalle.findByUsuarioModif", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.usuarioModif = :usuarioModif"), @NamedQuery(name = "EntradaSalidaDetalle.findByFechaAlta", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.fechaAlta = :fechaAlta"), @NamedQuery(name = "EntradaSalidaDetalle.findByFechaModif", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.fechaModif = :fechaModif")})
 public class EntradaSalidaDetalle implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="ENTRADA_SALIDA_DETALLE_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_ENT_SAL_DETALLE")
-    private BigDecimal codEntSalDetalle;
+    private Long codEntSalDetalle;
     @Basic(optional = false)
     @Column(name = "CANTIDAD_ENT_SAL")
     private BigInteger cantidadEntSal;
@@ -60,25 +66,50 @@ public class EntradaSalidaDetalle implements Serializable {
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
     @ManyToOne(optional = false)
     private Producto codProducto;
+    @JoinColumn(name = "COD_SOLICITUD", referencedColumnName = "COD_SOLICITUD")
+    @ManyToOne
+    private SolicitudInterna codSolicitud;
+    @JoinColumn(name = "COD_ORDEN_TRABAJO_DETALLE", referencedColumnName = "COD_ORDEN_TRABAJO_DET")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private OrdenTrabajoDetalle codOrdenTrabajoDetalle;
+
+    public OrdenTrabajoDetalle getCodOrdenTrabajoDetalle() {
+        return codOrdenTrabajoDetalle;
+    }
+
+    public void setCodOrdenTrabajoDetalle(OrdenTrabajoDetalle codOrdenTrabajoDetalle) {
+        this.codOrdenTrabajoDetalle = codOrdenTrabajoDetalle;
+    }
+
+
+    public SolicitudInterna getCodSolicitud() {
+        return codSolicitud;
+    }
+
+    public void setCodSolicitud(SolicitudInterna codSolicitud) {
+        this.codSolicitud = codSolicitud;
+    }
+
+
 
     public EntradaSalidaDetalle() {
     }
 
-    public EntradaSalidaDetalle(BigDecimal codEntSalDetalle) {
+    public EntradaSalidaDetalle(Long codEntSalDetalle) {
         this.codEntSalDetalle = codEntSalDetalle;
     }
 
-    public EntradaSalidaDetalle(BigDecimal codEntSalDetalle, BigInteger cantidadEntSal, String tipoEntradaSalida) {
+    public EntradaSalidaDetalle(Long codEntSalDetalle, BigInteger cantidadEntSal, String tipoEntradaSalida) {
         this.codEntSalDetalle = codEntSalDetalle;
         this.cantidadEntSal = cantidadEntSal;
         this.tipoEntradaSalida = tipoEntradaSalida;
     }
 
-    public BigDecimal getCodEntSalDetalle() {
+    public Long getCodEntSalDetalle() {
         return codEntSalDetalle;
     }
 
-    public void setCodEntSalDetalle(BigDecimal codEntSalDetalle) {
+    public void setCodEntSalDetalle(Long codEntSalDetalle) {
         this.codEntSalDetalle = codEntSalDetalle;
     }
 
