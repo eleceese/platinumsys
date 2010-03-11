@@ -15,12 +15,15 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,16 +34,16 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "ENTRADA_SALIDA_CABECERA")
-@NamedQueries({@NamedQuery(name = "EntradaSalidaCabecera.findAll", query = "SELECT e FROM EntradaSalidaCabecera e"), @NamedQuery(name = "EntradaSalidaCabecera.findByCodEntradaSalida", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.codEntradaSalida = :codEntradaSalida"), @NamedQuery(name = "EntradaSalidaCabecera.findByCodOrdenTrabajo", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.codOrdenTrabajo = :codOrdenTrabajo"), @NamedQuery(name = "EntradaSalidaCabecera.findByFechaEntradaSalida", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.fechaEntradaSalida = :fechaEntradaSalida"), @NamedQuery(name = "EntradaSalidaCabecera.findByHoraEntradaSalida", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.horaEntradaSalida = :horaEntradaSalida"), @NamedQuery(name = "EntradaSalidaCabecera.findByObservacion", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.observacion = :observacion"), @NamedQuery(name = "EntradaSalidaCabecera.findByUsuarioAlta", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "EntradaSalidaCabecera.findByUsuarioModif", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.usuarioModif = :usuarioModif"), @NamedQuery(name = "EntradaSalidaCabecera.findByFechaAlta", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.fechaAlta = :fechaAlta"), @NamedQuery(name = "EntradaSalidaCabecera.findByFechaModif", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.fechaModif = :fechaModif")})
+@SequenceGenerator(name="ENTRADA_SALIDA_SEQUENCE", sequenceName="SQ_CABECERA_ENTRADA_SALIDA", initialValue=5, allocationSize=1)
+@NamedQueries({@NamedQuery(name = "EntradaSalidaCabecera.findAll", query = "SELECT e FROM EntradaSalidaCabecera e"), @NamedQuery(name = "EntradaSalidaCabecera.findByCodEntradaSalida", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.codEntradaSalida = :codEntradaSalida"), @NamedQuery(name = "EntradaSalidaCabecera.findByFechaEntradaSalida", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.fechaEntradaSalida = :fechaEntradaSalida"), @NamedQuery(name = "EntradaSalidaCabecera.findByHoraEntradaSalida", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.horaEntradaSalida = :horaEntradaSalida"), @NamedQuery(name = "EntradaSalidaCabecera.findByObservacion", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.observacion = :observacion"), @NamedQuery(name = "EntradaSalidaCabecera.findByUsuarioAlta", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "EntradaSalidaCabecera.findByUsuarioModif", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.usuarioModif = :usuarioModif"), @NamedQuery(name = "EntradaSalidaCabecera.findByFechaAlta", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.fechaAlta = :fechaAlta"), @NamedQuery(name = "EntradaSalidaCabecera.findByFechaModif", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.fechaModif = :fechaModif")})
 public class EntradaSalidaCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="ENTRADA_SALIDA_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_ENTRADA_SALIDA")
     private Long codEntradaSalida;
-    @Column(name = "COD_ORDEN_TRABAJO")
-    private Long codOrdenTrabajo;
-    @Column(name = "FECHA_ENTRADA_SALIDA")
+     @Column(name = "FECHA_ENTRADA_SALIDA")
     @Temporal(TemporalType.DATE)
     private Date fechaEntradaSalida;
     @Column(name = "HORA_ENTRADA_SALIDA")
@@ -67,14 +70,17 @@ public class EntradaSalidaCabecera implements Serializable {
     @JoinColumn(name = "COD_ENCARGADO", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(optional = false)
     private Empleado codEncargado;
-    @JoinColumn(name = "COD_SOLICITUD", referencedColumnName = "COD_SOLICITUD")
-    @ManyToOne
-    private SolicitudInterna codSolicitud;
+  
     @OneToMany(mappedBy = "codEntSal", fetch=FetchType.EAGER)
     private Set<FacturaCompraCab> facturaCompraCab;
     @OneToMany(mappedBy = "codEntradaSalida", fetch=FetchType.EAGER)
     private Set<EntradaSalidaDetalle> entradaSalidaDetalle;
 
+
+
+
+   
+    
     public EntradaSalidaCabecera() {
     }
 
@@ -90,13 +96,7 @@ public class EntradaSalidaCabecera implements Serializable {
         this.codEntradaSalida = codEntradaSalida;
     }
 
-    public Long getCodOrdenTrabajo() {
-        return codOrdenTrabajo;
-    }
-
-    public void setCodOrdenTrabajo(Long codOrdenTrabajo) {
-        this.codOrdenTrabajo = codOrdenTrabajo;
-    }
+  
 
     public Date getFechaEntradaSalida() {
         return fechaEntradaSalida;
@@ -178,13 +178,7 @@ public class EntradaSalidaCabecera implements Serializable {
         this.codEncargado = codEncargado;
     }
 
-    public SolicitudInterna getCodSolicitud() {
-        return codSolicitud;
-    }
-
-    public void setCodSolicitud(SolicitudInterna codSolicitud) {
-        this.codSolicitud = codSolicitud;
-    }
+   
 
     public Set<FacturaCompraCab> getFacturaCompraCab() {
         return facturaCompraCab;

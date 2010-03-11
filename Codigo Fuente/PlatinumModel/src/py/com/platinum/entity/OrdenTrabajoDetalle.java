@@ -82,6 +82,9 @@ public class OrdenTrabajoDetalle implements Serializable {
     private Set<RecursoAsignado> recursoAsignadoCollection;
     @OneToMany(mappedBy = "codDetOrdenTrabaj",fetch=FetchType.EAGER)
     private Set<TareaAsignada> tareaAsignadaCollection;
+    
+    
+    
 
     public String getSemiFin() {
         return semiFin;
