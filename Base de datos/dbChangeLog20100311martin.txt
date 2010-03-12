@@ -1,0 +1,50 @@
+
+/* *********** FERNANDO ************** */
+
+alter table "ENTRADA_SALIDA_CABECERA" drop constraint
+"FK_ENT_SAL_CABECERA_SOLICITUD"
+/  
+
+alter table "ENTRADA_SALIDA_CABECERA" drop constraint
+"ENT_SAL_ORDEN_TRABAJO_FK"
+/
+
+
+alter table "ENTRADA_SALIDA_DETALLE" add
+("COD_ORDEN_TRABAJO_DETALLE" NUMBER NOT NULL)
+/  
+  
+
+alter table "ENTRADA_SALIDA_DETALLE" add
+("COD_SOLICITUD" NUMBER NOT NULL)
+/  
+
+alter table "ENTRADA_SALIDA_DETALLE" add constraint
+"ENTSAL_DETALLE_OT" foreign key ("COD_ORDEN_TRABAJO_DETALLE") references "ORDEN_TRABAJO_DETALLE" ("COD_ORDEN_TRABAJO_DET")
+/  
+
+
+alter table "ENTRADA_SALIDA_DETALLE" add constraint
+"ENTSAL_SOLICITUD" foreign key ("COD_SOLICITUD") references "SOLICITUD_INTERNA" ("COD_SOLICITUD")
+/  
+
+alter table "ENTRADA_SALIDA_CABECERA" drop column
+"COD_SOLICITUD"
+/  
+alter table "ENTRADA_SALIDA_CABECERA" drop column
+"COD_ORDEN_TRABAJO_DETALLE"
+/   
+
+alter table "ENTRADA_SALIDA_DETALLE" modify
+("COD_ORDEN_TRABAJO_DETALLE" NUMBER NULL)
+/  
+
+
+alter table "ENTRADA_SALIDA_DETALLE" modify
+("COD_SOLICITUD" NUMBER NULL)
+/   
+
+/*-------------------------------------------------------------------------------------------------------------------------------
+  Actualiza las entidades: Orden Trabajo Cabecera, Orden trabajo Detalle, Solicitud, ENtradaSalidaCabecera, ENtradaSalidaDetalle
+  ------------------------------------------------------------------------------------------------------------------------------- */
+  
