@@ -41,7 +41,7 @@ import javax.persistence.TemporalType;
 public class OrdenTrabajo implements Serializable {
     
     private static final long serialVersionUID = 1L;
-    @Basic(optional = false)
+    
     @Column(name = "NUMERO_ORDEN_TRABAJO")
     private Long numeroOrdenTrabajo;
     @Column(name = "FECHA_OT")
