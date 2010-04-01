@@ -50,7 +50,6 @@ public class RegistroMovDeposito extends AbstractPageBean {
         deposito2DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Deposito Central"), new com.sun.webui.jsf.model.Option("2", "Deposito 2"), new com.sun.webui.jsf.model.Option("3", "Deposito 3")});
         estadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Entregado"), new com.sun.webui.jsf.model.Option("2", "Retirado"), new com.sun.webui.jsf.model.Option("3", "Rechazados")});
         referencia1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Orden de Trabajo"), new com.sun.webui.jsf.model.Option("2", "Venta"), new com.sun.webui.jsf.model.Option("3", "Trabajo Diario")});
-        dropDown1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Deposito Central"), new com.sun.webui.jsf.model.Option("item2", "Item 2"), new com.sun.webui.jsf.model.Option("item3", "Item 3")});
         estado2DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Entrada"), new com.sun.webui.jsf.model.Option("item2", "Item 2"), new com.sun.webui.jsf.model.Option("item3", "Item 3")});
     }
     private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
@@ -205,15 +204,6 @@ public class RegistroMovDeposito extends AbstractPageBean {
 
     public void setEstado2DefaultOptions(SingleSelectOptionsList ssol) {
         this.estado2DefaultOptions = ssol;
-    }
-    private SingleSelectOptionsList dropDown1DefaultOptions = new SingleSelectOptionsList();
-
-    public SingleSelectOptionsList getDropDown1DefaultOptions() {
-        return dropDown1DefaultOptions;
-    }
-
-    public void setDropDown1DefaultOptions(SingleSelectOptionsList ssol) {
-        this.dropDown1DefaultOptions = ssol;
     }
 
     // </editor-fold>

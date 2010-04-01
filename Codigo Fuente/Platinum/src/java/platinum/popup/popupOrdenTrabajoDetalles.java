@@ -7,16 +7,20 @@ package platinum.popup;
 
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.PanelGroup;
+import com.sun.webui.jsf.component.TableColumn;
 import com.sun.webui.jsf.component.TextField;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Script;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import javax.faces.FacesException;
+import javax.faces.convert.EnumConverter;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
-import py.com.platinum.controller.ProductoController;
-import py.com.platinum.entity.Producto;
+import py.com.platinum.controller.OrdenTrabajoDetalleController;
+import py.com.platinum.controller.SolicitudInternaController;
+import py.com.platinum.entity.OrdenTrabajoDetalle;
+import py.com.platinum.entity.SolicitudInterna;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -27,7 +31,7 @@ import py.com.platinum.entity.Producto;
  *
  * @author Martin Jara
  */
-public class popupMateriasInsumos extends AbstractPageBean {
+public class popupOrdenTrabajoDetalles extends AbstractPageBean {
     // <editor-fold defaultstate="collapsed" desc="Managed Component Definition">
     /**
      * <p>Automatically managed component initialization.  <strong>WARNING:</strong>
@@ -81,12 +85,21 @@ public class popupMateriasInsumos extends AbstractPageBean {
     public void setGroupPanel1(PanelGroup pg) {
         this.groupPanel1 = pg;
     }
+    private EnumConverter enumConverter1 = new EnumConverter();
+
+    public EnumConverter getEnumConverter1() {
+        return enumConverter1;
+    }
+
+    public void setEnumConverter1(EnumConverter ec) {
+        this.enumConverter1 = ec;
+    }
 
     // </editor-fold>
     /**
      * <p>Construct a new Page bean instance.</p>
      */
-    public popupMateriasInsumos() {
+    public popupOrdenTrabajoDetalles() {
     }
 
     /**
@@ -123,6 +136,12 @@ public class popupMateriasInsumos extends AbstractPageBean {
     // Perform application initialization that must complete
     // *after* managed components are initialized
     // TODO - add your own initialization code here
+
+        //Obetenmos la lista
+        SolicitudInterna[] l = (SolicitudInterna[]) new SolicitudInternaController().getSolicitudInternas(null, null, null, null).toArray(new SolicitudInterna[0]);
+
+        //actializamos la lista en la session
+        getSessionBean1().setListaSolicitud(l);
     }
 
     /**
@@ -195,24 +214,25 @@ public class popupMateriasInsumos extends AbstractPageBean {
         //controlamos el parametro
         if (uiTxtParam.getText() != null) {
             param = uiTxtParam.getText().toString();
-        } 
+        }
 
-        //Obetenmos la lista
-        Producto[] l = (Producto[]) new ProductoController().getAllFiltered(null, param, "ProductoGenerico",null).toArray(new Producto[0]);
+        //Obetenemos la lista
+        OrdenTrabajoDetalle[] l = (OrdenTrabajoDetalle[]) new OrdenTrabajoDetalleController().getAll("estado").toArray(new OrdenTrabajoDetalle[0]);
 
         //Actualizamos la lista de la session
-        getSessionBean1().setListaGenericos(l);
+        getSessionBean1().setOrdenTrabajoDetalleArray(l);
 
         //refrescamos la pagina
         return null;
     }
 
     public String uiBtnTodos_action() {
-        //Obetenmos la lista
-        Producto[] l = (Producto[]) new ProductoController().getAllFiltered(null, null, "ProductoGenerico",null).toArray(new Producto[0]);
+        //Obetenemos la lista
+        //Obetenemos la lista
+        OrdenTrabajoDetalle[] l = (OrdenTrabajoDetalle[]) new OrdenTrabajoDetalleController().getAll("estado").toArray(new OrdenTrabajoDetalle[0]);
 
-        //actializamos la lista en la session
-        getSessionBean1().setListaGenericos(l);
+        //Actualizamos la lista de la session
+        getSessionBean1().setOrdenTrabajoDetalleArray(l);
 
         //refrecamos la pagina
         return null;

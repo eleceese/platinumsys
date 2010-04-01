@@ -12,6 +12,7 @@ import com.sun.webui.jsf.component.StaticText;
 import com.sun.webui.jsf.component.TableColumn;
 import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
+import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +20,18 @@ import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
+
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
+import py.com.platinum.controller.EquivalenciaController;
 import py.com.platinum.controller.OrdenTrabajoCabeceraController;
 import py.com.platinum.controller.OrdenTrabajoDetalleController;
+import py.com.platinum.controller.ProductoController;
+import py.com.platinum.entity.Equivalencia;
 import py.com.platinum.entity.OrdenTrabajo;
 import py.com.platinum.entity.OrdenTrabajoDetalle;
+import py.com.platinum.entity.Producto;
 
 
 
@@ -43,7 +49,7 @@ import py.com.platinum.entity.OrdenTrabajoDetalle;
  * @version Created on Oct 18, 2009, 8:11:57 PM
  * @author FerBoy
  */
-public class RegistroProDiaria_1 extends AbstractPageBean {
+public class ABMEquivalencias extends AbstractPageBean {
     // <editor-fold defaultstate="collapsed" desc="Managed Component Definition">
 
     /**
@@ -57,23 +63,14 @@ public class RegistroProDiaria_1 extends AbstractPageBean {
         deposito2DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Deposito Central"), new com.sun.webui.jsf.model.Option("2", "Deposito 2"), new com.sun.webui.jsf.model.Option("3", "Deposito 3")});
         referencia1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Orden de Trabajo"), new com.sun.webui.jsf.model.Option("2", "Venta"), new com.sun.webui.jsf.model.Option("3", "Trabajo Diario")});
     }
-    private StaticText detalleProduccion = new StaticText();
+    private StaticText equivalencias = new StaticText();
 
-    public StaticText getDetalleProduccion() {
-        return detalleProduccion;
+    public StaticText getEquivalencias() {
+        return equivalencias;
     }
 
-    public void setDetalleProduccion(StaticText st) {
-        this.detalleProduccion = st;
-    }
-    private HtmlPanelGrid gridPanelAddUpdate = new HtmlPanelGrid();
-
-    public HtmlPanelGrid getGridPanelAddUpdate() {
-        return gridPanelAddUpdate;
-    }
-
-    public void setGridPanelAddUpdate(HtmlPanelGrid hpg) {
-        this.gridPanelAddUpdate = hpg;
+    public void setEquivalencias(StaticText st) {
+        this.equivalencias = st;
     }
     private HtmlPanelGrid buttonsPanelAddUpdate = new HtmlPanelGrid();
 
@@ -84,14 +81,14 @@ public class RegistroProDiaria_1 extends AbstractPageBean {
     public void setButtonsPanelAddUpdate(HtmlPanelGrid hpg) {
         this.buttonsPanelAddUpdate = hpg;
     }
-    private Button button2 = new Button();
+    private Button uiButtonGuardarRegistro = new Button();
 
-    public Button getButton2() {
-        return button2;
+    public Button getUiButtonGuardarRegistro() {
+        return uiButtonGuardarRegistro;
     }
 
-    public void setButton2(Button b) {
-        this.button2 = b;
+    public void setUiButtonGuardarRegistro(Button b) {
+        this.uiButtonGuardarRegistro = b;
     }
     private PageAlert pageAlert1 = new PageAlert();
 
@@ -138,15 +135,6 @@ public class RegistroProDiaria_1 extends AbstractPageBean {
     public void setReferencia1DefaultOptions(SingleSelectOptionsList ssol) {
         this.referencia1DefaultOptions = ssol;
     }
-    private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
-
-    public DefaultTableDataProvider getDefaultTableDataProvider() {
-        return defaultTableDataProvider;
-    }
-
-    public void setDefaultTableDataProvider(DefaultTableDataProvider dtdp) {
-        this.defaultTableDataProvider = dtdp;
-    }
     private HtmlPanelGrid gridPanelBusqueda = new HtmlPanelGrid();
 
     public HtmlPanelGrid getGridPanelBusqueda() {
@@ -156,84 +144,71 @@ public class RegistroProDiaria_1 extends AbstractPageBean {
     public void setGridPanelBusqueda(HtmlPanelGrid hpg) {
         this.gridPanelBusqueda = hpg;
     }
-    private HtmlPanelGrid gridPanelCabecera = new HtmlPanelGrid();
+    private HtmlPanelGrid gridPanelAddUpdate = new HtmlPanelGrid();
 
-    public HtmlPanelGrid getGridPanelCabecera() {
-        return gridPanelCabecera;
+    public HtmlPanelGrid getGridPanelAddUpdate() {
+        return gridPanelAddUpdate;
     }
 
-    public void setGridPanelCabecera(HtmlPanelGrid hpg) {
-        this.gridPanelCabecera = hpg;
+    public void setGridPanelAddUpdate(HtmlPanelGrid hpg) {
+        this.gridPanelAddUpdate = hpg;
     }
-    private HtmlPanelGrid gridPannelDetalle = new HtmlPanelGrid();
+    private DropDown uiProductoGenFil = new DropDown();
 
-    public HtmlPanelGrid getGridPannelDetalle() {
-        return gridPannelDetalle;
-    }
-
-    public void setGridPannelDetalle(HtmlPanelGrid hpg) {
-        this.gridPannelDetalle = hpg;
-    }
-    private TextField uiOTNro = new TextField();
-
-    public TextField getUiOTNro() {
-        return uiOTNro;
+    public DropDown getUiProductoGenFil() {
+        return uiProductoGenFil;
     }
 
-    public void setUiOTNro(TextField tf) {
-        this.uiOTNro = tf;
+    public void setUiProductoGenFil(DropDown dd) {
+        this.uiProductoGenFil = dd;
     }
-    private SingleSelectOptionsList dropDown1DefaultOptions = new SingleSelectOptionsList();
+    private DropDown uiProductoFinFil = new DropDown();
 
-    public SingleSelectOptionsList getDropDown1DefaultOptions() {
-        return dropDown1DefaultOptions;
-    }
-
-    public void setDropDown1DefaultOptions(SingleSelectOptionsList ssol) {
-        this.dropDown1DefaultOptions = ssol;
-    }
-    private TextField uiTarCod = new TextField();
-
-    public TextField getUiTarCod() {
-        return uiTarCod;
+    public DropDown getUiProductoFinFil() {
+        return uiProductoFinFil;
     }
 
-    public void setUiTarCod(TextField tf) {
-        this.uiTarCod = tf;
+    public void setUiProductoFinFil(DropDown dd) {
+        this.uiProductoFinFil = dd;
     }
-    private TextField uiTarDesc = new TextField();
+    private DropDown uiProductoFin = new DropDown();
 
-    public TextField getUiTarDesc() {
-        return uiTarDesc;
-    }
-
-    public void setUiTarDesc(TextField tf) {
-        this.uiTarDesc = tf;
-    }
-    private TextField uiTarCant = new TextField();
-
-    public TextField getUiTarCant() {
-        return uiTarCant;
+    public DropDown getUiProductoFin() {
+        return uiProductoFin;
     }
 
-    public void setUiTarCant(TextField tf) {
-        this.uiTarCant = tf;
+    public void setUiProductoFin(DropDown dd) {
+        this.uiProductoFin = dd;
     }
-    private TextField uiTarTiempo = new TextField();
+    private DropDown uiProductoGen = new DropDown();
 
-    public TextField getUiTarTiempo() {
-        return uiTarTiempo;
+    public DropDown getUiProductoGen() {
+        return uiProductoGen;
     }
 
-    public void setUiTarTiempo(TextField tf) {
-        this.uiTarTiempo = tf;
+    public void setUiProductoGen(DropDown dd) {
+        this.uiProductoGen = dd;
+    }
+    private TextField uiRelacion = new TextField();
+
+    public TextField getUiRelacion() {
+        return uiRelacion;
+    }
+
+    public void setUiRelacion(TextField tf) {
+        this.uiRelacion = tf;
     }
 
     // </editor-fold>
     /**
      * <p>Construct a new Page bean instance.</p>
      */
-    public RegistroProDiaria_1() {
+
+    public ABMEquivalencias() {
+        cargarListaTodosProductosFin();
+        cargarListaTodosProductosGen();
+        cargarListaTodosEquivalencias();
+    
     }
 
     /**
@@ -273,8 +248,9 @@ public class RegistroProDiaria_1 extends AbstractPageBean {
 
     getSessionBean1().setTituloPagina("Registro de Produccion Diaria");
     getSessionBean1().setDetallePagina("Dpto de Produccion");
-
-
+    cargarListaTodosProductosFin();
+    cargarListaTodosProductosGen();
+    cargarListaTodosEquivalencias();
     }
 
     /**
@@ -303,30 +279,118 @@ public class RegistroProDiaria_1 extends AbstractPageBean {
     public void prerender() {
 
         if (addRequest) {
-            this.gridPanelCabecera.setRendered(true);
+            this.gridPanelAddUpdate.setRendered(true);
             this.gridPanelBusqueda.setRendered(false);
-            this.gridPannelDetalle.setRendered(true);
             
         } else if (updateRequest) {
-            this.gridPanelCabecera.setRendered(true);
+            this.gridPanelAddUpdate.setRendered(true);
             this.gridPanelBusqueda.setRendered(false);
-            this.gridPannelDetalle.setRendered(true);
-            
+           
         
         } else if (errorValidacion) {
-            this.gridPanelCabecera.setRendered(false);
+            this.gridPanelAddUpdate.setRendered(false);
             this.gridPanelBusqueda.setRendered(true);
-            this.gridPannelDetalle.setRendered(false);
             
         } else {
 
-            this.gridPanelCabecera.setRendered(false);
+            this.gridPanelAddUpdate.setRendered(false);
             this.gridPanelBusqueda.setRendered(true);
-            this.gridPannelDetalle.setRendered(false);
             
         }
 
     }
+
+
+    ////// CARGA DE COMBO BOX PRODUCTOS
+    Producto[] listaProductosGen;
+    Option[] listaProductosGenOp;
+
+    public Producto[] getListaProductosGen() {
+        return listaProductosGen;
+    }
+    public void setListaProductosGen(Producto[] listaProductosGen) {
+        this.listaProductosGen = listaProductosGen;
+    }
+    public Option[] getListaProductosGenOp() {
+        return listaProductosGenOp;
+    }
+    public void setListaProductosGenOp(Option[] listaProductosGenOp) {
+        this.listaProductosGenOp = listaProductosGenOp;
+    }
+    public void cargarListaTodosProductosGen() {
+        ProductoController productoController = new ProductoController();
+        listaProductosGen = (Producto[]) productoController.getAllFiltered(null, null, "ProductoGenerico", null).toArray(new Producto[0]);
+        listaProductosGenOp = new Option[listaProductosGen.length];
+        Option option;
+        for (int i = 0; i < listaProductosGen.length; i++) {
+            Producto p = listaProductosGen[i];
+            option = new Option();
+            option.setLabel(p.getDescripcion());
+            option.setValue(p.getCodProducto().toString());
+            listaProductosGenOp[i] = option;
+        }
+
+    }
+
+
+    ////// CARGA DE COMBO BOX PRODUCTOS
+    Producto[] listaProductosFin;
+    Option[] listaProductosFinOp;
+
+    public Producto[] getListaProductosFin() {
+        return listaProductosFin;
+    }
+    public void setListaProductosFin(Producto[] listaProductosFin) {
+        this.listaProductosFin = listaProductosFin;
+    }
+    public Option[] getListaProductosFinOp() {
+        return listaProductosFinOp;
+    }
+    public void setListaProductosFinOp(Option[] listaProductosFinOp) {
+        this.listaProductosFinOp = listaProductosFinOp;
+    }
+    public void cargarListaTodosProductosFin() {
+        ProductoController productoController = new ProductoController();
+        listaProductosFin = (Producto[]) productoController.getInsumosMaterias(null, null, null).toArray(new Producto[0]);
+        listaProductosFinOp = new Option[listaProductosFin.length];
+        Option option;
+        for (int i = 0; i < listaProductosFin.length; i++) {
+            Producto p = listaProductosFin[i];
+            option = new Option();
+            option.setLabel(p.getDescripcion());
+            option.setValue(p.getCodProducto().toString());
+            listaProductosFinOp[i] = option;
+        }
+
+    }
+
+
+
+    ////// FIN CARGA DE COMBO BOX DE ORDENES DE TRABAJO
+
+   private  Equivalencia[] listaEquivalencias;
+
+    public Equivalencia[] getListaEquivalencias() {
+        return listaEquivalencias;
+    }
+
+    public void setListaEquivalencias(Equivalencia[] listaEquivalencias) {
+        this.listaEquivalencias = listaEquivalencias;
+    }
+
+
+        public void cargarListaTodosEquivalencias() {
+        EquivalenciaController c = new EquivalenciaController();
+        listaEquivalencias = (Equivalencia[]) c.getAllFiltered(null, null, null).toArray(new Equivalencia[0]);
+        }
+
+
+
+
+
+
+
+
 
     /**
      * <p>Callback method that is called after rendering is completed for
@@ -391,7 +455,7 @@ public class RegistroProDiaria_1 extends AbstractPageBean {
         return null;
     }
 
-    public String cancelar_action() {
+    public String uiButtonCancelarRegistro_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         this.addRequest=false;
@@ -400,7 +464,7 @@ public class RegistroProDiaria_1 extends AbstractPageBean {
         return null;
     }
 
-    public String button2_action() {
+    public String uiButtonGuardarRegistro_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         this.addRequest=false;
@@ -418,7 +482,7 @@ public class RegistroProDiaria_1 extends AbstractPageBean {
         return null;
     }
 
-    public String button1_action() {
+    public String uiButtonBuscarFil_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
 
@@ -443,24 +507,69 @@ public class RegistroProDiaria_1 extends AbstractPageBean {
         return null;
     }
 
-    public String tarea_action() {
+   
+
+   
+   
+
+
+    public boolean isUpdateRequest() {
+        return updateRequest;
+    }
+
+    public void setUpdateRequest(boolean updateRequest) {
+        this.updateRequest = updateRequest;
+    }
+ public boolean isAddRequest() {
+        return addRequest;
+    }
+
+    public void setAddRequest(boolean addRequest) {
+        this.addRequest = addRequest;
+    }
+
+    public boolean isErrorValidacion() {
+        return errorValidacion;
+    }
+
+    public void setErrorValidacion(boolean errorValidacion) {
+        this.errorValidacion = errorValidacion;
+    }
+
+    public String uiNuevo_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
+        addRequest = true;
+
+
         return null;
     }
 
-    List<OrdenTrabajoDetalle>  ordenTrabajoDetalles = new ArrayList();
-    OrdenTrabajoDetalle[]  ordenTrabajoDetalleArray = new OrdenTrabajoDetalle[0];
-
-
-
-    public void uiOTNro_validate(FacesContext context, UIComponent component, Object value) {
-        OrdenTrabajoDetalleController ordenTrabajoDetalleController = new OrdenTrabajoDetalleController();
-        ordenTrabajoDetalles = ordenTrabajoDetalleController.getAllFiltered(Long.valueOf(value.toString()), null,null);
-        ordenTrabajoDetalleArray = (OrdenTrabajoDetalle[]) ordenTrabajoDetalles.toArray(new OrdenTrabajoDetalle[0]);
-        System.out.println("*********************");
-        System.out.println(ordenTrabajoDetalles.size());
-
+    public String uiEditar_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        updateRequest = true;
+        return null;
     }
+
+    public String uiEliminar_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        this.updateRequest = false;
+        this.addRequest = false;
+
+        return null;
+    }
+
+    public String button1_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+
+        this.addRequest = true;
+        return null;
+    }
+
+
+
 }
 
