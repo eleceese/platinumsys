@@ -288,10 +288,10 @@ public class FacturaCabeceraController extends AbstractJpaDao<FacturaCabecera> {
         r = new Long("0");
 
         //Armamos el SQL
-        SQL = " SELECT MAX(o.numeroFactura) " +
-              " FROM FacturaCabecera o " +
-              "WHERE o.establecimiento = :establecimiento " +
-              "  and o.bocaExpendio    = :bocaExpendio    ";
+        SQL = " SELECT MAX(o.numeroFactura)                   " +
+              "   FROM FacturaCabecera o                      " +
+              "  WHERE o.establecimiento = :establecimiento   " +
+              "    AND o.bocaExpendio    = :bocaExpendio      ";
 
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
