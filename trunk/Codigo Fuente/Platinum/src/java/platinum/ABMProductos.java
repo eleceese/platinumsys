@@ -66,12 +66,7 @@ public class ABMProductos extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-        tipoProducto1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("t", "Terminado"), new com.sun.webui.jsf.model.Option("s", "SemiTerminado"), new com.sun.webui.jsf.model.Option("i", "Insumo"), new com.sun.webui.jsf.model.Option("m", "Materias Primas")});
-        tipo2DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("t", "Terminado"), new com.sun.webui.jsf.model.Option("s", "SemiTerminado"), new com.sun.webui.jsf.model.Option("m", "MateriaPrima"), new com.sun.webui.jsf.model.Option("I", "Insumo")});
-        uiTipoProductoFilDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("Terminado", "Terminado"), new com.sun.webui.jsf.model.Option("SemiTerminado", "SemiTerminado"), new com.sun.webui.jsf.model.Option("Insumo", "Insumo"), new com.sun.webui.jsf.model.Option("MateriaPrima", "MateriaPrima"), new com.sun.webui.jsf.model.Option("Todos", "Todos")});
-        uiTipoProductoFilDefaultOptions.setSelectedValue("Todos");
-        uiMarcaFil.setSelected("99999");
-        uiPresentacionFil.setSelected("99999");
+        
     }
     private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
 
@@ -349,6 +344,13 @@ public class ABMProductos extends AbstractPageBean {
      * <p>Construct a new Page bean instance.</p>
      */
     public ABMProductos() {
+        tipoProducto1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("t", "Terminado"), new com.sun.webui.jsf.model.Option("s", "SemiTerminado"), new com.sun.webui.jsf.model.Option("i", "Insumo"), new com.sun.webui.jsf.model.Option("g", "ProductoGenerico"),new com.sun.webui.jsf.model.Option("m", "Materias Primas")});
+        tipo2DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("t", "Terminado"), new com.sun.webui.jsf.model.Option("s", "SemiTerminado"), new com.sun.webui.jsf.model.Option("m", "MateriaPrima"), new com.sun.webui.jsf.model.Option("g", "ProductoGenerico"), new com.sun.webui.jsf.model.Option("I", "Insumo")});
+        uiTipoProductoFilDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("Terminado", "Terminado"), new com.sun.webui.jsf.model.Option("SemiTerminado", "SemiTerminado"), new com.sun.webui.jsf.model.Option("Insumo", "Insumo"), new com.sun.webui.jsf.model.Option("MateriaPrima", "MateriaPrima"), new com.sun.webui.jsf.model.Option("Todos", "Todos")});
+        uiTipoProductoFilDefaultOptions.setSelectedValue("Todos");
+        uiMarcaFil.setSelected("99999");
+        uiPresentacionFil.setSelected("99999");
+
     }
 
     /**
@@ -418,6 +420,10 @@ public class ABMProductos extends AbstractPageBean {
     public void prerender() {
 
         if (addRequest) {
+                getSessionBean1().setTituloPagina("Productos");
+                getSessionBean1().setDetallePagina("Insertar nuevo Registro");
+
+
             this.gridPanelTabla.setRendered(false);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
@@ -432,6 +438,11 @@ public class ABMProductos extends AbstractPageBean {
 
 
         } else if (updateRequest) {
+
+            getSessionBean1().setTituloPagina("Productos");
+            getSessionBean1().setDetallePagina("Edicion de Registro");
+
+
             this.gridPanelTabla.setRendered(false);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
@@ -453,6 +464,10 @@ public class ABMProductos extends AbstractPageBean {
             this.datosProducto.setRendered(true);
 
         } else {
+
+                getSessionBean1().setTituloPagina("Registro de Productos");
+                getSessionBean1().setDetallePagina("Seleccione el Registro");
+
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(true);
             this.gridPanelBotones.setRendered(true);
@@ -870,6 +885,48 @@ public class ABMProductos extends AbstractPageBean {
 
 
         return null;
+    }
+
+    public void uiLstTipoProducto_processValueChange(ValueChangeEvent event) {
+
+
+    }
+
+    public void uiLstTipoProducto_validate(FacesContext context, UIComponent component, Object value) {
+            TipoProducto tipoProducto = new TipoProducto();
+            tipoProducto = new TipoProductoController().findById(Long.valueOf(value.toString()));
+            if (tipoProducto.getDescripcion() != null && tipoProducto.getDescripcion().toString().equals("ProductoGenerico")) {
+                    this.uiLstMarca.setDisabled(true);
+                    this.uiLstMarca.setSelected("1");
+
+                    this.uiCostoActual.setDisabled(true);
+                    this.uiCostoActual.setText("0");
+
+                    this.uiPrecioActual.setDisabled(true);
+                    this.uiPrecioActual.setText("0");
+
+                    this.uiControlExistencia.setSelected(false);
+                    this.uiControlExistencia.setDisabled(true);
+
+                
+        } else {
+
+                if (tipoProducto.getDescripcion() != null && (tipoProducto.getDescripcion().toString().equals("Terminado")|| tipoProducto.getDescripcion().toString().equals("SemiTerminado"))) {
+
+                    this.uiControlExistencia.setSelected(true);
+                    this.uiControlExistencia.setDisabled(true);
+                }else{
+                        this.uiControlExistencia.setDisabled(false);
+
+                }
+
+                this.uiLstMarca.setDisabled(false);
+                this.uiCostoActual.setDisabled(false);
+                this.uiPrecioActual.setDisabled(false);
+                
+        }
+
+
     }
 
    

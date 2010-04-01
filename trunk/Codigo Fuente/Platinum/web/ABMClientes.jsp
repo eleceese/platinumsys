@@ -13,9 +13,9 @@
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
                     <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <script>
-                        function initAllRows() {
+                        function ABMMovimientosDeposito() {
                             var table = document.getElementById("form1:table1");
-                            table.initAllRows();}
+                            table.ABMMovimientosDeposito();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->

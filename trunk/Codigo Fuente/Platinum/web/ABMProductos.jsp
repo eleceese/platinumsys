@@ -4,7 +4,8 @@
     Created on : Oct 18, 2009, 8:11:57 PM
     Author     : FerBoy
 -->
-<jsp:root version="2.1" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:webuijsf="http://www.sun.com/webui/webuijsf">
+<jsp:root version="2.1" xmlns:df="http://java.sun.com/jsf/dynamicfaces" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:webuijsf="http://www.sun.com/webui/webuijsf">
     <jsp:directive.page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"/>
     <f:view>
         <webuijsf:page id="page1">
@@ -13,9 +14,9 @@
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
                     <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <script>
-                        function ABMOrdenesTrabajo() {
+                        function initAllRows() {
                             var table = document.getElementById("form1:tableProductos");
-                            table.ABMOrdenesTrabajo();}
+                            table.initAllRows();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
@@ -32,6 +33,7 @@
                         }
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
+                    <df:ajaxTransaction id="ajaxGenerico" inputs="page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel10:uiLstTipoProducto" render="page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel10:uiLstTipoProducto,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel2:uiLstMarca,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel13:uiPrecioActual,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel12:uiCostoActual,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel9:uiControlExistencia"/>
                 </webuijsf:head>
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
@@ -107,7 +109,9 @@
                                 <webuijsf:label id="tipo1" text="Tipo"/>
                                 <h:panelGrid columns="2" id="gridPanel10" style="height: 100%" width="481">
                                     <webuijsf:dropDown binding="#{ABMProductos.uiLstTipoProducto}" id="uiLstTipoProducto"
-                                        items="#{SessionBean1.listaTipoProductosOp}" width="200"/>
+                                        items="#{SessionBean1.listaTipoProductosOp}"
+                                        onChange="DynaFaces.Tx.fire(&quot;ajaxGenerico&quot;,&quot;uiLstTipoProducto&quot;)"
+                                        validatorExpression="#{ABMProductos.uiLstTipoProducto_validate}" width="200"/>
                                     <webuijsf:message id="message10" showDetail="false" showSummary="true"/>
                                 </h:panelGrid>
                                 <webuijsf:label id="labelMarca1" text="Marca"/>

@@ -13,9 +13,9 @@
                 <webuijsf:head id="head1">
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
                     <script>
-                        function ABMOrdenesTrabajo() {
+                        function ABMEquivalencia() {
                             var table = document.getElementById("form1:tablaFormulas");
-                            table.ABMOrdenesTrabajo();}
+                            table.ABMEquivalencia();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->

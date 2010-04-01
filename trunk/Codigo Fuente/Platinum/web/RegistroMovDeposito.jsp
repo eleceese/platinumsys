@@ -27,7 +27,7 @@
                                     <webuijsf:label id="labelFecha" text="Fecha"/>
                                     <webuijsf:calendar id="calendar2"/>
                                     <webuijsf:label id="labelDep" text="Deposito"/>
-                                    <webuijsf:dropDown id="dropDown1" items="#{RegistroMovDeposito.dropDown1DefaultOptions.options}"/>
+                                    <webuijsf:dropDown id="dropDown1" items="#{SessionBean1.listaDepositos}"/>
                                     <webuijsf:label id="labelTIpo" text="Tipo"/>
                                     <webuijsf:dropDown id="estado2" items="#{RegistroMovDeposito.estado2DefaultOptions.options}" width="150px"/>
                                 </h:panelGrid>

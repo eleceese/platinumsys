@@ -13,9 +13,9 @@
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
                     <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <script>
-                        function ABMOrdenesTrabajo() {
+                        function initAllRows() {
                             var table = document.getElementById("form1:tableOrdenesTrabajo1");
-                            table.ABMOrdenesTrabajo();}
+                            table.initAllRows();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->

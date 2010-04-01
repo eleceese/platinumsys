@@ -113,7 +113,7 @@
                                     <h:panelGrid columns="2" id="sdsf">
                                         <webuijsf:hyperlink binding="#{ABMFormulaTerminado.uiHyperProducto}" id="uiHyperProducto"
                                             onClick="doPopup('form1:uiProductoCodigo_field', 'form1:uiProductoNombre_field')&#xd;&#xa;" target="popup"
-                                            text="Producto" url="/faces/popup/popupProductos.jsp"/>
+                                            text="Producto" url="/faces/popup/popupProductosTerminados.jsp"/>
                                         <h:panelGrid binding="#{ABMFormulaTerminado.gridPanelUser}" columns="3" id="gridPanelUser">
                                             <webuijsf:textField binding="#{ABMFormulaTerminado.uiProductoCodigo}" columns="15" id="uiProductoCodigo"/>
                                             <webuijsf:textField binding="#{ABMFormulaTerminado.uiProductoNombre}" columns="50" id="uiProductoNombre" valueChangeListenerExpression="#{ABMFormulaTerminado.uiProductoNombre_processValueChange}"/>

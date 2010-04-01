@@ -18,19 +18,18 @@
                         <webuijsf:table augmentTitle="false" id="table1" paginateButton="true" paginationControls="true"
                             style="height: 77px; left: 0px; top: 0px; position: absolute" title="Seleccione un Recurso" width="0">
                             <f:facet name="actionsTop"/>
-                            <webuijsf:tableRowGroup id="tableRowGroup1" rows="10" sourceData="#{SessionBean1.listaInsumosMaterias}" sourceVar="currentRow">
+                            <webuijsf:tableRowGroup id="tableRowGroup1" rows="10" sourceData="#{SessionBean1.listaGenericos}" sourceVar="currentRow">
                                 <webuijsf:tableColumn headerText="Descripcion" id="tableColumn1" sort="descripcion">
                                     <webuijsf:hyperlink id="hyperlink1"
-                                        onClick="doSave('#{currentRow.value['codProducto']}', '#{currentRow.value['descripcion']}')" text="#{currentRow.value['descripcion']}"/>
+                                        onBlur="doSave('#{currentRow.value['codProducto']}', '#{currentRow.value['descripcion']}')" text="#{currentRow.value['descripcion']}"/>
                                 </webuijsf:tableColumn>
-                                <webuijsf:tableColumn headerText="Codigo" id="tableColumn2" sort="codProducto">
-                                    <webuijsf:staticText id="staticText2" text="#{currentRow.value['codProducto']}"/>
+                                <webuijsf:tableColumn headerText="Codigo" id="tableColumn2">
+                                    <webuijsf:staticText id="staticText1" text="#{currentRow.value['codProducto']}"/>
                                 </webuijsf:tableColumn>
                             </webuijsf:tableRowGroup>
                             <f:facet name="actionsTop">
                                 <webuijsf:panelGroup binding="#{popup$popupMateriasInsumos.groupPanel1}" id="groupPanel1" separator="&amp;nbsp;">
-                                    <webuijsf:textField binding="#{popup$popupMateriasInsumos.uiTxtParam}" columns="35" id="uiTxtParam"
-                                        label="Insumos/MatPrimas" tabIndex="1"/>
+                                    <webuijsf:textField binding="#{popup$popupMateriasInsumos.uiTxtParam}" columns="35" id="uiTxtParam" label="Genericos" tabIndex="1"/>
                                     <webuijsf:button actionExpression="#{popup$popupMateriasInsumos.uiBtnBuscar_action}"
                                         binding="#{popup$popupMateriasInsumos.uiBtnBuscar}" id="uiBtnBuscar" text="Buscar"/>
                                     <webuijsf:button actionExpression="#{popup$popupMateriasInsumos.uiBtnTodos_action}"
