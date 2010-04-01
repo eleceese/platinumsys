@@ -144,6 +144,7 @@ public class SessionBean1 extends AbstractSessionBean {
         codDeposito = new DepositoController().findById(Long.valueOf("1"));
 
         //El siguiente Metodo Carga la Grilla De Productos al cargar la pagina de productos.
+        cargarListaTodosDepositos();
         cargarListaTodasTareasAsignadasProdDiaria();
         cargarListaTodosOrdenTrabajoDetallesProdDiaria();
         cargarListaTodosProductos();
@@ -153,6 +154,7 @@ public class SessionBean1 extends AbstractSessionBean {
         cargarListaTodosEmpleados();
         cargarListaTodosFormulaCabecerasSemiTer();
         cargarListaTodosProductosSemiterminados();
+        cargarListaTodosGenericos();
         cargarListaTodosInsumosMaterias();
         cargarListaTodosMarcas();
         cargarListaTodosTipoProductos();
@@ -166,6 +168,7 @@ public class SessionBean1 extends AbstractSessionBean {
         cargarListaCaja();
         cargarListaComision();
         cargarListaCliente();
+        cargarListaSolictud();
         cargarListaTipoComprobante();
         cargarListaPedidoVenta(null, PedidoVentaEstado.PENDIENTE);
         cargarListaFacturaCompra(null, FacturaCompraEstado.RECIBIDO);
@@ -366,6 +369,22 @@ public class SessionBean1 extends AbstractSessionBean {
     public void cargarListaTodosInsumosMaterias() {
         ProductoController productoController = new ProductoController();
         listaInsumosMaterias = (Producto[]) productoController.getInsumosMaterias(null, null, null).toArray(new Producto[0]);
+    }
+////// CARGA DE COMBO BOX MARCAS
+    ////// CARGA DE COMBO BOX Insumos Y materias Primas
+    Producto[] listaGenericos;
+
+    public Producto[] getListaGenericos() {
+        return listaGenericos;
+    }
+
+    public void setListaGenericos(Producto[] listaGenericos) {
+        this.listaGenericos = listaGenericos;
+    }
+
+    public void cargarListaTodosGenericos() {
+        ProductoController productoController = new ProductoController();
+        listaGenericos= (Producto[]) productoController.getAllFiltered(null, null, "ProductoGenerico", null).toArray(new Producto[0]);
     }
 ////// CARGA DE COMBO BOX MARCAS
 //////     import com.sun.webui.jsf.model.Option;
@@ -819,7 +838,7 @@ public class SessionBean1 extends AbstractSessionBean {
     Option[] listaDepositosOp;
 
     public Option[] getListaDepositosOp() {
-        return listaUnidadMedidasOp;
+        return listaDepositosOp;
     }
 
     public void setListaDepositosOp(Option[] listaDepositosOp) {
@@ -1245,4 +1264,5 @@ public class SessionBean1 extends AbstractSessionBean {
         FacturaCompraCabController c = new FacturaCompraCabController();
         listaFacturaCompra = (FacturaCompraCab[]) c.getFacturaCompraCab(cliente, estado).toArray(new FacturaCompraCab[0]);
     }
-}
+
+  }
