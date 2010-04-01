@@ -119,7 +119,7 @@
     <managed-bean>
         <managed-bean-name>ABMProductos</managed-bean-name>
         <managed-bean-class>platinum.ABMProductos</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
+        <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
         <managed-bean-name>RegistroMovDeposito</managed-bean-name>
@@ -452,9 +452,9 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>RegistroProDiaria_1</managed-bean-name>
-        <managed-bean-class>platinum.RegistroProDiaria_1</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
+        <managed-bean-name>ABMEquivalencias</managed-bean-name>
+        <managed-bean-class>platinum.ABMEquivalencias</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
         <managed-bean-name>popup$popupDetalleOTProdDiaria</managed-bean-name>
@@ -479,6 +479,26 @@
     <managed-bean>
         <managed-bean-name>popup$popupFacturaCompra</managed-bean-name>
         <managed-bean-class>platinum.popup.popupFacturaCompra</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMEquivalencia</managed-bean-name>
+        <managed-bean-class>platinum.ABMEquivalencia</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMMovimientosDeposito</managed-bean-name>
+        <managed-bean-class>platinum.ABMMovimientosDeposito</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupSolicitudesMovDep</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupSolicitudesMovDep</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupOrdenTrabajoDetalles</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupOrdenTrabajoDetalles</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 </faces-config>
