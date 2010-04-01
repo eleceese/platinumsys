@@ -260,7 +260,7 @@ public class SolicitudInterna implements Serializable {
 
     @Override
     public String toString() {
-        return codSolicitud.toString();
+        return estado;
     }
 
 }

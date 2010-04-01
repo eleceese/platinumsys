@@ -214,6 +214,7 @@ public class ProductoController extends AbstractJpaDao <Producto> {
             for (int i = 0; i < existenciaList.size(); i++) {
                 Existencia existencia = new Existencia();
                 existencia = existenciaList.get(i);
+
                 em.remove(em.merge(existencia));
             }
             Producto producto = p;

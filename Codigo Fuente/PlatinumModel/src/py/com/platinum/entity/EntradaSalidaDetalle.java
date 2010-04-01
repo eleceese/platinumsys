@@ -67,7 +67,7 @@ public class EntradaSalidaDetalle implements Serializable {
     @ManyToOne(optional = false)
     private Producto codProducto;
     @JoinColumn(name = "COD_SOLICITUD", referencedColumnName = "COD_SOLICITUD")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private SolicitudInterna codSolicitud;
     @JoinColumn(name = "COD_ORDEN_TRABAJO_DETALLE", referencedColumnName = "COD_ORDEN_TRABAJO_DET")
     @ManyToOne(fetch = FetchType.EAGER)
