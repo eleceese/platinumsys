@@ -5,12 +5,15 @@
 package py.com.platinum.utils;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -374,6 +377,22 @@ public class DateUtils {
         cal.setTimeInMillis(fch.getTime());
         cal.add(Calendar.DATE, -dias);
         return new Date(cal.getTimeInMillis());
+    }
+
+
+    public static Date getFechaActual(){
+        //Obtenemos la fecha del sistema
+        Date f = new Date();
+        //Establecemos el formato para las fechas
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            //Obtenemos el objetos Date aplicando el formato
+            f = df.parse(df.format(f));
+        } catch (ParseException ex) {
+            Logger.getLogger(DateUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return f;
     }
 
 //    public static void main(String [] args){
