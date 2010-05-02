@@ -77,8 +77,8 @@ public class PedidoCabecera implements Serializable {
     private Empleado codEmpleado;
     @OneToMany(mappedBy = "codPedidoCab", fetch = FetchType.EAGER)
     private Set<PedidoDetalle> pedidoDetalle;
-    @OneToMany(mappedBy = "codPedido", fetch = FetchType.EAGER)
-    private Set<FacturaCabecera> facturaCabecera;
+//    @OneToMany(mappedBy = "codPedido", fetch = FetchType.EAGER)
+//    private Set<FacturaCabecera> facturaCabecera;
 
     public PedidoCabecera() {
     }
@@ -214,19 +214,19 @@ public class PedidoCabecera implements Serializable {
     public void setPedidoDetalle(Set<PedidoDetalle> pedidoDetalle) {
         this.pedidoDetalle = pedidoDetalle;
     }
-
-    public Set<FacturaCabecera> getFacturaCabecera() {
-        return facturaCabecera;
-    }
-
-    public List<FacturaCabecera> getFacturaCabeceraList() {
-        return new ArrayList(Arrays.asList(facturaCabecera.toArray(new FacturaCabecera[0])));
-    }
-
-    public void setFacturaCabecera(Set<FacturaCabecera> facturaCabecera) {
-        this.facturaCabecera = facturaCabecera;
-    }
-
+//////
+//    public Set<FacturaCabecera> getFacturaCabecera() {
+//        return facturaCabecera;
+//    }
+//
+//    public List<FacturaCabecera> getFacturaCabeceraList() {
+//        return new ArrayList(Arrays.asList(facturaCabecera.toArray(new FacturaCabecera[0])));
+//    }
+//
+//    public void setFacturaCabecera(Set<FacturaCabecera> facturaCabecera) {
+//        this.facturaCabecera = facturaCabecera;
+//    }
+/////////
     public TipoComprobante getTipo() {
         return tipo;
     }

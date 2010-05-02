@@ -74,16 +74,16 @@ public class Cliente implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(mappedBy = "codCliente", fetch=FetchType.EAGER)
-    private Set<PedidoCabecera> pedidoCabecera;
-    @OneToMany(mappedBy = "codCliente", fetch=FetchType.EAGER)
-    private Set<ReciboCabecera> reciboCabecera;
-    @OneToMany(mappedBy = "codCliente", fetch=FetchType.EAGER)
-    private Set<FacturaCabecera> facturaCabecera;
-    @OneToMany(mappedBy = "codCliente", fetch=FetchType.EAGER)
-    private Set<NotaCreditoCliCabecera> notaCreditoCliCabecera;
-    @OneToMany(mappedBy = "codCliente", fetch=FetchType.EAGER)
-    private Set<SaldoCliente> saldoCliente;
+//    @OneToMany(mappedBy = "codCliente", fetch=FetchType.EAGER)
+//    private Set<PedidoCabecera> pedidoCabecera;
+//    @OneToMany(mappedBy = "codCliente", fetch=FetchType.EAGER)
+//    private Set<ReciboCabecera> reciboCabecera;
+//    @OneToMany(mappedBy = "codCliente", fetch=FetchType.EAGER)
+//    private Set<FacturaCabecera> facturaCabecera;
+//    @OneToMany(mappedBy = "codCliente", fetch=FetchType.EAGER)
+//    private Set<NotaCreditoCliCabecera> notaCreditoCliCabecera;
+//    @OneToMany(mappedBy = "codCliente", fetch=FetchType.EAGER)
+//    private Set<SaldoCliente> saldoCliente;
     @JoinColumn(name = "COD_CIUDAD", referencedColumnName = "CODCIUDAD")
     @ManyToOne
     private Ciudad codCiudad;
@@ -238,66 +238,67 @@ public class Cliente implements Serializable {
     public void setFechaModif(Date fechaModif) {
         this.fechaModif = fechaModif;
     }
-
-    public Set<PedidoCabecera> getPedidoCabecera() {
-        return pedidoCabecera;
-    }
-
-    public List<PedidoCabecera> getPedidoCabeceraList() {
-        return new ArrayList(Arrays.asList(pedidoCabecera.toArray(new PedidoCabecera[0])));
-    }
-
-    public void setPedidoCabecera(Set<PedidoCabecera> pedidoCabecera) {
-        this.pedidoCabecera = pedidoCabecera;
-    }
-
-    public Set<ReciboCabecera> getReciboCabecera() {
-        return reciboCabecera;
-    }
-
-    public List<ReciboCabecera> getReciboCabeceraList() {
-        return new ArrayList(Arrays.asList(reciboCabecera.toArray(new ReciboCabecera[0])));
-    }
-
-    public void setReciboCabecera(Set<ReciboCabecera> reciboCabecera) {
-        this.reciboCabecera = reciboCabecera;
-    }
-
-    public Set<FacturaCabecera> getFacturaCabecera() {
-        return facturaCabecera;
-    }
-
-    public List<FacturaCabecera> getFacturaCabeceraList() {
-        return new ArrayList(Arrays.asList(facturaCabecera.toArray(new FacturaCabecera[0])));
-    }
-
-    public void setFacturaCabecera(Set<FacturaCabecera> facturaCabecera) {
-        this.facturaCabecera = facturaCabecera;
-    }
-
-    public Set<NotaCreditoCliCabecera> getNotaCreditoCliCabecera() {
-        return notaCreditoCliCabecera;
-    }
-
-    public List<NotaCreditoCliCabecera> getNotaCreditoCliCabeceraList() {
-        return new ArrayList(Arrays.asList(notaCreditoCliCabecera.toArray(new NotaCreditoCliCabecera[0])));
-    }
-
-    public void setNotaCreditoCliCabecera(Set<NotaCreditoCliCabecera> notaCreditoCliCabecera) {
-        this.notaCreditoCliCabecera = notaCreditoCliCabecera;
-    }
-
-    public Set<SaldoCliente> getSaldoCliente() {
-        return saldoCliente;
-    }
-
-    public List<SaldoCliente> getSaldoClienteList() {
-        return new ArrayList(Arrays.asList(saldoCliente.toArray(new SaldoCliente[0])));
-    }
-
-    public void setSaldoCliente(Set<SaldoCliente> saldoCliente) {
-        this.saldoCliente = saldoCliente;
-    }
+//////////
+//    public Set<PedidoCabecera> getPedidoCabecera() {
+//        return pedidoCabecera;
+//    }
+//
+//    public List<PedidoCabecera> getPedidoCabeceraList() {
+//        return new ArrayList(Arrays.asList(pedidoCabecera.toArray(new PedidoCabecera[0])));
+//    }
+//
+//    public void setPedidoCabecera(Set<PedidoCabecera> pedidoCabecera) {
+//        this.pedidoCabecera = pedidoCabecera;
+//    }
+//
+//    public Set<ReciboCabecera> getReciboCabecera() {
+//        return reciboCabecera;
+//    }
+//
+//    public List<ReciboCabecera> getReciboCabeceraList() {
+//        return new ArrayList(Arrays.asList(reciboCabecera.toArray(new ReciboCabecera[0])));
+//    }
+//
+//    public void setReciboCabecera(Set<ReciboCabecera> reciboCabecera) {
+//        this.reciboCabecera = reciboCabecera;
+//    }
+//
+//    public Set<FacturaCabecera> getFacturaCabecera() {
+//        return facturaCabecera;
+//    }
+//
+//    public List<FacturaCabecera> getFacturaCabeceraList() {
+//        return new ArrayList(Arrays.asList(facturaCabecera.toArray(new FacturaCabecera[0])));
+//    }
+//
+//    public void setFacturaCabecera(Set<FacturaCabecera> facturaCabecera) {
+//        this.facturaCabecera = facturaCabecera;
+//    }
+//
+//    public Set<NotaCreditoCliCabecera> getNotaCreditoCliCabecera() {
+//        return notaCreditoCliCabecera;
+//    }
+//
+//    public List<NotaCreditoCliCabecera> getNotaCreditoCliCabeceraList() {
+//        return new ArrayList(Arrays.asList(notaCreditoCliCabecera.toArray(new NotaCreditoCliCabecera[0])));
+//    }
+//
+//    public void setNotaCreditoCliCabecera(Set<NotaCreditoCliCabecera> notaCreditoCliCabecera) {
+//        this.notaCreditoCliCabecera = notaCreditoCliCabecera;
+//    }
+//
+//    public Set<SaldoCliente> getSaldoCliente() {
+//        return saldoCliente;
+//    }
+//
+//    public List<SaldoCliente> getSaldoClienteList() {
+//        return new ArrayList(Arrays.asList(saldoCliente.toArray(new SaldoCliente[0])));
+//    }
+//
+//    public void setSaldoCliente(Set<SaldoCliente> saldoCliente) {
+//        this.saldoCliente = saldoCliente;
+//    }
+///////////////////////////
 
     public Ciudad getCodCiudad() {
         return codCiudad;

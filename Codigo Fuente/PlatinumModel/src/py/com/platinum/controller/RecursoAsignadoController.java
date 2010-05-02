@@ -150,9 +150,10 @@ public class RecursoAsignadoController extends AbstractJpaDao<RecursoAsignado> {
 
 public static void main(String []args){
 
-   RecursoAsignado recursoAsignado = new RecursoAsignadoController().getRecursoPorEquiv(Long.valueOf("161"), Long.valueOf("1096"));
+//   RecursoAsignado recursoAsignado = new RecursoAsignadoController().getRecursoPorEquiv(Long.valueOf("161"), Long.valueOf("1096"));
+   List<RecursoAsignado> recursosAsignados = new RecursoAsignadoController().getAll("codRecurso");
    System.out.println("***********************************************");
-   System.out.println(recursoAsignado.getCodProducto().getDescripcion());
+   System.out.println(recursosAsignados.size());
 
 
 }

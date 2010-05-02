@@ -84,10 +84,10 @@ public class HabilitacionCaja implements Serializable {
     @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(optional = false)
     private Empleado codEmpleado;
-    @OneToMany(mappedBy = "codHabilitacionCaja", fetch=FetchType.EAGER)
-    private Set<MovimientoCajaCabecera> movimientoCajaCabecera;
-    @OneToMany(mappedBy = "codHabilitacionCaja", fetch=FetchType.EAGER)
-    private Set<Gasto> gasto;
+//    @OneToMany(mappedBy = "codHabilitacionCaja", fetch=FetchType.EAGER)
+//    private Set<MovimientoCajaCabecera> movimientoCajaCabecera;
+//    @OneToMany(mappedBy = "codHabilitacionCaja", fetch=FetchType.EAGER)
+//    private Set<Gasto> gasto;
 
     public HabilitacionCaja() {
     }
@@ -247,31 +247,30 @@ public class HabilitacionCaja implements Serializable {
     public void setCodEmpleado(Empleado codEmpleado) {
         this.codEmpleado = codEmpleado;
     }
-
-    public Set<MovimientoCajaCabecera> getMovimientoCajaCabecera() {
-        return movimientoCajaCabecera;
-    }
-
-    public List<MovimientoCajaCabecera> getMovimientoCajaCabeceraList() {
-        return new ArrayList(Arrays.asList(movimientoCajaCabecera.toArray(new MovimientoCajaCabecera[0])));
-    }
-
-    public void setMovimientoCajaCabecera(Set<MovimientoCajaCabecera> movimientoCajaCabecera) {
-        this.movimientoCajaCabecera = movimientoCajaCabecera;
-    }
-
-    public Set<Gasto> getGasto() {
-        return gasto;
-    }
-
-    public List<Gasto> getGastoList() {
-        return new ArrayList(Arrays.asList(gasto.toArray(new Gasto[0])));
-    }
-
-    public void setGasto(Set<Gasto> gasto) {
-        this.gasto = gasto;
-    }
-
+    ///////////////
+//    public Set<MovimientoCajaCabecera> getMovimientoCajaCabecera() {
+//        return movimientoCajaCabecera;
+//    }
+//
+//    public List<MovimientoCajaCabecera> getMovimientoCajaCabeceraList() {
+//        return new ArrayList(Arrays.asList(movimientoCajaCabecera.toArray(new MovimientoCajaCabecera[0])));
+//    }
+//
+//    public void setMovimientoCajaCabecera(Set<MovimientoCajaCabecera> movimientoCajaCabecera) {
+//        this.movimientoCajaCabecera = movimientoCajaCabecera;
+//    }
+//
+//    public Set<Gasto> getGasto() {
+//        return gasto;
+//    }
+//
+//    public List<Gasto> getGastoList() {
+//        return new ArrayList(Arrays.asList(gasto.toArray(new Gasto[0])));
+//    }
+//
+//    public void setGasto(Set<Gasto> gasto) {
+//        this.gasto = gasto;
+///////////////////////////////
     @Override
     public int hashCode() {
         int hash = 0;

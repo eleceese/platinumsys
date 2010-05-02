@@ -78,14 +78,66 @@ public class OrdenTrabajoDetalle implements Serializable {
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
     @ManyToOne
     private Producto codProducto;
-    @OneToMany(mappedBy = "codOrdenTrabDet",fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "codOrdenTrabDet",fetch=FetchType.LAZY)
     private Set<RecursoAsignado> recursoAsignadoCollection;
-    @OneToMany(mappedBy = "codDetOrdenTrabaj",fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "codDetOrdenTrabaj",fetch=FetchType.LAZY)
     private Set<TareaAsignada> tareaAsignadaCollection;
-    
-    
-    
+//    @OneToMany(mappedBy = "codOrdenTrabajoDet", fetch=FetchType.LAZY)
+//    private Set<CostosFijos> costosFijosCollection;
+//    @OneToMany(mappedBy = "codOrdenTrabajoDet", fetch=FetchType.LAZY)
+//    private Set<OrdenTrabajoDetCostoH> ordenTrabajoDetCostoCollection;
+//    @OneToMany(mappedBy = "codOrdenTrabajoDet", fetch=FetchType.LAZY)
+//    private Set<OrdenTrabajoDetCostoMat> ordenTrabajoDetMCollection;
+//    @OneToMany(mappedBy = "codOrdenTrabajoDetalle", fetch=FetchType.EAGER)
+//    private Set<EntradaSalidaDetalle> entradaSalidaCollection;
 
+//    public Set<EntradaSalidaDetalle> getEntradaSalidaCollection() {
+//        return entradaSalidaCollection;
+//    }
+//
+//    public void setEntradaSalidaCollection(Set<EntradaSalidaDetalle> entradaSalidaCollection) {
+//        this.entradaSalidaCollection = entradaSalidaCollection;
+//    }
+
+
+////////////////////////
+//    public Set<OrdenTrabajoDetCostoMat> getOrdenTrabajoDetMCollection() {
+//        return ordenTrabajoDetMCollection;
+//    }
+//
+//    public List<OrdenTrabajoDetCostoMat> getOrdenTrabajoDetMListList() {
+//        return new ArrayList(Arrays.asList(ordenTrabajoDetMCollection.toArray(new OrdenTrabajoDetCostoMat[0])));
+//    }
+//
+//    public void setOrdenTrabajoDetMCollection(Set<OrdenTrabajoDetCostoMat> ordenTrabajoDetMCollection) {
+//        this.ordenTrabajoDetMCollection = ordenTrabajoDetMCollection;
+//    }
+//
+//
+//
+//    public Set<OrdenTrabajoDetCostoH> getOrdenTrabajoDetCostoCollection() {
+//        return ordenTrabajoDetCostoCollection;
+//    }
+//
+//    public List<OrdenTrabajoDetCostoH> getOrdenTrabajoDetCostoListList() {
+//        return new ArrayList(Arrays.asList(ordenTrabajoDetCostoCollection.toArray(new OrdenTrabajoDetCostoH[0])));
+//    }
+//    public void setOrdenTrabajoDetCostoCollection(Set<OrdenTrabajoDetCostoH> ordenTrabajoDetCostoCollection) {
+//        this.ordenTrabajoDetCostoCollection = ordenTrabajoDetCostoCollection;
+//    }
+//
+//
+//
+//  public Set<CostosFijos> getCostosFijosCollection() {
+//        return costosFijosCollection;
+//    }
+//    public List<CostosFijos> getCostosFijosListList() {
+//        return new ArrayList(Arrays.asList(costosFijosCollection.toArray(new CostosFijos[0])));
+//    }
+//    public void setCostosFijosCollection(Set<CostosFijos> costosFijosCollection) {
+//        this.costosFijosCollection = costosFijosCollection;
+//    }
+/////////////////////
     public String getSemiFin() {
         return semiFin;
     }
@@ -220,6 +272,7 @@ public class OrdenTrabajoDetalle implements Serializable {
         this.codProducto = codProducto;
     }
 
+    ////////////
     public Set<RecursoAsignado> getRecursoAsignadoCollection() {
         return recursoAsignadoCollection;
     }
@@ -235,10 +288,10 @@ public class OrdenTrabajoDetalle implements Serializable {
     }
 
     public void setRecursoAsignadoCollectionFromList(List<RecursoAsignado> recursoAsignadoList) {
-        
+
         this.recursoAsignadoCollection = new HashSet(recursoAsignadoList);
-        
-        
+
+
     }
 
 
@@ -260,7 +313,7 @@ public class OrdenTrabajoDetalle implements Serializable {
     public void setTareaAsignadaCollectionFromList(List<TareaAsignada> tareaAsignadaList) {
         this.tareaAsignadaCollection = new HashSet<TareaAsignada>(tareaAsignadaList);
     }
-
+/////////////////
     @Override
     public int hashCode() {
         int hash = 0;
@@ -283,7 +336,13 @@ public class OrdenTrabajoDetalle implements Serializable {
 
     @Override
     public String toString() {
-        return codOrdenTrabajoDet.toString();
+        if (codOrdenTrabajoDet ==null) {
+            return "-";
+        }else{
+            return codOrdenTrabajoDet.toString();
+        }
+
+
     }
 
 }

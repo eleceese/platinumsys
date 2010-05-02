@@ -10,11 +10,15 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,11 +28,13 @@ import javax.persistence.TemporalType;
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="PERDIDA_SEQUENCE", sequenceName="SQ_PERDIDAPROD", initialValue=1, allocationSize=1)
 @Table(name = "PERDIDA")
-@NamedQueries({@NamedQuery(name = "Perdida.findAll", query = "SELECT p FROM Perdida p"), @NamedQuery(name = "Perdida.findByCodPerdida", query = "SELECT p FROM Perdida p WHERE p.codPerdida = :codPerdida"), @NamedQuery(name = "Perdida.findByFechaPerdida", query = "SELECT p FROM Perdida p WHERE p.fechaPerdida = :fechaPerdida"), @NamedQuery(name = "Perdida.findByHoraPerdida", query = "SELECT p FROM Perdida p WHERE p.horaPerdida = :horaPerdida"), @NamedQuery(name = "Perdida.findByCantidadPerdida", query = "SELECT p FROM Perdida p WHERE p.cantidadPerdida = :cantidadPerdida"), @NamedQuery(name = "Perdida.findByObservacion", query = "SELECT p FROM Perdida p WHERE p.observacion = :observacion"), @NamedQuery(name = "Perdida.findByUsuarioAlta", query = "SELECT p FROM Perdida p WHERE p.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "Perdida.findByUsuarioModif", query = "SELECT p FROM Perdida p WHERE p.usuarioModif = :usuarioModif"), @NamedQuery(name = "Perdida.findByFechaAlta", query = "SELECT p FROM Perdida p WHERE p.fechaAlta = :fechaAlta"), @NamedQuery(name = "Perdida.findByFechaModif", query = "SELECT p FROM Perdida p WHERE p.fechaModif = :fechaModif")})
+@NamedQueries({@NamedQuery(name = "Perdida.findAll", query = "SELECT p FROM Perdida p"), @NamedQuery(name = "Perdida.findByCodPerdida", query = "SELECT p FROM Perdida p WHERE p.codPerdida = :codPerdida"), @NamedQuery(name = "Perdida.findByFechaPerdida", query = "SELECT p FROM Perdida p WHERE p.fechaPerdida = :fechaPerdida"), @NamedQuery(name = "Perdida.findByCantidadPerdida", query = "SELECT p FROM Perdida p WHERE p.cantidadPerdida = :cantidadPerdida"), @NamedQuery(name = "Perdida.findByObservacion", query = "SELECT p FROM Perdida p WHERE p.observacion = :observacion"), @NamedQuery(name = "Perdida.findByUsuarioAlta", query = "SELECT p FROM Perdida p WHERE p.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "Perdida.findByUsuarioModif", query = "SELECT p FROM Perdida p WHERE p.usuarioModif = :usuarioModif"), @NamedQuery(name = "Perdida.findByFechaAlta", query = "SELECT p FROM Perdida p WHERE p.fechaAlta = :fechaAlta"), @NamedQuery(name = "Perdida.findByFechaModif", query = "SELECT p FROM Perdida p WHERE p.fechaModif = :fechaModif")})
 public class Perdida implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PERDIDA_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_PERDIDA")
     private Long codPerdida;
@@ -36,10 +42,6 @@ public class Perdida implements Serializable {
     @Column(name = "FECHA_PERDIDA")
     @Temporal(TemporalType.DATE)
     private Date fechaPerdida;
-    @Basic(optional = false)
-    @Column(name = "HORA_PERDIDA")
-    @Temporal(TemporalType.DATE)
-    private Date horaPerdida;
     @Basic(optional = false)
     @Column(name = "CANTIDAD_PERDIDA")
     private long cantidadPerdida;
@@ -61,6 +63,17 @@ public class Perdida implements Serializable {
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
     @ManyToOne(optional = false)
     private Producto codProducto;
+    @JoinColumn(name = "COD_ORDEN_TRABAJO_DETALLE", referencedColumnName = "COD_ORDEN_TRABAJO_DET")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private OrdenTrabajoDetalle codOrdenTrabajoDetalle;
+
+    public OrdenTrabajoDetalle getCodOrdenTrabajoDetalle() {
+        return codOrdenTrabajoDetalle;
+    }
+
+    public void setCodOrdenTrabajoDetalle(OrdenTrabajoDetalle codOrdenTrabajoDetalle) {
+        this.codOrdenTrabajoDetalle = codOrdenTrabajoDetalle;
+    }
 
     public Perdida() {
     }
@@ -69,10 +82,10 @@ public class Perdida implements Serializable {
         this.codPerdida = codPerdida;
     }
 
-    public Perdida(Long codPerdida, Date fechaPerdida, Date horaPerdida, long cantidadPerdida) {
+    public Perdida(Long codPerdida, Date fechaPerdida,  long cantidadPerdida) {
         this.codPerdida = codPerdida;
         this.fechaPerdida = fechaPerdida;
-        this.horaPerdida = horaPerdida;
+      
         this.cantidadPerdida = cantidadPerdida;
     }
 
@@ -90,14 +103,6 @@ public class Perdida implements Serializable {
 
     public void setFechaPerdida(Date fechaPerdida) {
         this.fechaPerdida = fechaPerdida;
-    }
-
-    public Date getHoraPerdida() {
-        return horaPerdida;
-    }
-
-    public void setHoraPerdida(Date horaPerdida) {
-        this.horaPerdida = horaPerdida;
     }
 
     public long getCantidadPerdida() {
@@ -186,7 +191,7 @@ public class Perdida implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.Perdida[codPerdida=" + codPerdida + "]";
+        return observacion;
     }
 
 }

@@ -35,9 +35,7 @@ public class Marca implements Serializable {
     @Basic(optional = false)
     @Column(name = "NOMBRE")
     private String nombre;
-    @OneToMany(mappedBy = "codMarca")
-    private List<Producto> productoCollection;
-
+  
     public Marca() {
     }
 
@@ -66,13 +64,7 @@ public class Marca implements Serializable {
         this.nombre = nombre;
     }
 
-    public List<Producto> getProductoCollection() {
-        return productoCollection;
-    }
-
-    public void setProductoCollection(List<Producto> productoCollection) {
-        this.productoCollection = productoCollection;
-    }
+   
 
     @Override
     public int hashCode() {

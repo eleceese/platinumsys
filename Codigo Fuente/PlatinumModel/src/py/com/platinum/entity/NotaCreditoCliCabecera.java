@@ -69,8 +69,8 @@ public class NotaCreditoCliCabecera implements Serializable {
     @JoinColumn(name = "COD_FACTURA", referencedColumnName = "COD_FACTURA")
     @ManyToOne(optional = false)
     private FacturaCabecera codFactura;
-    @OneToMany(mappedBy = "codNotaCreditoCliente", fetch=FetchType.EAGER)
-    private Set<ReciboDetalle> reciboDetalle;
+//    @OneToMany(mappedBy = "codNotaCreditoCliente", fetch=FetchType.EAGER)
+//    private Set<ReciboDetalle> reciboDetalle;
 
     public NotaCreditoCliCabecera() {
     }
@@ -193,17 +193,18 @@ public class NotaCreditoCliCabecera implements Serializable {
         this.codFactura = codFactura;
     }
 
-    public Set<ReciboDetalle> getReciboDetalle() {
-        return reciboDetalle;
-    }
-
-    public List<ReciboDetalle> getReciboDetalleList() {
-        return new ArrayList(Arrays.asList(reciboDetalle.toArray(new ReciboDetalle[0])));
-    }
-
-    public void setReciboDetalle(Set<ReciboDetalle> reciboDetalle) {
-        this.reciboDetalle = reciboDetalle;
-    }
+    //////////
+//    public Set<ReciboDetalle> getReciboDetalle() {
+//        return reciboDetalle;
+//    }
+//
+//    public List<ReciboDetalle> getReciboDetalleList() {
+//        return new ArrayList(Arrays.asList(reciboDetalle.toArray(new ReciboDetalle[0])));
+//    }
+//
+//    public void setReciboDetalle(Set<ReciboDetalle> reciboDetalle) {
+//        this.reciboDetalle = reciboDetalle;
+//    }
 
     @Override
     public int hashCode() {

@@ -74,10 +74,10 @@ public class SolicitudInterna implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModif;
-    @OneToMany(mappedBy = "codSolicitud", fetch=FetchType.EAGER)
-    private Set<EntradaSalidaDetalle> entradaSalidaDetalle;
-    @OneToMany(mappedBy = "nroSolicitud", fetch=FetchType.EAGER)
-    private Set<FacturaCompraDet> facturaCompraDet;
+//    @OneToMany(mappedBy = "codSolicitud", fetch=FetchType.EAGER)
+//    private Set<EntradaSalidaDetalle> entradaSalidaDetalle;
+//    @OneToMany(mappedBy = "nroSolicitud", fetch=FetchType.EAGER)
+//    private Set<FacturaCompraDet> facturaCompraDet;
     @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(optional = false)
     private Empleado codEmpleado;
@@ -206,21 +206,22 @@ public class SolicitudInterna implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public Set<EntradaSalidaDetalle> getEntradaSalidaDetalle() {
-        return entradaSalidaDetalle;
-    }
 
-    public void setEntradaSalidaDetalle(Set<EntradaSalidaDetalle> entradaSalidaDetalle) {
-        this.entradaSalidaDetalle = entradaSalidaDetalle;
-    }
-
-    public Set<FacturaCompraDet> getFacturaCompraDet() {
-        return facturaCompraDet;
-    }
-
-    public void setFacturaCompraDet(Set<FacturaCompraDet> facturaCompraDet) {
-        this.facturaCompraDet = facturaCompraDet;
-    }
+//    public Set<EntradaSalidaDetalle> getEntradaSalidaDetalle() {
+//        return entradaSalidaDetalle;
+//    }
+//
+//    public void setEntradaSalidaDetalle(Set<EntradaSalidaDetalle> entradaSalidaDetalle) {
+//        this.entradaSalidaDetalle = entradaSalidaDetalle;
+//    }
+//
+//    public Set<FacturaCompraDet> getFacturaCompraDet() {
+//        return facturaCompraDet;
+//    }
+//
+//    public void setFacturaCompraDet(Set<FacturaCompraDet> facturaCompraDet) {
+//        this.facturaCompraDet = facturaCompraDet;
+//    }
 
     public Empleado getCodEmpleado() {
         return codEmpleado;

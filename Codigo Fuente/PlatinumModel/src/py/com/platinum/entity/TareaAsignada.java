@@ -32,7 +32,6 @@ import javax.persistence.TemporalType;
 @Entity
 @SequenceGenerator(name="TAREA_ASIGNADA_SEQUENCE", sequenceName="SQ_TAREA_ASIGNADA", initialValue=1, allocationSize=1)
 @Table(name = "TAREA_ASIGNADA")
-@NamedQueries({@NamedQuery(name = "TareaAsignada.findAll", query = "SELECT t FROM TareaAsignada t"), @NamedQuery(name = "TareaAsignada.findByCodTareaAsignada", query = "SELECT t FROM TareaAsignada t WHERE t.codTareaAsignada = :codTareaAsignada"), @NamedQuery(name = "TareaAsignada.findByOrdenTarea", query = "SELECT t FROM TareaAsignada t WHERE t.ordenTarea = :ordenTarea"), @NamedQuery(name = "TareaAsignada.findByCantidad", query = "SELECT t FROM TareaAsignada t WHERE t.cantidad = :cantidad"), @NamedQuery(name = "TareaAsignada.findByCantidadReal", query = "SELECT t FROM TareaAsignada t WHERE t.cantidadReal = :cantidadReal"), @NamedQuery(name = "TareaAsignada.findByObservacion", query = "SELECT t FROM TareaAsignada t WHERE t.observacion = :observacion"), @NamedQuery(name = "TareaAsignada.findByUsuarioAlta", query = "SELECT t FROM TareaAsignada t WHERE t.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "TareaAsignada.findByUsuarioModif", query = "SELECT t FROM TareaAsignada t WHERE t.usuarioModif = :usuarioModif"), @NamedQuery(name = "TareaAsignada.findByFechaAlta", query = "SELECT t FROM TareaAsignada t WHERE t.fechaAlta = :fechaAlta"), @NamedQuery(name = "TareaAsignada.findByFechaModif", query = "SELECT t FROM TareaAsignada t WHERE t.fechaModif = :fechaModif")})
 public class TareaAsignada implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -61,8 +60,6 @@ public class TareaAsignada implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(mappedBy = "codTareaAsignada")
-    private List<ProduccionDiaria> produccionDiariaCollection;
     @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne
     private Empleado codEmpleado;
@@ -167,15 +164,7 @@ public class TareaAsignada implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public List<ProduccionDiaria> getProduccionDiariaCollection() {
-        return produccionDiariaCollection;
-    }
-
-    public void setProduccionDiariaCollection(List<ProduccionDiaria> produccionDiariaCollection) {
-        this.produccionDiariaCollection = produccionDiariaCollection;
-    }
-
-    public Empleado getCodEmpleado() {
+      public Empleado getCodEmpleado() {
         return codEmpleado;
     }
 

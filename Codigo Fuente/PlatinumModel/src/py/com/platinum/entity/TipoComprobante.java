@@ -37,8 +37,6 @@ public class TipoComprobante implements Serializable {
     private int cantDias;
     @Column(name = "MODULO", length = 30)
     private String modulo;
-    @OneToMany(mappedBy = "tipo", fetch = FetchType.EAGER)
-    private Set<FacturaCompraCab> facturaCompraCab;
 
     public TipoComprobante() {
     }
@@ -85,13 +83,7 @@ public class TipoComprobante implements Serializable {
         this.modulo = modulo;
     }
 
-    public Set<FacturaCompraCab> getFacturaCompraCab() {
-        return facturaCompraCab;
-    }
-
-    public void setFacturaCompraCab(Set<FacturaCompraCab> facturaCompraCab) {
-        this.facturaCompraCab = facturaCompraCab;
-    }
+ 
 
     @Override
     public int hashCode() {

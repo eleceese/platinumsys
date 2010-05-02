@@ -38,9 +38,7 @@ public class UnidadMedida implements Serializable {
     @Basic(optional = false)
     @Column(name = "DESCRIPCION")
     private String descripcion;
-    @OneToMany(mappedBy = "codUnidadMedida")
-    private List<Producto> productoCollection;
-
+   
     public UnidadMedida() {
     }
 
@@ -69,13 +67,7 @@ public class UnidadMedida implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public List<Producto> getProductoCollection() {
-        return productoCollection;
-    }
-
-    public void setProductoCollection(List<Producto> productoCollection) {
-        this.productoCollection = productoCollection;
-    }
+   
 
     @Override
     public int hashCode() {

@@ -35,9 +35,7 @@ public class Cargo implements Serializable {
     @Basic(optional = false)
     @Column(name = "NOMBRE_CARGO")
     private String nombreCargo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codCargo")
-    private List<Empleado> empleadoCollection;
-
+  
     public Cargo() {
     }
 
@@ -66,13 +64,7 @@ public class Cargo implements Serializable {
         this.nombreCargo = nombreCargo;
     }
 
-    public List<Empleado> getEmpleadoCollection() {
-        return empleadoCollection;
-    }
-
-    public void setEmpleadoCollection(List<Empleado> empleadoCollection) {
-        this.empleadoCollection = empleadoCollection;
-    }
+ 
 
     @Override
     public int hashCode() {

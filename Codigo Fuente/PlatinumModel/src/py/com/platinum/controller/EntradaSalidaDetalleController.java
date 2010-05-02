@@ -4,15 +4,23 @@
  */
 package py.com.platinum.controller;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Deposito;
+import py.com.platinum.entity.Empleado;
+import py.com.platinum.entity.EntradaSalidaCabecera;
 import py.com.platinum.entity.EntradaSalidaDetalle;
 import py.com.platinum.entity.EntradaSalidaDetalle;
+import py.com.platinum.entity.OrdenTrabajoDetalle;
 import py.com.platinum.entity.Producto;
+import py.com.platinum.entity.SolicitudInterna;
+import py.com.platinum.entity.TareaAsignada;
 
 /**
  *
@@ -40,23 +48,23 @@ public class EntradaSalidaDetalleController extends AbstractJpaDao <EntradaSalid
         String SQL = "SELECT o FROM EntradaSalidaDetalle o WHERE o.codEntSalDetalle = o.codEntSalDetalle";
 
         if (codEntSalDetalle != null) {
-            SQL = SQL + " o.codEntSalDetalle = (:codEntSalDetalle)";
+            SQL = SQL + " o.codEntSalDetalle = :codEntSalDetalle";
         }
 
         if (producto != null && !producto.equals("")) {
-            SQL = SQL + " and UPPER(o.codProducto.descripcion) like upper(:producto)";
+            SQL = SQL + " and UPPER(o.codProducto.descripcion) like upper:producto";
         }
 
         if (codProducto != null) {
-            SQL = SQL + " o.codProducto.codProducto = (:codProducto)";
+            SQL = SQL + " and o.codProducto.codProducto = :codProducto";
         }
 
         if (codOrdenTrabajoDetalle != null) {
-            SQL = SQL + " o.codOrdenTrabajoDetalle.codOrdenTrabajoDet = (:codOrdenTrabajoDetalle)";
-        }
+            SQL = SQL + " and o.codOrdenTrabajoDetalle.codOrdenTrabajoDet = :codOrdenTrabajoDetalle";
+        }                       
 
         if (codSolicitud != null) {
-            SQL = SQL + " o.codSolicitud.codSolicitud = (:codSolicitud)";
+            SQL = SQL + " and o.codSolicitud.codSolicitud = :codSolicitud";
         }
 
 
@@ -93,14 +101,49 @@ public class EntradaSalidaDetalleController extends AbstractJpaDao <EntradaSalid
 
       }
 
-//public static void main (String[] v) {
-//        ProductoController productoController = new ProductoController();
-//        Producto producto = new Producto();
-//        producto = productoController.findById(Long.valueOf("1000"));
-//        System.out.println(producto.getDescripcion());
-//        productoController.delete(producto);
-//        };
+public static void main (String[] v) {
+//        List <EntradaSalidaDetalle> entSal = new ArrayList();
+//        entSal = new EntradaSalidaDetalleController().getAll("codProducto");
 
+        List<EntradaSalidaDetalle> entSal = new ArrayList();
+//        entSal = new EntradaSalidaDetalleController().getAll("codEntSalDetalle");
+        entSal  = new EntradaSalidaDetalleController().getAllFiltered(null, null, null, null, null);
+        System.out.println("********************");
+        System.out.println(entSal.size());
 
+       
+        };
+
+//public static void main(String[] args){
+//EntradaSalidaCabecera c = new EntradaSalidaCabecera();
+//EntradaSalidaDetalle d = new EntradaSalidaDetalle();
+//
+//Deposito dep = new Deposito();
+//dep.setCodDeposito(Long.valueOf("3"));
+//
+//c.setCodDeposito(dep);
+//Empleado codEmpleado = new Empleado(Long.valueOf("1"));
+//c.setCodEmpleado(codEmpleado);
+//c.setCodEncargado(codEmpleado);
+//
+//
+//
+//d.setCantidadEntSal(new BigInteger("777"));
+//d.setTipoEntradaSalida("E");
+//Producto codProducto = new ProductoController().findById (Long.valueOf("1096"));
+//d.setCodProducto(codProducto);
+//        OrdenTrabajoDetalle codOrdenTrabajoDetalle = new OrdenTrabajoDetalleController().findById(Long.valueOf("161"));
+//d.setCodOrdenTrabajoDetalle(codOrdenTrabajoDetalle);
+//
+//
+//EntradaSalidaDetalle[] entSalDetArray = new EntradaSalidaDetalle[1];
+//entSalDetArray[0] = d;
+//
+//new EntradaSalidaCabeceraController().createCabDet(c,entSalDetArray);
+////d.setCodEntradaSalida(c);
+////new EntradaSalidaDetalleController().create(d);
+//}
+
+    
 
 }

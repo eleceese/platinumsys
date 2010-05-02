@@ -12,12 +12,15 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,14 +30,16 @@ import javax.persistence.TemporalType;
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="INVENTARIO_DETALLE_SEQUENCE", sequenceName="SQ_DETALLE_INVENTARIO", initialValue=1, allocationSize=1)
 @Table(name = "INVENTARIO_DETALLE")
 @NamedQueries({@NamedQuery(name = "InventarioDetalle.findAll", query = "SELECT i FROM InventarioDetalle i"), @NamedQuery(name = "InventarioDetalle.findByCodInventarioDetalle", query = "SELECT i FROM InventarioDetalle i WHERE i.codInventarioDetalle = :codInventarioDetalle"), @NamedQuery(name = "InventarioDetalle.findByCantidadcontada", query = "SELECT i FROM InventarioDetalle i WHERE i.cantidadcontada = :cantidadcontada"), @NamedQuery(name = "InventarioDetalle.findByCantidadsistema", query = "SELECT i FROM InventarioDetalle i WHERE i.cantidadsistema = :cantidadsistema"), @NamedQuery(name = "InventarioDetalle.findByObservacion", query = "SELECT i FROM InventarioDetalle i WHERE i.observacion = :observacion"), @NamedQuery(name = "InventarioDetalle.findByEstado", query = "SELECT i FROM InventarioDetalle i WHERE i.estado = :estado"), @NamedQuery(name = "InventarioDetalle.findByUsuarioAlta", query = "SELECT i FROM InventarioDetalle i WHERE i.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "InventarioDetalle.findByUsuarioModif", query = "SELECT i FROM InventarioDetalle i WHERE i.usuarioModif = :usuarioModif"), @NamedQuery(name = "InventarioDetalle.findByFechaAlta", query = "SELECT i FROM InventarioDetalle i WHERE i.fechaAlta = :fechaAlta"), @NamedQuery(name = "InventarioDetalle.findByFechaModif", query = "SELECT i FROM InventarioDetalle i WHERE i.fechaModif = :fechaModif")})
 public class InventarioDetalle implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="INVENTARIO_DETALLE_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_INVENTARIO_DETALLE")
-    private BigDecimal codInventarioDetalle;
+    private Long codInventarioDetalle;
     @Column(name = "CANTIDADCONTADA")
     private BigInteger cantidadcontada;
     @Column(name = "CANTIDADSISTEMA")
@@ -63,15 +68,15 @@ public class InventarioDetalle implements Serializable {
     public InventarioDetalle() {
     }
 
-    public InventarioDetalle(BigDecimal codInventarioDetalle) {
+    public InventarioDetalle(Long codInventarioDetalle) {
         this.codInventarioDetalle = codInventarioDetalle;
     }
 
-    public BigDecimal getCodInventarioDetalle() {
+    public Long getCodInventarioDetalle() {
         return codInventarioDetalle;
     }
 
-    public void setCodInventarioDetalle(BigDecimal codInventarioDetalle) {
+    public void setCodInventarioDetalle(Long codInventarioDetalle) {
         this.codInventarioDetalle = codInventarioDetalle;
     }
 
