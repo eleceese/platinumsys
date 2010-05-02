@@ -63,8 +63,11 @@ public class FormulaCabecera implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
+
     @OneToMany(mappedBy = "codFormula",fetch=FetchType.EAGER)
     private List<FormulaDetalle> formulaDetalleCollection;
+
+
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
     @ManyToOne(optional = false)
     private Producto codProducto;

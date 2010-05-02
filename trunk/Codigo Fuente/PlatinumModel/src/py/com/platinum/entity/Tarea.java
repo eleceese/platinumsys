@@ -50,10 +50,7 @@ public class Tarea implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codTarea")
-    private List<TareaAsignada> tareaAsignadaCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codTarea")
-    private List<TareaFormula> tareaFormulaCollection;
+   
 
     public Tarea() {
     }
@@ -113,22 +110,6 @@ public class Tarea implements Serializable {
 
     public void setFechaModif(Date fechaModif) {
         this.fechaModif = fechaModif;
-    }
-
-    public List<TareaAsignada> getTareaAsignadaCollection() {
-        return tareaAsignadaCollection;
-    }
-
-    public void setTareaAsignadaCollection(List<TareaAsignada> tareaAsignadaCollection) {
-        this.tareaAsignadaCollection = tareaAsignadaCollection;
-    }
-
-    public List<TareaFormula> getTareaFormulaCollection() {
-        return tareaFormulaCollection;
-    }
-
-    public void setTareaFormulaCollection(List<TareaFormula> tareaFormulaCollection) {
-        this.tareaFormulaCollection = tareaFormulaCollection;
     }
 
     @Override

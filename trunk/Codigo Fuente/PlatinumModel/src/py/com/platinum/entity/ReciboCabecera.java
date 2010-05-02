@@ -58,8 +58,6 @@ public class ReciboCabecera implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(mappedBy = "codRecibo", fetch=FetchType.EAGER)
-    private Set<MovimientoCajaCabecera> movimientoCajaCabecera;
     @JoinColumn(name = "COD_CLIENTE", referencedColumnName = "COD_CLIENTE")
     @ManyToOne(optional = false)
     private Cliente codCliente;
@@ -156,18 +154,6 @@ public class ReciboCabecera implements Serializable {
 
     public void setFechaModif(Date fechaModif) {
         this.fechaModif = fechaModif;
-    }
-
-    public Set<MovimientoCajaCabecera> getMovimientoCajaCabecera() {
-        return movimientoCajaCabecera;
-    }
-
-    public List<MovimientoCajaCabecera> getMovimientoCajaCabeceraList() {
-        return new ArrayList(Arrays.asList(movimientoCajaCabecera.toArray(new MovimientoCajaCabecera[0])));
-    }
-
-    public void setMovimientoCajaCabecera(Set<MovimientoCajaCabecera> movimientoCajaCabecera) {
-        this.movimientoCajaCabecera = movimientoCajaCabecera;
     }
 
     public Cliente getCodCliente() {

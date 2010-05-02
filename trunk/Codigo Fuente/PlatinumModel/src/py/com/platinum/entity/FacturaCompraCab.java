@@ -80,8 +80,8 @@ public class FacturaCompraCab implements Serializable {
     @JoinColumn(name = "COD_PROVEEDOR", referencedColumnName = "COD_PROVEEDOR")
     @ManyToOne
     private Proveedor codProveedor;
-    @OneToMany(mappedBy = "codFacturaCab", fetch=FetchType.EAGER)
-    private Set<NotaCreditoProvCab> notaCreditoProvCab;
+//    @OneToMany(mappedBy = "codFacturaCab", fetch=FetchType.EAGER)
+//    private Set<NotaCreditoProvCab> notaCreditoProvCab;
 
     public FacturaCompraCab() {
     }
@@ -231,14 +231,15 @@ public class FacturaCompraCab implements Serializable {
     public void setCodProveedor(Proveedor codProveedor) {
         this.codProveedor = codProveedor;
     }
-
-    public Set<NotaCreditoProvCab> getNotaCreditoProvCab() {
-        return notaCreditoProvCab;
-    }
-
-    public void setNotaCreditoProvCab(Set<NotaCreditoProvCab> notaCreditoProvCab) {
-        this.notaCreditoProvCab = notaCreditoProvCab;
-    }
+//////////
+//    public Set<NotaCreditoProvCab> getNotaCreditoProvCab() {
+//        return notaCreditoProvCab;
+//    }
+//
+//    public void setNotaCreditoProvCab(Set<NotaCreditoProvCab> notaCreditoProvCab) {
+//        this.notaCreditoProvCab = notaCreditoProvCab;
+//    }
+    ////////////
 
     @Override
     public int hashCode() {

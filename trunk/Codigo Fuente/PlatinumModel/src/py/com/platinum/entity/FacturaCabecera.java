@@ -95,10 +95,10 @@ public class FacturaCabecera implements Serializable {
     @JoinColumn(name = "COD_PEDIDO", referencedColumnName = "COD_PEDIDO")
     @ManyToOne(fetch=FetchType.EAGER)
     private PedidoCabecera codPedido;
-    @OneToMany(mappedBy = "codFactura", fetch=FetchType.EAGER)
-    private Set<NotaCreditoCliCabecera> notaCreditoCliCabecera;
-    @OneToMany(mappedBy = "codFactura", fetch=FetchType.EAGER)
-    private Set<ReciboDetalle> reciboDetalle;
+//    @OneToMany(mappedBy = "codFactura", fetch=FetchType.EAGER)
+//    private Set<NotaCreditoCliCabecera> notaCreditoCliCabecera;
+//    @OneToMany(mappedBy = "codFactura", fetch=FetchType.EAGER)
+//    private Set<ReciboDetalle> reciboDetalle;
     @OneToMany(mappedBy = "codFactura", fetch=FetchType.EAGER)
     private Set<FacturaDetalle> facturaDetalle;
 
@@ -283,30 +283,32 @@ public class FacturaCabecera implements Serializable {
     public void setCodPedido(PedidoCabecera codPedido) {
         this.codPedido = codPedido;
     }
+/////////
+//    public Set<NotaCreditoCliCabecera> getNotaCreditoCliCabecera() {
+//        return notaCreditoCliCabecera;
+//    }
+//
+//    public List<NotaCreditoCliCabecera> getNotaCreditoCliCabeceraList() {
+//        return new ArrayList(Arrays.asList(notaCreditoCliCabecera.toArray(new NotaCreditoCliCabecera[0])));
+//    }
+//
+//    public void setNotaCreditoCliCabecera(Set<NotaCreditoCliCabecera> notaCreditoCliCabecera) {
+//        this.notaCreditoCliCabecera = notaCreditoCliCabecera;
+//    }
+//
+//    public Set<ReciboDetalle> getReciboDetalle() {
+//        return reciboDetalle;
+//    }
+//
+//    public List<ReciboDetalle> getReciboDetalleList() {
+//        return new ArrayList(Arrays.asList(reciboDetalle.toArray(new ReciboDetalle[0])));
+//    }
+//
+//    public void setReciboDetalle(Set<ReciboDetalle> reciboDetalle) {
+//        this.reciboDetalle = reciboDetalle;
+//    }
 
-    public Set<NotaCreditoCliCabecera> getNotaCreditoCliCabecera() {
-        return notaCreditoCliCabecera;
-    }
-
-    public List<NotaCreditoCliCabecera> getNotaCreditoCliCabeceraList() {
-        return new ArrayList(Arrays.asList(notaCreditoCliCabecera.toArray(new NotaCreditoCliCabecera[0])));
-    }
-
-    public void setNotaCreditoCliCabecera(Set<NotaCreditoCliCabecera> notaCreditoCliCabecera) {
-        this.notaCreditoCliCabecera = notaCreditoCliCabecera;
-    }
-
-    public Set<ReciboDetalle> getReciboDetalle() {
-        return reciboDetalle;
-    }
-
-    public List<ReciboDetalle> getReciboDetalleList() {
-        return new ArrayList(Arrays.asList(reciboDetalle.toArray(new ReciboDetalle[0])));
-    }
-
-    public void setReciboDetalle(Set<ReciboDetalle> reciboDetalle) {
-        this.reciboDetalle = reciboDetalle;
-    }
+    //////////////////////
 
     public Set<FacturaDetalle> getFacturaDetalle() {
         return facturaDetalle;

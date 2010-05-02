@@ -5,6 +5,7 @@
 
 package py.com.platinum.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -100,5 +101,43 @@ public class EquivalenciaController extends AbstractJpaDao<Equivalencia> {
 
       }
 
+
+    public BigDecimal getCantExistPorProducto(Long codProductoGen, Long codDeposito) {
+        //emf.createEntityManager Levanta el contexto del JPA
+
+        String SQL = "SELECT sum(ex.cantidadExistencia * e.relacion) FROM Equivalencia e, " +
+                "Existencia ex " +
+                "where e.codProductoGen.codProducto = :codProductoGen " +
+                "and  ex.codProducto.codProducto = e.codProductoFin.codProducto";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+
+        q.setParameter("codProductoGen", codProductoGen);
+
+       BigDecimal existencia = null;
+        try {
+            existencia = (BigDecimal) q.getSingleResult();
+
+        } catch (NoResultException e) {
+            e.printStackTrace();
+
+        }
+        em.close();
+
+        return existencia;
+
+      }
+
+
+    public static void main (String[] v) {
+        EquivalenciaController equivalenciaController = new EquivalenciaController();
+
+        BigDecimal existencia = equivalenciaController.getCantExistPorProducto(Long.valueOf("1049"),null);
+        System.out.println("*********************");
+        System.out.println(existencia);
+
+    }
 
 }

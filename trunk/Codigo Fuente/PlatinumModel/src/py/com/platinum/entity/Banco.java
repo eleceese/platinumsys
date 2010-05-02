@@ -47,8 +47,6 @@ public class Banco implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(mappedBy = "codBanco")
-    private List<FormaPago> formaPagoCollection;
 
     public Banco() {
     }
@@ -110,13 +108,7 @@ public class Banco implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public List<FormaPago> getFormaPagoCollection() {
-        return formaPagoCollection;
-    }
-
-    public void setFormaPagoCollection(List<FormaPago> formaPagoCollection) {
-        this.formaPagoCollection = formaPagoCollection;
-    }
+   
 
     @Override
     public int hashCode() {

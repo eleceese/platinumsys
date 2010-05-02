@@ -29,8 +29,7 @@ public class Ciudad implements Serializable {
     @Basic(optional = false)
     @Column(name = "NOMBRECIUDAD")
     private String nombreciudad;
-    @OneToMany(mappedBy = "codCiudad")
-    private List<Cliente> clienteCollection;
+    
 
     public Ciudad() {
     }
@@ -60,13 +59,6 @@ public class Ciudad implements Serializable {
         this.nombreciudad = nombreciudad;
     }
 
-    public List<Cliente> getClienteCollection() {
-        return clienteCollection;
-    }
-
-    public void setClienteCollection(List<Cliente> clienteCollection) {
-        this.clienteCollection = clienteCollection;
-    }
 
     @Override
     public int hashCode() {

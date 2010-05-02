@@ -38,9 +38,7 @@ public class Presentacion implements Serializable {
     @Basic(optional = false)
     @Column(name = "DESCRIPCION")
     private String descripcion;
-    @OneToMany(mappedBy = "codPresentacion")
-    private List<Producto> productoCollection;
-
+  
     public Presentacion() {
     }
 
@@ -69,13 +67,7 @@ public class Presentacion implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public List<Producto> getProductoCollection() {
-        return productoCollection;
-    }
-
-    public void setProductoCollection(List<Producto> productoCollection) {
-        this.productoCollection = productoCollection;
-    }
+   
 
     @Override
     public int hashCode() {

@@ -41,9 +41,7 @@ public class TipoProducto implements Serializable {
     @Basic(optional = false)
     @Column(name = "TAREAS")
     private String tareas;
-    @OneToMany(mappedBy = "codTipoProducto")
-    private List<Producto> productoCollection;
-
+   
     public TipoProducto() {
     }
 
@@ -79,14 +77,6 @@ public class TipoProducto implements Serializable {
 
     public void setTareas(String tareas) {
         this.tareas = tareas;
-    }
-
-    public List<Producto> getProductoCollection() {
-        return productoCollection;
-    }
-
-    public void setProductoCollection(List<Producto> productoCollection) {
-        this.productoCollection = productoCollection;
     }
 
     @Override

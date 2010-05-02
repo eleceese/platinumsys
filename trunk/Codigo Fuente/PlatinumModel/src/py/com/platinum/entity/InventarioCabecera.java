@@ -7,18 +7,25 @@ package py.com.platinum.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,14 +35,16 @@ import javax.persistence.TemporalType;
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="INVENTARIO_CABECERA_SEQUENCE", sequenceName="sq_cabecera_inventario", initialValue=1, allocationSize=1)
 @Table(name = "INVENTARIO_CABECERA")
 @NamedQueries({@NamedQuery(name = "InventarioCabecera.findAll", query = "SELECT i FROM InventarioCabecera i"), @NamedQuery(name = "InventarioCabecera.findByCodInventario", query = "SELECT i FROM InventarioCabecera i WHERE i.codInventario = :codInventario"), @NamedQuery(name = "InventarioCabecera.findByFecInventario", query = "SELECT i FROM InventarioCabecera i WHERE i.fecInventario = :fecInventario"), @NamedQuery(name = "InventarioCabecera.findByDescripcion", query = "SELECT i FROM InventarioCabecera i WHERE i.descripcion = :descripcion"), @NamedQuery(name = "InventarioCabecera.findByEstado", query = "SELECT i FROM InventarioCabecera i WHERE i.estado = :estado"), @NamedQuery(name = "InventarioCabecera.findByUsuarioAlta", query = "SELECT i FROM InventarioCabecera i WHERE i.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "InventarioCabecera.findByUsuarioModif", query = "SELECT i FROM InventarioCabecera i WHERE i.usuarioModif = :usuarioModif"), @NamedQuery(name = "InventarioCabecera.findByFechaAlta", query = "SELECT i FROM InventarioCabecera i WHERE i.fechaAlta = :fechaAlta"), @NamedQuery(name = "InventarioCabecera.findByFechaModif", query = "SELECT i FROM InventarioCabecera i WHERE i.fechaModif = :fechaModif")})
 public class InventarioCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="INVENTARIO_CABECERA_SEQUENCE")
     @Basic(optional = false)
     @Column(name = "COD_INVENTARIO")
-    private BigDecimal codInventario;
+    private Long codInventario;
     @Basic(optional = false)
     @Column(name = "FEC_INVENTARIO")
     @Temporal(TemporalType.DATE)
@@ -54,29 +63,41 @@ public class InventarioCabecera implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codInventario")
-    private List<InventarioDetalle> inventarioDetalleCollection;
+    @OneToMany(mappedBy = "codInventario",fetch=FetchType.EAGER)
+    private Set<InventarioDetalle> inventarioDetalleSetCollection;
     @JoinColumn(name = "COD_DEPOSITO", referencedColumnName = "COD_DEPOSITO")
     @ManyToOne(optional = false)
     private Deposito codDeposito;
+    @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
+    @ManyToOne(optional = false)
+    private Empleado codEmpleado;
+
+    public Empleado getCodEmpleado() {
+        return codEmpleado;
+    }
+
+    public void setCodEmpleado(Empleado codEmpleado) {
+        this.codEmpleado = codEmpleado;
+    }
+
 
     public InventarioCabecera() {
     }
 
-    public InventarioCabecera(BigDecimal codInventario) {
+    public InventarioCabecera(Long codInventario) {
         this.codInventario = codInventario;
     }
 
-    public InventarioCabecera(BigDecimal codInventario, Date fecInventario) {
+    public InventarioCabecera(Long codInventario, Date fecInventario) {
         this.codInventario = codInventario;
         this.fecInventario = fecInventario;
     }
 
-    public BigDecimal getCodInventario() {
+    public Long getCodInventario() {
         return codInventario;
     }
 
-    public void setCodInventario(BigDecimal codInventario) {
+    public void setCodInventario(Long codInventario) {
         this.codInventario = codInventario;
     }
 
@@ -136,12 +157,20 @@ public class InventarioCabecera implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public List<InventarioDetalle> getInventarioDetalleCollection() {
-        return inventarioDetalleCollection;
+    public Set<InventarioDetalle> getInventarioDetalleSetCollection() {
+        return inventarioDetalleSetCollection;
     }
 
-    public void setInventarioDetalleCollection(List<InventarioDetalle> inventarioDetalleCollection) {
-        this.inventarioDetalleCollection = inventarioDetalleCollection;
+
+    public List<InventarioDetalle> getInventarioDetalleCollection() {
+        return new ArrayList(Arrays.asList(inventarioDetalleSetCollection.toArray(new InventarioDetalle[0])));
+    }
+
+    
+
+
+    public void setInventarioDetalleSetCollection(Set<InventarioDetalle> inventarioDetalleSetCollection) {
+        this.inventarioDetalleSetCollection = inventarioDetalleSetCollection;
     }
 
     public Deposito getCodDeposito() {

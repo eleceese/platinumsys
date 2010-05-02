@@ -56,15 +56,12 @@ public class Deposito implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "codDeposito")
-    @OneToMany(mappedBy = "codDeposito", fetch=FetchType.EAGER)
-    private Set<EntradaSalidaCabecera> entradaSalidaCabeceraCollection;
-    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "codDeposito")
-    @OneToMany(mappedBy = "codDeposito", fetch=FetchType.EAGER)
-    private Set<InventarioCabecera> inventarioCabeceraCollection;
-    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "deposito")
-    @OneToMany(mappedBy = "codDeposito", fetch=FetchType.EAGER)
-    private Set<Existencia> existenciaCollection;
+//    @OneToMany(mappedBy = "codDeposito", fetch=FetchType.EAGER)
+//    private Set<EntradaSalidaCabecera> entradaSalidaCabeceraCollection;
+//    @OneToMany(mappedBy = "codDeposito", fetch=FetchType.EAGER)
+//    private Set<InventarioCabecera> inventarioCabeceraCollection;
+//    @OneToMany(mappedBy = "codDeposito", fetch=FetchType.EAGER)
+//    private Set<Existencia> existenciaCollection;
 
     public Deposito() {
     }
@@ -133,30 +130,31 @@ public class Deposito implements Serializable {
     public void setFechaModif(Date fechaModif) {
         this.fechaModif = fechaModif;
     }
-
-    public Set<EntradaSalidaCabecera> getEntradaSalidaCabeceraCollection() {
-        return entradaSalidaCabeceraCollection;
-    }
-
-    public void setEntradaSalidaCabeceraCollection(Set<EntradaSalidaCabecera> entradaSalidaCabeceraCollection) {
-        this.entradaSalidaCabeceraCollection = entradaSalidaCabeceraCollection;
-    }
-
-    public Set<InventarioCabecera> getInventarioCabeceraCollection() {
-        return inventarioCabeceraCollection;
-    }
-
-    public void setInventarioCabeceraCollection(Set<InventarioCabecera> inventarioCabeceraCollection) {
-        this.inventarioCabeceraCollection = inventarioCabeceraCollection;
-    }
-
-    public Set<Existencia> getExistenciaCollection() {
-        return existenciaCollection;
-    }
-
-    public void setExistenciaCollection(Set<Existencia> existenciaCollection) {
-        this.existenciaCollection = existenciaCollection;
-    }
+/////////////
+//    public Set<EntradaSalidaCabecera> getEntradaSalidaCabeceraCollection() {
+//        return entradaSalidaCabeceraCollection;
+//    }
+//
+//    public void setEntradaSalidaCabeceraCollection(Set<EntradaSalidaCabecera> entradaSalidaCabeceraCollection) {
+//        this.entradaSalidaCabeceraCollection = entradaSalidaCabeceraCollection;
+//    }
+//
+//    public Set<InventarioCabecera> getInventarioCabeceraCollection() {
+//        return inventarioCabeceraCollection;
+//    }
+//
+//    public void setInventarioCabeceraCollection(Set<InventarioCabecera> inventarioCabeceraCollection) {
+//        this.inventarioCabeceraCollection = inventarioCabeceraCollection;
+//    }
+//
+//    public Set<Existencia> getExistenciaCollection() {
+//        return existenciaCollection;
+//    }
+//
+//    public void setExistenciaCollection(Set<Existencia> existenciaCollection) {
+//        this.existenciaCollection = existenciaCollection;
+//    }
+    //////////////
 
     @Override
     public int hashCode() {

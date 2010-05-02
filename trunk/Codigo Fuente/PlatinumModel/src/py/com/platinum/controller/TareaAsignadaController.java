@@ -73,6 +73,17 @@ public class TareaAsignadaController extends AbstractJpaDao<TareaAsignada> {
         return entities;
 
      }
-    
+
+
+    public static void main(String []args){
+
+//   RecursoAsignado recursoAsignado = new RecursoAsignadoController().getRecursoPorEquiv(Long.valueOf("161"), Long.valueOf("1096"));
+   List<TareaAsignada> tareasAsignadas = new TareaAsignadaController().getAll("codTarea");
+   System.out.println("***********************************************");
+   System.out.println(tareasAsignadas.size());
+
+
+}
+
 
 }   

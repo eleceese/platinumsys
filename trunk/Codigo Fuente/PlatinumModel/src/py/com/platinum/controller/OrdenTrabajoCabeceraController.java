@@ -60,7 +60,7 @@ public class OrdenTrabajoCabeceraController extends AbstractJpaDao <OrdenTrabajo
 
     public List<OrdenTrabajo> getAllFiltered(String numeroOrdenTrabajo, String codProducto, String estado, Date fechaOt) {
         //emf.createEntityManager Levanta el contexto del JPA
-        String SQL = "SELECT o FROM OrdenTrabajo o WHERE o.numeroOrdenTrabajo= o.numeroOrdenTrabajo";
+        String SQL = "SELECT o FROM OrdenTrabajo o WHERE o.codOrdenTrabjo= o.codOrdenTrabjo";
 
         if (numeroOrdenTrabajo != null && !numeroOrdenTrabajo.equals("99999") && !numeroOrdenTrabajo.equals("")) {
             SQL = SQL + " and UPPER(o.numeroOrdenTrabajo) like upper(:numeroOrdenTrabajo)";

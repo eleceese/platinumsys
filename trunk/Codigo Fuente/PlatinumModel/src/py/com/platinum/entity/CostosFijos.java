@@ -11,35 +11,41 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
  *
- * @author Martin
+ * @author FerBoy
  */
 @Entity
-@Table(name = "COSTOS_FIJOS")
-@NamedQueries({@NamedQuery(name = "CostosFijos.findAll", query = "SELECT c FROM CostosFijos c"), @NamedQuery(name = "CostosFijos.findByCodCostoFijo", query = "SELECT c FROM CostosFijos c WHERE c.codCostoFijo = :codCostoFijo"), @NamedQuery(name = "CostosFijos.findByDescripcionGasto", query = "SELECT c FROM CostosFijos c WHERE c.descripcionGasto = :descripcionGasto"), @NamedQuery(name = "CostosFijos.findByMonto", query = "SELECT c FROM CostosFijos c WHERE c.monto = :monto"), @NamedQuery(name = "CostosFijos.findByUsuarioAlta", query = "SELECT c FROM CostosFijos c WHERE c.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "CostosFijos.findByUsuarioModif", query = "SELECT c FROM CostosFijos c WHERE c.usuarioModif = :usuarioModif"), @NamedQuery(name = "CostosFijos.findByFechaAlta", query = "SELECT c FROM CostosFijos c WHERE c.fechaAlta = :fechaAlta"), @NamedQuery(name = "CostosFijos.findByFechaModif", query = "SELECT c FROM CostosFijos c WHERE c.fechaModif = :fechaModif")})
+@SequenceGenerator(name="COSTOS_FIJOS_SEQUENCE", sequenceName="SQ_COSTOS_FIJOS", initialValue=1000, allocationSize=1)
+@Table(name = "COSTOS_FIJOS", catalog = "", schema = "PLATINUM")
+
 public class CostosFijos implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="COSTOS_FIJOS_SEQUENCE")
     @Basic(optional = false)
-    @Column(name = "COD_COSTO_FIJO")
+    @Column(name = "COD_COSTO_FIJO", nullable = false)
     private Long codCostoFijo;
-    @Column(name = "DESCRIPCION_GASTO")
+    @Column(name = "DESCRIPCION_GASTO", length = 200)
     private String descripcionGasto;
     @Column(name = "MONTO")
     private BigInteger monto;
-    @Column(name = "USUARIO_ALTA")
+    @Column(name = "USUARIO_ALTA", length = 15)
     private String usuarioAlta;
-    @Column(name = "USUARIO_MODIF")
+    @Column(name = "USUARIO_MODIF", length = 15)
     private String usuarioModif;
     @Column(name = "FECHA_ALTA")
     @Temporal(TemporalType.DATE)
@@ -47,9 +53,9 @@ public class CostosFijos implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @JoinColumn(name = "COD_ORDEN_TRABAJO", referencedColumnName = "COD_ORDEN_TRABJO")
-    @ManyToOne
-    private OrdenTrabajo codOrdenTrabajo;
+    @JoinColumn(name = "COD_ORDEN_TRABAJO_DET", referencedColumnName = "COD_ORDEN_TRABAJO_DET")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private OrdenTrabajoDetalle codOrdenTrabajoDet;
 
     public CostosFijos() {
     }
@@ -65,6 +71,9 @@ public class CostosFijos implements Serializable {
     public void setCodCostoFijo(Long codCostoFijo) {
         this.codCostoFijo = codCostoFijo;
     }
+
+
+
 
     public String getDescripcionGasto() {
         return descripcionGasto;
@@ -114,12 +123,12 @@ public class CostosFijos implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public OrdenTrabajo getCodOrdenTrabajo() {
-        return codOrdenTrabajo;
+    public OrdenTrabajoDetalle getCodOrdenTrabajoDet() {
+        return codOrdenTrabajoDet;
     }
 
-    public void setCodOrdenTrabajo(OrdenTrabajo codOrdenTrabajo) {
-        this.codOrdenTrabajo = codOrdenTrabajo;
+    public void setCodOrdenTrabajoDet(OrdenTrabajoDetalle codOrdenTrabajoDet) {
+        this.codOrdenTrabajoDet = codOrdenTrabajoDet;
     }
 
     @Override

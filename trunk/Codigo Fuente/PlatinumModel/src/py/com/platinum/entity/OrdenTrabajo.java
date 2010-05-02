@@ -86,8 +86,6 @@ public class OrdenTrabajo implements Serializable {
     private Date fechaModif;
     @OneToMany(mappedBy = "codOrdenTrabajo", fetch=FetchType.EAGER)
     private Set<OrdenTrabajoDetalle> ordenTrabajoDetalleCollection;
-    @OneToMany(mappedBy = "codOrdenTrabajo", fetch=FetchType.EAGER)
-    private Set<CostosFijos> costosFijosCollection;
     @JoinColumn(name = "COD_EMPLEADO1", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(optional = false)
     private Empleado codEmpleado1;
@@ -253,20 +251,7 @@ public class OrdenTrabajo implements Serializable {
         this.ordenTrabajoDetalleCollection = ordenTrabajoDetalleCollection;
     }
 
-    public Set<CostosFijos> getCostosFijosCollection() {
-        return costosFijosCollection;
-    }
-
-    public List<CostosFijos> getCostosFijosListList() {
-        return new ArrayList(Arrays.asList(costosFijosCollection.toArray(new CostosFijos[0])));
-
-    }
-
-    public void setCostosFijosCollection(Set<CostosFijos> costosFijosCollection) {
-        this.costosFijosCollection = costosFijosCollection;
-    }
-
-    public Empleado getCodEmpleado1() {
+        public Empleado getCodEmpleado1() {
         return codEmpleado1;
     }
 

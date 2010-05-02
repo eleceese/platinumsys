@@ -62,11 +62,7 @@ public class Proveedor implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(mappedBy = "codProveedor", fetch=FetchType.EAGER)
-    private Set<FacturaCompraCab> facturaCompraCab;
-    @OneToMany(mappedBy = "codProveedor", fetch=FetchType.EAGER)
-    private Set<NotaCreditoProvCab> notaCreditoProvCab;
-
+  
 
     public Proveedor() {
     }
@@ -184,29 +180,6 @@ public class Proveedor implements Serializable {
         this.fechaModif = fechaModif;
     }
 
-    public Set<FacturaCompraCab> getFacturaCompraCab() {
-        return facturaCompraCab;
-    }
-
-    public List<FacturaCompraCab> getFacturaCompraCabList() {
-        return new ArrayList(Arrays.asList(facturaCompraCab.toArray(new FacturaCompraCab[0])));
-    }
-
-    public void setFacturaCompraCab(Set<FacturaCompraCab> facturaCompraCab) {
-        this.facturaCompraCab = facturaCompraCab;
-    }
-
-    public Set<NotaCreditoProvCab> getNotaCreditoProvCab() {
-        return notaCreditoProvCab;
-    }
-
-    public List<NotaCreditoProvCab> getNotaCreditoProvCabList() {
-        return new ArrayList(Arrays.asList(notaCreditoProvCab.toArray(new NotaCreditoProvCab[0])));
-    }
-
-    public void setNotaCreditoProvCab(Set<NotaCreditoProvCab> notaCreditoProvCab) {
-        this.notaCreditoProvCab = notaCreditoProvCab;
-    }
 
     @Override
     public int hashCode() {

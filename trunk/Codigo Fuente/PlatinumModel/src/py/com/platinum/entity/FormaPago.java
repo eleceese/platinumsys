@@ -52,8 +52,8 @@ public class FormaPago implements Serializable {
     @JoinColumn(name = "COD_BANCO", referencedColumnName = "COD_BANCO")
     @ManyToOne
     private Banco codBanco;
-    @OneToMany(mappedBy = "codFormaPago")
-    private List<MovimientoCajaDetalle> movimientoCajaDetalleCollection;
+//    @OneToMany(mappedBy = "codFormaPago")
+//    private List<MovimientoCajaDetalle> movimientoCajaDetalleCollection;
 
     public FormaPago() {
     }
@@ -122,14 +122,15 @@ public class FormaPago implements Serializable {
     public void setCodBanco(Banco codBanco) {
         this.codBanco = codBanco;
     }
-
-    public List<MovimientoCajaDetalle> getMovimientoCajaDetalleCollection() {
-        return movimientoCajaDetalleCollection;
-    }
-
-    public void setMovimientoCajaDetalleCollection(List<MovimientoCajaDetalle> movimientoCajaDetalleCollection) {
-        this.movimientoCajaDetalleCollection = movimientoCajaDetalleCollection;
-    }
+////////
+////    public List<MovimientoCajaDetalle> getMovimientoCajaDetalleCollection() {
+////        return movimientoCajaDetalleCollection;
+////    }
+////
+////    public void setMovimientoCajaDetalleCollection(List<MovimientoCajaDetalle> movimientoCajaDetalleCollection) {
+////        this.movimientoCajaDetalleCollection = movimientoCajaDetalleCollection;
+////    }
+    ////////////
 
     @Override
     public int hashCode() {

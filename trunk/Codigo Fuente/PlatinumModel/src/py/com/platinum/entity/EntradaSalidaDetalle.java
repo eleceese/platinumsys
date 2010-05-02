@@ -32,7 +32,6 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "ENTRADA_SALIDA_DETALLE")
 @SequenceGenerator(name="ENTRADA_SALIDA_DETALLE_SEQUENCE", sequenceName="SQ_DETALLE_ENTRADA_SALIDA", initialValue=5, allocationSize=1)
-@NamedQueries({@NamedQuery(name = "EntradaSalidaDetalle.findAll", query = "SELECT e FROM EntradaSalidaDetalle e"), @NamedQuery(name = "EntradaSalidaDetalle.findByCodEntSalDetalle", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.codEntSalDetalle = :codEntSalDetalle"), @NamedQuery(name = "EntradaSalidaDetalle.findByCodOrdenTrabajoDetalle", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.codOrdenTrabajoDetalle = :codOrdenTrabajoDetalle"), @NamedQuery(name = "EntradaSalidaDetalle.findByCantidadEntSal", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.cantidadEntSal = :cantidadEntSal"), @NamedQuery(name = "EntradaSalidaDetalle.findByObservacion", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.observacion = :observacion"), @NamedQuery(name = "EntradaSalidaDetalle.findByEstadoDetalleEntSal", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.estadoDetalleEntSal = :estadoDetalleEntSal"), @NamedQuery(name = "EntradaSalidaDetalle.findByTipoEntradaSalida", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.tipoEntradaSalida = :tipoEntradaSalida"), @NamedQuery(name = "EntradaSalidaDetalle.findByUsuarioAlta", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "EntradaSalidaDetalle.findByUsuarioModif", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.usuarioModif = :usuarioModif"), @NamedQuery(name = "EntradaSalidaDetalle.findByFechaAlta", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.fechaAlta = :fechaAlta"), @NamedQuery(name = "EntradaSalidaDetalle.findByFechaModif", query = "SELECT e FROM EntradaSalidaDetalle e WHERE e.fechaModif = :fechaModif")})
 public class EntradaSalidaDetalle implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -67,10 +66,10 @@ public class EntradaSalidaDetalle implements Serializable {
     @ManyToOne(optional = false)
     private Producto codProducto;
     @JoinColumn(name = "COD_SOLICITUD", referencedColumnName = "COD_SOLICITUD")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private SolicitudInterna codSolicitud;
     @JoinColumn(name = "COD_ORDEN_TRABAJO_DETALLE", referencedColumnName = "COD_ORDEN_TRABAJO_DET")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private OrdenTrabajoDetalle codOrdenTrabajoDetalle;
 
     public OrdenTrabajoDetalle getCodOrdenTrabajoDetalle() {

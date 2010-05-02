@@ -36,9 +36,7 @@ public class Seccion implements Serializable {
     @Basic(optional = false)
     @Column(name = "NOMBRE_SECCION")
     private String nombreSeccion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codSeccion")
-    private List<Empleado> empleadoCollection;
-
+  
     public Seccion() {
     }
 
@@ -65,14 +63,6 @@ public class Seccion implements Serializable {
 
     public void setNombreSeccion(String nombreSeccion) {
         this.nombreSeccion = nombreSeccion;
-    }
-
-    public List<Empleado> getEmpleadoCollection() {
-        return empleadoCollection;
-    }
-
-    public void setEmpleadoCollection(List<Empleado> empleadoCollection) {
-        this.empleadoCollection = empleadoCollection;
     }
 
     @Override

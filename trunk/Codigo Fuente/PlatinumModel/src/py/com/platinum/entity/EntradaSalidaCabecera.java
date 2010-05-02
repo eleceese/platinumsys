@@ -35,7 +35,6 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "ENTRADA_SALIDA_CABECERA")
 @SequenceGenerator(name="ENTRADA_SALIDA_SEQUENCE", sequenceName="SQ_CABECERA_ENTRADA_SALIDA", initialValue=5, allocationSize=1)
-@NamedQueries({@NamedQuery(name = "EntradaSalidaCabecera.findAll", query = "SELECT e FROM EntradaSalidaCabecera e"), @NamedQuery(name = "EntradaSalidaCabecera.findByCodEntradaSalida", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.codEntradaSalida = :codEntradaSalida"), @NamedQuery(name = "EntradaSalidaCabecera.findByFechaEntradaSalida", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.fechaEntradaSalida = :fechaEntradaSalida"), @NamedQuery(name = "EntradaSalidaCabecera.findByHoraEntradaSalida", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.horaEntradaSalida = :horaEntradaSalida"), @NamedQuery(name = "EntradaSalidaCabecera.findByObservacion", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.observacion = :observacion"), @NamedQuery(name = "EntradaSalidaCabecera.findByUsuarioAlta", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "EntradaSalidaCabecera.findByUsuarioModif", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.usuarioModif = :usuarioModif"), @NamedQuery(name = "EntradaSalidaCabecera.findByFechaAlta", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.fechaAlta = :fechaAlta"), @NamedQuery(name = "EntradaSalidaCabecera.findByFechaModif", query = "SELECT e FROM EntradaSalidaCabecera e WHERE e.fechaModif = :fechaModif")})
 public class EntradaSalidaCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -70,15 +69,10 @@ public class EntradaSalidaCabecera implements Serializable {
     @JoinColumn(name = "COD_ENCARGADO", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(optional = false)
     private Empleado codEncargado;
-  
-    @OneToMany(mappedBy = "codEntSal", fetch=FetchType.EAGER)
-    private Set<FacturaCompraCab> facturaCompraCab;
+ //   @OneToMany(mappedBy = "codEntSal", fetch=FetchType.EAGER)
+ //   private Set<FacturaCompraCab> facturaCompraCab;
     @OneToMany(mappedBy = "codEntradaSalida", fetch=FetchType.EAGER)
     private Set<EntradaSalidaDetalle> entradaSalidaDetalle;
-
-
-
-
    
     
     public EntradaSalidaCabecera() {
@@ -180,17 +174,17 @@ public class EntradaSalidaCabecera implements Serializable {
 
    
 
-    public Set<FacturaCompraCab> getFacturaCompraCab() {
-        return facturaCompraCab;
-    }
-
-    public List<FacturaCompraCab> getFacturaCompraCabList() {
-        return new ArrayList(Arrays.asList(facturaCompraCab.toArray(new FacturaCompraCab[0])));
-    }
-
-    public void setFacturaCompraCab(Set<FacturaCompraCab> facturaCompraCab) {
-        this.facturaCompraCab = facturaCompraCab;
-    }
+//    public Set<FacturaCompraCab> getFacturaCompraCab() {
+//        return facturaCompraCab;
+//    }
+//
+//    public List<FacturaCompraCab> getFacturaCompraCabList() {
+//        return new ArrayList(Arrays.asList(facturaCompraCab.toArray(new FacturaCompraCab[0])));
+//    }
+//
+//    public void setFacturaCompraCab(Set<FacturaCompraCab> facturaCompraCab) {
+//        this.facturaCompraCab = facturaCompraCab;
+//    }
 
     public Set<EntradaSalidaDetalle> getEntradaSalidaDetalle() {
         return entradaSalidaDetalle;

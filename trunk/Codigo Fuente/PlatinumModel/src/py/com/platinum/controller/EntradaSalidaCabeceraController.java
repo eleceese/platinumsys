@@ -150,6 +150,7 @@ public class EntradaSalidaCabeceraController extends AbstractJpaDao <EntradaSali
                     EntradaSalidaDetalle entSaldet = new EntradaSalidaDetalle();
                     entSaldet = detallesEntSal[i];
                     entSaldet.setCodEntradaSalida(EntradaSalidaCabecera);
+                    em.persist(entSaldet);
 
 
                     ///// Actualizacion de la utilizacion a traves de la equivalencia
@@ -160,7 +161,7 @@ public class EntradaSalidaCabeceraController extends AbstractJpaDao <EntradaSali
 
                                 Long cantidad = null;
                                 cantidad = Long.valueOf(entSaldet.getCantidadEntSal().toString());
-                                if (entSaldet.getCodOrdenTrabajoDetalle().getCodOrdenTrabajoDet() != null) {
+                                if (entSaldet.getCodOrdenTrabajoDetalle() !=null && entSaldet.getCodOrdenTrabajoDetalle().getCodOrdenTrabajoDet() != null) {
                                     otDet = otDet = entSaldet.getCodOrdenTrabajoDetalle();
                                 }
 
@@ -185,20 +186,21 @@ public class EntradaSalidaCabeceraController extends AbstractJpaDao <EntradaSali
                      exist = new ExistenciaController().getExistencia(null, entSaldet.getCodProducto().getCodProducto(), entSaldet.getCodEntradaSalida().getCodDeposito().getCodDeposito());
 
                      BigInteger cantidadNueva = exist.getCantidadExistencia();
-                     cantidadNueva = BigInteger.valueOf(cantidadNueva.longValue() - entSaldet.getCantidadEntSal().longValue());
+                     if (entSaldet.getTipoEntradaSalida().equals("E")) {
+                         cantidadNueva = BigInteger.valueOf(cantidadNueva.longValue() + entSaldet.getCantidadEntSal().longValue());
+                    
+                    } else {
+                         cantidadNueva = BigInteger.valueOf(cantidadNueva.longValue() - entSaldet.getCantidadEntSal().longValue());
+
+                    }
+
+                    
                      exist.setCantidadExistencia(cantidadNueva);
                      em.merge(exist);
                                 
                      //////////////////
 
-                    em.persist(entSaldet);
-
-
-
-
-
-
-            }
+             }
             //// FIN DE CARGA DE LOS DETALLES
 
             tx.commit();
@@ -237,6 +239,54 @@ public class EntradaSalidaCabeceraController extends AbstractJpaDao <EntradaSali
                             EntradaSalidaDetalle entSalElim = new EntradaSalidaDetalle();
                             entSalElim = detallesEntSalEliminada[i];
                             EntradaSalidaDetalle entradaSalidaDetalle = em.find(EntradaSalidaDetalle.class, entSalElim.getCodEntSalDetalle());
+
+                                                 ///// Actualizacion de la utilizacion a traves de la equivalencia
+
+                                                    Producto p = null;
+                                                    OrdenTrabajoDetalle otDet = null;
+                                                    p = entradaSalidaDetalle.getCodProducto();
+
+                                                    Long cantidad = null;
+                                                    cantidad = Long.valueOf(entradaSalidaDetalle.getCantidadEntSal().toString());
+                                                    if (entradaSalidaDetalle.getCodOrdenTrabajoDetalle() !=null && entradaSalidaDetalle.getCodOrdenTrabajoDetalle().getCodOrdenTrabajoDet() != null) {
+                                                        otDet = entradaSalidaDetalle.getCodOrdenTrabajoDetalle();
+                                                    }
+
+                                                    if (otDet != null && p != null && cantidad != null) {
+
+                                                            RecursoAsignado rAsignado = new RecursoAsignado();
+                                                            RecursoAsignadoController rController = new RecursoAsignadoController();
+                                                            rAsignado = rController.getRecursoPorEquiv(otDet.getCodOrdenTrabajoDet(),p.getCodProducto());
+
+                                                                Equivalencia eq = new EquivalenciaController().getEqPorProductos(rAsignado.getCodProducto().getCodProducto(), p.getCodProducto());
+                                                                double relacion = eq.getRelacion().doubleValue();
+                                                                double retirado = relacion * cantidad;
+                                                                rAsignado.setCantidadReal(rAsignado.getCantidadReal() - Math.round(retirado));
+                                                                em.merge(rAsignado);
+                                                         }
+
+                                                        //////////////////
+
+                                                        //////////////////Actualizacion de las Existencias en Deposito
+                                                         Existencia exist = new Existencia();
+                                                         exist = new ExistenciaController().getExistencia(null, entradaSalidaDetalle.getCodProducto().getCodProducto(), entradaSalidaDetalle.getCodEntradaSalida().getCodDeposito().getCodDeposito());
+
+                                                         BigInteger cantidadNueva = exist.getCantidadExistencia();
+                                                         if (entradaSalidaDetalle.getTipoEntradaSalida().equals("E")) {
+                                                             cantidadNueva = BigInteger.valueOf(cantidadNueva.longValue() - entradaSalidaDetalle.getCantidadEntSal().longValue());
+
+                                                        } else {
+                                                             cantidadNueva = BigInteger.valueOf(cantidadNueva.longValue() + entradaSalidaDetalle.getCantidadEntSal().longValue());
+
+                                                        }
+
+
+                                                         exist.setCantidadExistencia(cantidadNueva);
+                                                         em.merge(exist);
+
+                                                         //////////////////
+
+                            
                             em.remove(entradaSalidaDetalle);
                          }
              }
@@ -246,13 +296,92 @@ public class EntradaSalidaCabeceraController extends AbstractJpaDao <EntradaSali
             entradaSalidaCabecera = cab;
             for (int i = 0; i < detallesEntSal.length; i++) {
                  EntradaSalidaDetalle entSaldet = new EntradaSalidaDetalle();
+                 EntradaSalidaDetalle entSaldetOrig = new EntradaSalidaDetalle();
+
                  entSaldet = detallesEntSal[i];
+
+                 //// Se inicializa la cantidad vieja en 0
+                 //// En el caso de ser un nuevo registro las diferencias entre la cantidad vieja 0 y la nueva cantidad
+                 //// dara la cantidad ingresada
+
+                 Long CantidadVieja = Long.valueOf("0");
+
                  if (entSaldet.getCodEntSalDetalle() != null) {
+                        //// En el caso de que ya tenga codigo, es una actualizacion entonces se obtiene la cantidad anterior para hallara las diferencias
+                     
+                        entSaldetOrig = new EntradaSalidaDetalleController().findById(entSaldet.getCodEntSalDetalle());
+                        CantidadVieja = Long.valueOf(entSaldetOrig.getCantidadEntSal().toString());
                         em.merge(entSaldet);
+
                  }else{
                         entSaldet.setCodEntradaSalida(entradaSalidaCabecera);
                         em.persist(entSaldet);
                  }
+
+
+                  ///// Actualizacion de la utilizacion a traves de la equivalencia Si las cantidades son diferentes
+                Long cantidad = null;
+                cantidad = Long.valueOf(entSaldet.getCantidadEntSal().toString());
+                if (!CantidadVieja.toString().equals(cantidad.toString())) {
+
+                        System.out.println("********************* Antiguo");
+                        System.out.println(CantidadVieja.toString());
+                        System.out.println("********************* Nuevo");
+                        System.out.println(cantidad.toString());
+
+                            Producto p = null;
+                OrdenTrabajoDetalle otDet = null;
+                p = entSaldet.getCodProducto();
+
+
+                if (entSaldet.getCodOrdenTrabajoDetalle() !=null && entSaldet.getCodOrdenTrabajoDetalle().getCodOrdenTrabajoDet() != null) {
+                    otDet = entSaldet.getCodOrdenTrabajoDetalle();
+                }
+
+                if (otDet != null && p != null && cantidad != null) {
+
+                        RecursoAsignado rAsignado = new RecursoAsignado();
+                        RecursoAsignadoController rController = new RecursoAsignadoController();
+                        rAsignado = rController.getRecursoPorEquiv(otDet.getCodOrdenTrabajoDet(),p.getCodProducto());
+
+                            Equivalencia eq = new EquivalenciaController().getEqPorProductos(rAsignado.getCodProducto().getCodProducto(), p.getCodProducto());
+                            double relacion = eq.getRelacion().doubleValue();
+                            double retirado = relacion * (cantidad - CantidadVieja);
+                            rAsignado.setCantidadReal(rAsignado.getCantidadReal() + Math.round(retirado));
+                            em.merge(rAsignado);
+                     }
+
+                    //////////////////
+
+                    //////////////////Actualizacion de las Existencias en Deposito
+                     Existencia exist = new Existencia();
+                     exist = new ExistenciaController().getExistencia(null, entSaldet.getCodProducto().getCodProducto(), entSaldet.getCodEntradaSalida().getCodDeposito().getCodDeposito());
+
+                     BigInteger cantidadNueva = exist.getCantidadExistencia();
+                     if (entSaldet.getTipoEntradaSalida().equals("E")) {
+                         cantidadNueva = BigInteger.valueOf(cantidadNueva.longValue() - (CantidadVieja - entSaldet.getCantidadEntSal().longValue()));
+
+                    } else {
+                         cantidadNueva = BigInteger.valueOf(cantidadNueva.longValue() + (CantidadVieja - entSaldet.getCantidadEntSal().longValue()));
+
+                    }
+                     exist.setCantidadExistencia(cantidadNueva);
+                     em.merge(exist);
+
+                     //////////////////
+
+                }
+
+
+
+
+
+
+
+
+
+
+
              }
              //// FIN ACTUALIZAR DETALLES
 

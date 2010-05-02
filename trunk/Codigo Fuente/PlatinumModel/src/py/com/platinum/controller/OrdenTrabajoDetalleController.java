@@ -75,12 +75,10 @@ public class OrdenTrabajoDetalleController extends AbstractJpaDao<OrdenTrabajoDe
 
     public static void main(String [] args){
     System.out.println(
-        new OrdenTrabajoDetalleController().getAllFiltered(Long.valueOf("67"), null,null).size());
+////        new OrdenTrabajoDetalleController().getAllFiltered(Long.valueOf("161"), null,null).size());
+        new OrdenTrabajoDetalleController().getAll("codOrdenTrabajoDet").size());
         
-        
-        
-    
-    
+           
     }
 
 

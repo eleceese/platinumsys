@@ -50,9 +50,7 @@ public class Caja implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codCaja")
-    private List<HabilitacionCaja> habilitacionCajaCollection;
-
+  
     public Caja() {
     }
 
@@ -111,14 +109,6 @@ public class Caja implements Serializable {
 
     public void setFechaModif(Date fechaModif) {
         this.fechaModif = fechaModif;
-    }
-
-    public List<HabilitacionCaja> getHabilitacionCajaCollection() {
-        return habilitacionCajaCollection;
-    }
-
-    public void setHabilitacionCajaCollection(List<HabilitacionCaja> habilitacionCajaCollection) {
-        this.habilitacionCajaCollection = habilitacionCajaCollection;
     }
 
     @Override
