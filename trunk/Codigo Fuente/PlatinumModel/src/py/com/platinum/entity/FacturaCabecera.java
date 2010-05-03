@@ -344,7 +344,7 @@ public class FacturaCabecera implements Serializable {
 
     @Override
     public String toString() {
-        return "py.com.platinum.entity.FacturaCabecera[codFactura=" + codFactura + "]";
+        return this.establecimiento + "-" + this.bocaExpendio + "-" + StringUtils.lpad(numeroFactura.toString(), 8, "0");
     }
 
 }

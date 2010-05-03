@@ -6,17 +6,18 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,13 +27,15 @@ import javax.persistence.TemporalType;
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="NC_DET_CLIENTE__SEQUENCE", sequenceName="SQ_DETALLE_NOTA_CRED_CLIENTE")
 @Table(name = "NOTA_CREDITO_CLI_DETALLE")
 public class NotaCreditoCliDetalle implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="NC_DET_CLIENTE__SEQUENCE")
     @Column(name = "COD_NOTA_CREDITO_CLI_DET")
-    private BigDecimal codNotaCreditoCliDet;
+    private Long codNotaCreditoCliDet;
     @Basic(optional = false)
     @Column(name = "PRECIO_UNITARIO")
     private BigInteger precioUnitario;
@@ -48,12 +51,6 @@ public class NotaCreditoCliDetalle implements Serializable {
     @Basic(optional = false)
     @Column(name = "TOTAL_IVA")
     private BigInteger totalIva;
-    @Basic(optional = false)
-    @Column(name = "SUB_TOTAL")
-    private BigInteger subTotal;
-    @Basic(optional = false)
-    @Column(name = "DESCRIPCION")
-    private String descripcion;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -70,30 +67,27 @@ public class NotaCreditoCliDetalle implements Serializable {
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
     @ManyToOne(optional = false)
     private Producto codProducto;
+    @JoinColumn(name = "COD_FACTURA_DET_CLIENTE", referencedColumnName = "COD_FACTURA_DETALLE")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private FacturaDetalle codFacturaDetCliente;
 
     public NotaCreditoCliDetalle() {
     }
 
-    public NotaCreditoCliDetalle(BigDecimal codNotaCreditoCliDet) {
-        this.codNotaCreditoCliDet = codNotaCreditoCliDet;
-    }
-
-    public NotaCreditoCliDetalle(BigDecimal codNotaCreditoCliDet, BigInteger precioUnitario, BigInteger cantidad, BigInteger monto, BigInteger porcentajeIva, BigInteger totalIva, BigInteger subTotal, String descripcion) {
+    public NotaCreditoCliDetalle(Long codNotaCreditoCliDet, BigInteger precioUnitario, BigInteger cantidad, BigInteger monto, BigInteger porcentajeIva, BigInteger totalIva) {
         this.codNotaCreditoCliDet = codNotaCreditoCliDet;
         this.precioUnitario = precioUnitario;
         this.cantidad = cantidad;
         this.monto = monto;
         this.porcentajeIva = porcentajeIva;
         this.totalIva = totalIva;
-        this.subTotal = subTotal;
-        this.descripcion = descripcion;
     }
 
-    public BigDecimal getCodNotaCreditoCliDet() {
+    public Long getCodNotaCreditoCliDet() {
         return codNotaCreditoCliDet;
     }
 
-    public void setCodNotaCreditoCliDet(BigDecimal codNotaCreditoCliDet) {
+    public void setCodNotaCreditoCliDet(Long codNotaCreditoCliDet) {
         this.codNotaCreditoCliDet = codNotaCreditoCliDet;
     }
 
@@ -135,22 +129,6 @@ public class NotaCreditoCliDetalle implements Serializable {
 
     public void setTotalIva(BigInteger totalIva) {
         this.totalIva = totalIva;
-    }
-
-    public BigInteger getSubTotal() {
-        return subTotal;
-    }
-
-    public void setSubTotal(BigInteger subTotal) {
-        this.subTotal = subTotal;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
 
     public String getUsuarioAlta() {
@@ -199,6 +177,14 @@ public class NotaCreditoCliDetalle implements Serializable {
 
     public void setCodProducto(Producto codProducto) {
         this.codProducto = codProducto;
+    }
+
+    public FacturaDetalle getCodFacturaDetCliente() {
+        return codFacturaDetCliente;
+    }
+
+    public void setCodFacturaDetCliente(FacturaDetalle codFacturaDetCliente) {
+        this.codFacturaDetCliente = codFacturaDetCliente;
     }
 
     @Override

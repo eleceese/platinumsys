@@ -12,6 +12,8 @@ package py.com.platinum.utilsenum;
 public class ModelUtil {
 
 
+    public static int MAX_DIGITO_COMPROBANTE = 8;
+
     /**
      * Obtenemos el tipo de Estado
      * @param estado

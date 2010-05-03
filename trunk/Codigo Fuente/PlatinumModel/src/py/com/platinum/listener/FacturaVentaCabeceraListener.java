@@ -70,7 +70,7 @@ public class FacturaVentaCabeceraListener {
             saldoCliente.setUsuarioAlta(cab.getUsuarioAlta());
             saldoCliente.setFechaAlta(new Date());
             saldoCliente.setNroComprobante(cab.getCodFactura());
-            saldoCliente.setTipoComprobante(cab.getTipoFactura().getCodTipo());
+ //**           saldoCliente.setTipoComprobante(cab.getTipoFactura());
             saldoCliente.setSaldo(cab.getTotalFactura());
             saldoCliente.setTotal(cab.getTotalFactura());
             saldoCliente.setFechaComprobante(cab.getFechaFactura());
