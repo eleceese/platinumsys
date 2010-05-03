@@ -1,0 +1,11 @@
+create sequence "SQ_PERDIDAPROD"
+start with 1
+increment by 1
+nocache
+nocycle
+noorder
+/ 
+
+alter table perdida
+drop column hora_perdida;
+
