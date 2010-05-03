@@ -501,4 +501,9 @@
         <managed-bean-class>platinum.popup.popupOrdenTrabajoDetalles</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMNotaCreditoCliente</managed-bean-name>
+        <managed-bean-class>platinum.ABMNotaCreditoCliente</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
 </faces-config>
