@@ -1,0 +1,41 @@
+--Nota credito cliente
+alter table nota_credito_cli_cabecera add ESTADO           VARCHAR2(15);
+alter table nota_credito_cli_cabecera add SALDO_FAC        NUMBER(15);                           
+alter table nota_credito_cli_cabecera add SUB_TOTAL        NUMBER(15);
+alter table nota_credito_cli_cabecera add COD_DEPOSITO     NUMBER;
+alter table nota_credito_cli_cabecera add ESTABLECIMIENTO  VARCHAR2(3) default  '001';
+alter table nota_credito_cli_cabecera add BOCA_EXPENDIO    VARCHAR2(3) default  '001';
+alter table nota_credito_cli_cabecera add TIPO             NUMBER(10);
+alter table nota_credito_cli_cabecera drop column cod_empleado;
+
+--Relacionamos el tipo de comprobante con la nota de credito cliente
+alter table nota_credito_cli_cabecera 
+   add constraint fk_not_cre_cli_tipocomp 
+      foreign key (tipo) references tipo_comprobante (cod_tipo);
+
+	  
+--Relacionamos el deposito con la nota de credito cliente
+alter table nota_credito_cli_cabecera
+    add constraint fk_notcreclicab_deposito 
+	    foreign key (cod_deposito) references deposito(cod_deposito);
+		
+
+--Detalle nota credito cliente
+alter table nota_credito_cli_detalle drop column DESCRIPCION;
+alter table nota_credito_cli_detalle drop column SUB_TOTAL;
+
+--Relacionamos el detalle de la nota de credito con el detalle de la factura
+alter table nota_credito_cli_detalle add cod_factura_det_cliente number;
+
+alter table nota_credito_cli_detalle
+    add constraint fk_faccreclicab_notcrecli 
+	    foreign key (cod_factura_det_cliente) references factura_detalle(cod_factura_detalle);
+
+		
+alter table "PERDIDA" add
+("COD_ORDEN_TRABAJO_DETALLE" NUMBER NULL)
+/
+
+alter table PERDIDA add CONSTRAINT PERDIDA_PRODUCCION FOREIGN KEY (cod_orden_trabajo_Detalle) 
+REFERENCES ORDEN_TRABAJO_DETALLE(cod_orden_trabajo_det)
+/
