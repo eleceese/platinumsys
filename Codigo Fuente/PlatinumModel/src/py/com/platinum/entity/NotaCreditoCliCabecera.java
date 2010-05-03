@@ -16,32 +16,57 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.utilsenum.NotaCreditoEstado;
 
 /**
  *
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="NC_CLIENTE__SEQUENCE", sequenceName="SQ_NOTA_CREDITO_CLIENTE")
 @Table(name = "NOTA_CREDITO_CLI_CABECERA")
 public class NotaCreditoCliCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="NC_CLIENTE__SEQUENCE")
     @Column(name = "COD_NOTA_CREDITO_CLIENTE")
-    private BigDecimal codNotaCreditoCliente;
+    private Long codNotaCreditoCliente;
     @Basic(optional = false)
     @Column(name = "NUM_NOTA_CREDTO_CLIENTE")
     private BigInteger numNotaCredtoCliente;
     @Column(name = "TOTAL_NOTA_CREDITO")
     private BigInteger totalNotaCredito;
+    @Column(name = "SUB_TOTAL")
+    private BigInteger subTotal;
+    @Column(name = "SALDO_FAC")
+    private BigInteger saldoFac;
+    @Column(name = "ESTADO")
+    @Enumerated(EnumType.STRING)
+    private NotaCreditoEstado estado;
+    @Column(name = "ESTABLECIMIENTO")
+    private String establecimiento;
+    @Column(name = "BOCA_EXPENDIO")
+    private String bocaExpendio;
+    @JoinColumn(name = "COD_DEPOSITO", referencedColumnName = "COD_DEPOSITO", nullable=false)
+    @ManyToOne(fetch=FetchType.EAGER)
+    private Deposito codDeposito;
+    @JoinColumn(name = "TIPO", referencedColumnName = "COD_TIPO", nullable=false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    private TipoComprobante tipoFactura;
     @Basic(optional = false)
     @Column(name = "FECHA_NOTA_CREDITO")
     @Temporal(TemporalType.DATE)
@@ -63,9 +88,6 @@ public class NotaCreditoCliCabecera implements Serializable {
     @JoinColumn(name = "COD_CLIENTE", referencedColumnName = "COD_CLIENTE")
     @ManyToOne(optional = false)
     private Cliente codCliente;
-    @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
-    @ManyToOne(optional = false)
-    private Empleado codEmpleado;
     @JoinColumn(name = "COD_FACTURA", referencedColumnName = "COD_FACTURA")
     @ManyToOne(optional = false)
     private FacturaCabecera codFactura;
@@ -75,21 +97,17 @@ public class NotaCreditoCliCabecera implements Serializable {
     public NotaCreditoCliCabecera() {
     }
 
-    public NotaCreditoCliCabecera(BigDecimal codNotaCreditoCliente) {
-        this.codNotaCreditoCliente = codNotaCreditoCliente;
-    }
-
-    public NotaCreditoCliCabecera(BigDecimal codNotaCreditoCliente, BigInteger numNotaCredtoCliente, Date fechaNotaCredito) {
+    public NotaCreditoCliCabecera(Long codNotaCreditoCliente, BigInteger numNotaCredtoCliente, Date fechaNotaCredito) {
         this.codNotaCreditoCliente = codNotaCreditoCliente;
         this.numNotaCredtoCliente = numNotaCredtoCliente;
         this.fechaNotaCredito = fechaNotaCredito;
     }
 
-    public BigDecimal getCodNotaCreditoCliente() {
+    public Long getCodNotaCreditoCliente() {
         return codNotaCreditoCliente;
     }
 
-    public void setCodNotaCreditoCliente(BigDecimal codNotaCreditoCliente) {
+    public void setCodNotaCreditoCliente(Long codNotaCreditoCliente) {
         this.codNotaCreditoCliente = codNotaCreditoCliente;
     }
 
@@ -177,14 +195,6 @@ public class NotaCreditoCliCabecera implements Serializable {
         this.codCliente = codCliente;
     }
 
-    public Empleado getCodEmpleado() {
-        return codEmpleado;
-    }
-
-    public void setCodEmpleado(Empleado codEmpleado) {
-        this.codEmpleado = codEmpleado;
-    }
-
     public FacturaCabecera getCodFactura() {
         return codFactura;
     }
@@ -205,6 +215,62 @@ public class NotaCreditoCliCabecera implements Serializable {
 //    public void setReciboDetalle(Set<ReciboDetalle> reciboDetalle) {
 //        this.reciboDetalle = reciboDetalle;
 //    }
+
+    public String getBocaExpendio() {
+        return bocaExpendio;
+    }
+
+    public void setBocaExpendio(String bocaExpendio) {
+        this.bocaExpendio = bocaExpendio;
+    }
+
+    public Deposito getCodDeposito() {
+        return codDeposito;
+    }
+
+    public void setCodDeposito(Deposito codDeposito) {
+        this.codDeposito = codDeposito;
+    }
+
+    public String getEstablecimiento() {
+        return establecimiento;
+    }
+
+    public void setEstablecimiento(String establecimiento) {
+        this.establecimiento = establecimiento;
+    }
+
+    public NotaCreditoEstado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(NotaCreditoEstado estado) {
+        this.estado = estado;
+    }
+
+    public BigInteger getSaldoFac() {
+        return saldoFac;
+    }
+
+    public void setSaldoFac(BigInteger saldoFac) {
+        this.saldoFac = saldoFac;
+    }
+
+    public BigInteger getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(BigInteger subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public TipoComprobante getTipoFactura() {
+        return tipoFactura;
+    }
+
+    public void setTipoFactura(TipoComprobante tipoFactura) {
+        this.tipoFactura = tipoFactura;
+    }
 
     @Override
     public int hashCode() {

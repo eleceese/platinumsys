@@ -13,6 +13,9 @@ import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.FacturaCabecera;
 import py.com.platinum.entity.FacturaDetalle;
+import py.com.platinum.entity.SaldoCliente;
+import py.com.platinum.entity.TipoComprobante;
+import py.com.platinum.utilsenum.ModuloEnum;
 
 /**
  *
@@ -313,6 +316,41 @@ public class FacturaCabeceraController extends AbstractJpaDao<FacturaCabecera> {
 
         //result
         return r + 1;
+    }
+
+
+    /**
+     * Este metodo realiza la consulta de acuerdo a los campos de filtro, la
+     * busqueda se realiza en forma aproximada con el uso del operador like
+     * @param nroFactura
+     * @param proveedor
+     *
+     * @return lista de FacturaCabeceras que cumplen con la condicion de busqueda
+     */
+    public List<FacturaCabecera> getFacturaConSaldo() {
+        //Armamos el sql String
+        String SQL =
+                     " select distinct f                                "
+                    +"   from FacturaCabecera f,                        "
+                    +"        SaldoCliente    s                         "
+                    +"  where s.tipoComprobante = f.tipoFactura.codTipo "
+                    +"    and s.nroComprobante  = f.codFactura          "
+                    +"    and s.saldo > 0                               ";
+
+
+        //Order By
+        SQL = SQL + " ORDER BY f.fechaFactura desc ";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Realizamos la busqueda
+        List<FacturaCabecera> entities = q.getResultList();
+        em.close();
+
+        //retornamos la lista
+        return entities;
+
     }
 
 }   
