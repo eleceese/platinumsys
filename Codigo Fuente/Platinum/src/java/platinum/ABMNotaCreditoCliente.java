@@ -908,7 +908,7 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
             }
 
             this.pageAlert1.setTitle(cr.getMsg());
-            this.pageAlert1.setSummary("");
+            this.pageAlert1.setSummary("");   
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
         }

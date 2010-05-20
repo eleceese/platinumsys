@@ -89,6 +89,8 @@
                                         <webuijsf:tableColumn headerText="Estado" id="tableColumnestado" width="96">
                                             <webuijsf:staticText id="staticText4" text="#{currentRow.value['estado']}"/>
                                         </webuijsf:tableColumn>
+
+                                      
                                         <webuijsf:tableColumn headerText="Factura" id="tableColumn5" width="112">
                                             <webuijsf:staticText id="staticText8" text="#{currentRow.value['codFactura']}"/>
                                         </webuijsf:tableColumn>
