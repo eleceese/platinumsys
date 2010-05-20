@@ -42,11 +42,6 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>Nuevo</managed-bean-name>
-        <managed-bean-class>platinum.Nuevo</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
         <managed-bean-name>ABMClientes</managed-bean-name>
         <managed-bean-class>platinum.ABMClientes</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
