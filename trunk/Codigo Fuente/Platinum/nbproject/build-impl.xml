@@ -532,10 +532,11 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.OralceJdbc.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.OralceJdbc.classpath" todir="${dist.ear.dir}"/>
         <copyfiles files="${libs.hibernate-persistence.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.hibernate-persistence.classpath" todir="${dist.ear.dir}"/>
         <copyfiles files="${libs.dynamicfaces_1686429988291665633.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.dynamicfaces_1686429988291665633.classpath" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.dynamicfaces_2427931534656224937.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.dynamicfaces_2427931534656224937.classpath" todir="${dist.ear.dir}"/>
         <copyfiles files="${libs.exceptionhandler-runtime.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${manifest.libs.jsf12-support.classpath} ${manifest.libs.woodstock-components.classpath} ${manifest.libs.woodstock-theme-default.classpath} ${manifest.file.reference.webui-jsf-suntheme_es.jar} ${manifest.reference.PlatinumModel.jar} ${manifest.reference.Utils.jar} ${manifest.libs.OralceJdbc.classpath} ${manifest.libs.hibernate-persistence.classpath} ${manifest.libs.dynamicfaces_1686429988291665633.classpath} "/>
+            <attribute name="Class-Path" value="${manifest.libs.jsf12-support.classpath} ${manifest.libs.woodstock-components.classpath} ${manifest.libs.woodstock-theme-default.classpath} ${manifest.file.reference.webui-jsf-suntheme_es.jar} ${manifest.reference.PlatinumModel.jar} ${manifest.reference.Utils.jar} ${manifest.libs.OralceJdbc.classpath} ${manifest.libs.hibernate-persistence.classpath} ${manifest.libs.dynamicfaces_1686429988291665633.classpath} ${manifest.libs.dynamicfaces_2427931534656224937.classpath} "/>
         </manifest>
     </target>
     <target depends="init" name="library-inclusion-in-archive" unless="dist.ear.dir">
@@ -548,6 +549,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.OralceJdbc.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.hibernate-persistence.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.dynamicfaces_1686429988291665633.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${libs.dynamicfaces_2427931534656224937.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.exceptionhandler-runtime.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
     </target>
     <target depends="init,compile,compile-jsps,-pre-dist,library-inclusion-in-manifest" name="do-ear-dist">
