@@ -6,6 +6,7 @@
 package platinum;
 
 import com.sun.rave.web.ui.appbase.AbstractFragmentBean;
+import com.sun.webui.jsf.model.Option;
 import javax.faces.FacesException;
 
 /**
@@ -31,6 +32,17 @@ public class Menu extends AbstractFragmentBean {
     private void _init() throws Exception {
     }
     // </editor-fold>
+
+
+    private Option opcionesComprasABM[] = new Option[0];
+
+    public Option[] getOpcionesComprasABM() {
+        return opcionesComprasABM;
+    }
+
+    public void setOpcionesComprasABM(Option[] opcionesComprasABM) {
+        this.opcionesComprasABM = opcionesComprasABM;
+    }
 
     public Menu() {
     }
@@ -66,6 +78,11 @@ public class Menu extends AbstractFragmentBean {
         // Perform application initialization that must complete
         // *after* managed components are initialized
         // TODO - add your own initialization code here
+
+        this.opcionesComprasABM = new Option[]{
+                new Option("Marcas", "/faces/ABMMarcas.jsp"),
+                new Option("Proveedores", "/faces/ABMProveedores.jsp")
+        };
     }
 
     /**
