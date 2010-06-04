@@ -78,7 +78,7 @@
                                                 selected="#{ABMNotaCreditoCliente.selected}" selectedValue="#{ABMNotaCreditoCliente.selectedValue}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Nro. Nota Credito" id="tableColumn2" width="130">
-                                            <webuijsf:staticText id="staticText2" text="#{currentRow.value['numNotaCredtoCliente']}"/>
+                                            <webuijsf:staticText id="staticText2" text="#{currentRow.value['establecimiento']} - #{currentRow.value['bocaExpendio']} - #{currentRow.value['numeroNota']}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Cliente" id="tableColumn3">
                                             <webuijsf:staticText id="staticText3" text="#{currentRow.value['codCliente'].apellidoCliente}, #{currentRow.value['codCliente'].nombreCliente}"/>
@@ -87,12 +87,7 @@
                                             <webuijsf:staticText converter="#{SessionBean1.dateTimeConverter}" id="staticText4" text="#{currentRow.value['fechaNotaCredito']}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Estado" id="tableColumnestado" width="96">
-                                            <webuijsf:staticText id="staticText4" text="#{currentRow.value['estado']}"/>
-                                        </webuijsf:tableColumn>
-
-                                      
-                                        <webuijsf:tableColumn headerText="Factura" id="tableColumn5" width="112">
-                                            <webuijsf:staticText id="staticText8" text="#{currentRow.value['codFactura']}"/>
+                                            <webuijsf:staticText id="staticText4" converter="#{ABMNotaCreditoCliente.characterConverter1}" text="#{currentRow.value['estado']}"/>
                                         </webuijsf:tableColumn>
                                     </webuijsf:tableRowGroup>
                                 </webuijsf:table>
@@ -136,7 +131,7 @@
                                             <webuijsf:textField binding="#{ABMNotaCreditoCliente.uiTxtTotalIva}" columns="20" id="uiTxtTotalIva"
                                                 onFocus="document.getElementById('form1:uiBtnCancelar').focus(); return false;" style="text-align: right"/>
                                         </h:panelGrid>
-                                        <webuijsf:hyperlink id="lnkPedido" onClick="doPopup('form1:uiTxtNroFactura_field')" target="popup" text="Factura" url="/faces/popup/popupPedidoVenta.jsp"/>
+                                        <webuijsf:hyperlink id="lnkPedido" onClick="doPopup('form1:uiTxtNroFactura_field')" target="popup" text="Factura" url="/faces/popup/popupFacturaVenta.jsp"/>
                                         <h:panelGrid columns="2" id="gridPanelPedido" width="191">
                                             <webuijsf:textField binding="#{ABMNotaCreditoCliente.uiTxtNroFactura}" columns="15" id="uiTxtNroFactura"
                                                 maxLength="15" onFocus="document.getElementById('form1:uiBtnCargarPedido').focus(); return false;"/>

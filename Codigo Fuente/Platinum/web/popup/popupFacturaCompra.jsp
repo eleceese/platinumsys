@@ -16,7 +16,7 @@
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
                         <webuijsf:table augmentTitle="false" id="table1" paginateButton="true" paginationControls="true"
-                            style="height: 77px; left: 0px; top: 0px; position: absolute" title="Seleccione una Nota Credito" width="504">
+                            style="height: 77px; left: 0px; top: 0px; position: absolute" title="Seleccione una Factura" width="504">
                             <f:facet name="actionsTop"/>
                             <webuijsf:tableRowGroup id="tableRowGroup1" rows="20" sourceData="#{SessionBean1.listaFacturaCompra}" sourceVar="currentRow">
                                 <webuijsf:tableColumn headerText="Nro. Factura" id="tableColumn1" width="113">

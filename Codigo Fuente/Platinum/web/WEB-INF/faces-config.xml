@@ -357,11 +357,6 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>ABMVentasCliente</managed-bean-name>
-        <managed-bean-class>platinum.ABMVentasCliente</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
         <managed-bean-name>LSTEstadisticaDeProduccion</managed-bean-name>
         <managed-bean-class>platinum.LSTEstadisticaDeProduccion</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
@@ -500,5 +495,10 @@
         <managed-bean-name>ABMNotaCreditoCliente</managed-bean-name>
         <managed-bean-class>platinum.ABMNotaCreditoCliente</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupFacturaVenta</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupFacturaVenta</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 </faces-config>

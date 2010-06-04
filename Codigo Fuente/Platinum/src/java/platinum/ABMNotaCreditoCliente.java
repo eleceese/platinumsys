@@ -29,6 +29,7 @@ import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.ClienteController;
 import py.com.platinum.controller.NotaCreditoClienteCabController;
 import py.com.platinum.controller.FacturaCabeceraController;
+import py.com.platinum.controller.SaldoClienteController;
 import py.com.platinum.controller.TipoComprobanteController;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.Producto;
@@ -961,9 +962,18 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
 
         if (uiTxtNroFactura.getText()!= null ){
             factura = facturaController.findById(Long.valueOf(uiTxtNroFactura.getText().toString()));
+
             if (factura == null) {
                 errorValidacion = true;
                 info("Numero de factura ingresado incorrecto, favor verifique");
+            }else{
+                long totalNota = Long.valueOf(uiTxtTotal.getText().toString());
+                long saldoFactura = new SaldoClienteController().getSaldoCliente(factura.getTipoFactura().getCodTipo(), factura.getCodFactura());
+
+                if (totalNota > saldoFactura) {
+                    errorValidacion = true;
+                    info("El Total de la Nota es superior al saldo de la Factura, favor verifique");
+                }
             }
         }
     }
