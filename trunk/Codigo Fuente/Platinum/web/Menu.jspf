@@ -8,17 +8,17 @@
     <f:subview id="Menu">
         <webuijsf:accordion id="acc1" refreshIcon="true" style="height: 650px; left: 0px; top: 144px; position: absolute; width: 200px" toggleControls="true">
             <webuijsf:accordionTab contentHeight="250px" id="tab1" title="Mantenimiento">
-                <webuijsf:hyperlink id="hyper7" target="rightFrame" text="Empleados" url="/faces/ABMEmpleados.jsp"/>
+                <webuijsf:hyperlink id="hyper7" text="Empleados" url="/faces/ABMEmpleados.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="hyper8" target="rightFrame" text="Solicitudes" url="/faces/ABMClientes.jsp"/>
+                <webuijsf:hyperlink id="hyper8" text="Solicitudes" url="/faces/ABMClientes.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="hyper9" target="rightFrame" text="Comisiones" url="/faces/ABMEmpleados2.jsp"/>
+                <webuijsf:hyperlink id="hyper9" text="Comisiones" url="/faces/ABMEmpleados2.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="secciones" target="rightFrame" text="Secciones" url="/faces/ABMSecciones.jsp"/>
+                <webuijsf:hyperlink id="secciones" text="Secciones" url="/faces/ABMSecciones.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="cargos" target="rightFrame" text="Cargos" url="/faces/ABMCargos.jsp"/>
+                <webuijsf:hyperlink id="cargos" text="Cargos" url="/faces/ABMCargos.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="comisiones" target="rightFrame" text="Comisiones" url="/faces/ABMComisiones.jsp"/>
+                <webuijsf:hyperlink id="comisiones" text="Comisiones" url="/faces/ABMComisiones.jsp"/>
                 <br/>
             </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab2" style="" title="Compras">
@@ -33,49 +33,49 @@
             </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab3" title="Ventas">
                 <h2>ABM</h2>
-                <webuijsf:hyperlink id="hyper10" style="margin-left: 20px" target="rightFrame" text="Clientes" url="/faces/ABMClientes.jsp"/>
+                <webuijsf:hyperlink id="hyper10" style="margin-left: 20px" text="Clientes" url="/faces/ABMClientes.jsp"/>
                 <br/>
                 <h2>Transacciones</h2>
-                <webuijsf:hyperlink id="abmFacturaVenta" style="margin-left: 20px" text="Factura Venta" url="/faces/ABMVentasCliente.jsp"/>
+                <webuijsf:hyperlink id="abmFacturaVenta" style="margin-left: 20px" text="Factura Venta" url="/faces/ABMFacturaVenta.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="abmNotaCreditoCliente"  style="margin-left: 20px" text="Nota Crédito Cliente" url="/faces/ABMNotaCreditoCliente.jsp"/>
             </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="Cobranzas" title="Cobranzas">
                 <h2>ABM</h2>
-                <webuijsf:hyperlink id="bancos" target="rightFrame" style="margin-left: 20px"  text="Bancos" url="/faces/ABMBancos.jsp"/>
+                <webuijsf:hyperlink id="bancos"  style="margin-left: 20px"  text="Bancos" url="/faces/ABMBancos.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="formaPagos" target="rightFrame" style="margin-left: 20px"  text="Formas de Pago" url="/faces/ABMFormaPagos.jsp"/>
+                <webuijsf:hyperlink id="formaPagos" style="margin-left: 20px"  text="Formas de Pago" url="/faces/ABMFormaPagos.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="cajas" target="rightFrame" style="margin-left: 20px"  text="Cajas de Cobranza" url="/faces/ABMCajas.jsp"/>
+                <webuijsf:hyperlink id="cajas" style="margin-left: 20px"  text="Cajas de Cobranza" url="/faces/ABMCajas.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="aperturaCajas" target="rightFrame" style="margin-left: 20px"  text="Apertura de Cajas" url="/faces/RegistroAperturaCaja.jsp"/>
+                <webuijsf:hyperlink id="aperturaCajas" style="margin-left: 20px"  text="Apertura de Cajas" url="/faces/RegistroAperturaCaja.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="cierraCajas" target="rightFrame" style="margin-left: 20px"  text="Cierre de Cajas" url="/faces/RegistroCierreCaja.jsp"/>
+                <webuijsf:hyperlink id="cierraCajas" style="margin-left: 20px"  text="Cierre de Cajas" url="/faces/RegistroCierreCaja.jsp"/>
                 <br/>
                 <h2>Transacciones</h2>
             </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab4" title="Produccion">
-                <webuijsf:hyperlink id="ordenesDeTrabajo" target="rightFrame" text="Ordenes de Trabajo" url="/faces/RegistroDeOrdenesDeTrabajo.jsp"/>
+                <webuijsf:hyperlink id="ordenesDeTrabajo" text="Ordenes de Trabajo" url="/faces/RegistroDeOrdenesDeTrabajo.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="produccionDiaria" target="rightFrame" text="Produccion Diaria" url="/faces/RegistroProDiaria.jsp"/>
+                <webuijsf:hyperlink id="produccionDiaria" text="Produccion Diaria" url="/faces/RegistroProDiaria.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="tipoProduccion" target="rightFrame" text="Tipo de Productos" url="/faces/ABMTipoProductos.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="Productos" target="rightFrame" text="Productos" url="/faces/ABMProductos.jsp"/>
+                <webuijsf:hyperlink id="Productos" text="Productos" url="/faces/ABMProductos.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="Tareas" target="rightFrame" text="Tareas" url="/faces/ABMTareas.jsp"/>
+                <webuijsf:hyperlink id="Tareas" text="Tareas" url="/faces/ABMTareas.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="unidadMedida" target="rightFrame" text="Unidades de Medida" url="/faces/ABMUnidadMedida.jsp"/>
+                <webuijsf:hyperlink id="unidadMedida" text="Unidades de Medida" url="/faces/ABMUnidadMedida.jsp"/>
                 <br/>
             </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab5" title="Stock">
-                <webuijsf:hyperlink id="depositos" target="rightFrame" text="Depositos" url="/faces/ABMDeposito.jsp"/>
+                <webuijsf:hyperlink id="depositos" text="Depositos" url="/faces/ABMDeposito.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="movimientos" target="rightFrame" text="Movimientos Deposito" url="/faces/RegistroMovDeposito.jsp"/>
+                <webuijsf:hyperlink id="movimientos" text="Movimientos Deposito" url="/faces/RegistroMovDeposito.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="inventarios" target="rightFrame" text="Apertura Inventario" url="/faces/RegistroDeInventario.jsp"/>
+                <webuijsf:hyperlink id="inventarios" text="Apertura Inventario" url="/faces/RegistroDeInventario.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="inventariosCierre" target="rightFrame" text="Cierre Inventario" url="/faces/RegistroDeInventarioCierre.jsp"/>
+                <webuijsf:hyperlink id="inventariosCierre"  text="Cierre Inventario" url="/faces/RegistroDeInventarioCierre.jsp"/>
                 <br/>
             </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab7" title="Reportes"/>

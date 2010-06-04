@@ -659,7 +659,7 @@ public class ABMFacturaVenta extends AbstractPageBean {
         } else if (errorValidacion) {
             addUpdatePanel.setRendered(true);
         } else if (!updateDetRequest) {
-            getSessionBean1().setTituloPagina("Facturas Compras");
+            getSessionBean1().setTituloPagina("Facturas Venta");
             getSessionBean1().setDetallePagina("Registro de Facturas - Cliente");
             gridPanelBuscar.setRendered(true);
             table1.setRendered(true);
@@ -909,7 +909,6 @@ public class ABMFacturaVenta extends AbstractPageBean {
 
             //Set de los artributos
             cabecera.setCodCliente(cliente);
-            cabecera.setEstadoFactura(ModelUtil.getFacturaVentaEstado(uiLstEstado.getSelected().toString()));
             cabecera.setFechaFactura(uiCalFecha.getSelectedDate());
             cabecera.setFechaVencimiento(DateUtils.fechaMas(uiCalFecha.getSelectedDate(), tipoComprobante.getCantDias()));
             cabecera.setCodPedido(pedido);
@@ -926,6 +925,13 @@ public class ABMFacturaVenta extends AbstractPageBean {
             cabecera.setTotalIvaFactura(Long.valueOf(uiTxtTotalIva.getText().toString()));
             cabecera.setSubtotalFactura(Long.valueOf(uiTxtSubTotal.getText().toString()));
             cabecera.setTotalFactura(Long.valueOf(uiTxtTotal.getText().toString()));
+
+            //El estado dependiendo del tipo de comprobante
+            if (tipoComprobante.getCantCuota() > 0) {
+                cabecera.setEstadoFactura(ModelUtil.getFacturaVentaEstado(uiLstEstado.getSelected().toString()));
+            } else {
+                cabecera.setEstadoFactura(FacturaVentaEstado.COBRADO);
+            }
 
             //Insertamos la cebecera y del detalle
             ControllerResult cr = new FacturaCabeceraController().crear(cabecera, lstDetalleLIST);

@@ -20,6 +20,7 @@ import py.com.platinum.controller.ComisionController;
 import py.com.platinum.controller.EmpleadoController;
 import py.com.platinum.controller.FormaPagoController;
 import py.com.platinum.controller.DepositoController;
+import py.com.platinum.controller.FacturaCabeceraController;
 import py.com.platinum.controller.FacturaCompraCabController;
 import py.com.platinum.controller.FormulaCabeceraController;
 import py.com.platinum.controller.FormulaSemiCabeceraController;
@@ -46,6 +47,7 @@ import py.com.platinum.entity.Comision;
 import py.com.platinum.entity.Empleado;
 import py.com.platinum.entity.FormaPago;
 import py.com.platinum.entity.Deposito;
+import py.com.platinum.entity.FacturaCabecera;
 import py.com.platinum.entity.FacturaCompraCab;
 import py.com.platinum.entity.FormulaCabecera;
 import py.com.platinum.entity.FormulaSemiCabecera;
@@ -65,6 +67,7 @@ import py.com.platinum.entity.TipoComprobante;
 import py.com.platinum.entity.TipoProducto;
 import py.com.platinum.entity.UnidadMedida;
 import py.com.platinum.utilsenum.FacturaCompraEstado;
+import py.com.platinum.utilsenum.FacturaVentaEstado;
 import py.com.platinum.utilsenum.ModuloEnum;
 import py.com.platinum.utilsenum.PedidoVentaEstado;
 
@@ -172,6 +175,7 @@ public class SessionBean1 extends AbstractSessionBean {
         cargarListaTipoComprobante();
         cargarListaPedidoVenta(null, PedidoVentaEstado.PENDIENTE);
         cargarListaFacturaCompra(null, FacturaCompraEstado.RECIBIDO);
+        cargarListaFacturaVenta(null);
     }
 
     /**
@@ -1263,6 +1267,22 @@ public class SessionBean1 extends AbstractSessionBean {
     public void cargarListaFacturaCompra(String cliente, FacturaCompraEstado estado) {
         FacturaCompraCabController c = new FacturaCompraCabController();
         listaFacturaCompra = (FacturaCompraCab[]) c.getFacturaCompraCab(cliente, estado).toArray(new FacturaCompraCab[0]);
+    }
+
+
+    FacturaCabecera[] listaFacturaVenta;
+
+    public FacturaCabecera[] getListaFacturaVenta() {
+        return listaFacturaVenta;
+    }
+
+    public void setListaFacturaVenta(FacturaCabecera[] listaFacturaVenta) {
+        this.listaFacturaVenta = listaFacturaVenta;
+    }
+
+    public void cargarListaFacturaVenta(String cliente) {
+        FacturaCabeceraController c = new FacturaCabeceraController();
+        listaFacturaVenta = (FacturaCabecera[]) c.getFacturaConSaldo(cliente).toArray(new FacturaCabecera[0]);
     }
 
   }
