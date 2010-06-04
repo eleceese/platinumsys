@@ -1,0 +1,10 @@
+--Agregamos cantidad de cuotas para los tipos de comprobantes
+alter table tipo_comprobante add cant_cuota number(5) default 0;
+
+--Agregamos cantidad de cuotas para saldo cliente
+alter table saldo_cliente add nro_cuota number(5);
+alter table saldo_cliente add monto_cuota number;
+alter table saldo_cliente add saldo_cuota number;
+alter table saldo_cliente rename column saldo to saldo_comprobante;
+alter table saldo_cliente rename column total to total_comprobante;
+
