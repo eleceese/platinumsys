@@ -37,6 +37,8 @@ public class TipoComprobante implements Serializable {
     private int cantDias;
     @Column(name = "MODULO", length = 30)
     private String modulo;
+    @Column(name = "CANT_CUOTA")
+    private Long cantCuota;
 
     public TipoComprobante() {
     }
@@ -83,7 +85,13 @@ public class TipoComprobante implements Serializable {
         this.modulo = modulo;
     }
 
- 
+    public Long getCantCuota() {
+        return cantCuota;
+    }
+
+    public void setCantCuota(Long cantCuota) {
+        this.cantCuota = cantCuota;
+    }
 
     @Override
     public int hashCode() {

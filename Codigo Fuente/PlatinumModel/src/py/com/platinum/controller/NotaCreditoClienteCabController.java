@@ -154,11 +154,11 @@ public class NotaCreditoClienteCabController extends AbstractJpaDao<NotaCreditoC
      */
     public synchronized  Long getNroNotaCredito(String establecimiento, String bocaExpendio) {
         //Variables
-        Long r;
+        BigInteger  r;
         String SQL;
 
         //Inicializamos
-        r = new Long("0");
+        r = BigInteger.valueOf(Long.valueOf("0"));
 
         //Armamos el SQL
         SQL = " SELECT MAX(o.numNotaCredtoCliente)            " +
@@ -175,16 +175,16 @@ public class NotaCreditoClienteCabController extends AbstractJpaDao<NotaCreditoC
 
 
         //Realizamos la busqueda
-        r = (Long) q.getSingleResult();
+        r = (BigInteger) q.getSingleResult();
 
         if (r == null) {
-            r = new Long("0");
+            r = BigInteger.valueOf(Long.valueOf("0"));
         }
 
         //Cerar campos el entity manager
         em.close();
 
         //result
-        return r + 1;
+        return r.longValue() + 1;
     }
 }   
