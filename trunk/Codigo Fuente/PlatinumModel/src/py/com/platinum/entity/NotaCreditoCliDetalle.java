@@ -11,6 +11,7 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,12 +22,14 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.listener.NotaCreditoClienteDetalleListener;
 
 /**
  *
  * @author Martin
  */
 @Entity
+@EntityListeners(value=NotaCreditoClienteDetalleListener.class)
 @SequenceGenerator(name="NC_DET_CLIENTE__SEQUENCE", sequenceName="SQ_DETALLE_NOTA_CRED_CLIENTE")
 @Table(name = "NOTA_CREDITO_CLI_DETALLE")
 public class NotaCreditoCliDetalle implements Serializable {

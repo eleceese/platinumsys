@@ -4,6 +4,7 @@
  */
 package py.com.platinum.listener;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -62,21 +63,65 @@ public class FacturaVentaCabeceraListener {
 
         }
 
-        //Verificamos si es contado el comprobante no insertamos en la tabla de saldo
-        if (cab.getTipoFactura().getCantDias() > 0) {
-            //Persistimos el comprobante en el Entity SaldoCliente
+        /* Verificamos si el tipo de comprobante maneja cuotas, para insertar
+         * en la tabla de saldos.
+         */
+        long cantCuotas = cab.getTipoFactura().getCantCuota();
+
+        if (cantCuotas > 0) {
+
+            //Inicializamos las variables
+            Date fecVencimiento;
+            long cnt = 1;
             saldoCliente = new SaldoCliente();
-            saldoCliente.setCodCliente(cab.getCodCliente());
-            saldoCliente.setUsuarioAlta(cab.getUsuarioAlta());
-            saldoCliente.setFechaAlta(new Date());
-            saldoCliente.setNroComprobante(cab.getCodFactura());
- //**           saldoCliente.setTipoComprobante(cab.getTipoFactura());
-            saldoCliente.setSaldo(cab.getTotalFactura());
-            saldoCliente.setTotal(cab.getTotalFactura());
-            saldoCliente.setFechaComprobante(cab.getFechaFactura());
-            saldoCliente.setFechaVencimiento(DateUtils.fechaMas(cab.getFechaFactura(), cab.getTipoFactura().getCantDias()));
-            //Persistimos
-            saldoClienteController.create(saldoCliente);
+            fecVencimiento = cab.getFechaFactura();
+
+            //Calculamos el importe de las cuotas
+            double montoCuota, ajusteMonto = 0;
+            montoCuota  = cab.getTotalFactura() / cantCuotas;
+
+            //Calculamos el ajuste del monto cuota
+            ajusteMonto = montoCuota - Math.floor(montoCuota);
+
+            if (ajusteMonto > 0) {
+                ajusteMonto = ajusteMonto * cantCuotas;
+            }
+
+            //Generamos la cuotas
+            while (cnt <= cantCuotas) {
+                //Asignamos los valores para el objeto SaldoCliente
+                saldoCliente.setCodCliente(cab.getCodCliente());
+                saldoCliente.setUsuarioAlta(cab.getUsuarioAlta());
+                saldoCliente.setFechaAlta(new Date());
+                saldoCliente.setNroComprobante(cab.getCodFactura());
+                saldoCliente.setTipoComprobante(cab.getTipoFactura().getCodTipo());
+                saldoCliente.setSaldoComprobante(cab.getTotalFactura());
+                saldoCliente.setTotalComprobante(cab.getTotalFactura());
+                saldoCliente.setFechaComprobante(cab.getFechaFactura());
+                saldoCliente.setNroCuota(cnt);
+
+                //Fecha Vencimiento
+                fecVencimiento = DateUtils.fechaMas(fecVencimiento, cab.getTipoFactura().getCantDias());
+                saldoCliente.setFechaVencimiento(fecVencimiento);
+                
+                if (cnt != cantCuotas) {
+                    saldoCliente.setMontoCuota(BigDecimal.valueOf(montoCuota).longValue());
+                    saldoCliente.setSaldoCuota(BigDecimal.valueOf(montoCuota).longValue());
+                }else{
+                    saldoCliente.setMontoCuota(BigDecimal.valueOf(montoCuota+ajusteMonto).longValue());
+                    saldoCliente.setSaldoCuota(BigDecimal.valueOf(montoCuota+ajusteMonto).longValue());
+                }
+
+
+                //Persistimos
+                saldoClienteController.create(saldoCliente);
+
+                //Cerar
+                cnt++;
+                saldoCliente = new SaldoCliente();
+                
+            }
+
         }
     }
 
@@ -90,15 +135,8 @@ public class FacturaVentaCabeceraListener {
         if (cab.getEstadoFactura().toString().equals(FacturaVentaEstado.ANULADO.toString())) {
             //Si el comprobante es a Credito, actualizamos el saldo del cliente
             if (cab.getTipoFactura().getCantDias() > 0) {
-                //Obtenemos el comprobante de la tabla factura
-                saldoCliente = saldoClienteController.getSaldoCliente(cab.getTipoFactura().getCodTipo(), cab.getCodFactura());
-
-                //Ceramos los totales
-                saldoCliente.setTotal(Long.valueOf("0"));
-                saldoCliente.setSaldo(Long.valueOf("0"));
-
-                //Actualizamos
-                saldoClienteController.update(saldoCliente);    
+                //Anulamos las cuotas del comprobante
+                saldoClienteController.anularComprobante(cab.getTipoFactura().getCodTipo(), cab.getCodFactura());
             }
 
             //Actualizamos el detalle

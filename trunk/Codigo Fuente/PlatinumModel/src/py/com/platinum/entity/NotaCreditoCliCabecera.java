@@ -6,7 +6,6 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +15,7 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -29,6 +29,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.listener.NotaCreditoClienteCabeceraListener;
+import py.com.platinum.utils.StringUtils;
 import py.com.platinum.utilsenum.NotaCreditoEstado;
 
 /**
@@ -36,6 +38,7 @@ import py.com.platinum.utilsenum.NotaCreditoEstado;
  * @author Martin
  */
 @Entity
+@EntityListeners(value=NotaCreditoClienteCabeceraListener.class)
 @SequenceGenerator(name="NC_CLIENTE__SEQUENCE", sequenceName="SQ_NOTA_CREDITO_CLIENTE")
 @Table(name = "NOTA_CREDITO_CLI_CABECERA")
 public class NotaCreditoCliCabecera implements Serializable {
@@ -270,6 +273,10 @@ public class NotaCreditoCliCabecera implements Serializable {
 
     public void setTipoFactura(TipoComprobante tipoFactura) {
         this.tipoFactura = tipoFactura;
+    }
+
+    public String getNumeroNota() {
+        return StringUtils.lpad(numNotaCredtoCliente.toString(), 8, "0");
     }
 
     @Override

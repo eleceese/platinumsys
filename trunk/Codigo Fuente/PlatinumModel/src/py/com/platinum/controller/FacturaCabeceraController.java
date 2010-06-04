@@ -13,9 +13,7 @@ import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.FacturaCabecera;
 import py.com.platinum.entity.FacturaDetalle;
-import py.com.platinum.entity.SaldoCliente;
-import py.com.platinum.entity.TipoComprobante;
-import py.com.platinum.utilsenum.ModuloEnum;
+import py.com.platinum.utilsenum.FacturaCompraEstado;
 
 /**
  *
@@ -344,6 +342,39 @@ public class FacturaCabeceraController extends AbstractJpaDao<FacturaCabecera> {
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
 
+        //Realizamos la busqueda
+        List<FacturaCabecera> entities = q.getResultList();
+        em.close();
+
+        //retornamos la lista
+        return entities;
+
+    }
+
+    public List<FacturaCabecera> getFacturaConSaldo(String cliente) {
+        //Armamos el sql String
+        String SQL =
+                     " select distinct f                                "
+                    +"   from FacturaCabecera f,                        "
+                    +"        SaldoCliente    s                         "
+                    +"  where s.tipoComprobante = f.tipoFactura.codTipo "
+                    +"    and s.nroComprobante  = f.codFactura          "
+                    +"    and s.saldoCuota > 0                          ";
+
+        if (cliente != null && !cliente.equals("")) {
+            SQL = SQL + "    and UPPER( CONCAT(CONCAT(f.codCliente.apellidoCliente, '%'), f.codCliente.nombreCliente)) like UPPER(:cliente)  ";
+        }
+
+        //Order By
+        SQL = SQL + " ORDER BY f.fechaFactura desc ";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        if (cliente != null && !cliente.equals("")) {
+            q.setParameter("cliente", "%" + cliente + "%");
+        }
+        
         //Realizamos la busqueda
         List<FacturaCabecera> entities = q.getResultList();
         em.close();

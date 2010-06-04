@@ -42,10 +42,16 @@ public class SaldoCliente implements Serializable {
     @Column(name = "FECHA_VENCIMIENTO")
     @Temporal(TemporalType.DATE)
     private Date fechaVencimiento;
-    @Column(name = "SALDO")
-    private Long saldo;
-    @Column(name = "TOTAL")
-    private Long total;
+    @Column(name = "SALDO_COMPROBANTE")
+    private Long saldoComprobante;
+    @Column(name = "TOTAL_COMPROBANTE")
+    private Long totalComprobante;
+    @Column(name = "NRO_CUOTA")
+    private Long nroCuota;
+    @Column(name = "MONTO_CUOTA")
+    private Long montoCuota;
+    @Column(name = "SALDO_CUOTA")
+    private Long saldoCuota;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -107,20 +113,20 @@ public class SaldoCliente implements Serializable {
         this.fechaComprobante = fechaComprobante;
     }
 
-    public Long getSaldo() {
-        return saldo;
+    public Long getSaldoComprobante() {
+        return saldoComprobante;
     }
 
-    public void setSaldo(Long saldo) {
-        this.saldo = saldo;
+    public void setSaldoComprobante(Long saldoComprobante) {
+        this.saldoComprobante = saldoComprobante;
     }
 
-    public Long getTotal() {
-        return total;
+    public Long getTotalComprobante() {
+        return totalComprobante;
     }
 
-    public void setTotal(Long total) {
-        this.total = total;
+    public void setTotalComprobante(Long totalComprobante) {
+        this.totalComprobante = totalComprobante;
     }
 
     public String getUsuarioAlta() {
@@ -161,6 +167,30 @@ public class SaldoCliente implements Serializable {
 
     public void setCodCliente(Cliente codCliente) {
         this.codCliente = codCliente;
+    }
+
+    public Long getMontoCuota() {
+        return montoCuota;
+    }
+
+    public void setMontoCuota(Long montoCuota) {
+        this.montoCuota = montoCuota;
+    }
+
+    public Long getNroCuota() {
+        return nroCuota;
+    }
+
+    public void setNroCuota(Long nroCuota) {
+        this.nroCuota = nroCuota;
+    }
+
+    public Long getSaldoCuota() {
+        return saldoCuota;
+    }
+
+    public void setSaldoCuota(Long saldoCuota) {
+        this.saldoCuota = saldoCuota;
     }
 
     @Override

@@ -6,6 +6,7 @@ package py.com.platinum.controller;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
@@ -31,9 +32,9 @@ public class SaldoClienteController extends AbstractJpaDao<SaldoCliente> {
         return this.getAll(SaldoCliente.class, orderBy);
     }
 
-    public SaldoCliente getSaldoCliente(Long tipoComprobante, Long nroComprobante) {
+    public Long getSaldoCliente(Long tipoComprobante, Long nroComprobante) {
         //Armamos el sql String
-        String SQL = "SELECT o FROM SaldoCliente o       " +
+        String SQL = "SELECT sum(o.montoCuota) FROM SaldoCliente o       " +
                      " WHERE o.tipoComprobante = :tipoComprobante " +
                      "   and o.nroComprobante  = :nroComprobante";
 
@@ -45,9 +46,9 @@ public class SaldoClienteController extends AbstractJpaDao<SaldoCliente> {
         q.setParameter("nroComprobante", nroComprobante);
 
         //Realizamos la busqueda
-        SaldoCliente entities;
+        Long entities;
         try {
-            entities = (SaldoCliente) q.getSingleResult();
+            entities = (Long) q.getSingleResult();
         } catch (NoResultException e) {
             e.printStackTrace();
             entities = null;
@@ -58,6 +59,45 @@ public class SaldoClienteController extends AbstractJpaDao<SaldoCliente> {
         //retornamos la lista
         return entities;
 
+    }
+
+    public int anularComprobante(Long tipoComprobante, Long nroComprobante) {
+
+        //Armamos el sql String
+        String SQL = " update SaldoCliente                         " +
+                     "    set montoCuota = :zero,                  " +
+                     "        saldoCuota = :zero,                  " +
+                     "        totalComprobante = :zero,            " +
+                     "        saldoComprobante = :zero             " +
+                     "  where tipoComprobante  = :tipoComprobante  " +
+                     "    and nroComprobante   = :nroComprobante   ";
+
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        Query q = em.createQuery(SQL);
+
+        //Seteamos los parametros
+        q.setParameter("tipoComprobante", tipoComprobante);
+        q.setParameter("nroComprobante", nroComprobante);
+        q.setParameter("zero", Long.valueOf("0"));
+
+
+        //Realizamos la busqueda
+        int cant;
+        try {
+            cant = q.executeUpdate();
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            cant = 0;
+            tx.rollback();
+        }
+
+        em.close();
+
+
+        return cant;
     }
 
 }   
