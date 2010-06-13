@@ -21,16 +21,13 @@
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
                         <div>
-                            <h:panelGrid columns="2" id="mainContainer" style="height: 149px; left: 288px; top: 235px; position: absolute" width="456">
-                                <webuijsf:label id="lblTipoProducto" text="Tipo Producto"/>
-                                <webuijsf:dropDown id="dropDown1" items="#{LSTValoresEnDeposito.dropDown1DefaultOptions.options}"
-                                    selected="#{LSTValoresEnDeposito.dropDown1DefaultOptions.selectedValue}" width="120"/>
-                                <webuijsf:hyperlink id="linkProducto" text="Producto"/>
-                                <webuijsf:textField columns="40" id="txtProducto" text="TODOS"/>
-                                <webuijsf:hyperlink id="linkDeposito" text="Deposito"/>
-                                <webuijsf:textField columns="40" id="txtDeposito" text="TODOS"/>
-                                <webuijsf:hyperlink id="linkMarca" text="Marca"/>
-                                <webuijsf:textField columns="40" id="txtMarca" text="TODOS"/>
+                            <h:panelGrid columns="2" id="mainContainer" style="height: 125px; left: 288px; top: 235px; position: absolute" width="456">
+                                <webuijsf:label id="label1" text="Producto"/>
+                                <webuijsf:dropDown binding="#{LSTValoresEnDeposito.uiProducto1}" id="uiProducto1" items="#{LSTValoresEnDeposito.listaProductosOp}"/>
+                                <webuijsf:label id="label2" text="Deposito"/>
+                                <webuijsf:dropDown binding="#{LSTValoresEnDeposito.uiDeposito1}" id="uiDeposito1" items="#{LSTValoresEnDeposito.listaDepositosOp}"/>
+                                <webuijsf:label id="label3" text="Marca"/>
+                                <webuijsf:dropDown binding="#{LSTValoresEnDeposito.uiMarca1}" id="uiMarca1" items="#{LSTValoresEnDeposito.listaMarcasOp}"/>
                                 <webuijsf:button actionExpression="#{LSTValoresEnDeposito.button1_action}" id="button1" text="Ejecutar"/>
                                 <webuijsf:button actionExpression="#{LSTValoresEnDeposito.button2_action}" id="button2" text="Cancelar"/>
                             </h:panelGrid>

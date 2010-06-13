@@ -26,6 +26,9 @@
                                 <webuijsf:tableColumn headerText="Codigo" id="tableColumn2" sort="codigoInterno">
                                     <webuijsf:staticText id="staticText2" text="#{currentRow.value['codigoInterno']}"/>
                                 </webuijsf:tableColumn>
+                                <webuijsf:tableColumn headerText="codProducto" id="tableColumn3" sort="codProducto">
+                                    <webuijsf:staticText id="staticText1" text="#{currentRow.value['codProducto']}"/>
+                                </webuijsf:tableColumn>
                             </webuijsf:tableRowGroup>
                             <f:facet name="actionsTop">
                                 <webuijsf:panelGroup binding="#{popup$popupProductos.groupPanel1}" id="groupPanel1" separator="&amp;nbsp;">

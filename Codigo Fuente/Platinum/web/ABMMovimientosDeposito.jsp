@@ -12,9 +12,9 @@
                 <webuijsf:head id="head1">
                     <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <script>
-                        function ABMMovimientosDeposito() {
-                            var table = document.getElementById("form1:tablaFormulas");
-                            table.ABMMovimientosDeposito();}
+                        function RegistroEstadosOT() {
+                            var table = document.getElementById("form1:tableMovimientos");
+                            table.RegistroEstadosOT();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
@@ -31,13 +31,6 @@
                         }
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
-                    <!-- \ SCRIPT PARA MANEJAR EL DETALLE-->
-                    <script>
-                        function DetalleFormula() {
-                            var table = document.getElementById("form1:tableDetalleFormula");
-                            table.DetalleFormula();}
-                    </script>
-                    <!-- \ SCRIPT PARA MANEJAR EL DETALLE-->
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
                     <webuijsf:script id="scriptPopUp" type="text/javascript" url="/js/utilJS.js"/>
                 </webuijsf:head>
@@ -45,12 +38,13 @@
                     <webuijsf:form id="form1">
                         <div>
                             <jsp:directive.include file="cabecera.jspf"/>
+                            <webuijsf:dropDown id="dropDown1" items="#{ABMMovimientosDeposito.dropDown1DefaultOptions.options}"/>
                         </div>
                         <div>
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
                         <div>
-                            <h:panelGrid binding="#{ABMMovimientosDeposito.mainContainer}" id="mainContainer" style="height: 96px; left: 240px; top: 288px; position: absolute; width: 96px">
+                            <h:panelGrid binding="#{ABMMovimientosDeposito.mainContainer}" id="mainContainer" style="height: 96px; left: 336px; top: 288px; position: absolute; width: 96px">
                                 <h:panelGrid binding="#{ABMMovimientosDeposito.gridPanelBuscar}" columns="1" id="gridPanelBuscar">
                                     <h:panelGrid columns="2" id="gridPanelFiltros" style="height: 72px" width="503">
                                         <h:panelGrid columns="2" id="gridPanelEmailFiltro">
@@ -67,11 +61,17 @@
                                         <webuijsf:button actionExpression="#{ABMMovimientosDeposito.buscarButton_action}"
                                             binding="#{ABMMovimientosDeposito.buscarButton}" id="buscarButton" text="Buscar"/>
                                     </h:panelGrid>
-                                    <webuijsf:table augmentTitle="false" id="uiTableMovimientos" paginateButton="true" paginationControls="true"
-                                        title="Movimientos en Deposito" width="911">
-                                        <webuijsf:tableRowGroup id="tableRowGroup1" rows="20" sourceData="#{ABMMovimientosDeposito.listaMovimientosCab}" sourceVar="currentRow">
-                                            <webuijsf:tableColumn align="center" id="tableColumn1" width="41">
-                                                <webuijsf:radioButton id="radioButton2" label=""/>
+                                    <webuijsf:table augmentTitle="false" id="uiTableMovimientos" title="Movimientos en Deposito" width="911">
+                                        <webuijsf:tableRowGroup binding="#{ABMMovimientosDeposito.tableRowGroup1}" id="tableRowGroup1" rows="5"
+                                            selected="#{ABMMovimientosDeposito.selectedState}" sourceData="#{ABMMovimientosDeposito.listaMovimientosCab}" sourceVar="currentRow">
+                                            <webuijsf:tableColumn align="center" binding="#{ABMMovimientosDeposito.tableColumn1}" id="tableColumn1"
+                                                onClick="setTimeout('initAllRows()', 0)" selectId="#{ABMMovimientosDeposito.radioButton2.id}" width="41">
+                                                <webuijsf:radioButton binding="#{ABMMovimientosDeposito.radioButton2}" id="radioButton2" label=""
+                                                    name="#{ABMMovimientosDeposito.radioButton2.id}" onClick="delSelect='ok'"
+                                                    selected="#{ABMMovimientosDeposito.selected}" selectedValue="#{ABMMovimientosDeposito.selectedValue}"/>
+                                            </webuijsf:tableColumn>
+                                            <webuijsf:tableColumn headerText="Cod" id="tableColumn14" width="10">
+                                                <webuijsf:staticText id="staticText10" text="#{currentRow.value['codEntradaSalida']}"/>
                                             </webuijsf:tableColumn>
                                             <webuijsf:tableColumn headerText="Fecha" id="tableColumn2" sort="fechaEntradaSalida" width="142">
                                                 <webuijsf:staticText converter="#{SessionBean1.dateTimeConverter}" id="staticText2" text="#{currentRow.value['fechaEntradaSalida']}"/>
@@ -124,7 +124,7 @@
                                             <webuijsf:textField binding="#{ABMMovimientosDeposito.uiResponsable2Codigo}" columns="15" id="uiResponsable2Codigo"/>
                                             <webuijsf:textField binding="#{ABMMovimientosDeposito.uiResponsableNombre1}" columns="50" disabled="true"
                                                 id="uiResponsableNombre1" valueChangeListenerExpression="#{ABMMovimientosDeposito.uiResponsableNombre_processValueChange}"/>
-                                            <webuijsf:message for="uiResponsableNombre1" id="message5" showDetail="false" showSummary="true"/>
+                                            <webuijsf:message for="uiResponsable2Codigo" id="message5" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
                                         <webuijsf:label id="label2" text="Observacion"/>
                                         <h:panelGrid columns="2" id="gridPanelPassword">
@@ -161,7 +161,8 @@
                                             </h:panelGrid>
                                             <h:panelGrid columns="2" id="gridPanel5" style="height: 26px; width: 96px">
                                                 <webuijsf:label id="label1" text="Cantidad"/>
-                                                <webuijsf:textField binding="#{ABMMovimientosDeposito.uiDetalleCant}" id="uiDetalleCant" valueChangeListenerExpression="#{ABMMovimientosDeposito.uiDetalleCant_processValueChange}"/>
+                                                <webuijsf:textField binding="#{ABMMovimientosDeposito.uiDetalleCant}"
+                                                    converter="#{ABMMovimientosDeposito.numberConverter1}" id="uiDetalleCant" valueChangeListenerExpression="#{ABMMovimientosDeposito.uiDetalleCant_processValueChange}"/>
                                             </h:panelGrid>
                                             <webuijsf:hyperlink id="uiHiperLynkOT"
                                                 onClick="doPopup('form1:uiDetalleOTCod_field', 'form1:uiDetalleOTProducto_field')&#xd;" target="popup"
@@ -201,7 +202,7 @@
                                                         <webuijsf:staticText id="staticText8" text="#{currentRow.value['codProducto']}"/>
                                                     </webuijsf:tableColumn>
                                                     <webuijsf:tableColumn headerText="Cantidad" id="tableColumn10" width="50">
-                                                        <webuijsf:staticText id="staticText9" text="#{currentRow.value['cantidadEntSal']}"/>
+                                                        <webuijsf:staticText converter="#{ABMMovimientosDeposito.numberConverter3}" id="staticText9" text="#{currentRow.value['cantidadEntSal']}"/>
                                                     </webuijsf:tableColumn>
                                                     <webuijsf:tableColumn headerText="Sub OT" id="tableColumn5" sort="codOrdenTrabajoDetalle">
                                                         <webuijsf:staticText id="staticText5" text="#{currentRow.value['codOrdenTrabajoDetalle']}"/>
@@ -210,10 +211,16 @@
                                                         <webuijsf:staticText id="staticText6" text="#{currentRow.value['codSolicitud']}"/>
                                                     </webuijsf:tableColumn>
                                                     <webuijsf:tableColumn align="center" id="tableColumn11" width="20">
-                                                        <webuijsf:imageHyperlink id="imageHyperlink1" imageURL="/resources/Images/edit_16x16.gif" text=""/>
+                                                        <webuijsf:imageHyperlink actionExpression="#{ABMMovimientosDeposito.editDetailButton_action}"
+                                                            id="editDetailButton" imageURL="/resources/Images/edit_16x16.gif" text="">
+                                                            <f:setPropertyActionListener target="#{ABMMovimientosDeposito.itemDet}" value="#{currentRow.tableRow.rowId}"/>
+                                                        </webuijsf:imageHyperlink>
                                                     </webuijsf:tableColumn>
                                                     <webuijsf:tableColumn align="center" id="tableColumn13" width="20">
-                                                        <webuijsf:imageHyperlink id="imageHyperlink2" imageURL="/resources/Images/delete.gif" text=""/>
+                                                        <webuijsf:imageHyperlink actionExpression="#{ABMMovimientosDeposito.removeDetailButton_action}"
+                                                            id="removeDetailButton" imageURL="/resources/Images/delete.gif" text="">
+                                                            <f:setPropertyActionListener target="#{ABMMovimientosDeposito.itemDet}" value="#{currentRow.tableRow.rowId}"/>
+                                                        </webuijsf:imageHyperlink>
                                                     </webuijsf:tableColumn>
                                                 </webuijsf:tableRowGroup>
                                             </webuijsf:table>
@@ -222,6 +229,7 @@
                                 </h:panelGrid>
                             </h:panelGrid>
                         </div>
+                        <webuijsf:dropDown id="dropDown2" items="#{ABMMovimientosDeposito.dropDown2DefaultOptions.options}"/>
                     </webuijsf:form>
                 </webuijsf:body>
             </webuijsf:html>

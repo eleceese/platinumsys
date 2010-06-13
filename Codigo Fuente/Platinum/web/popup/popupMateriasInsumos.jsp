@@ -21,7 +21,7 @@
                             <webuijsf:tableRowGroup id="tableRowGroup1" rows="10" sourceData="#{SessionBean1.listaGenericos}" sourceVar="currentRow">
                                 <webuijsf:tableColumn headerText="Descripcion" id="tableColumn1" sort="descripcion">
                                     <webuijsf:hyperlink id="hyperlink1"
-                                        onBlur="doSave('#{currentRow.value['codProducto']}', '#{currentRow.value['descripcion']}')" text="#{currentRow.value['descripcion']}"/>
+                                        onClick="doSave('#{currentRow.value['codProducto']}', '#{currentRow.value['descripcion']}')" text="#{currentRow.value['descripcion']}"/>
                                 </webuijsf:tableColumn>
                                 <webuijsf:tableColumn headerText="Codigo" id="tableColumn2">
                                     <webuijsf:staticText id="staticText1" text="#{currentRow.value['codProducto']}"/>

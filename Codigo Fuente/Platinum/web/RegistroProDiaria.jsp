@@ -13,9 +13,9 @@
                 <webuijsf:head id="head1">
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
                     <script>
-                        function ABMEquivalencia() {
+                        function RegistroEstadosOT() {
                             var table = document.getElementById("form1:tablaFormulas");
-                            table.ABMEquivalencia();}
+                            table.RegistroEstadosOT();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
@@ -52,10 +52,8 @@
                     </script>
                     <!-- \ SCRIPT PARA MANEJAR EL DETALLE-->
                     <webuijsf:script id="scriptPopUp" type="text/javascript" url="/js/utilJS.js"/>
-                    <df:ajaxTransaction id="grillaSemis"
-                        inputs="page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:uiOTNro,page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:uiCabOTNro,page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:uiCabNroOT" render="page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:uiCabNroOT"/>
-                    <df:ajaxTransaction id="grillaTareas"
-                        inputs="page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:gridPanelSemi:uiSemiTerCod" render="page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:gridPanelSemi:uiSemiTerCod,page1:html1:body1:form1:mainContainer:gridPannelDetalle:gridPanel1:tablaTareas"/>
+                    <df:ajaxTransaction id="actualizarGrillaTareas"
+                        inputs="page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelDatos2:uiCodSubOt,page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:gridPanelSemi:uiSemiTerNombre,page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:gridPanelSemi:uiSemiTerCod" render="page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:uiCabNroOT,page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:uiOTDescripcion,page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:gridPanelSemi:uiSemiTerCod,page1:html1:body1:form1:mainContainer:gridPannelDetalle:gridPanel1:tablaTareas,page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:gridPanelSemi:uiSemiTerNombre"/>
                 </webuijsf:head>
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
@@ -77,18 +75,22 @@
                                     <webuijsf:label id="fecha" text="Fecha"/>
                                     <webuijsf:calendar binding="#{RegistroProDiaria.uiFechaAct}" id="uiFechaAct" style="margin-left: 41px"/>
                                 </h:panelGrid>
+                                <h:panelGrid columns="2" id="gridPanelDatos2" style="height: 30px" width="455">
+                                    <webuijsf:label id="codOtLabel" text="Codigo de SubOT"/>
+                                    <webuijsf:dropDown id="uiCodSubOt" items="#{RegistroProDiaria.listaOtsOp}"
+                                        onChange="DynaFaces.Tx.fire(&quot;actualizarGrillaTareas&quot;,&quot;uiCodSubOt&quot;)" validatorExpression="#{RegistroProDiaria.uiCodSubOt_validate}"/>
+                                </h:panelGrid>
                                 <h:panelGrid columns="2" id="gridPanelOT" style="border-width: 2px; border-style: outset; height: 100%; width: 100%">
-                                    <webuijsf:hyperlink id="orden_Trabajo" onClick="doPopup('form1:uiCabNroOT_field', 'form1:uiOTDescripcion_field')"
-                                        target="popup" text="Cod Ot" url="/faces/popup/popupOts.jsp"/>
-                                    <webuijsf:textField binding="#{RegistroProDiaria.uiCabNroOT}" id="uiCabNroOT"
+                                    <webuijsf:label id="cod_Ot" text="Cod Ot"/>
+                                    <webuijsf:textField binding="#{RegistroProDiaria.uiCabNroOT}" disabled="true" id="uiCabNroOT"
                                         onBlur="DynaFaces.Tx.fire(&quot;grillaSemis&quot;,&quot;uiCabNroOT&quot;)" validatorExpression="#{RegistroProDiaria.uiCabNroOT_validate}"/>
                                     <webuijsf:label id="labelDesc" text="Descripcion"/>
                                     <webuijsf:textArea binding="#{RegistroProDiaria.uiOTDescripcion}" columns="60" disabled="true" id="uiOTDescripcion" rows="5"/>
-                                    <webuijsf:hyperlink id="uiLinkSemFiTEr" onClick="doPopup('form1:uiSemiTerCod_field', 'form1:uiSemiTerNombre_field')"
-                                        target="popup" text="SemiTerminado" url="/faces/popup/popupDetalleOTProdDiaria.jsp"/>
+                                    <webuijsf:label id="cod_Ot1" text="SemiTerminado"/>
                                     <h:panelGrid columns="2" id="gridPanelSemi" style="margin-left: -3px">
-                                        <webuijsf:textField binding="#{RegistroProDiaria.uiSemiTerCod}" columns="10" id="uiSemiTerCod"
-                                            onBlur="DynaFaces.Tx.fire(&quot;grillaTareas&quot;, &quot;uiSemiTerCod&quot;)" validatorExpression="#{RegistroProDiaria.uiSemiTerCod_validate}"/>
+                                        <webuijsf:textField binding="#{RegistroProDiaria.uiSemiTerCod}" columns="10" disabled="true" id="uiSemiTerCod"
+                                            onBlur="DynaFaces.Tx.fire(&quot;grillaTareas&quot;, &quot;uiSemiTerCod&quot;)"
+                                            validatorExpression="#{RegistroProDiaria.uiSemiTerCod_validate}" valueChangeListenerExpression="#{RegistroProDiaria.uiSemiTerCod_processValueChange}"/>
                                         <webuijsf:textField binding="#{RegistroProDiaria.uiSemiTerNombre}" columns="50" disabled="true" id="uiSemiTerNombre"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
@@ -98,6 +100,7 @@
                                     <webuijsf:button actionExpression="#{RegistroProDiaria.button2_action}" binding="#{RegistroProDiaria.button2}" id="button2"
                                         style="font-size: 14px; height: 24px" text="Guardar"/>
                                 </h:panelGrid>
+                                <webuijsf:messageGroup id="messageGroup1"/>
                             </h:panelGrid>
                             <h:panelGrid binding="#{RegistroProDiaria.gridPannelDetalle}" id="gridPannelDetalle" style="width: 100%; height: 100%;">
                                 <webuijsf:staticText binding="#{RegistroProDiaria.detalleProduccion}" id="detalleProduccion"
