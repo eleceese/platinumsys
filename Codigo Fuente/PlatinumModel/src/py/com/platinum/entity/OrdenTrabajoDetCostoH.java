@@ -27,7 +27,7 @@ import javax.persistence.Table;
  * @author FerBoy
  */
 @Entity
-@SequenceGenerator(name="ORDEN_TRAB_DET_COSTO_HOR_SQ", sequenceName="SQ_ORDEN_TRAB_DET_COSTO_HOR", initialValue=1000, allocationSize=1)
+@SequenceGenerator(name="ORDEN_TRAB_DET_COSTO_HOR_SQ", sequenceName="SQ_ORDEN_TRABAJO_DET_COSTO_H", initialValue=1000, allocationSize=1)
 @Table(name = "ORDEN_TRABAJO_DET_COSTO_H", catalog = "", schema = "PLATINUM")
 public class OrdenTrabajoDetCostoH implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -37,11 +37,11 @@ public class OrdenTrabajoDetCostoH implements Serializable {
     @Column(name = "COD_ORDEN_TRAB_DET_HORAS", nullable = false)
     private Long codOrdenTrabDetHoras;
     @Column(name = "CANTIDAD_HORAS")
-    private BigInteger cantidadHoras;
+    private BigDecimal cantidadHoras;
     @Column(name = "COSTO_HORA")
-    private BigInteger costoHora;
+    private BigDecimal costoHora;
     @Column(name = "COSTO_TOTAL")
-    private BigInteger costoTotal;
+    private Long costoTotal;
     @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(fetch = FetchType.EAGER)
     private Empleado codEmpleado;
@@ -64,27 +64,27 @@ public class OrdenTrabajoDetCostoH implements Serializable {
         this.codOrdenTrabDetHoras = codOrdenTrabDetHoras;
     }
 
-    public BigInteger getCantidadHoras() {
+    public BigDecimal getCantidadHoras() {
         return cantidadHoras;
     }
 
-    public void setCantidadHoras(BigInteger cantidadHoras) {
+    public void setCantidadHoras(BigDecimal cantidadHoras) {
         this.cantidadHoras = cantidadHoras;
     }
 
-    public BigInteger getCostoHora() {
+    public BigDecimal getCostoHora() {
         return costoHora;
     }
 
-    public void setCostoHora(BigInteger costoHora) {
+    public void setCostoHora(BigDecimal costoHora) {
         this.costoHora = costoHora;
     }
 
-    public BigInteger getCostoTotal() {
+    public Long getCostoTotal() {
         return costoTotal;
     }
 
-    public void setCostoTotal(BigInteger costoTotal) {
+    public void setCostoTotal(Long costoTotal) {
         this.costoTotal = costoTotal;
     }
 
