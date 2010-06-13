@@ -16,6 +16,7 @@ import com.sun.webui.jsf.component.TableRowGroup;
 import com.sun.webui.jsf.component.TextArea;
 import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
+import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import java.util.ArrayList;
 import java.util.Date;
@@ -292,6 +293,7 @@ public class RegistroProDiaria extends AbstractPageBean {
      * <p>Construct a new Page bean instance.</p>
      */
     public RegistroProDiaria() {
+    cargarListaTodosOts();
     }
 
     /**
@@ -330,7 +332,7 @@ public class RegistroProDiaria extends AbstractPageBean {
     // TODO - add your own initialization code here
 
     getSessionBean1().setTituloPagina("Registro de Produccion Diaria");
-    getSessionBean1().setDetallePagina("Dpto de Produccion");
+    getSessionBean1().setDetallePagina("Detalles de Tareas en Produccion");
 
     }
 
@@ -395,6 +397,11 @@ public class RegistroProDiaria extends AbstractPageBean {
             this.gridPannelDetalle.setRendered(true);
             
         }
+
+
+    getSessionBean1().setTituloPagina("Registro de Produccion Diaria");
+    getSessionBean1().setDetallePagina("Detalles de Tareas en Produccion");
+
 
     }
 
@@ -560,19 +567,20 @@ public class RegistroProDiaria extends AbstractPageBean {
         this.tareasAsignadasArray = tareasAsignadasArray;
     }
 
-    public void uiCabOTNro_validate(FacesContext fc, UIComponent uic, Object o) {
-     OrdenTrabajoDetalleController ordenTrabajoDetalleController = new OrdenTrabajoDetalleController();
-        ordenTrabajoDetalles = ordenTrabajoDetalleController.getAllFiltered(Long.valueOf(o.toString()), null,null);
-        ordenTrabajoDetalleArray = (OrdenTrabajoDetalle[]) ordenTrabajoDetalles.toArray(new OrdenTrabajoDetalle[0]);
-        getSessionBean1().setOrdenTrabajoDetalleArray(ordenTrabajoDetalleArray);
-
-
-        System.out.println("*********************");
-        System.out.println(ordenTrabajoDetalles.size());
-    }
+//    public void uiCabOTNro_validate(FacesContext fc, UIComponent uic, Object o) {
+//     OrdenTrabajoDetalleController ordenTrabajoDetalleController = new OrdenTrabajoDetalleController();
+//        ordenTrabajoDetalles = ordenTrabajoDetalleController.getAllFiltered(Long.valueOf(o.toString()), null,null);
+//        ordenTrabajoDetalleArray = (OrdenTrabajoDetalle[]) ordenTrabajoDetalles.toArray(new OrdenTrabajoDetalle[0]);
+//        getSessionBean1().setOrdenTrabajoDetalleArray(ordenTrabajoDetalleArray);
+//
+//
+//        System.out.println("*********************");
+//        System.out.println(ordenTrabajoDetalles.size());
+//    }
 
     public void uiCabNroOT_validate(FacesContext context, UIComponent component, Object value) {
- OrdenTrabajoDetalleController ordenTrabajoDetalleController = new OrdenTrabajoDetalleController();
+
+        OrdenTrabajoDetalleController ordenTrabajoDetalleController = new OrdenTrabajoDetalleController();
         getSessionBean1().setIdOTProdDiaria(Long.valueOf(value.toString()));
         ordenTrabajoDetalles = ordenTrabajoDetalleController.getAllFiltered(Long.valueOf(value.toString()), null,null);
         ordenTrabajoDetalleArray = (OrdenTrabajoDetalle[]) ordenTrabajoDetalles.toArray(new OrdenTrabajoDetalle[0]);
@@ -602,9 +610,7 @@ public class RegistroProDiaria extends AbstractPageBean {
         limpiarDetalle();
 
         getSessionBean1().setTareasAsignadasArray(tareasAsignadasArray);
-        System.out.println("*********************");
-        System.out.println(tareasAsignadas.size());
-
+      
 
     }
 
@@ -612,37 +618,37 @@ public class RegistroProDiaria extends AbstractPageBean {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
          this.pageAlert1.setRendered(false);
+         validarCampos();
 
-        ControllerResult controllerResult = new ControllerResult();
-        ProduccionDiaria produccionDiaria = new ProduccionDiaria();
-        ProduccionDiariaController produccionDiariaController = new ProduccionDiariaController();
-        TareaAsignadaController tareaAsignadaController = new TareaAsignadaController();
+         if (!errorValidacion) {
+                        ControllerResult controllerResult = new ControllerResult();
+                        ProduccionDiaria produccionDiaria = new ProduccionDiaria();
+                        ProduccionDiariaController produccionDiariaController = new ProduccionDiariaController();
+                        TareaAsignadaController tareaAsignadaController = new TareaAsignadaController();
 
-        produccionDiaria.setCodTareaAsignada(tareaAsignadaController.findById(Long.valueOf(this.uiDetCodTareaAsig.getText().toString())));
-        produccionDiaria.setCodEmpleado(new EmpleadoController().findById(Long.valueOf(this.uiEmpleado.getSelected().toString())));
-        produccionDiaria.setCantidad(Long.valueOf(this.uiDetCantidad.getText().toString()));
-        produccionDiaria.setTiempoInvertido(Long.valueOf(this.uiDetTiempo.getText().toString()));
-        produccionDiaria.setFecha(this.uiFechaAct.getSelectedDate());
+                        produccionDiaria.setCodTareaAsignada(tareaAsignadaController.findById(Long.valueOf(this.uiDetCodTareaAsig.getText().toString())));
+                        produccionDiaria.setCodEmpleado(new EmpleadoController().findById(Long.valueOf(this.uiEmpleado.getSelected().toString())));
+                        produccionDiaria.setCantidad(Long.valueOf(this.uiDetCantidad.getText().toString()));
+                        produccionDiaria.setTiempoInvertido(Long.valueOf(this.uiDetTiempo.getText().toString()));
+                        produccionDiaria.setFecha(this.uiFechaAct.getSelectedDate());
 
-        produccionesDiarias.add(produccionDiaria);
-        produccionesDiariasArray = (ProduccionDiaria[]) produccionesDiarias.toArray(new ProduccionDiaria[0]);
-        controllerResult = produccionDiariaController.create(produccionDiaria);
+                        produccionesDiarias.add(produccionDiaria);
+                        produccionesDiariasArray = (ProduccionDiaria[]) produccionesDiarias.toArray(new ProduccionDiaria[0]);
+                        controllerResult = produccionDiariaController.create(produccionDiaria);
 
-         if (controllerResult.getCodRetorno() ==-1) {
-                        this.pageAlert1.setType("error");
-                    } else {
-                        this.pageAlert1.setType("information");
-                        limpiarDetalle();
-                    }
+                         if (controllerResult.getCodRetorno() ==-1) {
+                                        this.pageAlert1.setType("error");
+                                    } else {
+                                        this.pageAlert1.setType("information");
+                                        limpiarDetalle();
+                                    }
 
-            this.pageAlert1.setTitle(controllerResult.getMsg());
-            this.pageAlert1.setSummary("");
-            this.pageAlert1.setDetail("");
-            this.pageAlert1.setRendered(true);
-
-        System.out.println("***********************");
-        System.out.println(produccionDiaria.getFecha().toString());
-        System.out.println(produccionDiaria.getCodTareaAsignada().toString());
+                            this.pageAlert1.setTitle(controllerResult.getMsg());
+                            this.pageAlert1.setSummary("");
+                            this.pageAlert1.setDetail("");
+                            this.pageAlert1.setRendered(true);
+        }
+       
         return null;
     }
 
@@ -668,27 +674,30 @@ private boolean validarCampos(){
                        this.info("Debe seleccionar una tarea");
                 }
 
-         if (this.uiDetDescTarea.getText() == null ||
-                    this.uiDetDescTarea.getText().toString() == null ||
-                    this.uiDetDescTarea.getText().toString().equals("")){
-                        errorValidacion = true;
-                       this.info("Verifique el codigo de la tarea");
-                }
+//         if (this.uiDetDescTarea.getText() == null ||
+//                    this.uiDetDescTarea.getText().toString() == null ||
+//                    this.uiDetDescTarea.getText().toString().equals("")){
+//                        errorValidacion = true;
+//                       this.info("Verifique el codigo de la tarea");
+//                }
 
-         if (this.uiFechaAct.getSelectedDate() == null ||
-                    this.uiFechaAct.getSelectedDate().before(new Date()))
+         if (this.uiFechaAct.getSelectedDate() == null 
+                 //|| this.uiFechaAct.getSelectedDate().getTime() < new Date()
+                 )
                 {
                         errorValidacion = true;
                         this.info("Verifique el valor de la Fecha");
                 }
 
 
-         if (!StringUtils.esNumero(this.uiDetCantidad.getText().toString()))
+         if (this.uiDetCantidad.getText() == null ||
+                   !StringUtils.esNumero(this.uiDetCantidad.getText().toString()))
                         {   errorValidacion = true;
                             this.info("Verifique la cantidad");
                         }
 
-         if (!StringUtils.esNumero(this.uiDetTiempo.getText().toString()))
+         if (this.uiDetTiempo.getText() == null ||
+                    !StringUtils.esNumero(this.uiDetTiempo.getText().toString()))
                         {   errorValidacion = true;
                             this.info("Verifique el tiempo");
                         }
@@ -696,6 +705,68 @@ private boolean validarCampos(){
                  return errorValidacion;
 
 }
+
+////// CARGA DE COMBO BOX DE ORDEN TRABAJO
+    OrdenTrabajoDetalle[] listaOts;
+    Option[] listaOtsOp;
+
+    public Option[] getlistaOtsOp() {
+        return listaOtsOp;
+    }
+
+    public void setlistaOtsOp(Option[] listaOtsOp) {
+        this.listaOtsOp = listaOtsOp;
+    }
+
+    public OrdenTrabajoDetalle[] listaOts() {
+        return listaOts;
+    }
+
+    public void setlistaOts(OrdenTrabajoDetalle[] listaOts) {
+        this.listaOts = listaOts;
+    }
+
+    public void cargarListaTodosOts() {
+        OrdenTrabajoDetalleController otController = new OrdenTrabajoDetalleController();
+        listaOts = (OrdenTrabajoDetalle[]) otController.getAll("codOrdenTrabajoDet").toArray(new OrdenTrabajoDetalle[0]);
+        listaOtsOp = new Option[listaOts.length];
+        Option option;
+        for (int i = 0; i < listaOts.length; i++) {
+            OrdenTrabajoDetalle p = listaOts[i];
+            option = new Option();
+            //            if (p.getEstado().toString().equals("P")) {
+            //            }
+            option.setLabel(p.getCodOrdenTrabajoDet().toString()+" "+p.getCodProducto().getDescripcion());
+            option.setValue(p.getCodOrdenTrabajoDet().toString());
+            listaOtsOp[i] = option;
+        }
+    }
+
+    public void uiCodSubOt_validate(FacesContext context, UIComponent component, Object value) {
+        OrdenTrabajoDetalle ordenTrabajoDetalle = new OrdenTrabajoDetalleController().findById(Long.valueOf(value.toString()));
+            this.uiOTDescripcion.setText(ordenTrabajoDetalle.getCodOrdenTrabajo().getDescripcion().toString());
+            this.uiCabNroOT.setText(ordenTrabajoDetalle.getCodOrdenTrabajo().getCodOrdenTrabjo().toString());
+            this.uiSemiTerCod.setText(ordenTrabajoDetalle.getCodOrdenTrabajoDet().toString());
+            this.uiSemiTerNombre.setText(ordenTrabajoDetalle.getCodProducto().getDescripcion().toString());
+
+             this.pageAlert1.setRendered(false);
+        getSessionBean1().setIdOTDetProdDiaria(Long.valueOf(value.toString()));
+        TareaAsignadaController tareaAsignadaController = new TareaAsignadaController();
+        tareasAsignadas = tareaAsignadaController.getAllFiltered(Long.valueOf(value.toString()), null, null);
+        tareasAsignadasArray = (TareaAsignada[]) tareasAsignadas.toArray(new TareaAsignada[0]);
+
+        ProduccionDiariaController produccionDiariaController = new ProduccionDiariaController();
+        produccionesDiarias = produccionDiariaController.getAllFiltered(null,null,Long.valueOf(value.toString()), null);
+        produccionesDiariasArray = (ProduccionDiaria[]) produccionesDiarias.toArray(new ProduccionDiaria[0]);
+        limpiarDetalle();
+
+        getSessionBean1().setTareasAsignadasArray(tareasAsignadasArray);
+
+
+
+    }
+
+
 
 }
 

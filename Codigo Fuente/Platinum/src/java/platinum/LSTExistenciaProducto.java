@@ -6,8 +6,24 @@
 package platinum;
 
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
+import com.sun.webui.jsf.component.DropDown;
+import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.sql.Connection;
+import java.sql.SQLException;
 import javax.faces.FacesException;
+import javax.servlet.ServletContext;
+import py.com.platinum.controller.DepositoController;
+import py.com.platinum.controller.MarcaController;
+import py.com.platinum.controller.ProductoController;
+import py.com.platinum.controller.TipoProductoController;
+import py.com.platinum.entity.Deposito;
+import py.com.platinum.entity.Marca;
+import py.com.platinum.entity.Producto;
+import py.com.platinum.entity.TipoProducto;
+import reportes.Formated;
+import reportes.GetConnection;
+import reportes.RptCreate;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -30,17 +46,42 @@ public class LSTExistenciaProducto extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-        dropDown1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("TE", "Terminado"), new com.sun.webui.jsf.model.Option("ST", "Semi-Terminado"), new com.sun.webui.jsf.model.Option("IN", "Insumos"),new com.sun.webui.jsf.model.Option("TO", "Todos")});
-        dropDown1DefaultOptions.setSelectedValue("ST");
     }
-    private SingleSelectOptionsList dropDown1DefaultOptions = new SingleSelectOptionsList();
+    private DropDown uiProducto = new DropDown();
 
-    public SingleSelectOptionsList getDropDown1DefaultOptions() {
-        return dropDown1DefaultOptions;
+    public DropDown getUiProducto() {
+        return uiProducto;
     }
 
-    public void setDropDown1DefaultOptions(SingleSelectOptionsList ssol) {
-        this.dropDown1DefaultOptions = ssol;
+    public void setUiProducto(DropDown dd) {
+        this.uiProducto = dd;
+    }
+    private DropDown uiTipoProd = new DropDown();
+
+    public DropDown getUiTipoProd() {
+        return uiTipoProd;
+    }
+
+    public void setUiTipoProd(DropDown dd) {
+        this.uiTipoProd = dd;
+    }
+    private DropDown uiDeposito = new DropDown();
+
+    public DropDown getUiDeposito() {
+        return uiDeposito;
+    }
+
+    public void setUiDeposito(DropDown dd) {
+        this.uiDeposito = dd;
+    }
+    private DropDown uiMarca = new DropDown();
+
+    public DropDown getUiMarca() {
+        return uiMarca;
+    }
+
+    public void setUiMarca(DropDown dd) {
+        this.uiMarca = dd;
     }
 
     // </editor-fold>
@@ -49,6 +90,10 @@ public class LSTExistenciaProducto extends AbstractPageBean {
      * <p>Construct a new Page bean instance.</p>
      */
     public LSTExistenciaProducto() {
+    cargarListaTodosDepositos();
+    cargarListaTodosTipoProductos();
+    cargarListaTodosMarcas(); 
+    cargarListaTodosProductos();
     }
 
     /**
@@ -85,6 +130,8 @@ public class LSTExistenciaProducto extends AbstractPageBean {
         // Perform application initialization that must complete
         // *after* managed components are initialized
         // TODO - add your own initialization code here
+    
+    
     }
 
     /**
@@ -108,8 +155,13 @@ public class LSTExistenciaProducto extends AbstractPageBean {
      */
     @Override
     public void prerender() {
-        getSessionBean1().setTituloPagina("Valores en Déposito");
-        getSessionBean1().setDetallePagina("Generar Listado de Valores por productos, por tipo de producto, por deposito y por marca");
+        getSessionBean1().setTituloPagina("Existencia en Déposito");
+        getSessionBean1().setDetallePagina("Generar Listado de Existencia de productos en deposito, por tipo de producto, por tipo, por deposito y por marca");
+        this.uiDeposito.setSelected("-1");
+        this.uiMarca.setSelected("-1");
+        this.uiProducto.setSelected("-1");
+        this.uiTipoProd.setSelected("-1");
+
     }
 
     /**
@@ -165,6 +217,89 @@ public class LSTExistenciaProducto extends AbstractPageBean {
     public String button1_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
+                String[] sparamName= new String[5];
+                String[] sparamValue= new String[5];
+                Connection conn= GetConnection.getSimpleConnection();
+                ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
+                
+                String sProducto="";
+                String sP="";
+
+                String sMarca="";
+                String sM="";
+
+                String sTipo="";
+                String sT="";
+
+                String sDeposito="";
+                String sD="";
+
+                String sSql="";
+                Formated f= new Formated();
+                f.setDatePattern("yyyy/dd/MM");
+
+                Producto p;
+
+                try{
+
+                if (!uiProducto.getSelected().toString().equals("-1")){
+                    sProducto = " and p.cod_Producto = "+uiProducto.getSelected().toString();
+                    sP = new ProductoController().findById(Long.valueOf(this.uiProducto.getSelected().toString())).getDescripcion();
+                }else{
+                    sP="Todos";
+                }
+
+                if (!uiDeposito.getSelected().toString().equals("-1")){
+                    sDeposito = " and d.cod_deposito = "+uiDeposito.getSelected().toString();
+                    sD = new DepositoController().findById(Long.valueOf(this.uiDeposito.getSelected().toString())).getNombre();
+                }else{
+                    sD="Todos";
+                }
+
+                if (!uiMarca.getSelected().toString().equals("-1")){
+                    sMarca = " and p.cod_marca = "+uiMarca.getSelected().toString();
+                    sM = new MarcaController().findById(Long.valueOf(this.uiMarca.getSelected().toString())).getNombre();
+                }else{
+                    sM="Todos";
+                }
+
+                if (!uiTipoProd.getSelected().toString().equals("-1")){
+                    sTipo = " and p.cod_tipo_producto = "+uiTipoProd.getSelected().toString();
+                    sT = new TipoProductoController().findById(Long.valueOf(this.uiTipoProd.getSelected().toString())).getDescripcion();
+                }else{
+                    sT="Todos";
+                }
+//                if (calFecHasta.getValue()!=null)
+//                sFecHasta = " and TARJETAS.FECHA_ALTA <= convert(datetime,'"+f.getDateFormat((Date)calFecHasta.getValue())+"') ";
+
+                sSql = sProducto+sMarca+sDeposito+sTipo;
+
+                RptCreate rpt= new RptCreate();
+
+                sparamName[0]="parametros";
+                sparamValue[0]= sSql;
+                sparamName[1]="producto";
+                sparamValue[1]= sP;
+                sparamName[2]="deposito";
+                sparamValue[2]= sD;
+                sparamName[3]="marca";
+                sparamValue[3]= sM;
+                sparamName[4]="tipo";
+                sparamValue[4]= sT;
+
+                rpt.getReport(conn, "ExistenciasDeposito.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+
+                }catch(Exception e){
+                error("Error al generar el reporte ");
+                error(" " + e);
+                }finally{
+                try{
+                if(conn != null && !conn.isClosed())
+                conn.close();
+                }catch(SQLException sqle){
+                error("Error al intentar cerrar la conexion"+ sqle);
+                }
+                }
         return null;
     }
 
@@ -173,6 +308,171 @@ public class LSTExistenciaProducto extends AbstractPageBean {
         // case name where null will return to the same page.
         return null;
     }
-    
+   ////// CARGA DE COMBO BOX PRODUCTOS
+    Producto[] listaProductos;
+    Option[] listaProductosOp;
+
+    public Option[] getListaProductosOp() {
+        return listaProductosOp;
+    }
+
+    public void setListaProductosOp(Option[] listaProductosOp) {
+        this.listaProductosOp = listaProductosOp;
+    }
+
+    public Producto[] getListaProductos() {
+        return listaProductos;
+    }
+
+    public void setListaProductos(Producto[] listaProductos) {
+        this.listaProductos = listaProductos;
+    }
+
+    public void cargarListaTodosProductos() {
+        ProductoController productoController = new ProductoController();
+        listaProductos = (Producto[]) productoController.getInsumosMateriasFinalesSemiter(null, null, null).toArray(new Producto[0]);
+        listaProductosOp = new Option[listaProductos.length+1];
+        Option option;
+        for (int i = 0; i < listaProductos.length; i++) {
+            Producto p = listaProductos[i];
+            option = new Option();
+            option.setLabel(p.getDescripcion()+" "+p.getCodMarca().getNombre().toString());
+            option.setValue(p.getCodProducto().toString());
+            listaProductosOp[i] = option;
+        }
+
+
+        option = new Option();
+        option.setLabel("Todos...");
+        option.setValue("-1");
+        listaProductosOp[listaProductos.length] = option;
+    }
+////// CARGA DE COMBO BOX MARCAS
+//////     import com.sun.webui.jsf.model.Option;
+    Marca[] listaMarcas;
+    Option[] listaMarcasOp;
+
+    public Option[] getListaMarcasOp() {
+        return listaMarcasOp;
+    }
+
+    public void setListaMarcasOp(Option[] listaMarcasOp) {
+        this.listaMarcasOp = listaMarcasOp;
+    }
+
+    public Marca[] getListaMarcas() {
+        return listaMarcas;
+    }
+
+    public void setListaMarcas(Marca[] listaMarcas) {
+        this.listaMarcas = listaMarcas;
+    }
+
+    public void cargarListaTodosMarcas() {
+        MarcaController MarcaController = new MarcaController();
+        listaMarcas = (Marca[]) MarcaController.getAll("nombre").toArray(new Marca[0]);
+        listaMarcasOp = new Option[listaMarcas.length+1];
+        Option option;
+        for (int i = 0; i < listaMarcas.length; i++) {
+            Marca m = listaMarcas[i];
+            option = new Option();
+            option.setLabel(m.getNombre());
+            option.setValue(m.getCodMarca().toString());
+            listaMarcasOp[i] = option;
+        }
+          option = new Option();
+            option.setLabel("Todos");
+            option.setValue("-1");
+            listaMarcasOp[listaMarcas.length] = option;
+
+    }
+////// FIN CARGA DE COMBO BOX MARCAS
+
+
+////// CARGA DE COMBO BOX TipoProductoS
+//////     import com.sun.webui.jsf.model.Option;
+    TipoProducto[] listaTipoProductos;
+    Option[] listaTipoProductosOp;
+
+    public Option[] getListaTipoProductosOp() {
+        return listaTipoProductosOp;
+    }
+
+    public void setListaTipoProductosOp(Option[] listaTipoProductosOp) {
+        this.listaTipoProductosOp = listaTipoProductosOp;
+    }
+
+    public TipoProducto[] getListaTipoProductos() {
+        return listaTipoProductos;
+    }
+
+    public void setListaTipoProductos(TipoProducto[] listaTipoProductos) {
+        this.listaTipoProductos = listaTipoProductos;
+    }
+
+    public void cargarListaTodosTipoProductos() {
+        TipoProductoController TipoProductoController = new TipoProductoController();
+        listaTipoProductos = (TipoProducto[]) TipoProductoController.getAll("descripcion").toArray(new TipoProducto[0]);
+        listaTipoProductosOp = new Option[listaTipoProductos.length+1];
+        Option option;
+        for (int i = 0; i < listaTipoProductos.length; i++) {
+            TipoProducto tp = listaTipoProductos[i];
+            option = new Option();
+            option.setLabel(tp.getDescripcion());
+            option.setValue(tp.getCodTipoProducto().toString());
+            listaTipoProductosOp[i] = option;
+        }
+
+            option = new Option();
+            option.setLabel("Todos");
+            option.setValue("-1");
+            listaTipoProductosOp[listaTipoProductos.length] = option;
+
+    }
+////// FIN CARGA DE COMBO BOX TipoProductoS
+
+////// CARGA DE COMBO BOX Depositos
+//////     import com.sun.webui.jsf.model.Option;
+    Deposito[] listaDepositos;
+    Option[] listaDepositosOp;
+
+    public Option[] getListaDepositosOp() {
+        return listaDepositosOp;
+    }
+
+    public void setListaDepositosOp(Option[] listaDepositosOp) {
+        this.listaDepositosOp = listaDepositosOp;
+    }
+
+    public Deposito[] getListaDepositos() {
+        return listaDepositos;
+    }
+
+    public void setListaDepositos(Deposito[] listaDepositos) {
+        this.listaDepositos = listaDepositos;
+    }
+
+    public void cargarListaTodosDepositos() {
+        DepositoController depositoController = new DepositoController();
+        listaDepositos = (Deposito[]) depositoController.getAll("nombre").toArray(new Deposito[0]);
+        listaDepositosOp = new Option[listaDepositos.length+1];
+        Option option;
+        int i;
+        for (i = 0; i < listaDepositos.length; i++) {
+            Deposito tp = listaDepositos[i];
+            option = new Option();
+            option.setLabel(tp.getNombre());
+            option.setValue(tp.getCodDeposito().toString());
+            listaDepositosOp[i] = option;
+        }
+            option = new Option();
+            option.setLabel("Todos");
+            option.setValue("-1");
+            listaDepositosOp[listaDepositos.length] = option;
+
+    }
+////// FIN CARGA DE COMBO BOX
+
+
 }
 

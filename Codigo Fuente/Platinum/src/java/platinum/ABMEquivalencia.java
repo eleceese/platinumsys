@@ -14,6 +14,7 @@ import com.sun.webui.jsf.component.StaticText;
 import com.sun.webui.jsf.component.Table;
 import com.sun.webui.jsf.component.TableColumn;
 import com.sun.webui.jsf.component.TableRowGroup;
+import com.sun.webui.jsf.component.TextArea;
 import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
@@ -21,7 +22,9 @@ import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import java.math.BigDecimal;
 import javax.faces.FacesException;
+import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlPanelGrid;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
@@ -223,6 +226,33 @@ public class ABMEquivalencia extends AbstractPageBean {
     public void setRadioButton1(RadioButton rb) {
         this.radioButton1 = rb;
     }
+    private TextArea uiProductoFinDesc = new TextArea();
+
+    public TextArea getUiProductoFinDesc() {
+        return uiProductoFinDesc;
+    }
+
+    public void setUiProductoFinDesc(TextArea ta) {
+        this.uiProductoFinDesc = ta;
+    }
+    private TextField uiProductoFinMarca = new TextField();
+
+    public TextField getUiProductoFinMarca() {
+        return uiProductoFinMarca;
+    }
+
+    public void setUiProductoFinMarca(TextField tf) {
+        this.uiProductoFinMarca = tf;
+    }
+    private TextField uiProductoFinPresentacion = new TextField();
+
+    public TextField getUiProductoFinPresentacion() {
+        return uiProductoFinPresentacion;
+    }
+
+    public void setUiProductoFinPresentacion(TextField tf) {
+        this.uiProductoFinPresentacion = tf;
+    }
 
     // </editor-fold>
     /**
@@ -271,8 +301,8 @@ public class ABMEquivalencia extends AbstractPageBean {
     // *after* managed components are initialized
     // TODO - add your own initialization code here
 
-    getSessionBean1().setTituloPagina("Registro de Tareas");
-    getSessionBean1().setDetallePagina("Seleccione el registro Deseado");
+    getSessionBean1().setTituloPagina("Registro de Equivalencias");
+    getSessionBean1().setDetallePagina("Ingrese la Relacion entre Productos Genericos y Productos Finales");
 
 
     }
@@ -310,7 +340,7 @@ public class ABMEquivalencia extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosTareas.setRendered(true);
-             limpiarCamposNew();
+             
 
 
         } else if (updateRequest) {
@@ -346,6 +376,10 @@ public class ABMEquivalencia extends AbstractPageBean {
             this.datosTareas.setRendered(false);
 
         }
+getSessionBean1().setTituloPagina("Registro de Equivalencias");
+getSessionBean1().setDetallePagina("Ingrese la Relacion entre Productos Genericos y Productos Finales");
+
+
 buscar_action2();
     }
 
@@ -364,8 +398,17 @@ buscar_action2();
          //// CARGA DE CAMPOS DE LA PAGINA
 
             this.uiProductoFin.setSelected(eq.getCodProductoFin().getCodProducto().toString());
+            this.uiProductoFin.setDisabled(true);
+
             this.uiProductoGen.setSelected(eq.getCodProductoGen().getCodProducto().toString());
+            this.uiProductoGen.setDisabled(true);
+
             this.uiRelacion.setText(eq.getRelacion().toString());
+
+            this.uiProductoFinDesc.setText(eq.getCodProductoFin().getDescripcion().toString());
+            this.uiProductoFinMarca.setText(eq.getCodProductoFin().getCodMarca().getNombre().toString());
+            this.uiProductoFinPresentacion.setText(eq.getCodProductoFin().getCodPresentacion().getDescripcion().toString());
+ 
 
          }
     }
@@ -373,7 +416,14 @@ buscar_action2();
 public void limpiarCamposNew(){
 
         this.uiProductoFin.setSelected("");
+        this.uiProductoFin.setDisabled(false);
+
         this.uiProductoGen.setSelected("");
+        this.uiProductoGen.setDisabled(false);
+
+        this.uiProductoFinDesc.setText("");
+        this.uiProductoFinMarca.setText("");
+        this.uiProductoFinPresentacion.setText("");
         this.uiRelacion.setText("");
             
 
@@ -445,6 +495,7 @@ public void limpiarCamposNew(){
 
         this.buttonGuardarNuevo.setRendered(true);
         this.buttonGuardarEdicion.setRendered(false);
+        limpiarCamposNew();
         return null;
     }
 
@@ -491,11 +542,13 @@ public void limpiarCamposNew(){
         // case name where null will return to the same page.
         this.addRequest=false;
         this.updateRequest=false;
+        this.errorValidacion=false;
 
         return null;
     }
 
     public String buttonGuardarNuevo_action() {
+        this.addRequest=true;
         validarCampos();
 
         if (! errorValidacion){
@@ -562,7 +615,18 @@ public void validarCampos() {
             if (this.uiProductoFin.getSelected() == null)
                 {
                    errorValidacion = true;
-                   this.info(uiProductoFin, "Favor Seleccione el Producto");
+                   this.info(uiProductoFin, "Favor Seleccione el Producto Final");
+            }else if (addRequest) {
+                    EquivalenciaController eqController = new EquivalenciaController();
+                    Equivalencia eq = new Equivalencia();
+                    eq = eqController.getExisteEqPorProductoFin(Long.valueOf(this.uiProductoFin.getSelected().toString()));
+                    if (!(eq == null)) {
+
+                        errorValidacion = true;
+                        this.info(uiProductoFin, "Ya existe una Relacion con el Producto Final en cuestion, favor verifique el Producto Final");
+
+                    }
+
             }
 
             if (this.uiRelacion.getText() == null ||
@@ -586,7 +650,7 @@ public void validarCampos() {
         return null;
     }
 
-private TableSelectPhaseListener tablePhaseListener =
+       private TableSelectPhaseListener tablePhaseListener =
                                   new TableSelectPhaseListener();
 
     public void setSelected(Object object) {
@@ -703,7 +767,7 @@ private TableSelectPhaseListener tablePhaseListener =
         for (int i = 0; i < listaProductosGen.length; i++) {
             Producto p = listaProductosGen[i];
             option = new Option();
-            option.setLabel(p.getDescripcion());
+            option.setLabel(p.getCodProducto().toString()+" "+p.getDescripcion());
             option.setValue(p.getCodProducto().toString());
             listaProductosGenOp[i] = option;
         }
@@ -735,7 +799,7 @@ private TableSelectPhaseListener tablePhaseListener =
         for (int i = 0; i < listaProductosFin.length; i++) {
             Producto p = listaProductosFin[i];
             option = new Option();
-            option.setLabel(p.getDescripcion());
+            option.setLabel(p.getCodProducto().toString()+" "+p.getDescripcion());
             option.setValue(p.getCodProducto().toString());
             listaProductosFinOp[i] = option;
         }
@@ -761,6 +825,18 @@ private TableSelectPhaseListener tablePhaseListener =
         EquivalenciaController c = new EquivalenciaController();
         listaEquivalencias = (Equivalencia[]) c.getAllFiltered(null, null, null).toArray(new Equivalencia[0]);
         }
+
+    public void uiProductoFin_val(FacesContext context, UIComponent component, Object value) {
+
+    Producto producto = new Producto();
+    producto = new ProductoController().findById(Long.valueOf(value.toString()));
+
+    this.uiProductoFinDesc.setText(producto.getDescripcion().toString());
+    this.uiProductoFinMarca.setText(producto.getCodMarca().getNombre().toString());
+    this.uiProductoFinPresentacion.setText(producto.getCodPresentacion().getDescripcion().toString());
+ 
+
+    }
 
 
 

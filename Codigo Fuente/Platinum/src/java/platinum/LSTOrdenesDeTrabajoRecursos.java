@@ -6,6 +6,7 @@
 package platinum;
 
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
+import com.sun.webui.jsf.component.Calendar;
 import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
@@ -13,24 +14,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javax.faces.FacesException;
 import javax.servlet.ServletContext;
-import py.com.platinum.controller.DepositoController;
+import py.com.platinum.controller.OrdenTrabajoCabeceraController;
 import py.com.platinum.controller.ProductoController;
-import py.com.platinum.entity.Deposito;
+import py.com.platinum.entity.OrdenTrabajo;
 import py.com.platinum.entity.Producto;
 import reportes.Formated;
 import reportes.GetConnection;
 import reportes.RptCreate;
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -39,12 +29,12 @@ import reportes.RptCreate;
  * lifecycle methods and event handlers where you may add behavior
  * to respond to incoming events.</p>
  *
- * @version Reporte.java
- * @version Created on 07-sep-2009, 16:17:38
- * @author MartinJara
+ * @version LSTOrdenesDeTrabajoRecursos.java
+ * @version Created on Jun 13, 2010, 2:49:39 PM
+ * @author FerBoy
  */
 
-public class LSTMovimientoDeposito extends AbstractPageBean {
+public class LSTOrdenesDeTrabajoRecursos extends AbstractPageBean {
     // <editor-fold defaultstate="collapsed" desc="Managed Component Definition">
 
     /**
@@ -53,16 +43,17 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-        uiTipoMDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("T", "Todos"), new com.sun.webui.jsf.model.Option("E", "Entrada"), new com.sun.webui.jsf.model.Option("S", "Salida")});
+        uiEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("-1", "Todos"), new com.sun.webui.jsf.model.Option("A", "Abierto"), new com.sun.webui.jsf.model.Option("P", "En proceso"), new com.sun.webui.jsf.model.Option("T", "Termnado"), new com.sun.webui.jsf.model.Option("C", "Cerrado")});
+        uiEstadoDefaultOptions.setSelectedValue("-1");
     }
-    private DropDown uiDeposito = new DropDown();
+    private DropDown uiNroOt = new DropDown();
 
-    public DropDown getUiDeposito() {
-        return uiDeposito;
+    public DropDown getUiNroOt() {
+        return uiNroOt;
     }
 
-    public void setUiDeposito(DropDown dd) {
-        this.uiDeposito = dd;
+    public void setUiNroOt(DropDown dd) {
+        this.uiNroOt = dd;
     }
     private DropDown uiProducto = new DropDown();
 
@@ -73,23 +64,41 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
     public void setUiProducto(DropDown dd) {
         this.uiProducto = dd;
     }
-    private SingleSelectOptionsList uiTipoMDefaultOptions = new SingleSelectOptionsList();
+    private Calendar uiFechaDesde = new Calendar();
 
-    public SingleSelectOptionsList getUiTipoMDefaultOptions() {
-        return uiTipoMDefaultOptions;
+    public Calendar getUiFechaDesde() {
+        return uiFechaDesde;
     }
 
-    public void setUiTipoMDefaultOptions(SingleSelectOptionsList ssol) {
-        this.uiTipoMDefaultOptions = ssol;
+    public void setUiFechaDesde(Calendar c) {
+        this.uiFechaDesde = c;
     }
-    private DropDown uiTipoM = new DropDown();
+    private Calendar uiFechaHasta = new Calendar();
 
-    public DropDown getUiTipoM() {
-        return uiTipoM;
+    public Calendar getUiFechaHasta() {
+        return uiFechaHasta;
     }
 
-    public void setUiTipoM(DropDown dd) {
-        this.uiTipoM = dd;
+    public void setUiFechaHasta(Calendar c) {
+        this.uiFechaHasta = c;
+    }
+    private SingleSelectOptionsList uiEstadoDefaultOptions = new SingleSelectOptionsList();
+
+    public SingleSelectOptionsList getUiEstadoDefaultOptions() {
+        return uiEstadoDefaultOptions;
+    }
+
+    public void setUiEstadoDefaultOptions(SingleSelectOptionsList ssol) {
+        this.uiEstadoDefaultOptions = ssol;
+    }
+    private DropDown uiEstado = new DropDown();
+
+    public DropDown getUiEstado() {
+        return uiEstado;
+    }
+
+    public void setUiEstado(DropDown dd) {
+        this.uiEstado = dd;
     }
 
     // </editor-fold>
@@ -97,10 +106,10 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
     /**
      * <p>Construct a new Page bean instance.</p>
      */
-    public LSTMovimientoDeposito() {
-
-    cargarListaTodosDepositos();
+    public LSTOrdenesDeTrabajoRecursos() {
+    cargarListaTodosOTCab();
     cargarListaTodosProductos();
+
     }
 
     /**
@@ -129,7 +138,7 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
         try {
             _init();
         } catch (Exception e) {
-            log("Reporte Initialization Failure", e);
+            log("LSTOrdenesDeTrabajoRecursos Initialization Failure", e);
             throw e instanceof FacesException ? (FacesException) e: new FacesException(e);
         }
         
@@ -160,8 +169,13 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
      */
     @Override
     public void prerender() {
-        getSessionBean1().setTituloPagina("Listado de Movimientos en Déposito");
-        getSessionBean1().setDetallePagina("Detalle de los movimientos en Deposito, carge los parametros y ejecute el listado");
+        getSessionBean1().setTituloPagina("Detalle de Ordenes de Trabajo - Recursos");
+        getSessionBean1().setDetallePagina("Se ingresa los parámetros para generar el informe.");
+
+        this.uiNroOt.setSelected("-1");
+        this.uiEstado.setSelected("-1");
+        this.uiProducto.setSelected("-1");
+
     }
 
     /**
@@ -176,7 +190,14 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
     public void destroy() {
     }
 
- 
+    /**
+     * <p>Return a reference to the scoped data bean.</p>
+     *
+     * @return reference to the scoped data bean
+     */
+    protected SessionBean1 getSessionBean1() {
+        return (SessionBean1) getBean("SessionBean1");
+    }
 
     /**
      * <p>Return a reference to the scoped data bean.</p>
@@ -196,87 +217,68 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
         return (RequestBean1) getBean("RequestBean1");
     }
 
-    /**
-     * <p>Return a reference to the scoped data bean.</p>
-     *
-     * @return reference to the scoped data bean
-     */
-    protected Menu getMenu() {
-        return (Menu) getBean("Menu");
-    }
-
-    /**
-     * <p>Return a reference to the scoped data bean.</p>
-     *
-     * @return reference to the scoped data bean
-     */
-    protected SessionBean1 getSessionBean1() {
-        return (SessionBean1) getBean("SessionBean1");
-    }
-
-    public String uiEjecutar_action() {
+    public String uiButtonEjecutar_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
-        String[] sparamName= new String[4];
-                String[] sparamValue= new String[4];
+ String[] sparamName= new String[5];
+                String[] sparamValue= new String[5];
                 Connection conn= GetConnection.getSimpleConnection();
                 ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
-                String sProducto="";
-                String ps;
-                
-                String sTipo="";
-                String ts;
 
-                String sDeposito="";
-                String ds;
+                String sProd="";
+                String sP="";
+
+                String sCodOt="";
+                String sC="";
+
+                String sEstado="";
+                String sE="";
 
                 String sSql="";
                 Formated f= new Formated();
                 f.setDatePattern("yyyy/dd/MM");
 
-                Producto p;
-
                 try{
 
+
                 if (!uiProducto.getSelected().toString().equals("-1")){
-                    sProducto = " and det.cod_producto = "+uiProducto.getSelected().toString();
-                    ps = new ProductoController().findById(Long.valueOf(this.uiProducto.getSelected().toString())).getDescripcion().toString();
-                 }else{
-                    ps= "Todos";
-                 }
-
-                if (!uiDeposito.getSelected().toString().equals("-1")){
-                    sDeposito = " and cab.cod_deposito = "+uiDeposito.getSelected().toString();
-                        ds = new DepositoController().findById(Long.valueOf(this.uiDeposito.getSelected().toString())).getNombre().toString();
+                    sProd = " and ot.cod_Producto_ot = "+uiProducto.getSelected().toString();
+                    sP = new ProductoController().findById(Long.valueOf(this.uiProducto.getSelected().toString())).getDescripcion();
                 }else{
-                        ds= "Todos";
+                    sP="Todos";
                 }
 
-                if (!uiTipoM.getSelected().toString().equals("T")){
-                    sTipo = " and det.tipo_entrada_salida = "+"'"+uiTipoM.getSelected().toString()+"'";
-                    ts = this.uiTipoM.getSelected().toString();
+                if (!uiNroOt.getSelected().toString().equals("-1")){
+                    sCodOt = " and ot.Cod_Orden_Trabjo = "+uiNroOt.getSelected().toString();
+                    sC = new OrdenTrabajoCabeceraController().findById(Long.valueOf(this.uiNroOt.getSelected().toString())).getDescripcion().toString();
                 }else{
-                    ts = "Todos";
+                    sC="Todos";
                 }
 
-                //                if (calFecHasta.getValue()!=null)
+                if (!uiEstado.getSelected().toString().equals("-1")){
+                    sEstado = " and ot.estado_ot = "+"'"+uiEstado.getSelected().toString()+"'";
+                    sE = uiEstado.getSelected().toString();
+                }else{
+                    sE="Todos";
+                }
+
+//                if (calFecHasta.getValue()!=null)
 //                sFecHasta = " and TARJETAS.FECHA_ALTA <= convert(datetime,'"+f.getDateFormat((Date)calFecHasta.getValue())+"') ";
 
-                sSql = sProducto+sDeposito+sTipo;
+                sSql = sProd+sCodOt+sEstado;
 
                 RptCreate rpt= new RptCreate();
 
                 sparamName[0]="parametros";
                 sparamValue[0]= sSql;
-                sparamName[1]="producto";
-                sparamValue[1]= ps;
-                sparamName[2]="deposito";
-                sparamValue[2]= ds;
-                sparamName[3]="tipo";
-                sparamValue[3]= ts;
+                sparamName[1]="codProd";
+                sparamValue[1]= sP;
+                sparamName[2]="codOt";
+                sparamValue[2]= sC;
+                sparamName[3]="estado";
+                sparamValue[3]= sE;
 
-
-                rpt.getReport(conn, "MovimientosDeposito.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+                rpt.getReport(conn, "OrdenesDeTrabajoRecursos.jrxml", sparamName, sparamValue, theApplicationsServletContext);
 
                 }catch(Exception e){
                 error("Error al generar el reporte ");
@@ -289,59 +291,51 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
                 error("Error al intentar cerrar la conexion"+ sqle);
                 }
                 }
+
+
         return null;
     }
 
-    public String button2_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        return null;
+    //////  CARGA DE COMBO BOX DE ORDENES DE TRABAJO
+
+    OrdenTrabajo[] listaOtCab;
+    Option[] listaOtCabOp;
+
+    public OrdenTrabajo[] getListaOtCab() {
+        return listaOtCab;
     }
 
-    ////// CARGA DE COMBO BOX Depositos
-//////     import com.sun.webui.jsf.model.Option;
-    Deposito[] listaDepositos;
-    Option[] listaDepositosOp;
-
-    public Option[] getListaDepositosOp() {
-        return listaDepositosOp;
+    public void setListaOtCab(OrdenTrabajo[] listaOtCab) {
+        this.listaOtCab = listaOtCab;
     }
 
-    public void setListaDepositosOp(Option[] listaDepositosOp) {
-        this.listaDepositosOp = listaDepositosOp;
+    public Option[] getListaOtCabOp() {
+        return listaOtCabOp;
     }
 
-    public Deposito[] getListaDepositos() {
-        return listaDepositos;
+    public void setListaOtCabOp(Option[] listaOtCabOp) {
+        this.listaOtCabOp = listaOtCabOp;
     }
 
-    public void setListaDepositos(Deposito[] listaDepositos) {
-        this.listaDepositos = listaDepositos;
-    }
-
-    public void cargarListaTodosDepositos() {
-        DepositoController depositoController = new DepositoController();
-        listaDepositos = (Deposito[]) depositoController.getAll("nombre").toArray(new Deposito[0]);
-        listaDepositosOp = new Option[listaDepositos.length+1];
+        public void cargarListaTodosOTCab() {
+        OrdenTrabajoCabeceraController c = new OrdenTrabajoCabeceraController();
+        listaOtCab = (OrdenTrabajo[]) c.getAllFiltered(null,null, null, null).toArray(new OrdenTrabajo[0]);
+        listaOtCabOp = new Option[listaOtCab.length+1];
         Option option;
-        int i;
-        for (i = 0; i < listaDepositos.length; i++) {
-            Deposito tp = listaDepositos[i];
+        for (int i = 0; i < listaOtCab.length; i++) {
+            OrdenTrabajo p = listaOtCab[i];
             option = new Option();
-            option.setLabel(tp.getNombre());
-            option.setValue(tp.getCodDeposito().toString());
-            listaDepositosOp[i] = option;
+            option.setLabel(p.getCodOrdenTrabjo().toString()+" "+p.getCodProductoOt().getDescripcion().toString()+" x "+p.getCantidadOt().toString());
+            option.setValue(p.getCodOrdenTrabjo().toString());
+            listaOtCabOp[i] = option;
         }
-            option = new Option();
-            option.setLabel("Todos");
-            option.setValue("-1");
-            listaDepositosOp[listaDepositos.length] = option;
+        option = new Option();
+        option.setLabel("Todos...");
+        option.setValue("-1");
+        listaOtCabOp[listaOtCab.length] = option;
+}
 
-    }
-////// FIN CARGA DE COMBO BOX
-
-
-     ////// CARGA DE COMBO BOX PRODUCTOS
+ ////// CARGA DE COMBO BOX PRODUCTOS
     Producto[] listaProductos;
     Option[] listaProductosOp;
 
@@ -380,6 +374,7 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
         option.setValue("-1");
         listaProductosOp[listaProductos.length] = option;
     }
+
 
 }
 

@@ -29,11 +29,13 @@ import java.util.Date;
 import java.util.List;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
+import javax.faces.convert.NumberConverter;
 import javax.faces.event.ValueChangeEvent;
 import py.com.platinum.controller.DepositoController;
 import py.com.platinum.controller.EmpleadoController;
 import py.com.platinum.controller.EntradaSalidaCabeceraController;
 import py.com.platinum.controller.EquivalenciaController;
+import py.com.platinum.controller.ExistenciaController;
 import py.com.platinum.controller.FormulaCabeceraController;
 import py.com.platinum.controller.FormulaDetalleController;
 import py.com.platinum.controller.FormulaSemiCabeceraController;
@@ -42,9 +44,12 @@ import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.RecursoAsignadoController;
 import py.com.platinum.controller.SolicitudInternaController;
 import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Deposito;
+import py.com.platinum.entity.Empleado;
 import py.com.platinum.entity.EntradaSalidaCabecera;
 import py.com.platinum.entity.EntradaSalidaDetalle;
 import py.com.platinum.entity.Equivalencia;
+import py.com.platinum.entity.Existencia;
 import py.com.platinum.entity.FormulaCabecera;
 import py.com.platinum.entity.FormulaDetalle;
 import py.com.platinum.entity.FormulaSemiCabecera;
@@ -113,6 +118,16 @@ public class ABMMovimientosDeposito extends AbstractPageBean {
     }
 
     private void _init() throws Exception {
+        numberConverter1.setMinIntegerDigits(1);
+        numberConverter1.setMaxIntegerDigits(40);
+        numberConverter1.setMaxFractionDigits(3);
+        numberConverter2.setMinIntegerDigits(1);
+        numberConverter2.setMaxIntegerDigits(50);
+        numberConverter2.setLocale(new java.util.Locale("es", "", ""));
+        numberConverter3.setMinIntegerDigits(1);
+        numberConverter3.setMaxIntegerDigits(40);
+        numberConverter3.setLocale(new java.util.Locale("es", "", ""));
+        numberConverter3.setMaxFractionDigits(3);
   
        
         //table1.setWidth();
@@ -450,6 +465,78 @@ public class ABMMovimientosDeposito extends AbstractPageBean {
     public void setUiDetalleSolicProduct(TextField tf) {
         this.uiDetalleSolicProduct = tf;
     }
+    private TableColumn tableColumn1 = new TableColumn();
+
+    public TableColumn getTableColumn1() {
+        return tableColumn1;
+    }
+
+    public void setTableColumn1(TableColumn tc) {
+        this.tableColumn1 = tc;
+    }
+    private TableRowGroup tableRowGroup1 = new TableRowGroup();
+
+    public TableRowGroup getTableRowGroup1() {
+        return tableRowGroup1;
+    }
+
+    public void setTableRowGroup1(TableRowGroup trg) {
+        this.tableRowGroup1 = trg;
+    }
+    private RadioButton radioButton2 = new RadioButton();
+
+    public RadioButton getRadioButton2() {
+        return radioButton2;
+    }
+
+    public void setRadioButton2(RadioButton rb) {
+        this.radioButton2 = rb;
+    }
+    private SingleSelectOptionsList dropDown1DefaultOptions = new SingleSelectOptionsList();
+
+    public SingleSelectOptionsList getDropDown1DefaultOptions() {
+        return dropDown1DefaultOptions;
+    }
+
+    public void setDropDown1DefaultOptions(SingleSelectOptionsList ssol) {
+        this.dropDown1DefaultOptions = ssol;
+    }
+    private SingleSelectOptionsList dropDown2DefaultOptions = new SingleSelectOptionsList();
+
+    public SingleSelectOptionsList getDropDown2DefaultOptions() {
+        return dropDown2DefaultOptions;
+    }
+
+    public void setDropDown2DefaultOptions(SingleSelectOptionsList ssol) {
+        this.dropDown2DefaultOptions = ssol;
+    }
+    private NumberConverter numberConverter1 = new NumberConverter();
+
+    public NumberConverter getNumberConverter1() {
+        return numberConverter1;
+    }
+
+    public void setNumberConverter1(NumberConverter nc) {
+        this.numberConverter1 = nc;
+    }
+    private NumberConverter numberConverter2 = new NumberConverter();
+
+    public NumberConverter getNumberConverter2() {
+        return numberConverter2;
+    }
+
+    public void setNumberConverter2(NumberConverter nc) {
+        this.numberConverter2 = nc;
+    }
+    private NumberConverter numberConverter3 = new NumberConverter();
+
+    public NumberConverter getNumberConverter3() {
+        return numberConverter3;
+    }
+
+    public void setNumberConverter3(NumberConverter nc) {
+        this.numberConverter3 = nc;
+    }
 
     // </editor-fold>
     /**
@@ -494,9 +581,9 @@ public class ABMMovimientosDeposito extends AbstractPageBean {
         // Perform application initialization that must complete
         // *after* managed components are initialized
         // TODO - add your own initialization code here
-        getSessionBean1().setTituloPagina("Fórmulas de Producción");
-        getSessionBean1().setDetallePagina("Productos Terminados");
-       
+        getSessionBean1().setTituloPagina("Registro de Movimientos en Deposito");
+        getSessionBean1().setDetallePagina("Entradas y salidas de Productos");
+        cargarListaTodosMovimientosCab();
 
     }
 
@@ -545,8 +632,8 @@ public class ABMMovimientosDeposito extends AbstractPageBean {
         } else if(errorValidacion){
             addUpdatePanel.setRendered(true);
         }else {
-            getSessionBean1().setTituloPagina("Fórmulas de Producción");
-            getSessionBean1().setDetallePagina("Productos Terminados");
+            getSessionBean1().setTituloPagina("Registro de Movimientos en Deposito");
+            getSessionBean1().setDetallePagina("Seleccione el registro deseado");
             gridPanelBuscar.setRendered(true);
             tablaFormulas.setRendered(true);
 //            buttonPanel.setRendered(true);
@@ -556,25 +643,43 @@ public class ABMMovimientosDeposito extends AbstractPageBean {
     buscar_action2();
     }
 
+    private Long codCabFormulaEditada;
+
+    public Long getCodCabFormulaEditada() {
+        return codCabFormulaEditada;
+    }
+
+    public void setCodCabFormulaEditada(Long codCabFormulaEditada) {
+        this.codCabFormulaEditada = codCabFormulaEditada;
+    }
+
     public void cargarCamposUpdate(){
-//         if (getFormulasRW().getSelectedRowsCount() > 0){
-//          RowKey[] selectedRowKeys = getFormulasRW().getSelectedRowKeys();
-//          EntradaSalidaCabecera[] entradaSalidaCabecera = this.listaMovimientosCab;
-//          int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
-//          EntradaSalidaCabecera entradaSalidaCabecera = [rowId];
-//
-//          getSessionBean1().setId(formulaCabecera.getCodFormula());
-//         //// CARGA DE CAMPOS DE LA PAGINA
-//         this.uiProductoCodigo.setText(formulaCabecera.getCodProducto().getCodProducto().toString());
-//         this.uiProductoNombre.setText(formulaCabecera.getCodProducto().getDescripcion().toString());
-//         this.uiDescripcion.setText(formulaCabecera.getDescripcion().toString());
-//         this.uiCantidad.setText(formulaCabecera.getCantidad());
-//         this.uiFecha.setSelectedDate(formulaCabecera.getFecha());
-//
-//         detalleEntradaSalidaList = new ArrayList();
-//         detalleEntradaSalidaList = formulaCabecera.getFormulaDetalleCollection();
-//         detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
-//            }
+         if (getTableRowGroup1().getSelectedRowsCount() > 0){
+          RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+          EntradaSalidaCabecera[] entradaSalidaCabeceras = this.listaMovimientosCab;
+          int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+          EntradaSalidaCabecera entradaSalidaCabecera = entradaSalidaCabeceras[rowId];
+
+          codCabFormulaEditada = entradaSalidaCabecera.getCodEntradaSalida();
+         //// CARGA DE CAMPOS DE LA PAGINA
+
+         this.uiResponsableCodigo.setText(entradaSalidaCabecera.getCodEncargado().getCodEmpleado().toString());
+         this.uiResponsableNombre.setText(entradaSalidaCabecera.getCodEncargado().getNombreEmpleado().toString()+" "+entradaSalidaCabecera.getCodEncargado().getApellidoEmpleado().toString());
+         this.uiResponsable2Codigo.setText(entradaSalidaCabecera.getCodEmpleado().getCodEmpleado().toString());
+         this.uiResponsableNombre1.setText(entradaSalidaCabecera.getCodEmpleado().getNombreEmpleado().toString()+" "+entradaSalidaCabecera.getCodEmpleado().getApellidoEmpleado().toString());
+         this.uiObservacion.setText(entradaSalidaCabecera.getObservacion().toString());
+         this.uiDeposito.setSelected(entradaSalidaCabecera.getCodDeposito().getCodDeposito().toString());
+         this.uiFecha.setSelectedDate(entradaSalidaCabecera.getFechaEntradaSalida());
+
+         detalleEntradaSalidaList = new ArrayList();
+         detalleEntradaSalidaList = entradaSalidaCabecera.getEntradaSalidaDetalleList();
+         detallesEntradaSalida = (EntradaSalidaDetalle[]) detalleEntradaSalidaList.toArray(new EntradaSalidaDetalle[0]);
+
+         this.uiDetalleProdCod.setDisabled(false);
+         this.uiDetalleCodSolic.setDisabled(false);
+         this.uiDetalleOTCod.setDisabled(false);
+
+         }
 }
 
 
@@ -720,48 +825,52 @@ public class ABMMovimientosDeposito extends AbstractPageBean {
     public String updateRecordButton_action() {
         //errorValidacion = validarCampos();
         errorValidacion = false;
-//        updateRequest = true;
-//        validarCampos();
-//        ControllerResult controllerResult = new ControllerResult();
-//        FormulaCabecera formulaCabecera = new FormulaCabecera();
-//        FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
-//
-//
-//        if (! errorValidacion){
-//            formulaCabecera = new FormulaCabeceraController().findById(getSessionBean1().getId());
-//                            formulaCabecera = new FormulaCabeceraController().findById(getSessionBean1().getId());
-//                            ProductoController productoController = new ProductoController();
-//
-//                            formulaCabecera.setCodProducto(productoController.findById(Long.valueOf(this.uiProductoCodigo.getText().toString())));
-//                            formulaCabecera.setCantidad(new BigInteger( this.uiCantidad.getText().toString()));
-//                            formulaCabecera.setDescripcion(this.uiDescripcion.getText().toString());
-//                            formulaCabecera.setFecha(this.uiFecha.getSelectedDate());
-//                            formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
-//                            //formulaCabecera.setEstado("A");
-//            FormulaDetalle[] detallesFormulaEliminada = (FormulaDetalle[]) detalleFormulaEliminadaList.toArray(new FormulaDetalle[0]);
-//            detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
-//
-//            controllerResult = formulaCabeceraController.updateCabDet(formulaCabecera, detallesFormula, detallesFormulaEliminada);
-//
-//
-//
-//            if (controllerResult.getCodRetorno() ==-1) {
-//                this.pageAlert1.setType("error");
-//                this.errorValidacion=true;
-//            } else {
-//                updateRequest = false;
-//                this.pageAlert1.setType("information");
-//            }
-//
-//            this.pageAlert1.setTitle(controllerResult.getMsg());
-//            this.pageAlert1.setSummary("");
-//            this.pageAlert1.setDetail("");
-//            this.pageAlert1.setRendered(true);
-//
-//
-//
-//
-//    }
+        updateRequest = true;
+        validarCampos();
+        ControllerResult controllerResult = new ControllerResult();
+        EntradaSalidaCabecera entradaSalidaCabecera = new EntradaSalidaCabecera();
+        EntradaSalidaCabeceraController entradaSalidaCabeceraController = new EntradaSalidaCabeceraController();
+
+
+        if (! errorValidacion){
+            
+                            entradaSalidaCabecera = new EntradaSalidaCabeceraController().findById(codCabFormulaEditada.longValue());
+                            ProductoController productoController = new ProductoController();
+
+                            DepositoController depositoController = new DepositoController();
+                            EmpleadoController empleadoController = new EmpleadoController();
+
+                            entradaSalidaCabecera.setCodDeposito(depositoController.findById(Long.valueOf(this.uiDeposito.getSelected().toString())));
+                            entradaSalidaCabecera.setCodEncargado(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
+                            entradaSalidaCabecera.setCodEmpleado(empleadoController.findById(Long.valueOf(this.uiResponsable2Codigo.getText().toString())));
+                            entradaSalidaCabecera.setFechaEntradaSalida(this.uiFecha.getSelectedDate());
+                            entradaSalidaCabecera.setObservacion(this.uiObservacion.getText().toString());
+
+                            //formulaCabecera.setEstado("A");
+                            EntradaSalidaDetalle[] entradaSalidaDetalleEliminada = (EntradaSalidaDetalle[]) detalleEntradaSalidaEliminadaList.toArray(new EntradaSalidaDetalle[0]);
+                            detallesEntradaSalida = (EntradaSalidaDetalle[]) detalleEntradaSalidaList.toArray(new EntradaSalidaDetalle[0]);
+
+                            controllerResult = entradaSalidaCabeceraController.updateCabDet(entradaSalidaCabecera, detallesEntradaSalida, entradaSalidaDetalleEliminada);
+
+
+
+            if (controllerResult.getCodRetorno() ==-1) {
+                this.pageAlert1.setType("error");
+                this.errorValidacion=true;
+            } else {
+                updateRequest = false;
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(controllerResult.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+
+
+
+
+    }
  return null;
 }
 
@@ -785,12 +894,26 @@ private boolean validarCampos(){
                          for (int i = 0; i < detallesEntradaSalida.length; i++) {
                                 EntradaSalidaDetalle entSal = detallesEntradaSalida[i];
                                 Producto p = null;
+                                
+                                ///VERIFICAMOS LA EXISTENCIA
+                                
+                                Deposito deposito = new DepositoController().findById(Long.valueOf(uiDeposito.getSelected().toString()));
+                                Existencia existencia = new ExistenciaController().getExistencia(null, entSal.getCodProducto().getCodProducto(), deposito.getCodDeposito());
+                                    if (existencia != null && entSal.getTipoEntradaSalida().equals("S") && existencia.getCantidadExistencia().longValue() < entSal.getCantidadEntSal().longValue()) {
+
+                                            this.errorValidacion= true;
+                                            String mensaje = "La cantidad ingresada del producto "+entSal.getCodProducto().getDescripcion().toString()+" no existe en Deposito";
+                                            info(uiDetalleProdDesc, mensaje);
+                                            break;
+                                    }
+
+                                /////
                                 OrdenTrabajoDetalle otDet = null;
                                 p = entSal.getCodProducto();
 
                                 Long cantidad = null;
                                 cantidad = Long.valueOf(entSal.getCantidadEntSal().toString());
-                                if (entSal.getCodOrdenTrabajoDetalle().getCodOrdenTrabajoDet() != null) {
+                                if (entSal.getCodOrdenTrabajoDetalle() !=null && entSal.getCodOrdenTrabajoDetalle().getCodOrdenTrabajoDet() != null) {
                                     otDet = entSal.getCodOrdenTrabajoDetalle();
                                 }
 
@@ -829,15 +952,28 @@ private boolean validarCampos(){
 
             if (this.uiResponsableCodigo.getText() == null ||
                     this.uiResponsableCodigo.getText().toString() == null ||
-                    this.uiResponsableCodigo.getText().toString().equals("")){
+                    this.uiResponsableCodigo.getText().toString().equals("") || !StringUtils.esNumero(this.uiResponsableCodigo.getText().toString())){
                         errorValidacion = true;
                        this.info(uiResponsableCodigo, "Debe seleccionar un Responsable");
+                }else{
+                        Empleado e   = new EmpleadoController().findById(Long.valueOf(uiResponsableCodigo.getText().toString()));
+                        if (e == null) {
+                            this.errorValidacion= true;
+                            info(uiResponsableCodigo, "Verifique el codigo del Empleado Responsable");
+                        }
+
                 }
             if (this.uiResponsable2Codigo.getText() == null ||
                     this.uiResponsable2Codigo.getText().toString() == null ||
-                    this.uiResponsable2Codigo.getText().toString().equals("")){
+                    this.uiResponsable2Codigo.getText().toString().equals("") || !StringUtils.esNumero(this.uiResponsable2Codigo.getText().toString())){
                         errorValidacion = true;
                        this.info(uiResponsable2Codigo, "Debe seleccionar un Responsable de retirar");
+                }else{
+                        Empleado e2 = new EmpleadoController().findById(Long.valueOf(uiResponsable2Codigo.getText().toString()));
+                        if (e2 == null) {
+                            this.errorValidacion= true;
+                            info(uiResponsable2Codigo, "Verifique el codigo del Empleado Responsable del Retiro");
+                        }
                 }
 
 
@@ -855,43 +991,7 @@ private boolean validarCampos(){
 }
 
 
-////// CARGA DE COMBO BOX Formulas TERMINADOS
-//////     import com.sun.webui.jsf.model.Option;
-
-    FormulaCabecera[] listaFormulaCabeceras;
-    Option[] listaFormulaCabecerasOp;
-
-    public Option[] getListaFormulaCabecerasOp() {
-        return listaFormulaCabecerasOp;
-    }
-
-    public void setListaFormulaCabecerasOp(Option[] listaFormulaCabeceraOp) {
-        this.listaFormulaCabecerasOp = listaFormulaCabeceraOp;
-    }
-
-    public FormulaCabecera[] getListaFormulaCabeceras() {
-        return listaFormulaCabeceras;
-    }
-
-    public void setListaFormulaCabeceras(FormulaCabecera[] listaFormulaCabeceras) {
-        this.listaFormulaCabeceras = listaFormulaCabeceras;
-    }
-
-    public void cargarListaTodosFormulaCabeceras(){
-        FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
-        listaFormulaCabeceras = (FormulaCabecera[]) formulaCabeceraController.getAll("codProducto.codProducto").toArray(new FormulaCabecera[0]);
-        listaFormulaCabecerasOp = new Option [listaFormulaCabeceras.length];
-        Option option;
-        for (int i = 0; i < listaFormulaCabeceras.length; i++) {
-            FormulaCabecera p = listaFormulaCabeceras[i];
-            option = new Option();
-            option.setLabel(p.getDescripcion());
-            option.setValue(p.getCodFormula().toString());
-            listaFormulaCabecerasOp[i] = option;
-        }
-    }
-//////// FIN CARGA DE COMBO BOX Formulas
-////// CARGA DE COMBO BOX Formulas TERMINADOS
+///// CARGA DE COMBO BOX Formulas TERMINADOS
 //////     import com.sun.webui.jsf.model.Option;
 
     EntradaSalidaCabecera[] listaMovimientosCab;
@@ -964,16 +1064,16 @@ private EntradaSalidaCabecera cabeceraEntradaSalida;
                             Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetalleProdCod.getText().toString()));
 
                             OrdenTrabajoDetalleController ordenTrabajoDetalleController  = new OrdenTrabajoDetalleController ();
-                            OrdenTrabajoDetalle ordenTDet = new OrdenTrabajoDetalle();
+                            OrdenTrabajoDetalle ordenTDet = null;
 
                             SolicitudInternaController solicitudInternaController  = new SolicitudInternaController ();
-                            SolicitudInterna solicitud = new SolicitudInterna();
+                            SolicitudInterna solicitud = null;
                             
                             
-                            if (!uiDetalleOTCod.getText().equals("")) {
+                            if (uiDetalleOTCod.getText() != null  && !uiDetalleOTCod.getText().equals("")) {
                                     ordenTDet = ordenTrabajoDetalleController.findById(Long.valueOf(Long.valueOf(this.uiDetalleOTCod.getText().toString())));
                             }
-                            if (!uiDetalleCodSolic.getText().equals("")) {
+                            if (uiDetalleCodSolic.getText() != null && !uiDetalleCodSolic.getText().equals("")) {
                                     solicitud = solicitudInternaController.findById(Long.valueOf(Long.valueOf(this.uiDetalleCodSolic.getText().toString())));
                             }
                             
@@ -982,8 +1082,15 @@ private EntradaSalidaCabecera cabeceraEntradaSalida;
                            detalleEntradaSalida.setCodProducto(producto);
                            detalleEntradaSalida.setCantidadEntSal(BigInteger.valueOf(Long.valueOf(this.uiDetalleCant.getText().toString())));
                            detalleEntradaSalida.setTipoEntradaSalida(this.uiDetalleTipo.getSelected().toString());
+
+                           if (ordenTDet != null) {
                            detalleEntradaSalida.setCodOrdenTrabajoDetalle(ordenTDet);
-                           detalleEntradaSalida.setCodSolicitud(solicitud);
+                            }
+
+                           if (solicitud != null) {
+                            detalleEntradaSalida.setCodSolicitud(solicitud);
+                           }
+
                            detalleEntradaSalida.setFechaAlta(this.uiFecha.getSelectedDate());
 
 
@@ -993,20 +1100,42 @@ private EntradaSalidaCabecera cabeceraEntradaSalida;
 
             }else{
 
-//                            Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetalleProdCod.getText().toString()));
-//
-//                            FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
-//                            FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabecera();
-//                            formulaSemiCabecera = formulaSemiCabeceraController.findById(Long.valueOf(Long.valueOf(this.uiDetalleCodFormula.getText().toString())));
-//
-//                //           FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabeceraController().findById(Long.valueOf(this.uiDetalleCodFormula.getText().toString()));
-//
-//
-//                           detalleFormula  = detalleFormulaList.get(Integer.valueOf(itemDet).intValue());
-//                           detalleFormula.setCodProducto(producto);
-//                           detalleFormula.setCodFormulaSemiCabecera(formulaSemiCabecera);
-//                           detalleFormula.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetalleCant.getText().toString())));
-//                           editarDetalle = false;
+                this.uiDetalleProdCod.setDisabled(false);
+                this.uiDetalleCodSolic.setDisabled(false);
+                this.uiDetalleOTCod.setDisabled(false);
+
+                 editarDetalle = false;
+                 Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetalleProdCod.getText().toString()));
+
+                            OrdenTrabajoDetalleController ordenTrabajoDetalleController  = new OrdenTrabajoDetalleController ();
+                            OrdenTrabajoDetalle ordenTDet = null;
+
+                            SolicitudInternaController solicitudInternaController  = new SolicitudInternaController ();
+                            SolicitudInterna solicitud = null;
+
+
+                            if (uiDetalleOTCod.getText() != null  && !uiDetalleOTCod.getText().equals("")) {
+                                    ordenTDet = ordenTrabajoDetalleController.findById(Long.valueOf(Long.valueOf(this.uiDetalleOTCod.getText().toString())));
+                            }
+                            if (uiDetalleCodSolic.getText() != null && !uiDetalleCodSolic.getText().equals("")) {
+                                    solicitud = solicitudInternaController.findById(Long.valueOf(Long.valueOf(this.uiDetalleCodSolic.getText().toString())));
+                            }
+
+                           EntradaSalidaDetalle entradaSalidaDetalle = detalleEntradaSalidaList.get(Integer.valueOf(itemDet).intValue());
+
+
+
+                           entradaSalidaDetalle.setCodProducto(producto);
+                           entradaSalidaDetalle.setCantidadEntSal(BigInteger.valueOf(Long.valueOf(this.uiDetalleCant.getText().toString())));
+                           entradaSalidaDetalle.setTipoEntradaSalida(this.uiDetalleTipo.getSelected().toString());
+                           entradaSalidaDetalle.setFechaAlta(this.uiFecha.getSelectedDate());
+                           if (ordenTDet != null) {
+                                entradaSalidaDetalle.setCodOrdenTrabajoDetalle(ordenTDet);
+                           }
+                           if (solicitud != null) {
+                            entradaSalidaDetalle.setCodSolicitud(solicitud);
+                           }
+            
            }
            detallesEntradaSalida = (EntradaSalidaDetalle[]) detalleEntradaSalidaList.toArray(new EntradaSalidaDetalle[0]);
            limpiarDetalle();
@@ -1021,7 +1150,7 @@ public void validarDetalle(){
     OrdenTrabajoDetalle otDet = null;
 
     this.errorValidacion= false;
-if (uiDetalleProdCod.getText() == null || uiDetalleProdCod.getText().equals("") ) {
+if (uiDetalleProdCod.getText() == null || uiDetalleProdCod.getText().equals("") || !StringUtils.esNumero(this.uiDetalleProdCod.getText().toString())) {
         this.errorValidacion= true;
         info(uiDetalleProdDesc, "Verifique el codigo de Producto");
 }else{
@@ -1029,10 +1158,23 @@ if (uiDetalleProdCod.getText() == null || uiDetalleProdCod.getText().equals("") 
      if (p == null) {
          this.errorValidacion= true;
          info(uiDetalleProdDesc, "Verifique el codigo de Producto");
+     }else{
+         if (detalleEntradaSalidaList != null && detalleEntradaSalidaList.size() > 0 && !editarDetalle) {
+             for (int i = 0; i < detalleEntradaSalidaList.size(); i++) {
+                 EntradaSalidaDetalle entSalDeta = detalleEntradaSalidaList.get(i);
+                 if (entSalDeta.getCodProducto().getCodProducto().equals(p.getCodProducto()) ) {
+                              this.errorValidacion= true;
+                              info(uiDetalleProdDesc, "El codigo de Producto no puede ser repetido");
+                              break;
+                 }
+             }
+
+         }
+
      }
 }
 Long cantidad = null;
-if (uiDetalleCant.getText() == null || uiDetalleCant.getText().equals("") ) {
+if (uiDetalleCant.getText() == null || uiDetalleCant.getText().equals("") ||!StringUtils.esNumero(this.uiDetalleCant.getText().toString()) ) {
         this.errorValidacion= true;
         info(uiDetalleProdDesc, "Verifique la cantidad");
 }else{
@@ -1049,20 +1191,47 @@ if (uiDetalleCant.getText() == null || uiDetalleCant.getText().equals("") ) {
     }
 }
 
-if (uiDetalleOTCod.getText() != null ){
-    otDet = new OrdenTrabajoDetalleController().findById(Long.valueOf(uiDetalleOTCod.getText().toString()));
-    if (otDet == null) {
-         this.errorValidacion= true;
-         info(uiDetalleProdDesc, "Verifique el codigo de OT");
-    }else{
-        if (uiDetalleTipo.getSelected().toString().equals("E")) {
-            this.errorValidacion= true;
-            info(uiDetalleProdDesc, "El tipo de movimiento debe ser Salida");
+
+        if (uiDetalleCodSolic.getText() != null && !uiDetalleCodSolic.getText().equals("")){
+              if (StringUtils.esNumero(this.uiDetalleCodSolic.getText().toString())){
+                        SolicitudInterna sol = new SolicitudInternaController().findById(Long.valueOf(uiDetalleCodSolic.getText().toString()));
+                        if (sol == null ) {
+                             this.errorValidacion= true;
+                             info(uiDetalleProdDesc, "Verifique el codigo se Solicitud");
+                        }
+         
+              }else{
+                             this.errorValidacion= true;
+                             info(uiDetalleProdDesc, "Verifique el codigo se Solicitud");
+              }
         }
 
-    }
 
-}
+        if (uiDetalleOTCod.getText() != null && !uiDetalleOTCod.getText().equals("")){
+
+
+            if (StringUtils.esNumero(this.uiDetalleOTCod.getText().toString())){
+                    otDet = new OrdenTrabajoDetalleController().findById(Long.valueOf(uiDetalleOTCod.getText().toString()));
+                    if (otDet == null) {
+                         this.errorValidacion= true;
+                         info(uiDetalleProdDesc, "Verifique el codigo de OT");
+                    }else{
+                        if (uiDetalleTipo.getSelected().toString().equals("E")) {
+                            this.errorValidacion= true;
+                            info(uiDetalleProdDesc, "El tipo de movimiento debe ser Salida");
+                        }else if(!otDet.getEstado().toString().equals("P")){
+                         this.errorValidacion= true;
+                         info(uiDetalleProdDesc, "El codigo de OT no se encuentra en Proceso");
+                        }
+                    }
+            }else{
+
+                         this.errorValidacion= true;
+                         info(uiDetalleProdDesc, "Verifique el codigo de OT");
+
+            }
+        }
+
 
 
     if (otDet != null && p != null && cantidad != null) {
@@ -1104,39 +1273,7 @@ this.uiDetalleTipo.setSelected("E");
 }
 
 
-public String detailRemove() {
-//    // esta bandera se usa para determinar el comportamiento del boton guardar detalle
-//    editarDetalle = false;
-//
-//    //// agrego la formula eliminada a la lista de formulas Eliminadas
-//    //// se utiliza luego al actualizar el registro
-//
-//    if (updateRequest) {
-//       FormulaDetalle fDetEliminada  = detalleFormulaList.get(Integer.valueOf(itemDet).intValue());
-//       detalleFormulaEliminadaList.add(fDetEliminada);
-//
-//    }
-//
-//    detalleFormulaList.remove(Integer.valueOf(itemDet).intValue());
-//    detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
-//    return null;
-//}
-//
-//public String detailEdit() {
-//    // esta bandera se usa para determinar el comportamiento del boton guardar detalle
-//    editarDetalle = true;
-//
-//    FormulaDetalle formulaDetalle = new FormulaDetalle();
-//    formulaDetalle = detalleFormulaList.get(Integer.valueOf(itemDet).intValue());
-//
-//    this.uiDetalleCodFormula.setText(formulaDetalle.getCodFormulaSemiCabecera().getCodFormulaSemiCabecera().toString());
-//    this.uiDetalleFormula.setText(formulaDetalle.getCodFormulaSemiCabecera().getDescripcion().toString());
-//    this.uiDetalleProdCod.setText(formulaDetalle.getCodProducto().getCodProducto().toString());
-//    this.uiDetalleProdDesc.setText(formulaDetalle.getCodProducto().getDescripcion());
-//    this.uiDetalleCant.setText(formulaDetalle.getCantidad().toString());
-//
-    return null;
-}
+
 
 
 private String itemDet;
@@ -1152,6 +1289,7 @@ private String itemDet;
     public String buscarButton_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
+        buscar_action();
         return null;
     }
 
@@ -1183,6 +1321,10 @@ private String itemDet;
 
         limpiarDetalle();
 
+            this.uiDetalleProdCod.setDisabled(false);
+            this.uiDetalleCodSolic.setDisabled(false);
+            this.uiDetalleOTCod.setDisabled(false);
+
         this.addRecordButton.setRendered(true);
         this.updateRecordButton.setRendered(false);
 
@@ -1197,14 +1339,14 @@ private String itemDet;
         // case name where null will return to the same page.
 
             detalleEntradaSalidaList = new ArrayList();
-        getSessionBean1().setTituloPagina("Editar Fórmula de Producción");
-        getSessionBean1().setDetallePagina("Editar una fórmula de producción, " +
-                "con su detalle correspondiente de Semiterminados");
+            detalleEntradaSalidaEliminadaList = new ArrayList();
+        getSessionBean1().setTituloPagina("Editar un movimiento en deposito");
+        getSessionBean1().setDetallePagina("Con sus respectivos detalles de productos y movimientos");
         this.pageAlert1.setRendered(false);
         this.updateRequest=true;
         this.addRecordButton.setRendered(false);
         this.updateRecordButton.setRendered(true);
-
+        this.codCabFormulaEditada = null;
 
         cargarCamposUpdate();
         limpiarDetalle();
@@ -1262,7 +1404,60 @@ private String itemDet;
         return null;
     }
 
-  
+
+    public String editDetailButton_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+
+    // esta bandera se usa para determinar el comportamiento del boton guardar detalle
+    editarDetalle = true;
+    this.uiDetalleProdCod.setDisabled(true);
+    this.uiDetalleCodSolic.setDisabled(true);
+    this.uiDetalleOTCod.setDisabled(true);
+
+    EntradaSalidaDetalle entradaSalidaDetalle = new EntradaSalidaDetalle();
+    entradaSalidaDetalle = detalleEntradaSalidaList.get(Integer.valueOf(itemDet).intValue());
+
+    this.uiDetalleProdCod.setText(entradaSalidaDetalle.getCodProducto().getCodProducto().toString());
+    this.uiDetalleProdDesc.setText(entradaSalidaDetalle.getCodProducto().getDescripcion().toString());
+    this.uiDetalleCant.setText(entradaSalidaDetalle.getCantidadEntSal().toString());
+    this.uiDetalleTipo.setSelected(entradaSalidaDetalle.getTipoEntradaSalida().toString());
+
+    if (entradaSalidaDetalle.getCodSolicitud() != null && !entradaSalidaDetalle.getCodSolicitud().equals("")) {
+            this.uiDetalleSolicProduct.setText(entradaSalidaDetalle.getCodSolicitud().getCodSolicitud().toString());
+    }
+    if (entradaSalidaDetalle.getCodOrdenTrabajoDetalle() != null && !entradaSalidaDetalle.getCodOrdenTrabajoDetalle().equals("")) {
+            this.uiDetalleOTCod.setText(entradaSalidaDetalle.getCodOrdenTrabajoDetalle().getCodOrdenTrabajoDet().toString());
+    }
+
+    return null;
+    }
+
+    public String removeDetailButton_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+
+
+        // esta bandera se usa para determinar el comportamiento del boton guardar detalle
+    editarDetalle = false;
+    this.uiDetalleProdCod.setDisabled(false);
+    this.uiDetalleCodSolic.setDisabled(false);
+    this.uiDetalleOTCod.setDisabled(false);
+
+    //// agrego la formula eliminada a la lista de formulas Eliminadas
+    //// se utiliza luego al actualizar el registro
+
+    if (updateRequest) {
+
+       EntradaSalidaDetalle entSalEliminada  = detalleEntradaSalidaList.get(Integer.valueOf(itemDet).intValue());
+       detalleEntradaSalidaEliminadaList.add(entSalEliminada);
+
+    }
+
+    detalleEntradaSalidaList.remove(Integer.valueOf(itemDet).intValue());
+    detallesEntradaSalida= (EntradaSalidaDetalle[]) detalleEntradaSalidaList.toArray(new EntradaSalidaDetalle[0]);
+    return null;
+    }
 
 
 }

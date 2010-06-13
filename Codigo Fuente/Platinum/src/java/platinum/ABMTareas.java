@@ -7,6 +7,8 @@ package platinum;
 import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
+import com.sun.webui.jsf.component.Checkbox;
+import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.component.PageAlert;
 import com.sun.webui.jsf.component.RadioButton;
 import com.sun.webui.jsf.component.StaticText;
@@ -23,8 +25,10 @@ import javax.faces.event.ValueChangeEvent;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
+import py.com.platinum.controller.MaquinariaController;
 import py.com.platinum.controller.TareaController;
 import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Maquinarias;
 import py.com.platinum.entity.Tarea;
 
 
@@ -197,6 +201,24 @@ public class ABMTareas extends AbstractPageBean {
     public void setTableColumn3(TableColumn tc) {
         this.tableColumn3 = tc;
     }
+    private DropDown uiMaquinaria = new DropDown();
+
+    public DropDown getUiMaquinaria() {
+        return uiMaquinaria;
+    }
+
+    public void setUiMaquinaria(DropDown dd) {
+        this.uiMaquinaria = dd;
+    }
+    private Checkbox uiUtilizaMaq = new Checkbox();
+
+    public Checkbox getUiUtilizaMaq() {
+        return uiUtilizaMaq;
+    }
+
+    public void setUiUtilizaMaq(Checkbox c) {
+        this.uiUtilizaMaq = c;
+    }
 
     // </editor-fold>
     /**
@@ -332,13 +354,20 @@ buscar_action2();
           getSessionBean1().setId(tarea.getCodTarea());
          //// CARGA DE CAMPOS DE LA PAGINA
          this.uiTarea.setText(tarea.getNombreTarea());
-
+             if (tarea.getCodMaquinaria() != null) {
+                 this.uiUtilizaMaq.setSelected(true);
+                 this.uiMaquinaria.setSelected(tarea.getCodMaquinaria().getCodMaquinaria().toString());
+             }else{
+                 this.uiUtilizaMaq.setSelected(false);
+                 this.uiMaquinaria.setSelected(null);
+             }
          }
     }
 
 public void limpiarCamposNew(){
 
             this.uiTarea.setText("");
+            this.uiUtilizaMaq.setSelected(false);
             
 
     }
@@ -472,6 +501,10 @@ public void limpiarCamposNew(){
             Tarea tarea = new Tarea();
             tarea.setNombreTarea(this.uiTarea.getText().toString());
 
+            Maquinarias maq = new MaquinariaController().findById(Long.valueOf(this.uiMaquinaria.getSelected().toString()));
+            tarea.setCodMaquinaria(maq);
+
+
 //                        producto.setFechaAlta(this.uiFechaAlta.getSelectedDate());
 
             TareaController tareaController = new TareaController();
@@ -503,7 +536,7 @@ public void validarCampos() {
                 this.uiTarea.getText().toString().equals("")){
                    errorValidacion = true;
                    this.info(uiTarea, "El nombre de Tarea no puede ser nula");
-            } else if (new TareaController().existe(this.uiTarea.getText().toString()))  {
+            } else if (!updateRequest && new TareaController().existe(this.uiTarea.getText().toString()))  {
                          errorValidacion = true;
                           this.info(uiTarea, "La tarea ya Existe");
             }
@@ -567,7 +600,12 @@ private TableSelectPhaseListener tablePhaseListener =
           Tarea tarea = new TareaController().findById(getSessionBean1().getId());
 
                             tarea.setNombreTarea(this.uiTarea.getText().toString());
-
+                            if (uiUtilizaMaq.isChecked()) {
+                                Maquinarias maq = new MaquinariaController().findById(Long.valueOf(this.uiMaquinaria.getSelected().toString()));
+                                tarea.setCodMaquinaria(maq);
+                            }else{
+                                tarea.setCodMaquinaria(null);
+                            }
 
                             TareaController tareaController = new TareaController();
 
