@@ -42,7 +42,7 @@
                         <div>
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
-                        <h:panelGrid id="mainContainer" style="height: 408px; left: 288px; top: 192px; position: absolute" width="888">
+                        <h:panelGrid id="mainContainer" style="height: 408px; left: 240px; top: 216px; position: absolute" width="888">
                             <webuijsf:pageAlert binding="#{ABMOrdenesTrabajo.pageAlert1}" id="pageAlert1" rendered="false"/>
                             <h:panelGrid binding="#{ABMOrdenesTrabajo.gridPanelBuscar}" id="gridPanelBuscar" style="height: 72px" width="407">
                                 <h:panelGrid columns="2" id="gridPanelFiltros1" style="height: 96px" width="647">
@@ -114,6 +114,7 @@
                                         style="width: 50px" text="Nuevo"/>
                                     <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonEditarRegistro_action}" id="uiButtonEditarRegistro"
                                         style="width: 65px" text="Ver Detalles"/>
+                                    <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.calcularCosto_action}" id="calcularCosto" text="Costos Finales"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                             <br/>
@@ -190,14 +191,19 @@
                                         </webuijsf:tab>
                                     </webuijsf:tabSet>
                                 </h:panelGrid>
-                            </h:panelGrid>
-                            <h:panelGrid columns="2" id="buttonsPanelAddUpdate1" style="height: 24px; margin-left: 540px" width="191">
-                                <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiCancelButton_action}" id="uiButtonCancelRegistro"
-                                    style="font-size: 14px; height: 24px" text="Cancelar"/>
-                                <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonGuardarRegistro_action}"
-                                    binding="#{ABMOrdenesTrabajo.uiButtonGuardarRegistro}" id="uiButtonGuardarRegistro" style="font-size: 14px; height: 24px" text="Guardar"/>
-                                <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uibuttonGuardarEdicion_action}"
-                                    binding="#{ABMOrdenesTrabajo.uibuttonGuardarEdicion}" id="uibuttonGuardarEdicion" style="font-size: 14px; height: 24px" text="Guardar"/>
+                                <h:panelGrid columns="2" id="buttonsPanelAddUpdate1" style="height: 24px; margin-left: 540px" width="191">
+                                    <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiCancelButton_action}" id="uiButtonCancelRegistro"
+                                        style="font-size: 14px; height: 24px" text="Cancelar"/>
+                                    <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonGuardarRegistro_action}"
+                                        binding="#{ABMOrdenesTrabajo.uiButtonGuardarRegistro}" id="uiButtonGuardarRegistro"
+                                        style="font-size: 14px; height: 24px" text="Guardar"/>
+                                    <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uibuttonGuardarEdicion_action}"
+                                        binding="#{ABMOrdenesTrabajo.uibuttonGuardarEdicion}" id="uibuttonGuardarEdicion" style="font-size: 14px; height: 24px" text="Guardar"/>
+                                    <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uibuttonGuardarCostos_action}"
+                                        binding="#{ABMOrdenesTrabajo.uibuttonGuardarCostos}" id="uibuttonGuardarCostos" style="font-size: 14px; height: 24px" text="Guardar"/>
+                                    <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uibuttonCalcularCostos_action}"
+                                        binding="#{ABMOrdenesTrabajo.uibuttonCalcularCostos}" id="uibuttonCalcularCostos" style="font-size: 14px; height: 24px" text="Calcular Costos"/>
+                                </h:panelGrid>
                             </h:panelGrid>
                             <h:panelGrid binding="#{ABMOrdenesTrabajo.gridPanelDetalleOT}" id="gridPanelDetalleOT">
                                 <webuijsf:label id="labelDetalleSemiTer2" style="color: rgb(0, 0, 153); font-size: 14px; font-weight: bold" text="Detalle Semi Terminados"/>
@@ -214,7 +220,8 @@
                                                 <webuijsf:textField binding="#{ABMOrdenesTrabajo.uiDetSemiTerCant}" id="uiDetSemiTerCant" valueChangeListenerExpression="#{ABMOrdenesTrabajo.uiDetSemiTerCant_processValueChange}"/>
                                                 <webuijsf:checkbox binding="#{ABMOrdenesTrabajo.uiDetSemiTerFin}" id="uiDetSemiTerFin" label="Fin"/>
                                             </h:panelGrid>
-                                            <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.buttonAgregar_action}" id="uiButtonAgregarDetalleOt" text="Agregar"/>
+                                            <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.buttonAgregar_action}"
+                                                binding="#{ABMOrdenesTrabajo.uiButtonAgregarDetalleOt}" id="uiButtonAgregarDetalleOt" text="Agregar"/>
                                         </webuijsf:panelLayout>
                                     </webuijsf:tab>
                                 </webuijsf:tabSet>
@@ -239,22 +246,28 @@
                                             <webuijsf:tableColumn headerText="Cant Prod" id="tableColumn9" width="70">
                                                 <webuijsf:staticText id="staticText7" text="#{currentRow.value['cantidadReal']}"/>
                                             </webuijsf:tableColumn>
+                                            <webuijsf:tableColumn align="right" binding="#{ABMOrdenesTrabajo.tableColumnCostoSemi}" headerText="Costo Final" id="tableColumnCostoSemi">
+                                                <webuijsf:staticText id="staticText23" text="#{currentRow.value['costoReal']}"/>
+                                            </webuijsf:tableColumn>
                                             <webuijsf:tableColumn headerText="Est" id="tableColumn10" sort="estado" width="87">
                                                 <webuijsf:staticText id="staticText8" text="#{currentRow.value['estado']}"/>
                                             </webuijsf:tableColumn>
-                                            <webuijsf:tableColumn align="center" id="tableColumn11" valign="top" width="94">
+                                            <webuijsf:tableColumn align="center" binding="#{ABMOrdenesTrabajo.tableColumnVerDetalles}"
+                                                id="tableColumnVerDetalles" valign="top" width="94">
                                                 <webuijsf:hyperlink actionExpression="#{ABMOrdenesTrabajo.uiSemiTerDetLynkRecusos_action}"
-                                                    id="uiSemiTerDetLynkRecusos" text="Ver Detalles ...">
+                                                    binding="#{ABMOrdenesTrabajo.uiSemiTerDetLynkRecusos}" id="uiSemiTerDetLynkRecusos" text="Ver Detalles ...">
                                                     <f:setPropertyActionListener target="#{ABMOrdenesTrabajo.itemDetalleOt}" value="#{currentRow.tableRow.rowId}"/>
                                                 </webuijsf:hyperlink>
                                             </webuijsf:tableColumn>
-                                            <webuijsf:tableColumn align="center" id="tableColumn12" valign="top" width="20">
+                                            <webuijsf:tableColumn align="center" binding="#{ABMOrdenesTrabajo.tableColumnEditSemiter}"
+                                                id="tableColumnEditSemiter" valign="top" width="20">
                                                 <webuijsf:imageHyperlink actionExpression="#{ABMOrdenesTrabajo.uiEditDetLynk_action}"
                                                     binding="#{ABMOrdenesTrabajo.uiEditDetLynk}" id="uiEditDetLynk" imageURL="/resources/Images/edit_16x16.gif" text="">
                                                     <f:setPropertyActionListener target="#{ABMOrdenesTrabajo.itemDet}" value="#{currentRow.tableRow.rowId}"/>
                                                 </webuijsf:imageHyperlink>
                                             </webuijsf:tableColumn>
-                                            <webuijsf:tableColumn align="center" id="tableColumn13" valign="top" width="20">
+                                            <webuijsf:tableColumn align="center" binding="#{ABMOrdenesTrabajo.tableColumnDelSemiTer}" id="tableColumnDelSemiTer"
+                                                valign="top" width="33">
                                                 <webuijsf:imageHyperlink actionExpression="#{ABMOrdenesTrabajo.uiRemoDetLynk_action}"
                                                     binding="#{ABMOrdenesTrabajo.uiRemoDetLynk}" id="uiRemoDetLynk" imageURL="/resources/Images/delete.gif" text="">
                                                     <f:setPropertyActionListener target="#{ABMOrdenesTrabajo.itemDet}" value="#{currentRow.tableRow.rowId}"/>
@@ -268,7 +281,9 @@
                                 <webuijsf:label id="labelDetalleSemiTer3" style="color: rgb(0, 0, 153); font-size: 14px; font-weight: bold" text="SemiTerminados / Detalle de Recursos y Tareas"/>
                                 <webuijsf:label id="labelProduccion1" style="color: rgb(0, 51, 204)" text="Descripcion de la Produccion"/>
                                 <h:panelGrid columns="2" id="gridPanelCabeceraSemiTer1" style="border-width: 1px; border-style: double; vertical-align: top" width="700">
-                                    <h:panelGrid columns="2" id="gridPanelProduccionSemitTer1" style="border-width: 1px; height: 240px" width="431">
+                                    <h:panelGrid columns="2" id="gridPanelProduccionSemitTer1" style="border-width: 1px; height: 264px" width="431">
+                                        <webuijsf:label id="label9" text="Codigo Sub-OT"/>
+                                        <webuijsf:textField binding="#{ABMOrdenesTrabajo.uiSemiTerCabcod}" columns="25" disabled="true" id="uiSemiTerCabcod"/>
                                         <webuijsf:hyperlink id="codigo_Semiterminado1"
                                             onClick="doPopup('form1:uiSemiTerCabProductoCod_field', 'form1:uiSemiTerCabProductoDesc_field')" target="popup"
                                             text="Codigo Semiterminado" url="/faces/popup/popupProductosSemiter.jsp"/>
@@ -291,22 +306,27 @@
                                         <webuijsf:textField binding="#{ABMOrdenesTrabajo.uiSemiTerCabCantProd}" disabled="true" id="uiSemiTerCabCantProd"/>
                                     </h:panelGrid>
                                     <h:panelGrid id="gridPanelActivar1" style="height: 288px; text-align: center" width="216">
-                                        <webuijsf:label id="activar1" style="font-size: 14px; bottom: 1px; vertical-align: top" text="Activado"/>
+                                        <webuijsf:label binding="#{ABMOrdenesTrabajo.activarLabel}" id="activarLabel"
+                                            style="font-size: 14px; bottom: 1px; vertical-align: top" text="Activado"/>
                                         <webuijsf:checkbox binding="#{ABMOrdenesTrabajo.uiSemiTerCabActivoCheck}" id="uiSemiTerCabActivoCheck" readOnly="true"/>
-                                        <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonActivarOtDet_action}"
-                                            binding="#{ABMOrdenesTrabajo.uiButtonActivarOtDet}" id="uiButtonActivarOtDet" text="Activar"/>
-                                        <h:panelGrid id="gridPanel3" style="height: 115px" width="236"/>
+                                        <h:panelGrid id="gridPanel3" style="height: 115px" width="236">
+                                            <webuijsf:label binding="#{ABMOrdenesTrabajo.uiLabelDetCabCosto}" id="uiLabelDetCabCosto"
+                                                style="color: #cc0000; font-size: 12px; font-weight: bold" text="Costo Total"/>
+                                            <webuijsf:textField binding="#{ABMOrdenesTrabajo.uiSemiTerCabCostoTotal}" disabled="true"
+                                                id="uiSemiTerCabCostoTotal" style="background-position: right; color: rgb(204, 0, 0); font-size: 14px; font-weight: bold; text-align: right"/>
+                                        </h:panelGrid>
                                     </h:panelGrid>
                                 </h:panelGrid>
                                 <h:panelGrid columns="2" id="buttonsPanelAddUpdate2" style="height: 24px; margin-left: 540px" width="191">
-                                    <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonSemiterVolver_action}" id="uiButtonSemiterVolver" mini="true"
+                                    <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonSemiterVolver_action}"
+                                        binding="#{ABMOrdenesTrabajo.uiButtonSemiterVolver}" id="uiButtonSemiterVolver" mini="true"
                                         style="font-size: 14px; height: 24px" text="Volver"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="1" id="gridPanelDetalleSemiTer1" style="width: 100%; height: 100%;">
                                     <h:panelGrid binding="#{ABMOrdenesTrabajo.gridPanelDetalleSemiTerRecursos1}" columns="1"
                                         id="gridPanelDetalleSemiTerRecursos1" style="width: 100%; height: 100%;">
                                         <webuijsf:tabSet id="tabSet5" lite="true" mini="true" selected="tab5" style="height: 96px; width: 695px">
-                                            <webuijsf:tab id="tab5" text="Recursos">
+                                            <webuijsf:tab actionExpression="#{ABMOrdenesTrabajo.tab5_action}" id="tab5" text="Recursos">
                                                 <webuijsf:panelLayout id="layoutPanel5" style="height: 38px; position: relative; width: 100%; -rave-layout: grid">
                                                     <h:panelGrid columns="5" id="gridPanelAddUpdate2" style="height: 48px" width="624">
                                                         <webuijsf:hyperlink id="producto2"
@@ -320,6 +340,7 @@
                                                         <webuijsf:label id="cantidad1" text="Cantidad"/>
                                                         <webuijsf:textField binding="#{ABMOrdenesTrabajo.uiSemiTerDetCantRecurso}" columns="10" id="uiSemiTerDetCantRecurso"/>
                                                         <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonSemiTerAddDetalleRecurso_action}"
+                                                            binding="#{ABMOrdenesTrabajo.uiButtonSemiTerAddDetalleRecurso}"
                                                             id="uiButtonSemiTerAddDetalleRecurso" text="Agregar"/>
                                                     </h:panelGrid>
                                                 </webuijsf:panelLayout>
@@ -344,13 +365,15 @@
                                                     <webuijsf:tableColumn headerText="Cant Usada" id="tableColumn28">
                                                         <webuijsf:staticText id="staticText19" text="#{currentRow.value['cantidadReal']}"/>
                                                     </webuijsf:tableColumn>
-                                                    <webuijsf:tableColumn align="center" id="tableColumn16" valign="top">
+                                                    <webuijsf:tableColumn align="center" binding="#{ABMOrdenesTrabajo.tableColumnRecursosEdit}"
+                                                        id="tableColumnRecursosEdit" valign="top" width="47">
                                                         <webuijsf:imageHyperlink binding="#{ABMOrdenesTrabajo.uiSemiTerDetEditRecursoLink}"
                                                             id="uiSemiTerDetEditRecursoLink" imageURL="/resources/Images/edit_16x16.gif" text="">
                                                             <f:setPropertyActionListener target="#{ABMOrdenesTrabajo.itemDet}" value="#{currentRow.tableRow.rowId}"/>
                                                         </webuijsf:imageHyperlink>
                                                     </webuijsf:tableColumn>
-                                                    <webuijsf:tableColumn align="center" id="tableColumn17" valign="top">
+                                                    <webuijsf:tableColumn align="center" binding="#{ABMOrdenesTrabajo.tableColumnRecursosDel}"
+                                                        id="tableColumnRecursosDel" valign="top">
                                                         <webuijsf:imageHyperlink actionExpression="#{ABMOrdenesTrabajo.uiSemiTerRemoveRecursoLink_action}"
                                                             binding="#{ABMOrdenesTrabajo.uiSemiTerRemoveRecursoLink}" id="uiSemiTerRemoveRecursoLink"
                                                             imageURL="/resources/Images/delete.gif" text="">
@@ -378,7 +401,7 @@
                                                         <webuijsf:textField binding="#{ABMOrdenesTrabajo.uiSemiTerDetCantTarea}" columns="10" id="uiSemiTerDetCantTarea"/>
                                                         <webuijsf:checkbox binding="#{ABMOrdenesTrabajo.uiSemiTerDetFin}" id="uiSemiTerDetFin" label="Fin"/>
                                                         <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonSemiTerAddDetalleTarea_action}"
-                                                            id="uiButtonSemiTerAddDetalleTarea" text="Agregar"/>
+                                                            binding="#{ABMOrdenesTrabajo.uiButtonSemiTerAddDetalleTarea}" id="uiButtonSemiTerAddDetalleTarea" text="Agregar"/>
                                                     </h:panelGrid>
                                                 </webuijsf:panelLayout>
                                             </webuijsf:tab>
@@ -402,16 +425,19 @@
                                                     <webuijsf:tableColumn headerText="Cant Prod" id="tableColumn29">
                                                         <webuijsf:staticText id="staticText20" text="#{currentRow.value['cantidadReal']}"/>
                                                     </webuijsf:tableColumn>
-                                                    <webuijsf:tableColumn align="center" id="tableColumn21" valign="top" width="36">
+                                                    <webuijsf:tableColumn align="center" binding="#{ABMOrdenesTrabajo.tableColumTareasEdit}"
+                                                        id="tableColumTareasEdit" valign="top" width="36">
                                                         <webuijsf:imageHyperlink actionExpression="#{ABMOrdenesTrabajo.uiSemiTerDetEditTareaLink_action}"
                                                             binding="#{ABMOrdenesTrabajo.uiSemiTerDetEditTareaLink}" id="uiSemiTerDetEditTareaLink"
                                                             imageURL="/resources/Images/edit_16x16.gif" text="">
                                                             <f:setPropertyActionListener target="#{ABMOrdenesTrabajo.itemDet}" value="#{currentRow.tableRow.rowId}"/>
                                                         </webuijsf:imageHyperlink>
                                                     </webuijsf:tableColumn>
-                                                    <webuijsf:tableColumn align="center" id="tableColumn22" valign="top" width="40">
-                                                        <webuijsf:imageHyperlink binding="#{ABMOrdenesTrabajo.uiSemiTerDetRemoveTareaLink}"
-                                                            id="uiSemiTerDetRemoveTareaLink" imageURL="/resources/Images/delete.gif" text="">
+                                                    <webuijsf:tableColumn align="center" binding="#{ABMOrdenesTrabajo.tableColumnTareasDel}"
+                                                        id="tableColumnTareasDel" valign="top" width="40">
+                                                        <webuijsf:imageHyperlink actionExpression="#{ABMOrdenesTrabajo.uiSemiTerDetRemoveTareaLink_action}"
+                                                            binding="#{ABMOrdenesTrabajo.uiSemiTerDetRemoveTareaLink}" id="uiSemiTerDetRemoveTareaLink"
+                                                            imageURL="/resources/Images/delete.gif" text="">
                                                             <f:setPropertyActionListener target="#{ABMOrdenesTrabajo.itemDet}" value="#{currentRow.tableRow.rowId}"/>
                                                         </webuijsf:imageHyperlink>
                                                     </webuijsf:tableColumn>
@@ -444,11 +470,118 @@
                                                 </webuijsf:tableColumn>
                                             </webuijsf:tableRowGroup>
                                         </webuijsf:table>
+                                        <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonSolicitudVolver_action}" id="uiButtonSolicitudVolver" text="Volver"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
-                                <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonSolicitudVolver_action}" id="uiButtonSolicitudVolver" text="Volver"/>
                             </h:panelGrid>
                             <webuijsf:messageGroup id="messageGroup1"/>
+                            <h:panelGrid binding="#{ABMOrdenesTrabajo.gridPanelCostos}" id="gridPanelCostos" style="width: 100%; height: 100%;">
+                                <webuijsf:label id="labelDetalleSemiTer4" style="color: rgb(0, 0, 153); font-size: 14px; font-weight: bold" text="SemiTerminados / Detalle de Costos Finales"/>
+                                <webuijsf:label id="labelProduccion2" style="color: rgb(0, 51, 204)" text="Costos de Produccion"/>
+                                <webuijsf:table augmentTitle="false" id="tableMatPrima" paginateButton="true" paginationControls="true"
+                                    title="Detalle De Costos de Materias Primas" width="815">
+                                    <webuijsf:tableRowGroup id="tableRowGroup5" rows="10" sourceData="#{ABMOrdenesTrabajo.costosMatOt}" sourceVar="currentRow">
+                                        <webuijsf:tableColumn align="center" headerText="Producto" id="tableColumn12" sort="codProducto" width="200">
+                                            <webuijsf:staticText id="staticText24" text="#{currentRow.value['codProducto']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn align="right" headerText="Cantidad" id="tableColumn13" width="100">
+                                            <webuijsf:staticText id="staticText25" text="#{currentRow.value['cantidad']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn align="right" headerText="Costo Unitario" id="tableColumn32" width="100">
+                                            <webuijsf:staticText id="staticText26" text="#{currentRow.value['costoUnitario']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn align="right" headerText="Costo Total" id="tableColumn39" width="100">
+                                            <webuijsf:staticText id="staticText33" text="#{currentRow.value['costoTotal']}"/>
+                                        </webuijsf:tableColumn>
+                                    </webuijsf:tableRowGroup>
+                                </webuijsf:table>
+                                <webuijsf:tabSet id="tabSetCostos" lite="true" mini="true" selected="tabCostos" style="height: 120px; width: 767px">
+                                    <webuijsf:tab id="tabCostos" text="Costos Hora Hombre">
+                                        <webuijsf:panelLayout id="layoutPanel4" style="height: 38px; position: relative; width: 757px; -rave-layout: grid">
+                                            <h:panelGrid columns="6" id="gridPanelCostoHombre" style="height: 48px" width="744">
+                                                <webuijsf:label id="empleado" text="Empleado"/>
+                                                <webuijsf:textField binding="#{ABMOrdenesTrabajo.uiDetCostoHombreEmpleado}" columns="60" disabled="true" id="uiDetCostoHombreEmpleado"/>
+                                                <webuijsf:label id="label6" text="Costo x Hora"/>
+                                                <webuijsf:textField binding="#{ABMOrdenesTrabajo.uiDetCostoHombreCosto}" id="uiDetCostoHombreCosto"/>
+                                                <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonActualizarCostoHombre_action}"
+                                                    id="uiButtonActualizarCostoHombre" text="Actualizar"/>
+                                            </h:panelGrid>
+                                        </webuijsf:panelLayout>
+                                    </webuijsf:tab>
+                                </webuijsf:tabSet>
+                                <webuijsf:table augmentTitle="false" id="tableHorasHombre" paginateButton="true" paginationControls="true"
+                                    title="Detalle de Costos Horas Hombre" width="815">
+                                    <webuijsf:tableRowGroup id="tableRowGroup6" rows="10" sourceData="#{ABMOrdenesTrabajo.costosHoraOt}" sourceVar="currentRow">
+                                        <webuijsf:tableColumn headerText="Empleado" id="tableColumn33" sort="codEmpleado" width="200">
+                                            <webuijsf:staticText id="staticText27" text="#{currentRow.value['codEmpleado']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn align="right" headerText="Cantidad Horas" id="tableColumn34" width="100">
+                                            <webuijsf:staticText id="staticText28" text="#{currentRow.value['cantidadHoras']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn align="right" headerText="Costo Hora" id="tableColumn35" width="100">
+                                            <webuijsf:staticText id="staticText29" text="#{currentRow.value['costoHora']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn align="right" headerText="CostoTotal" id="tableColumn40" width="100">
+                                            <webuijsf:staticText id="staticText34" text="#{currentRow.value['costoTotal']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn align="center" binding="#{ABMOrdenesTrabajo.tableColumn42}" id="tableColumn42" width="40">
+                                            <webuijsf:imageHyperlink actionExpression="#{ABMOrdenesTrabajo.uiDetCostoEditarCostoHombre}"
+                                                binding="#{ABMOrdenesTrabajo.uiDetCostoEditarCostoHombre}" id="uiDetCostoEditarCostoHombre"
+                                                imageURL="/resources/Images/edit_16x16.gif" text="">
+                                                <f:setPropertyActionListener target="#{ABMOrdenesTrabajo.itemDet}" value="#{currentRow.tableRow.rowId}"/>
+                                            </webuijsf:imageHyperlink>
+                                        </webuijsf:tableColumn>
+                                    </webuijsf:tableRowGroup>
+                                </webuijsf:table>
+                                <webuijsf:tabSet id="tabSetGastosFijos" lite="true" mini="true" selected="tabGastosFijos" style="height: 120px; width: 767px">
+                                    <webuijsf:tab id="tabGastosFijos" text="Gastos Fijos">
+                                        <webuijsf:panelLayout id="layoutPanel6" style="height: 62px; position: relative; width: 100%; -rave-layout: grid">
+                                            <h:panelGrid columns="7" id="gridPanelGastoFijo" style="height: 48px" width="744">
+                                                <webuijsf:label id="label7" text="Descripcion"/>
+                                                <webuijsf:textArea binding="#{ABMOrdenesTrabajo.uiDetCostoFijoDescripcion}" columns="45"
+                                                    id="uiDetCostoFijoDescripcion" rows="3"/>
+                                                <h:panelGrid columns="2" id="gridPanel9" style="height: 100%" width="239">
+                                                    <webuijsf:label id="label10" text="Costo Unit"/>
+                                                    <webuijsf:textField binding="#{ABMOrdenesTrabajo.uiDetCostoFijoCostoUnit}" id="uiDetCostoFijoCostoUnit"/>
+                                                    <webuijsf:label id="label11" text="Cantidad"/>
+                                                    <webuijsf:textField binding="#{ABMOrdenesTrabajo.uiDetCostoFijoCantidad}" id="uiDetCostoFijoCantidad"/>
+                                                    <webuijsf:label id="label8" text="Monto"/>
+                                                    <webuijsf:textField binding="#{ABMOrdenesTrabajo.uiDetCostoFijoMonto}" disabled="true" id="uiDetCostoFijoMonto"/>
+                                                </h:panelGrid>
+                                                <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonInsertarGasto_action}" id="uiButtonInsertarGasto" text="Insertar"/>
+                                            </h:panelGrid>
+                                        </webuijsf:panelLayout>
+                                    </webuijsf:tab>
+                                </webuijsf:tabSet>
+                                <webuijsf:table augmentTitle="false" id="tableGastosFijos" paginateButton="true" paginationControls="true"
+                                    title="Detalle de gastos Fijos" width="767">
+                                    <webuijsf:tableRowGroup id="tableRowGroup7" rows="10" sourceData="#{ABMOrdenesTrabajo.costosFijosOt}" sourceVar="currentRow">
+                                        <webuijsf:tableColumn headerText="Descripcion del gasto" id="tableColumn36" sort="descripcionGasto" width="400">
+                                            <webuijsf:staticText id="staticText30" text="#{currentRow.value['descripcionGasto']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="CostoUnitario" id="tableColumn11" width="100">
+                                            <webuijsf:staticText id="staticText32" text="#{currentRow.value['costoUnitario']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="Cant" id="tableColumn16" width="70">
+                                            <webuijsf:staticText id="staticText35" text="#{currentRow.value['cantidad']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn align="right" headerText="Total" id="tableColumn37" width="100">
+                                            <webuijsf:staticText id="staticText31" text="#{currentRow.value['monto']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn align="center" binding="#{ABMOrdenesTrabajo.tableColumn38}" id="tableColumn38" width="23">
+                                            <webuijsf:imageHyperlink actionExpression="#{ABMOrdenesTrabajo.uiDetCostoEditarGastoFijo}"
+                                                binding="#{ABMOrdenesTrabajo.uiDetCostoEditarGastoFijo}" id="uiDetCostoEditarGastoFijo"
+                                                imageURL="/resources/Images/edit_16x16.gif" text="">
+                                                <f:setPropertyActionListener target="#{ABMOrdenesTrabajo.itemDet}" value="#{currentRow.tableRow.rowId}"/>
+                                            </webuijsf:imageHyperlink>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn align="center" id="tableColumn41" width="23">
+                                            <webuijsf:imageHyperlink id="imageHyperlink2" imageURL="/resources/Images/delete.gif" text=""/>
+                                        </webuijsf:tableColumn>
+                                    </webuijsf:tableRowGroup>
+                                </webuijsf:table>
+                                <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonVolverCostos_action}" id="uiButtonVolverCostos" text="Volver"/>
+                            </h:panelGrid>
                         </h:panelGrid>
                     </webuijsf:form>
                 </webuijsf:body>

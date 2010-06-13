@@ -23,14 +23,13 @@
                         <div>
                             <h:panelGrid columns="2" id="mainContainer" style="height: 149px; left: 288px; top: 235px; position: absolute" width="456">
                                 <webuijsf:label id="lblTipoProducto" text="Tipo Producto"/>
-                                <webuijsf:dropDown id="dropDown1" items="#{LSTExistenciaProducto.dropDown1DefaultOptions.options}"
-                                    selected="#{LSTExistenciaProducto.dropDown1DefaultOptions.selectedValue}" width="120"/>
-                                <webuijsf:hyperlink id="linkProducto" text="Producto"/>
-                                <webuijsf:textField columns="40" id="txtProducto" text="TODOS"/>
-                                <webuijsf:hyperlink id="linkDeposito" text="Deposito"/>
-                                <webuijsf:textField columns="40" id="txtDeposito" text="TODOS"/>
-                                <webuijsf:hyperlink id="linkMarca" text="Marca"/>
-                                <webuijsf:textField columns="40" id="txtMarca" text="TODOS"/>
+                                <webuijsf:dropDown binding="#{LSTExistenciaProducto.uiTipoProd}" id="uiTipoProd" items="#{LSTExistenciaProducto.listaTipoProductosOp}"/>
+                                <webuijsf:label id="label1" text="Producto"/>
+                                <webuijsf:dropDown binding="#{LSTExistenciaProducto.uiProducto}" id="uiProducto" items="#{LSTExistenciaProducto.listaProductosOp}"/>
+                                <webuijsf:label id="label2" text="Deposito"/>
+                                <webuijsf:dropDown binding="#{LSTExistenciaProducto.uiDeposito}" id="uiDeposito" items="#{LSTExistenciaProducto.listaDepositosOp}"/>
+                                <webuijsf:label id="label3" text="Marca"/>
+                                <webuijsf:dropDown binding="#{LSTExistenciaProducto.uiMarca}" id="uiMarca" items="#{LSTExistenciaProducto.listaMarcasOp}"/>
                                 <webuijsf:button actionExpression="#{LSTExistenciaProducto.button1_action}" id="button1" text="Ejecutar"/>
                                 <webuijsf:button actionExpression="#{LSTExistenciaProducto.button2_action}" id="button2" text="Cancelar"/>
                             </h:panelGrid>

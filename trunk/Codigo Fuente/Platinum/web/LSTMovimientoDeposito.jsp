@@ -22,13 +22,17 @@
                         </div>
                         <div>
                             <h:panelGrid columns="2" id="mainContainer" style="height: 125px; left: 288px; top: 235px; position: absolute" width="456">
-                                <webuijsf:hyperlink id="hyperlink1" text="Deposito"/>
-                                <webuijsf:textField columns="40" id="TODOS" style="margin-left: 11px" text="TODOS"/>
+                                <webuijsf:label id="label2" text="Deposito"/>
+                                <webuijsf:dropDown binding="#{LSTMovimientoDeposito.uiDeposito}" id="uiDeposito" items="#{LSTMovimientoDeposito.listaDepositosOp}"/>
+                                <webuijsf:label id="label4" text="Producto"/>
+                                <webuijsf:dropDown binding="#{LSTMovimientoDeposito.uiProducto}" id="uiProducto" items="#{LSTMovimientoDeposito.listaProductosOp}"/>
+                                <webuijsf:label for="uiTipoM" id="label5" text="Tipo de Movimiento"/>
+                                <webuijsf:dropDown binding="#{LSTMovimientoDeposito.uiTipoM}" id="uiTipoM" items="#{LSTMovimientoDeposito.uiTipoMDefaultOptions.options}"/>
                                 <webuijsf:label id="label1" text="Fecha Inicio"/>
-                                <webuijsf:calendar columns="15" id="textField2"/>
+                                <webuijsf:calendar columns="15" id="uiFechaIni"/>
                                 <webuijsf:label id="label3" text="Fecha Fin"/>
-                                <webuijsf:calendar columns="15" id="textField3"/>
-                                <webuijsf:button actionExpression="#{LSTMovimientoDeposito.button1_action}" id="button1" text="Ejecutar"/>
+                                <webuijsf:calendar columns="15" id="uiFechaFin"/>
+                                <webuijsf:button actionExpression="#{LSTMovimientoDeposito.uiEjecutar_action}" id="uiEjecutar" text="Ejecutar"/>
                                 <webuijsf:button actionExpression="#{LSTMovimientoDeposito.button2_action}" id="button2" text="Cancelar"/>
                             </h:panelGrid>
                         </div>

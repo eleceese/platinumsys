@@ -41,7 +41,7 @@
                         <div>
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
-                        <h:panelGrid id="mainContainer" style="height: 408px; left: 216px; top: 192px; position: absolute" width="888">
+                        <h:panelGrid id="mainContainer" style="height: 408px; left: 216px; top: 216px; position: absolute" width="888">
                             <webuijsf:pageAlert binding="#{ABMTareas.pageAlert1}" id="pageAlert1" rendered="false"/>
                             <h:panelGrid binding="#{ABMTareas.gridPanelBuscar}" columns="2" id="gridPanelBuscar" style="height: 72px" width="455">
                                 <h:panelGrid columns="2" id="gridPanelCodigo" style="height:30px; width: 60%">
@@ -89,6 +89,10 @@
                                     <webuijsf:textField binding="#{ABMTareas.uiTarea}" columns="50" id="uiTarea"/>
                                     <webuijsf:message for="uiTarea" id="message3" showDetail="false" showSummary="true"/>
                                 </h:panelGrid>
+                                <webuijsf:label id="label2" text="Utiliza Maquinaria?"/>
+                                <webuijsf:checkbox binding="#{ABMTareas.uiUtilizaMaq}" id="uiUtilizaMaq"/>
+                                <webuijsf:label id="label1" text="Maquinaria"/>
+                                <webuijsf:dropDown binding="#{ABMTareas.uiMaquinaria}" id="uiMaquinaria" items="#{SessionBean1.listaMaquinariasOp}"/>
                             </h:panelGrid>
                             <h:panelGrid binding="#{ABMTareas.buttonsPanelAddUpdate}" columns="2" id="buttonsPanelAddUpdate" style="height: 100%" width="191">
                                 <webuijsf:button actionExpression="#{ABMTareas.cancelar_action}" id="cancelar" text="Cancelar"/>

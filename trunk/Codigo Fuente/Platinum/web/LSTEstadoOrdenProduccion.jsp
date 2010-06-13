@@ -22,27 +22,19 @@
                         </div>
                         <div>
                             <h:panelGrid columns="2" id="mainContainer" style="height: 269px; left: 288px; top: 235px; position: absolute" width="456">
+                                <webuijsf:label id="label1" text="Nro Ot"/>
+                                <webuijsf:dropDown binding="#{LSTEstadoOrdenProduccion.uiCodOt}" id="uiCodOt" items="#{LSTEstadoOrdenProduccion.listaOtCabOp}" onChange=""/>
+                                <webuijsf:label id="label2" text="Producto"/>
+                                <webuijsf:dropDown binding="#{LSTEstadoOrdenProduccion.uiProducto}" id="uiProducto" items="#{LSTEstadoOrdenProduccion.listaProductosOp}"/>
+                                <webuijsf:label id="label3" text="Estado"/>
+                                <webuijsf:dropDown binding="#{LSTEstadoOrdenProduccion.uiEstado}" id="uiEstado"
+                                    items="#{LSTEstadoOrdenProduccion.uiEstadoDefaultOptions.options}" selected="#{LSTEstadoOrdenProduccion.uiEstadoDefaultOptions.selectedValue}"/>
                                 <webuijsf:label id="lblFecInicio" text="Fecha Desde"/>
                                 <webuijsf:calendar columns="15" id="txtFecApertura"/>
                                 <webuijsf:label id="lblFecFin" text="Fecha Hasta"/>
                                 <webuijsf:calendar columns="15" id="txtFecAprobacion"/>
-                                <webuijsf:label id="lblProductoGenerico" text="Producto Genérico"/>
-                                <webuijsf:textField columns="30" id="textProductoGenerico" style="margin-left: 11px"/>
-                                <webuijsf:label id="lblTipoProducto" text="Tipo Producto"/>
-                                <webuijsf:dropDown id="dropDown1" items="#{LSTEstadisticaDeProduccion.dropDown1DefaultOptions.options}"
-                                    selected="#{LSTEstadisticaDeProduccion.dropDown1DefaultOptions.selectedValue}" style="margin-left: 11px" width="120px"/>
-                                <webuijsf:hyperlink id="linkProducto" text="Producto"/>
-                                <h:panelGrid columns="2" id="panelProducto">
-                                    <webuijsf:textField columns="10" id="txtCodProducto" style="margin-left: 7px"/>
-                                    <webuijsf:textField columns="35" id="txtDescProducto"/>
-                                </h:panelGrid>
-                                <webuijsf:hyperlink id="linkEmpleado" text="Empleado"/>
-                                <h:panelGrid columns="2" id="panelEmpleado">
-                                    <webuijsf:textField columns="10" id="txtCodEmpleado" style="margin-left: 7px"/>
-                                    <webuijsf:textField columns="35" id="txtDescEmpleado"/>
-                                </h:panelGrid>
-                                <webuijsf:button actionExpression="#{LSTEstadisticaDeProduccion.button1_action}" id="button1" text="Ejecutar"/>
-                                <webuijsf:button actionExpression="#{LSTEstadisticaDeProduccion.button2_action}" id="button2" text="Cancelar"/>
+                                <webuijsf:button actionExpression="#{LSTEstadoOrdenProduccion.button1_action}" id="button1" text="Ejecutar"/>
+                                <webuijsf:button actionExpression="#{LSTEstadoOrdenProduccion.button2_action}" id="button2" text="Cancelar"/>
                             </h:panelGrid>
                         </div>
                     </webuijsf:form>
