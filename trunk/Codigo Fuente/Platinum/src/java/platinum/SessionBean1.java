@@ -24,6 +24,7 @@ import py.com.platinum.controller.FacturaCabeceraController;
 import py.com.platinum.controller.FacturaCompraCabController;
 import py.com.platinum.controller.FormulaCabeceraController;
 import py.com.platinum.controller.FormulaSemiCabeceraController;
+import py.com.platinum.controller.MaquinariaController;
 import py.com.platinum.controller.MarcaController;
 import py.com.platinum.controller.OrdenTrabajoCabeceraController;
 import py.com.platinum.controller.OrdenTrabajoDetalleController;
@@ -51,6 +52,7 @@ import py.com.platinum.entity.FacturaCabecera;
 import py.com.platinum.entity.FacturaCompraCab;
 import py.com.platinum.entity.FormulaCabecera;
 import py.com.platinum.entity.FormulaSemiCabecera;
+import py.com.platinum.entity.Maquinarias;
 import py.com.platinum.entity.Marca;
 import py.com.platinum.entity.OrdenTrabajo;
 import py.com.platinum.entity.OrdenTrabajoDetalle;
@@ -147,6 +149,7 @@ public class SessionBean1 extends AbstractSessionBean {
         codDeposito = new DepositoController().findById(Long.valueOf("1"));
 
         //El siguiente Metodo Carga la Grilla De Productos al cargar la pagina de productos.
+        cargarListaTodosMaquinarias();
         cargarListaTodosDepositos();
         cargarListaTodasTareasAsignadasProdDiaria();
         cargarListaTodosOrdenTrabajoDetallesProdDiaria();
@@ -862,7 +865,8 @@ public class SessionBean1 extends AbstractSessionBean {
         listaDepositos = (Deposito[]) depositoController.getAll("nombre").toArray(new Deposito[0]);
         listaDepositosOp = new Option[listaDepositos.length];
         Option option;
-        for (int i = 0; i < listaDepositos.length; i++) {
+        int i;
+        for (i = 0; i < listaDepositos.length; i++) {
             Deposito tp = listaDepositos[i];
             option = new Option();
             option.setLabel(tp.getNombre());
@@ -870,7 +874,7 @@ public class SessionBean1 extends AbstractSessionBean {
             listaDepositosOp[i] = option;
         }
     }
-////// FIN CARGA DE COMBO BOX Depositos
+////// FIN CARGA DE COMBO BOX 
     ////// CARGA DE COMBO BOX Proveedores
 //////     import com.sun.webui.jsf.model.Option;
     Proveedor[] listaProveedores;
@@ -940,7 +944,7 @@ public class SessionBean1 extends AbstractSessionBean {
             listaFormulaCabecerasSemiTerOp[i] = option;
         }
     }
-////// FIN CARGA DE COMBO BOX DE ORDENES DE TRABAJO
+////// FIN CARGA DE COMBO BOX DE FORMULAS
 ////// CARGA DE COMBO BOX Formulas TERMINADOS
 //////     import com.sun.webui.jsf.model.Option;
 
@@ -976,7 +980,7 @@ public class SessionBean1 extends AbstractSessionBean {
             listaFormulaCabecerasTerOp[i] = option;
         }
     }
-////// FIN CARGA DE COMBO BOX DE ORDENES DE TRABAJO
+//////  CARGA DE COMBO BOX DE ORDENES DE TRABAJO
 
     OrdenTrabajo[] listaOtCab;
     Option[] listaOtCabOp;
@@ -1270,6 +1274,42 @@ public class SessionBean1 extends AbstractSessionBean {
     }
 
 
+
+        ////// CARGA DE COMBO BOX MAQUINARIAS
+//////     import com.sun.webui.jsf.model.Option;
+    Maquinarias[] listaMaquinarias;
+    Option[] listaMaquinariasOp;
+
+    public Maquinarias[] getListaMaquinarias() {
+        return listaMaquinarias;
+    }
+
+    public void setListaMaquinarias(Maquinarias[] listaMaquinarias) {
+        this.listaMaquinarias = listaMaquinarias;
+    }
+
+    public Option[] getListaMaquinariasOp() {
+        return listaMaquinariasOp;
+    }
+
+    public void setListaMaquinariasOp(Option[] listaMaquinariasOp) {
+        this.listaMaquinariasOp = listaMaquinariasOp;
+    }
+
+    public void cargarListaTodosMaquinarias() {
+        MaquinariaController maqController = new MaquinariaController();
+        listaMaquinarias = (Maquinarias[]) maqController.getAll("descripcion").toArray(new Maquinarias[0]);
+        listaMaquinariasOp = new Option[listaMaquinarias.length];
+        Option option;
+        int i;
+        for (i = 0; i < listaMaquinarias.length; i++) {
+            Maquinarias tp = listaMaquinarias[i];
+            option = new Option();
+            option.setLabel(tp.getCodMaquinaria().toString()+" "+tp.getDescripcion());
+            option.setValue(tp.getCodMaquinaria().toString());
+            listaMaquinariasOp[i] = option;
+        }
+      }
     FacturaCabecera[] listaFacturaVenta;
 
     public FacturaCabecera[] getListaFacturaVenta() {
