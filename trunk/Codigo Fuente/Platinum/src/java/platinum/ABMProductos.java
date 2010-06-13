@@ -856,13 +856,6 @@ public class ABMProductos extends AbstractPageBean {
                                 producto.setControlaExistencia("N");
                             }
                             producto.setCodigoInterno(this.uiCodInterno.getText().toString());
-
-                    //       info(this.uiCodInterno, "Favor ingresar Nombre, Campo Obligatorio");
-
-
-                            // Create a new User Entity
-
-                            // Add the new Entity to the database using UserController
                             ProductoController productoController = new ProductoController();
 
                             ControllerResult controllerResult = new ControllerResult();

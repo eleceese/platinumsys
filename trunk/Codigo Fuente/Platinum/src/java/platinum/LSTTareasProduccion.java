@@ -13,24 +13,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javax.faces.FacesException;
 import javax.servlet.ServletContext;
-import py.com.platinum.controller.DepositoController;
-import py.com.platinum.controller.ProductoController;
-import py.com.platinum.entity.Deposito;
-import py.com.platinum.entity.Producto;
+import py.com.platinum.controller.EmpleadoController;
+import py.com.platinum.controller.OrdenTrabajoCabeceraController;
+import py.com.platinum.controller.TareaController;
+import py.com.platinum.entity.Empleado;
+import py.com.platinum.entity.OrdenTrabajo;
+import py.com.platinum.entity.Tarea;
 import reportes.Formated;
 import reportes.GetConnection;
 import reportes.RptCreate;
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -44,7 +35,7 @@ import reportes.RptCreate;
  * @author MartinJara
  */
 
-public class LSTMovimientoDeposito extends AbstractPageBean {
+public class LSTTareasProduccion extends AbstractPageBean {
     // <editor-fold defaultstate="collapsed" desc="Managed Component Definition">
 
     /**
@@ -53,43 +44,33 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-        uiTipoMDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("T", "Todos"), new com.sun.webui.jsf.model.Option("E", "Entrada"), new com.sun.webui.jsf.model.Option("S", "Salida")});
     }
-    private DropDown uiDeposito = new DropDown();
+    private DropDown uiEmpleado = new DropDown();
 
-    public DropDown getUiDeposito() {
-        return uiDeposito;
-    }
-
-    public void setUiDeposito(DropDown dd) {
-        this.uiDeposito = dd;
-    }
-    private DropDown uiProducto = new DropDown();
-
-    public DropDown getUiProducto() {
-        return uiProducto;
+    public DropDown getUiEmpleado() {
+        return uiEmpleado;
     }
 
-    public void setUiProducto(DropDown dd) {
-        this.uiProducto = dd;
+    public void setUiEmpleado(DropDown dd) {
+        this.uiEmpleado = dd;
     }
-    private SingleSelectOptionsList uiTipoMDefaultOptions = new SingleSelectOptionsList();
+    private DropDown uiCodOt = new DropDown();
 
-    public SingleSelectOptionsList getUiTipoMDefaultOptions() {
-        return uiTipoMDefaultOptions;
-    }
-
-    public void setUiTipoMDefaultOptions(SingleSelectOptionsList ssol) {
-        this.uiTipoMDefaultOptions = ssol;
-    }
-    private DropDown uiTipoM = new DropDown();
-
-    public DropDown getUiTipoM() {
-        return uiTipoM;
+    public DropDown getUiCodOt() {
+        return uiCodOt;
     }
 
-    public void setUiTipoM(DropDown dd) {
-        this.uiTipoM = dd;
+    public void setUiCodOt(DropDown dd) {
+        this.uiCodOt = dd;
+    }
+    private DropDown uiTarea = new DropDown();
+
+    public DropDown getUiTarea() {
+        return uiTarea;
+    }
+
+    public void setUiTarea(DropDown dd) {
+        this.uiTarea = dd;
     }
 
     // </editor-fold>
@@ -97,10 +78,10 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
     /**
      * <p>Construct a new Page bean instance.</p>
      */
-    public LSTMovimientoDeposito() {
-
-    cargarListaTodosDepositos();
-    cargarListaTodosProductos();
+    public LSTTareasProduccion() {
+    cargarListaTodosEmpleados();
+    cargarListaTodosOTCab();
+    cargarListaTodosTareas();
     }
 
     /**
@@ -160,8 +141,13 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
      */
     @Override
     public void prerender() {
-        getSessionBean1().setTituloPagina("Listado de Movimientos en Déposito");
-        getSessionBean1().setDetallePagina("Detalle de los movimientos en Deposito, carge los parametros y ejecute el listado");
+        getSessionBean1().setTituloPagina("Listado de Tareas");
+        getSessionBean1().setDetallePagina("Se ingresa los parámetros para generar el informe de tareas.");
+
+        this.uiCodOt.setSelected("-1");
+        this.uiEmpleado.setSelected("-1");
+        this.uiTarea.setSelected("-1");
+
     }
 
     /**
@@ -214,69 +200,70 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
         return (SessionBean1) getBean("SessionBean1");
     }
 
-    public String uiEjecutar_action() {
+    public String button1_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
-        String[] sparamName= new String[4];
-                String[] sparamValue= new String[4];
+
+                String[] sparamName= new String[5];
+                String[] sparamValue= new String[5];
                 Connection conn= GetConnection.getSimpleConnection();
                 ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
-                String sProducto="";
-                String ps;
-                
-                String sTipo="";
-                String ts;
 
-                String sDeposito="";
-                String ds;
+
+                String sOt="";
+                String sO="";
+
+                String sEmpleado="";
+                String sE="";
+
+                String sTarea="";
+                String sT="";
 
                 String sSql="";
+
                 Formated f= new Formated();
                 f.setDatePattern("yyyy/dd/MM");
 
-                Producto p;
-
                 try{
 
-                if (!uiProducto.getSelected().toString().equals("-1")){
-                    sProducto = " and det.cod_producto = "+uiProducto.getSelected().toString();
-                    ps = new ProductoController().findById(Long.valueOf(this.uiProducto.getSelected().toString())).getDescripcion().toString();
-                 }else{
-                    ps= "Todos";
-                 }
-
-                if (!uiDeposito.getSelected().toString().equals("-1")){
-                    sDeposito = " and cab.cod_deposito = "+uiDeposito.getSelected().toString();
-                        ds = new DepositoController().findById(Long.valueOf(this.uiDeposito.getSelected().toString())).getNombre().toString();
+                if (!uiCodOt.getSelected().toString().equals("-1")){
+                    sOt = " and ot.cod_orden_trabjo = "+uiCodOt.getSelected().toString();
+                    sO = new OrdenTrabajoCabeceraController().findById(Long.valueOf(this.uiCodOt.getSelected().toString())).getDescripcion();
                 }else{
-                        ds= "Todos";
+                    sO="Todos";
                 }
 
-                if (!uiTipoM.getSelected().toString().equals("T")){
-                    sTipo = " and det.tipo_entrada_salida = "+"'"+uiTipoM.getSelected().toString()+"'";
-                    ts = this.uiTipoM.getSelected().toString();
+                if (!uiEmpleado.getSelected().toString().equals("-1")){
+                    sEmpleado = " and e.cod_empleado = "+uiEmpleado.getSelected().toString();
+                    sE = new EmpleadoController().findById(Long.valueOf(this.uiEmpleado.getSelected().toString())).getApellidoEmpleado().toString();
                 }else{
-                    ts = "Todos";
+                    sE="Todos";
                 }
 
-                //                if (calFecHasta.getValue()!=null)
+                if (!uiTarea.getSelected().toString().equals("-1")){
+                    sTarea = " and t.cod_tarea = "+uiTarea.getSelected().toString();
+                    sT = new TareaController().findById(Long.valueOf(this.uiTarea.getSelected().toString())).getNombreTarea();
+                }else{
+                    sT="Todos";
+                }
+
+//                if (calFecHasta.getValue()!=null)
 //                sFecHasta = " and TARJETAS.FECHA_ALTA <= convert(datetime,'"+f.getDateFormat((Date)calFecHasta.getValue())+"') ";
 
-                sSql = sProducto+sDeposito+sTipo;
+                sSql = sEmpleado+sOt+sTarea;
 
                 RptCreate rpt= new RptCreate();
 
                 sparamName[0]="parametros";
                 sparamValue[0]= sSql;
-                sparamName[1]="producto";
-                sparamValue[1]= ps;
-                sparamName[2]="deposito";
-                sparamValue[2]= ds;
-                sparamName[3]="tipo";
-                sparamValue[3]= ts;
+                sparamName[1]="codOt";
+                sparamValue[1]= sO;
+                sparamName[2]="codEmpleado";
+                sparamValue[2]= sE;
+                sparamName[3]="tarea";
+                sparamValue[3]= sT;
 
-
-                rpt.getReport(conn, "MovimientosDeposito.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+                rpt.getReport(conn, "ListadoTareas.jrxml", sparamName, sparamValue, theApplicationsServletContext);
 
                 }catch(Exception e){
                 error("Error al generar el reporte ");
@@ -289,7 +276,8 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
                 error("Error al intentar cerrar la conexion"+ sqle);
                 }
                 }
-        return null;
+
+       return null;
     }
 
     public String button2_action() {
@@ -298,87 +286,121 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
         return null;
     }
 
-    ////// CARGA DE COMBO BOX Depositos
-//////     import com.sun.webui.jsf.model.Option;
-    Deposito[] listaDepositos;
-    Option[] listaDepositosOp;
+    //////  CARGA DE COMBO BOX DE ORDENES DE TRABAJO
 
-    public Option[] getListaDepositosOp() {
-        return listaDepositosOp;
+    OrdenTrabajo[] listaOtCab;
+    Option[] listaOtCabOp;
+
+    public OrdenTrabajo[] getListaOtCab() {
+        return listaOtCab;
     }
 
-    public void setListaDepositosOp(Option[] listaDepositosOp) {
-        this.listaDepositosOp = listaDepositosOp;
+    public void setListaOtCab(OrdenTrabajo[] listaOtCab) {
+        this.listaOtCab = listaOtCab;
     }
 
-    public Deposito[] getListaDepositos() {
-        return listaDepositos;
+    public Option[] getListaOtCabOp() {
+        return listaOtCabOp;
     }
 
-    public void setListaDepositos(Deposito[] listaDepositos) {
-        this.listaDepositos = listaDepositos;
+    public void setListaOtCabOp(Option[] listaOtCabOp) {
+        this.listaOtCabOp = listaOtCabOp;
     }
 
-    public void cargarListaTodosDepositos() {
-        DepositoController depositoController = new DepositoController();
-        listaDepositos = (Deposito[]) depositoController.getAll("nombre").toArray(new Deposito[0]);
-        listaDepositosOp = new Option[listaDepositos.length+1];
+        public void cargarListaTodosOTCab() {
+        OrdenTrabajoCabeceraController c = new OrdenTrabajoCabeceraController();
+        listaOtCab = (OrdenTrabajo[]) c.getAllFiltered(null,null, null, null).toArray(new OrdenTrabajo[0]);
+        listaOtCabOp = new Option[listaOtCab.length+1];
         Option option;
-        int i;
-        for (i = 0; i < listaDepositos.length; i++) {
-            Deposito tp = listaDepositos[i];
+        for (int i = 0; i < listaOtCab.length; i++) {
+            OrdenTrabajo p = listaOtCab[i];
             option = new Option();
-            option.setLabel(tp.getNombre());
-            option.setValue(tp.getCodDeposito().toString());
-            listaDepositosOp[i] = option;
+            option.setLabel(p.getCodOrdenTrabjo().toString()+" "+p.getCodProductoOt().getDescripcion().toString()+" x "+p.getCantidadOt().toString());
+            option.setValue(p.getCodOrdenTrabjo().toString());
+            listaOtCabOp[i] = option;
         }
-            option = new Option();
-            option.setLabel("Todos");
-            option.setValue("-1");
-            listaDepositosOp[listaDepositos.length] = option;
-
-    }
-////// FIN CARGA DE COMBO BOX
-
-
-     ////// CARGA DE COMBO BOX PRODUCTOS
-    Producto[] listaProductos;
-    Option[] listaProductosOp;
-
-    public Option[] getListaProductosOp() {
-        return listaProductosOp;
-    }
-
-    public void setListaProductosOp(Option[] listaProductosOp) {
-        this.listaProductosOp = listaProductosOp;
-    }
-
-    public Producto[] getListaProductos() {
-        return listaProductos;
-    }
-
-    public void setListaProductos(Producto[] listaProductos) {
-        this.listaProductos = listaProductos;
-    }
-
-    public void cargarListaTodosProductos() {
-        ProductoController productoController = new ProductoController();
-        listaProductos = (Producto[]) productoController.getInsumosMateriasFinalesSemiter(null, null, null).toArray(new Producto[0]);
-        listaProductosOp = new Option[listaProductos.length+1];
-        Option option;
-        for (int i = 0; i < listaProductos.length; i++) {
-            Producto p = listaProductos[i];
-            option = new Option();
-            option.setLabel(p.getDescripcion()+" "+p.getCodMarca().getNombre().toString());
-            option.setValue(p.getCodProducto().toString());
-            listaProductosOp[i] = option;
-        }
-
-
         option = new Option();
         option.setLabel("Todos...");
         option.setValue("-1");
-        listaProductosOp[listaProductos.length] = option;
+        listaOtCabOp[listaOtCab.length] = option;
+}
+
+    Empleado[] listaEmpleados;
+    Option[] listaEmpleadosOp;
+
+    public Option[] getListaEmpleadosOp() {
+        return listaEmpleadosOp;
+    }
+
+    public void setListaEmpleadosOp(Option[] listaEmpleadosOp) {
+        this.listaEmpleadosOp = listaEmpleadosOp;
+    }
+
+
+    public Empleado[] getListaEmpleados() {
+        return listaEmpleados;
+    }
+
+    public void setListaEmpleados(Empleado[] listaEmpleados) {
+        this.listaEmpleados = listaEmpleados;
+    }
+
+    public void cargarListaTodosEmpleados() {
+        EmpleadoController EmpleadoController = new EmpleadoController();
+        listaEmpleados = (Empleado[]) EmpleadoController.getAll("apellidoEmpleado").toArray(new Empleado[0]);
+
+        listaEmpleadosOp = new Option[listaEmpleados.length+1];
+        Option option;
+        for (int i = 0; i < listaEmpleados.length; i++) {
+            Empleado em = listaEmpleados[i];
+            option = new Option();
+            option.setLabel(em.getNombreEmpleado()+" "+em.getApellidoEmpleado());
+            option.setValue(em.getCodEmpleado().toString());
+            listaEmpleadosOp[i] = option;
+        }
+        option = new Option();
+        option.setLabel("Todos...");
+        option.setValue("-1");
+        listaEmpleadosOp[listaEmpleados.length] = option;
+
+    }
+
+    Tarea[] listaTareas;
+    Option[] listaTareasOp;
+
+    public Option[] getListaTareasOp() {
+        return listaTareasOp;
+    }
+
+    public void setListaTareasOp(Option[] listaTareasOp) {
+        this.listaTareasOp = listaTareasOp;
+    }
+
+    public Tarea[] getListaTareas() {
+        return listaTareas;
+    }
+
+    public void setListaTareas(Tarea[] listaTareas) {
+        this.listaTareas = listaTareas;
+    }
+
+    public void cargarListaTodosTareas() {
+        TareaController tareaController = new TareaController();
+        listaTareas = (Tarea[]) tareaController.getAll("nombreTarea").toArray(new Tarea[0]);
+        listaTareasOp = new Option[listaTareas.length+1];
+        Option option;
+        for (int i = 0; i < listaTareas.length; i++) {
+            Tarea tp = listaTareas[i];
+            option = new Option();
+            option.setLabel(tp.getNombreTarea());
+            option.setValue(tp.getCodTarea().toString());
+            listaTareasOp[i] = option;
+        }
+         option = new Option();
+        option.setLabel("Todos...");
+        option.setValue("-1");
+        listaTareasOp[listaTareas.length] = option;
+
     }
 
 }

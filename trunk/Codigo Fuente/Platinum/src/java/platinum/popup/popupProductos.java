@@ -221,5 +221,6 @@ public class popupProductos extends AbstractPageBean {
         //refrecamos la pagina
         return null;
     }
+
 }
 
