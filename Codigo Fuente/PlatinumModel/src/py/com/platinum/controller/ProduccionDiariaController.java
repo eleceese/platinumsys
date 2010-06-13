@@ -16,6 +16,8 @@ import py.com.platinum.entity.OrdenTrabajo;
 import py.com.platinum.entity.OrdenTrabajoDetalle;
 import py.com.platinum.entity.ProduccionDiaria;
 import py.com.platinum.entity.TareaAsignada;
+import py.com.platinum.view.MaquinariaCantidadHora;
+import py.com.platinum.view.TareaEmpleadoCantidad;
 
 /**
  *
@@ -97,14 +99,24 @@ public class ProduccionDiariaController extends AbstractJpaDao <ProduccionDiaria
       }
 
     public static void main (String[] v) {
-        ProduccionDiariaController controller = new ProduccionDiariaController();
-        List<ProduccionDiaria> producciones = new ArrayList();
-        producciones = controller.getAllFiltered(null, null, Long.valueOf("92"), null);
-        
-        System.out.println("**************");
-        System.out.println(producciones.size());
-        
-        };
+
+        List<TareaEmpleadoCantidad> tareasEmp = new ArrayList();
+//        entSal = new EntradaSalidaDetalleController().getAll("codEntSalDetalle");
+        tareasEmp  = new ProduccionDiariaController().getTareaEmpleado(Long.valueOf("242"));
+
+
+        System.out.println("********************");
+        System.out.println(tareasEmp.size());
+
+
+        for (int i = 0; i < tareasEmp.size(); i++) {
+        TareaEmpleadoCantidad tareaEmp = tareasEmp.get(i);
+                    System.out.println("******det****");
+                    System.out.println(tareaEmp.getCodEmpleado());
+                    System.out.println(tareaEmp.getCantidadTiempo().toString());
+
+        }
+};
 
 
 
@@ -172,6 +184,74 @@ public class ProduccionDiariaController extends AbstractJpaDao <ProduccionDiaria
             return r;
         }
     }
+
+
+    public List<TareaEmpleadoCantidad> getTareaEmpleado(Long codOrdenTrabajoDetalle) {
+        //emf.createEntityManager Levanta el contexto del JPA
+
+
+            String SQL = "SELECT p.COD_EMPLEADO as codEmpleado, sum(p.TIEMPO_INVERTIDO) as cantidadTiempo FROM TAREA_ASIGNADA t, PRODUCCION_DIARIA p ";
+            SQL = SQL + "where p.COD_TAREA_ASIGNADA = t.COD_TAREA_ASIGNADA ";
+            if (codOrdenTrabajoDetalle != null) {
+                    SQL = SQL + "and t.COD_DET_ORDEN_TRABAJ = :codOrdenTrabajoDetalle ";
+                   
+            }
+
+            SQL = SQL + "group by p.COD_EMPLEADO";
+
+
+          EntityManager em = emf.createEntityManager();
+          Query q = em.createNativeQuery(SQL, TareaEmpleadoCantidad.class);
+
+                if (codOrdenTrabajoDetalle != null) {
+                    q.setParameter("codOrdenTrabajoDetalle", codOrdenTrabajoDetalle);
+                }
+
+                List<TareaEmpleadoCantidad> entities = (List<TareaEmpleadoCantidad>) q.getResultList();
+                em.close();
+                return entities;
+        }
+
+
+      public List<MaquinariaCantidadHora> getMaquinariaCantida(Long codOrdenTrabajoDetalle) {
+        //emf.createEntityManager Levanta el contexto del JPA
+
+
+
+            //select m.cod_maquinaria,m.descripcion, sum(ta.cantidad_real) from tarea_asignada ta, tarea t, maquinarias m
+            //where ta.cod_tarea = t.cod_tarea
+            //and t.cod_maquinaria = m.cod_maquinaria
+            //group by m.cod_maquinaria,m.descripcion
+
+
+          String SQL = "SELECT m.cod_maquinaria as codMaquinaria, sum(ta.cantidad_real) as cantidadMinutos " +
+                       "FROM tarea_asignada ta, tarea t, maquinarias m ";
+            SQL = SQL + "where ta.cod_tarea = t.cod_tarea ";
+            SQL = SQL + "and t.cod_maquinaria = m.cod_maquinaria ";
+
+            if (codOrdenTrabajoDetalle != null) {
+                    SQL = SQL + "and ta.cod_det_orden_trabaj = :codOrdenTrabajoDetalle ";
+
+            }
+
+            SQL = SQL + "group by m.cod_maquinaria ";
+            SQL = SQL + "HAVING sum(ta.cantidad_real)>0";
+
+
+          EntityManager em = emf.createEntityManager();
+          Query q = em.createNativeQuery(SQL, MaquinariaCantidadHora.class);
+
+                if (codOrdenTrabajoDetalle != null) {
+                    q.setParameter("codOrdenTrabajoDetalle", codOrdenTrabajoDetalle);
+                }
+
+                List<MaquinariaCantidadHora> entities = (List<MaquinariaCantidadHora>) q.getResultList();
+                em.close();
+                return entities;
+        }
+
+
+
 
 
 

@@ -49,6 +49,7 @@ public class TareaAsignadaController extends AbstractJpaDao<TareaAsignada> {
             SQL = SQL + " and UPPER(o.codTarea.nombreTarea) like upper(:nombreTarea)";
         }
 
+             
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
 
