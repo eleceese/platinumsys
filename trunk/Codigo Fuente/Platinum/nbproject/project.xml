@@ -35,6 +35,10 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library>
+                    <file>${libs.ireports.classpath}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library>
                     <file>${libs.OralceJdbc.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
