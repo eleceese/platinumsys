@@ -4,14 +4,20 @@
  */
 package py.com.platinum.controller;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.CostosFijos;
 import py.com.platinum.entity.OrdenTrabajo;
+import py.com.platinum.entity.OrdenTrabajoDetCostoH;
+import py.com.platinum.entity.OrdenTrabajoDetCostoMat;
 import py.com.platinum.entity.OrdenTrabajoDetalle;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.RecursoAsignado;
@@ -235,37 +241,63 @@ public class OrdenTrabajoCabeceraController extends AbstractJpaDao <OrdenTrabajo
                 OrdenTrabajoDetalle ordenTrabajoDetalle = new OrdenTrabajoDetalle();
                 ordenTrabajoDetalle = detallesOrdenTrabajo[i];
 
-                if (ordenTrabajoDetalle.getCodOrdenTrabajo() != null) {
+                
+                //////////PRUEBA ///////////////
+                    List<RecursoAsignado> recursos = new ArrayList();
+                    recursos = ordenTrabajoDetalle.getRecursoAsignadoListList();
+                    for (int j = 0; j < recursos.size(); j++) {
+                    RecursoAsignado rrr = recursos.get(j);
+                        System.out.println("********RECURSO***************");
+                        System.out.println(rrr.getCodRecurso());
 
+                    }
+                 ////////// FIN PRUEBA //////////
+                 
+                 List<RecursoAsignado> recursosActualizar = new ArrayList<RecursoAsignado>();
+                 List<TareaAsignada> tareasActualizar = new ArrayList<TareaAsignada>();
+                 recursosActualizar = ordenTrabajoDetalle.getRecursoAsignadoListList();
+                 tareasActualizar = ordenTrabajoDetalle.getTareaAsignadaListList();
+
+                 ordenTrabajoDetalle.setRecursoAsignadoCollection(new HashSet());
+                 ordenTrabajoDetalle.setTareaAsignadaCollection(new HashSet());
+
+                 
+                if (ordenTrabajoDetalle.getCodOrdenTrabajoDet() != null) {
+//
                             em.merge(ordenTrabajoDetalle);
-
                             /// ACTUALIZAR LOS DETALLES DE RECURSOS ASIGNADOS
                             List<RecursoAsignado> detalleRecursoAsignadoList = ordenTrabajoDetalle.getRecursoAsignadoListList();
-                            for (int j = 0; j < detalleRecursoAsignadoList.size(); j++) {
-                                        RecursoAsignado recursoAsignado = detalleRecursoAsignadoList.get(j);
+//                            for (int j = 0; j < detalleRecursoAsignadoList.size(); j++) {
+                            for (int j = 0; j < recursosActualizar.size(); j++) {
+//                                        RecursoAsignado recursoAsignado = detalleRecursoAsignadoList.get(j);
+                                        RecursoAsignado recursoAsignado = recursosActualizar.get(j);
                                         if (recursoAsignado.getCodOrdenTrabDet() != null) {
                                                 em.merge(recursoAsignado);
                                         } else {
+//                                                recursoAsignado.setCodOrdenTrabDet(ordenTrabajoDetalle);
                                                 recursoAsignado.setCodOrdenTrabDet(ordenTrabajoDetalle);
-                                                em.persist(recursoAsignado);
+                                                em.persist(em.merge(recursoAsignado));
                                         }
                             }
                             /// FIN ACTUALIZAR LOS DETALLES DE RECURSOS ASIGNADOS
 
                             /// ACTUALIZAR LOS DETALLES DE TAREAS ASIGNADAS
                             List<TareaAsignada> detalleTareaAsignadaList = ordenTrabajoDetalle.getTareaAsignadaListList();
-                            for (int j = 0; j < detalleTareaAsignadaList.size(); j++) {
-                                    TareaAsignada tareaAsignada = detalleTareaAsignadaList.get(j);
+//                            for (int j = 0; j < detalleTareaAsignadaList.size(); j++) {
+                            for (int j = 0; j < tareasActualizar.size(); j++) {
+//                                    TareaAsignada tareaAsignada = detalleTareaAsignadaList.get(j);
+                                    TareaAsignada tareaAsignada = tareasActualizar.get(j);
                                     if (tareaAsignada.getCodDetOrdenTrabaj() != null) {
                                             em.merge(tareaAsignada);
                                     } else {
+//                                            tareaAsignada.setCodDetOrdenTrabaj(ordenTrabajoDetalle);
                                             tareaAsignada.setCodDetOrdenTrabaj(ordenTrabajoDetalle);
-                                            em.persist(tareaAsignada);
+                                            em.persist(em.merge(tareaAsignada));
                                     }
 
                             }
                             /// FIN ACTUALIZAR LOS DETALLES DE TAREAS ASIGNADAS
-
+                            
             }else{
                             /// INSERTAR LOS NUEVOS DETALLES
 
@@ -313,6 +345,92 @@ public class OrdenTrabajoCabeceraController extends AbstractJpaDao <OrdenTrabajo
             return r;
         }
     }
+
+
+ public ControllerResult updateCostosFinales(OrdenTrabajo cab, OrdenTrabajoDetalle[] det)  {
+        ControllerResult r = new ControllerResult();
+        EntityManager em = emf.createEntityManager();
+
+        OrdenTrabajo ordenTrabajoCabecera = cab;
+        OrdenTrabajoDetalle[] detallesOrdenTrabajo = det;
+
+
+        try {
+            em.getTransaction().begin();
+
+           //// ACTUALIZAR DETALLES DE ORDEN DE TRABAJO
+
+            ordenTrabajoCabecera = cab;
+
+            for (int i = 0; i < detallesOrdenTrabajo.length; i++) {
+                OrdenTrabajoDetalle ordenTrabajoDetalle = new OrdenTrabajoDetalle();
+                ordenTrabajoDetalle = detallesOrdenTrabajo[i];
+
+
+
+                 List<CostosFijos> costosFijosActualizar = new ArrayList<CostosFijos>();
+                 List<OrdenTrabajoDetCostoH> costosHActualizar = new ArrayList<OrdenTrabajoDetCostoH>();
+                 List<OrdenTrabajoDetCostoMat> costosMatActualizar = new ArrayList<OrdenTrabajoDetCostoMat>();
+
+                 costosFijosActualizar = ordenTrabajoDetalle.getCostosFijosListList();
+                 costosMatActualizar = ordenTrabajoDetalle.getOrdenTrabajoDetMListList();
+                 costosHActualizar = ordenTrabajoDetalle.getOrdenTrabajoDetCostoListList();
+
+                 ordenTrabajoDetalle.setCostosFijosCollection(new HashSet());
+                 ordenTrabajoDetalle.setOrdenTrabajoDetCostoCollection(new HashSet());
+                 ordenTrabajoDetalle.setOrdenTrabajoDetMCollection(new HashSet());
+
+                em.merge(ordenTrabajoDetalle);
+               ///INSERTAR LOS COSTOS FIJOS
+                for (int j = 0; j < costosFijosActualizar.size(); j++) {
+                                        CostosFijos costoFijo = costosFijosActualizar.get(j);
+                                        costoFijo.setCodOrdenTrabajoDet(ordenTrabajoDetalle);
+                                        costoFijo.setCostoUnitario(BigInteger.valueOf(Long.valueOf("3321")));
+                                        costoFijo.setCantidad(BigInteger.valueOf(Long.valueOf("121")));
+
+                                        em.persist(em.merge(costoFijo));
+               }
+               /// FIN INSERTAR LOS COSTOS FIJOS
+
+               ///INSERTAR LOS COSTOS DE HORAS HOMBRE
+                for (int j = 0; j < costosHActualizar.size(); j++) {
+                                        OrdenTrabajoDetCostoH costoH = costosHActualizar.get(j);
+                                        costoH.setCodOrdenTrabajoDet(ordenTrabajoDetalle);
+                                        em.persist(em.merge(costoH));
+               }
+               /// FIN INSERTAR LOS COSTOS DE HORAS HOMBRE
+
+               ///INSERTAR LOS COSTOS DE HORAS HOMBRE
+                for (int j = 0; j < costosMatActualizar.size(); j++) {
+                                        OrdenTrabajoDetCostoMat costoMat = costosMatActualizar.get(j);
+                                        costoMat.setCodOrdenTrabajoDet(ordenTrabajoDetalle);
+                                        em.persist(em.merge(costoMat));
+               }
+               /// FIN INSERTAR LOS COSTOS DE HORAS HOMBRE
+
+
+        }
+            ordenTrabajoCabecera = cab;
+            em.merge(ordenTrabajoCabecera);
+            em.getTransaction().commit();
+            r.setCodRetorno(0);
+            r.setMsg("Se han calculado los costos Finales Correctamente");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            r.setCodRetorno(-1);
+            r.setMsg("Error al actualizar el registro");
+            try {
+                em.getTransaction().rollback();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            em.close();
+            return r;
+        }
+    }
+
+
 
 
 

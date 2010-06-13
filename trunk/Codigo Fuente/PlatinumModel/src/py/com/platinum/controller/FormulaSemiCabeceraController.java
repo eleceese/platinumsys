@@ -257,11 +257,8 @@ public ControllerResult updateCabDet(FormulaSemiCabecera cab, FormulaSemiDetalle
             fSemidet = detallesFormulaSemi[i];
 
             if (fSemidet.getCodFormulaSemiCabecera() != null) {
-
                 em.merge(fSemidet);
-
             }else{
-
                 fSemidet.setCodFormulaSemiCabecera(formulaSemiCabecera);
                 em.persist(fSemidet);
             }
@@ -276,9 +273,7 @@ public ControllerResult updateCabDet(FormulaSemiCabecera cab, FormulaSemiDetalle
             tarFor = tareasFormula[h];
 
             if (tarFor.getCodFormulaSemiCabecera() != null) {
-
                 em.merge(tarFor);
-
             }else{
                 tarFor.setCodFormulaSemiCabecera(formulaSemiCabecera);
                 em.persist(tarFor);

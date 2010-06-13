@@ -21,6 +21,7 @@ import py.com.platinum.entity.OrdenTrabajoDetalle;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.SolicitudInterna;
 import py.com.platinum.entity.TareaAsignada;
+import py.com.platinum.view.EntradaSalidaCantidad;
 
 /**
  *
@@ -105,14 +106,23 @@ public static void main (String[] v) {
 //        List <EntradaSalidaDetalle> entSal = new ArrayList();
 //        entSal = new EntradaSalidaDetalleController().getAll("codProducto");
 
-        List<EntradaSalidaDetalle> entSal = new ArrayList();
+        List<EntradaSalidaCantidad> entSal = new ArrayList();
 //        entSal = new EntradaSalidaDetalleController().getAll("codEntSalDetalle");
-        entSal  = new EntradaSalidaDetalleController().getAllFiltered(null, null, null, null, null);
+        entSal  = new EntradaSalidaDetalleController().getProductoCantidad(null);
+
+
         System.out.println("********************");
         System.out.println(entSal.size());
 
-       
-        };
+
+        for (int i = 0; i < entSal.size(); i++) {
+        EntradaSalidaCantidad entradaSalidaCantidad = entSal.get(i);
+                    System.out.println("******det****");
+                    System.out.println(entradaSalidaCantidad.getCodProducto());
+                    System.out.println(entradaSalidaCantidad.getCantidad().toString());
+   
+        }
+};
 
 //public static void main(String[] args){
 //EntradaSalidaCabecera c = new EntradaSalidaCabecera();
@@ -144,6 +154,30 @@ public static void main (String[] v) {
 ////new EntradaSalidaDetalleController().create(d);
 //}
 
-    
+    public List<EntradaSalidaCantidad> getProductoCantidad(Long codOrdenTrabajoDetalle) {
+        //emf.createEntityManager Levanta el contexto del JPA
+
+
+            String SQL = "SELECT COD_PRODUCTO as codProducto,sum(CANTIDAD_ENT_SAL) as cantidad FROM Entrada_Salida_Detalle ";
+                 
+            if (codOrdenTrabajoDetalle != null) {
+                    SQL = SQL + "where cod_Orden_Trabajo_Detalle = :codOrdenTrabajoDetalle ";
+
+            }
+            SQL = SQL + "group by COD_PRODUCTO";
+
+
+          EntityManager em = emf.createEntityManager();
+          Query q = em.createNativeQuery(SQL, EntradaSalidaCantidad.class);
+
+                if (codOrdenTrabajoDetalle != null) {
+                    q.setParameter("codOrdenTrabajoDetalle", codOrdenTrabajoDetalle);
+                }
+
+                List<EntradaSalidaCantidad> entities = (List<EntradaSalidaCantidad>) q.getResultList();
+                em.close();
+                return entities;
+        }
+   
 
 }

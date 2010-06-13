@@ -100,6 +100,33 @@ public class EquivalenciaController extends AbstractJpaDao<Equivalencia> {
         return entity;
 
       }
+    public Equivalencia getExisteEqPorProductoFin(Long codProductoFin) {
+        //emf.createEntityManager Levanta el contexto del JPA
+        String SQL = "SELECT o FROM Equivalencia o WHERE o.codEquivalencia = o.codEquivalencia " +
+                "and o.codProductoFin.codProducto = :codProductoFin";
+
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+
+            q.setParameter("codProductoFin", codProductoFin);
+
+        Equivalencia entity = null;
+        try {
+            entity = (Equivalencia) q.getSingleResult();
+
+        } catch (NoResultException e) {
+            e.printStackTrace();
+
+        }
+
+
+        em.close();
+
+        return entity;
+
+      }
 
 
     public BigDecimal getCantExistPorProducto(Long codProductoGen, Long codDeposito) {
