@@ -15,6 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -50,7 +52,19 @@ public class Tarea implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-   
+    @JoinColumn(name = "COD_MAQUINARIA", referencedColumnName = "COD_MAQUINARIA")
+    @ManyToOne
+    private Maquinarias codMaquinaria;
+
+    public Maquinarias getCodMaquinaria() {
+        return codMaquinaria;
+    }
+
+    public void setCodMaquinaria(Maquinarias codMaquinaria) {
+        this.codMaquinaria = codMaquinaria;
+    }
+
+
 
     public Tarea() {
     }

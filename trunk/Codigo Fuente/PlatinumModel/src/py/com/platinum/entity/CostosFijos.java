@@ -43,6 +43,10 @@ public class CostosFijos implements Serializable {
     private String descripcionGasto;
     @Column(name = "MONTO")
     private BigInteger monto;
+    @Column(name = "COSTO_UNITARIO")
+    private BigInteger costoUnitario;
+    @Column(name = "CANTIDAD")
+    private BigInteger cantidad;
     @Column(name = "USUARIO_ALTA", length = 15)
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF", length = 15)
@@ -72,7 +76,24 @@ public class CostosFijos implements Serializable {
         this.codCostoFijo = codCostoFijo;
     }
 
+    public BigInteger getCantidad() {
+        return cantidad;
+    }
 
+    public void setCantidad(BigInteger cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public BigInteger getCostoUnitario() {
+        return costoUnitario;
+    }
+
+    public void setCostoUnitario(BigInteger costoUnitario) {
+        this.costoUnitario = costoUnitario;
+    }
+
+
+    
 
 
     public String getDescripcionGasto() {
