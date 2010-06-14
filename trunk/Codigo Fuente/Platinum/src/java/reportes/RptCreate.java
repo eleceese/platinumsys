@@ -114,29 +114,7 @@ public class RptCreate {
             visor.setTitle("Reporte");
             visor.setVisible(true); //Lo hacemos visible
 
-//            byte[] pdf=null;
-//            pdf= JasperRunManager.runReportToPdf(jasperReport, parameters, conn);
-//            JasperPrint jp= JasperFillManager.fillReport(jasperReport, parameters, conn);
-//            // You can use JasperPrint to create PDF
-//            FacesContext faces = FacesContext.getCurrentInstance();
-//            HttpServletResponse response =
-//                    (HttpServletResponse) faces
-//                    .getExternalContext()
-//                    .getResponse();
-//            response.setContentType("application/pdf");
-//            response.setContentLength(pdf.length);
-//            response.setHeader("Content-disposition","inline; filename=\"MyPdf.pdf\"");
-//
-//
-//            //exporter.setParameter(JRExporterParameter.JASPER_PRINT,  jp);
-//            //exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, response.getOutputStream());
-//
-//            //exporter.exportReport();
-//
-//            ServletOutputStream out = response.getOutputStream();
-//            out.write(pdf);
-//
-//            faces.responseComplete();
+
         }
 
         catch(Exception e){
@@ -147,13 +125,7 @@ public class RptCreate {
     public void getReport(JRDataSource ds, String sNameReport, String[] sParametersNames, String[] sParametersValues, ServletContext sc) throws Exception{
         String realPathXml = sc.getRealPath("/WEB-INF/classes/reportesFuente/");
         try{
-            //JRPdfExporter exporter = new JRPdfExporter();
-            //FontKey fontk= new FontKey("COMICBD", false, false);
-            //PdfFont pdffont= new PdfFont("C:\\WINDOWS\\FONTS\\COMICBD.TTF", BaseFont.IDENTITY_H, true);
-            //Map fontmap= new HashMap();
-            //fontmap.put(fontk, pdffont);
-            //exporter.setParameter(JRPdfExporterParameter.FONT_MAP, fontmap);
-            // First, load JasperDesign from XML and compile it into JasperReport
+
             JasperDesign jasperDesign = JRXmlLoader.load(realPathXml +"/" +sNameReport);
             JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
             // Second, create a map of parameters to pass to the report.
@@ -162,13 +134,11 @@ public class RptCreate {
             for(int i=0; i<sParametersNames.length; i++){
                 parameters.put(sParametersNames[i], sParametersValues[i]);
             }
-            // Third, get a database connection
 
-            // Fourth, create JasperPrint using fillReport() method
             byte[] pdf=null;
             pdf= JasperRunManager.runReportToPdf(jasperReport, parameters, ds);
             JasperPrint jp= JasperFillManager.fillReport(jasperReport, parameters, ds);
-            // You can use JasperPrint to create PDF
+
             FacesContext faces = FacesContext.getCurrentInstance();
             HttpServletResponse response =
                     (HttpServletResponse) faces
@@ -180,10 +150,7 @@ public class RptCreate {
                     "Content-disposition",
                     "inline; filename=\"MyPdf.pdf\"");
 
-            //exporter.setParameter(JRExporterParameter.JASPER_PRINT,  jp);
-            //exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, response.getOutputStream());
 
-            //exporter.exportReport();
 
             ServletOutputStream out = response.getOutputStream();
             out.write(pdf);
