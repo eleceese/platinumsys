@@ -1,5 +1,9 @@
 --Cerar tablas
 delete from saldo_cliente;
+delete from entrada_salida_detalle;
+delete from entrada_salida_cabecera;
+delete from nota_credito_cli_detalle;
+delete from nota_credito_cli_cabecera;
 delete from factura_detalle;
 delete from factura_cabecera;
 delete from pedido_detalle;
