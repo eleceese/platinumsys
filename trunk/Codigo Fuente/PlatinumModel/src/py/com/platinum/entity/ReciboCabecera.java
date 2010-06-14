@@ -17,10 +17,13 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,10 +34,11 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "RECIBO_CABECERA")
+@SequenceGenerator(name="RECIBO_CAB_SEQUENCE", sequenceName="SQ_CABECERA_RECIBO", initialValue=1, allocationSize=1)
 public class ReciboCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="RECIBO_CAB_SEQUENCE")
     @Column(name = "COD_RECIBO")
     private BigDecimal codRecibo;
     @Basic(optional = false)
@@ -42,8 +46,6 @@ public class ReciboCabecera implements Serializable {
     private BigInteger numeroRecibo;
     @Column(name = "MONTO_TOTAL")
     private BigInteger montoTotal;
-    @Column(name = "MONTO_NOTA_CREDITO")
-    private BigInteger montoNotaCredito;
     @Column(name = "ESTADO")
     private String estado;
     @Column(name = "SERIE_RECIBO")
@@ -99,15 +101,7 @@ public class ReciboCabecera implements Serializable {
     public void setMontoTotal(BigInteger montoTotal) {
         this.montoTotal = montoTotal;
     }
-
-    public BigInteger getMontoNotaCredito() {
-        return montoNotaCredito;
-    }
-
-    public void setMontoNotaCredito(BigInteger montoNotaCredito) {
-        this.montoNotaCredito = montoNotaCredito;
-    }
-
+    
     public String getEstado() {
         return estado;
     }

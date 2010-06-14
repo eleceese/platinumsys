@@ -29,6 +29,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import py.com.platinum.listener.NotaCreditoClienteCabeceraListener;
 import py.com.platinum.utils.StringUtils;
 import py.com.platinum.utilsenum.NotaCreditoEstado;
@@ -246,6 +247,31 @@ public class NotaCreditoCliCabecera implements Serializable {
     public NotaCreditoEstado getEstado() {
         return estado;
     }
+
+    @Transient
+    private String estadoString;
+
+    public String getEstadoString() {
+        estadoString = estado.toString();
+        return estadoString;
+    }
+
+    @Transient
+    private String nroFactura;
+
+    public String getNroFactura() {
+        nroFactura = "";
+        
+        if (codFactura != null) {
+            nroFactura = codFactura.toString();
+        }
+
+        return nroFactura;
+    }
+
+//    public void setEstadoString(String x) {
+//        estadoString = x;
+//    }
 
     public void setEstado(NotaCreditoEstado estado) {
         this.estado = estado;

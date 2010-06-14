@@ -16,5 +16,8 @@
 
 6. Filtrar lista de producto en factura proveedor, insumo, meteria prima.
 
-
+7. ABMFacturaProveedor
+   Cuando se ingresa en el detalle una solicitud, controlar que el producto de la solicitud sea igual al producto ingresado en el detalle de la 
+   factura, sino son iguales buscar las equivalencias del producto de la solicitud que sea igual al producto de la factura en este ultimo caso sino
+   se encuentra ninguna equivalencia se emite un mensaje al usuario.
 

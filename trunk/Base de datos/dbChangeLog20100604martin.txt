@@ -8,3 +8,5 @@ alter table saldo_cliente add saldo_cuota number;
 alter table saldo_cliente rename column saldo to saldo_comprobante;
 alter table saldo_cliente rename column total to total_comprobante;
 
+--Agregar stock minimo
+alter table producto add stock_minimo number;

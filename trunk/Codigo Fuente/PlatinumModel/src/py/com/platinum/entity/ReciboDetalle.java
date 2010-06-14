@@ -7,14 +7,14 @@ package py.com.platinum.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,20 +25,13 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "RECIBO_DETALLE")
+@SequenceGenerator(name="RECIBO_DET_SEQUENCE", sequenceName="SQ_DETALLE_RECIBO", initialValue=1, allocationSize=1)
 public class ReciboDetalle implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="RECIBO_DET_SEQUENCE")
     @Column(name = "COD_RECIBO_DET")
     private Long codReciboDet;
-    @Column(name = "MONTO_EFECTIVO")
-    private Long montoEfectivo;
-    @Column(name = "MONTO_NOTA_CREDITO")
-    private Long montoNotaCredito;
-    @Column(name = "MONTO_TOTAL")
-    private Long montoTotal;
-    @Column(name = "ESTADO_DETALLE_RECIBO")
-    private String estadoDetalleRecibo;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -49,12 +42,6 @@ public class ReciboDetalle implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
-    @JoinColumn(name = "COD_FACTURA", referencedColumnName = "COD_FACTURA")
-    @ManyToOne(optional = false)
-    private FacturaCabecera codFactura;
-    @JoinColumn(name = "COD_NOTA_CREDITO_CLIENTE", referencedColumnName = "COD_NOTA_CREDITO_CLIENTE")
-    @ManyToOne
-    private NotaCreditoCliCabecera codNotaCreditoCliente;
     @JoinColumn(name = "COD_RECIBO", referencedColumnName = "COD_RECIBO")
     @ManyToOne(optional = false)
     private ReciboCabecera codRecibo;
@@ -72,38 +59,6 @@ public class ReciboDetalle implements Serializable {
 
     public void setCodReciboDet(Long codReciboDet) {
         this.codReciboDet = codReciboDet;
-    }
-
-    public Long getMontoEfectivo() {
-        return montoEfectivo;
-    }
-
-    public void setMontoEfectivo(Long montoEfectivo) {
-        this.montoEfectivo = montoEfectivo;
-    }
-
-    public Long getMontoNotaCredito() {
-        return montoNotaCredito;
-    }
-
-    public void setMontoNotaCredito(Long montoNotaCredito) {
-        this.montoNotaCredito = montoNotaCredito;
-    }
-
-    public Long getMontoTotal() {
-        return montoTotal;
-    }
-
-    public void setMontoTotal(Long montoTotal) {
-        this.montoTotal = montoTotal;
-    }
-
-    public String getEstadoDetalleRecibo() {
-        return estadoDetalleRecibo;
-    }
-
-    public void setEstadoDetalleRecibo(String estadoDetalleRecibo) {
-        this.estadoDetalleRecibo = estadoDetalleRecibo;
     }
 
     public String getUsuarioAlta() {
@@ -136,22 +91,6 @@ public class ReciboDetalle implements Serializable {
 
     public void setFechaModif(Date fechaModif) {
         this.fechaModif = fechaModif;
-    }
-
-    public FacturaCabecera getCodFactura() {
-        return codFactura;
-    }
-
-    public void setCodFactura(FacturaCabecera codFactura) {
-        this.codFactura = codFactura;
-    }
-
-    public NotaCreditoCliCabecera getCodNotaCreditoCliente() {
-        return codNotaCreditoCliente;
-    }
-
-    public void setCodNotaCreditoCliente(NotaCreditoCliCabecera codNotaCreditoCliente) {
-        this.codNotaCreditoCliente = codNotaCreditoCliente;
     }
 
     public ReciboCabecera getCodRecibo() {
