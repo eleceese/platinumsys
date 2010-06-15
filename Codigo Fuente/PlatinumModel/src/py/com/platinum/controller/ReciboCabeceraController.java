@@ -5,6 +5,7 @@
 
 package py.com.platinum.controller;
 
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -41,28 +42,36 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
      *
      * @return lista de ReciboCabeceras que cumplen con la condicion de busqueda
      */
-    public List<ReciboCabecera> getReciboCabeceras(String codigo, String descripcion) {
+    public List<ReciboCabecera> getReciboCabeceras(String nroRecibo, String cliente, Date fecha) {
         //Armamos el sql String
-        String SQL = "SELECT o FROM ReciboCabecera o WHERE o.codReciboCabecera = o.codReciboCabecera";
+        String SQL = "SELECT o FROM ReciboCabecera o WHERE o.codRecibo = o.codRecibo ";
 
-        if (codigo != null && !codigo.equals("")) {
-            SQL = SQL + " and UPPER(o.codReciboCabecera) like UPPER(:codigo)";
+        if (nroRecibo != null && !nroRecibo.equals("")) {
+            SQL = SQL + " and UPPER(o.numeroRecibo) like UPPER(:nroRecibo)";
         }
 
-        if (descripcion != null && !descripcion.equals("")) {
-            SQL = SQL + " and UPPER(o.nombreReciboCabecera) like UPPER(:descripcion)";
+        if (cliente != null && !cliente.equals("")) {
+            SQL = SQL + " and UPPER( CONCAT(CONCAT(o.codCliente.apellidoCliente, '%'), o.codCliente.nombreCliente)) like UPPER(:cliente) ";
+        }
+
+        if (fecha != null) {
+            SQL = SQL + " and o.fecha = :fecha ";
         }
 
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
 
         //Seteamos los parametros
-        if (codigo != null && !codigo.equals("")) {
-            q.setParameter("codigo", "%" + codigo + "%");
+        if (nroRecibo != null && !nroRecibo.equals("")) {
+            q.setParameter("nroRecibo", "%" + nroRecibo + "%");
         }
 
-        if (descripcion != null && !descripcion.equals("")) {
-            q.setParameter("descripcion", "%" + descripcion + "%");
+        if (cliente != null && !cliente.equals("")) {
+            q.setParameter("cliente", "%" + cliente + "%");
+        }
+
+        if (fecha != null) {
+            q.setParameter("fecha", fecha );
         }
 
         //Realizamos la busqueda
