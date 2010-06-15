@@ -1,7 +1,7 @@
 --Cabecera Recibo
 alter table recibo_cabecera drop column MONTO_NOTA_CREDITO;
 alter table recibo_cabecera modify estado varchar2(15);
-
+alter table recibo_cabecera add FECHA date;
 
 --Quitamos al detalle del recibo 
 alter table recibo_detalle drop column estado_detalle_recibo;
