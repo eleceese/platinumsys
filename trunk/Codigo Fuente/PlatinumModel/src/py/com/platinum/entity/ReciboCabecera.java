@@ -6,7 +6,6 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +15,8 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,6 +28,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.utils.StringUtils;
+import py.com.platinum.utilsenum.ReciboEstado;
 
 /**
  *
@@ -40,14 +43,15 @@ public class ReciboCabecera implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="RECIBO_CAB_SEQUENCE")
     @Column(name = "COD_RECIBO")
-    private BigDecimal codRecibo;
+    private Long codRecibo;
     @Basic(optional = false)
     @Column(name = "NUMERO_RECIBO")
     private BigInteger numeroRecibo;
     @Column(name = "MONTO_TOTAL")
     private BigInteger montoTotal;
     @Column(name = "ESTADO")
-    private String estado;
+    @Enumerated(EnumType.STRING)
+    private ReciboEstado estado;
     @Column(name = "SERIE_RECIBO")
     private String serieRecibo;
     @Column(name = "USUARIO_ALTA")
@@ -72,20 +76,20 @@ public class ReciboCabecera implements Serializable {
     public ReciboCabecera() {
     }
 
-    public ReciboCabecera(BigDecimal codRecibo) {
+    public ReciboCabecera(Long codRecibo) {
         this.codRecibo = codRecibo;
     }
 
-    public ReciboCabecera(BigDecimal codRecibo, BigInteger numeroRecibo) {
+    public ReciboCabecera(Long codRecibo, BigInteger numeroRecibo) {
         this.codRecibo = codRecibo;
         this.numeroRecibo = numeroRecibo;
     }
 
-    public BigDecimal getCodRecibo() {
+    public Long getCodRecibo() {
         return codRecibo;
     }
 
-    public void setCodRecibo(BigDecimal codRecibo) {
+    public void setCodRecibo(Long codRecibo) {
         this.codRecibo = codRecibo;
     }
 
@@ -105,11 +109,11 @@ public class ReciboCabecera implements Serializable {
         this.montoTotal = montoTotal;
     }
     
-    public String getEstado() {
+    public ReciboEstado getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(ReciboEstado estado) {
         this.estado = estado;
     }
 
@@ -179,6 +183,10 @@ public class ReciboCabecera implements Serializable {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+    
+    public String getNumero() {
+        return StringUtils.lpad(numeroRecibo.toString(), 8, "0");
     }
 
     @Override
