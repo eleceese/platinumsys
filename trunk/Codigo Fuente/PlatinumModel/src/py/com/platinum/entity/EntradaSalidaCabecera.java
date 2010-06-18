@@ -73,7 +73,10 @@ public class EntradaSalidaCabecera implements Serializable {
  //   private Set<FacturaCompraCab> facturaCompraCab;
     @OneToMany(mappedBy = "codEntradaSalida", fetch=FetchType.EAGER)
     private Set<EntradaSalidaDetalle> entradaSalidaDetalle;
-   
+    @Column(name = "TIPO_COMPROBANTE")
+    private Long tipoComprobante;
+    @Column(name = "NRO_COMPROBANTE")
+    private Long nroComprobante;
     
     public EntradaSalidaCabecera() {
     }
@@ -196,6 +199,22 @@ public class EntradaSalidaCabecera implements Serializable {
 
     public void setEntradaSalidaDetalle(Set<EntradaSalidaDetalle> entradaSalidaDetalle) {
         this.entradaSalidaDetalle = entradaSalidaDetalle;
+    }
+
+    public Long getNroComprobante() {
+        return nroComprobante;
+    }
+
+    public void setNroComprobante(Long nroComprobante) {
+        this.nroComprobante = nroComprobante;
+    }
+
+    public Long getTipoComprobante() {
+        return tipoComprobante;
+    }
+
+    public void setTipoComprobante(Long tipoComprobante) {
+        this.tipoComprobante = tipoComprobante;
     }
 
     @Override
