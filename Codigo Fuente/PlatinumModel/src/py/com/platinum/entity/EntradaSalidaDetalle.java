@@ -71,6 +71,8 @@ public class EntradaSalidaDetalle implements Serializable {
     @JoinColumn(name = "COD_ORDEN_TRABAJO_DETALLE", referencedColumnName = "COD_ORDEN_TRABAJO_DET")
     @ManyToOne
     private OrdenTrabajoDetalle codOrdenTrabajoDetalle;
+    @Column(name = "EXISTENCIA")
+    private BigDecimal existencia;
 
     public OrdenTrabajoDetalle getCodOrdenTrabajoDetalle() {
         return codOrdenTrabajoDetalle;
@@ -192,6 +194,15 @@ public class EntradaSalidaDetalle implements Serializable {
         this.codProducto = codProducto;
     }
 
+    public BigDecimal getExistencia() {
+        return existencia;
+    }
+
+    public void setExistencia(BigDecimal existencia) {
+        this.existencia = existencia;
+    }
+
+    
     @Override
     public int hashCode() {
         int hash = 0;

@@ -68,6 +68,8 @@ public class Producto implements Serializable {
     @Column(name = "FECHA_ALTA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaAlta;
+    @Column(name = "PORCENTAJE_IVA")
+    private BigDecimal porcentajeIva;
 
     public Producto() {
     }
@@ -176,6 +178,14 @@ public class Producto implements Serializable {
 
     public void setFechaAlta(Date fechaAlta) {
         this.fechaAlta = fechaAlta;
+    }
+
+    public BigDecimal getPorcentajeIva() {
+        return porcentajeIva;
+    }
+
+    public void setPorcentajeIva(BigDecimal porcentajeIva) {
+        this.porcentajeIva = porcentajeIva;
     }
 
     @Override
