@@ -482,6 +482,15 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setTableColumnEliminarDet(TableColumn tc) {
         this.tableColumnEliminarDet = tc;
     }
+    private Button btnConfirmar = new Button();
+
+    public Button getBtnConfirmar() {
+        return btnConfirmar;
+    }
+
+    public void setBtnConfirmar(Button b) {
+        this.btnConfirmar = b;
+    }
 
     // </editor-fold>
     /**
@@ -1350,5 +1359,20 @@ public class ABMComprasProveedor extends AbstractPageBean {
         getSessionBean1().cargarListaTipoComprobantePorModulo(ModuloEnum.COMPRA);
 
 
+    }
+
+    public String btnConfirmar_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+
+        cabecera.setEstado("C");
+
+        FacturaCompraCabController c = new FacturaCompraCabController();
+
+        c.actualizar(cabecera, lstDetalleLIST, lstDetalleEliminar);
+
+        info("Factura Confirmada");
+
+        return null;
     }
 }

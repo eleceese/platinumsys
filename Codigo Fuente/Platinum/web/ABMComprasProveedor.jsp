@@ -139,7 +139,7 @@
                                                 onFocus="document.getElementById('form1:uiBtnCancelar').focus(); return false;" style="text-align: right"/>
                                         </h:panelGrid>
                                     </h:panelGrid>
-                                    <h:panelGrid columns="2" id="gridPanel1"
+                                    <h:panelGrid columns="3" id="gridPanel1"
                                         style="direction: rtl; height: 48px; line-height: normal; margin-left: 540px; text-align: right; vertical-align: bottom" width="182">
                                         <webuijsf:button actionExpression="#{ABMComprasProveedor.uiBtnGuardarNuevo_action}"
                                             binding="#{ABMComprasProveedor.uiBtnGuardarNuevo}" id="uiBtnGuardarNuevo" style="font-size: 14px" text="Guardar"/>
@@ -147,6 +147,8 @@
                                             binding="#{ABMComprasProveedor.uiBtnGuardarEditar}" id="uiBtnGuardarEditar" rendered="false" style="font-size: 14px" text="Anular"/>
                                         <webuijsf:button actionExpression="#{ABMComprasProveedor.uiBtnCancelar_action}"
                                             binding="#{ABMComprasProveedor.uiBtnCancelar}" id="uiBtnCancelar" style="font-size: 14px" text="Cancelar"/>
+                                        <webuijsf:button actionExpression="#{ABMComprasProveedor.btnConfirmar_action}"
+                                            binding="#{ABMComprasProveedor.btnConfirmar}" id="btnConfirmar" style="font-size: 14px" text="Confirmar"/>
                                     </h:panelGrid>
                                     <webuijsf:messageGroup id="messageGroup1" style="width: 719px"/>
                                     <h:panelGrid id="gridPanel2" style="width: 100%; height: 100%;">
