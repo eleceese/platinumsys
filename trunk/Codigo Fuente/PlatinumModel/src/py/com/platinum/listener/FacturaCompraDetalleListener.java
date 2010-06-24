@@ -5,9 +5,11 @@
 
 package py.com.platinum.listener;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import javax.persistence.PostPersist;
 import py.com.platinum.controller.ExistenciaController;
+import py.com.platinum.controller.HistoricoCostoController;
 import py.com.platinum.controller.SolicitudInternaController;
 import py.com.platinum.entity.Existencia;
 import py.com.platinum.entity.FacturaCompraDet;
@@ -70,6 +72,9 @@ public class FacturaCompraDetalleListener {
 
         //Actualizamos
         existenciaController.update(existencia);
+
+        //Calculamos historico de costo
+        new HistoricoCostoController().calcularCostoPromedio(det.getCodProducto().getCodProducto(), BigInteger.valueOf(det.getPrecioUni()), BigDecimal.valueOf(det.getCantidad()));
 
     }
 }

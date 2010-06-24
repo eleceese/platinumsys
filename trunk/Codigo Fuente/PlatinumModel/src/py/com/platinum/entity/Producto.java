@@ -117,7 +117,13 @@ public class Producto implements Serializable {
     }
 
     public BigInteger getCostoActual() {
-        return costoActual;
+        
+        if (costoActual == null) {
+            return new BigInteger("0");
+        }else{
+            return costoActual;
+        }
+        
     }
 
     public void setCostoActual(BigInteger costoActual) {

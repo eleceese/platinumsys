@@ -12,11 +12,12 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,13 +28,14 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "HISTORICO_COSTO")
-@NamedQueries({@NamedQuery(name = "HistoricoCosto.findAll", query = "SELECT h FROM HistoricoCosto h"), @NamedQuery(name = "HistoricoCosto.findByCodHistoricoCosto", query = "SELECT h FROM HistoricoCosto h WHERE h.codHistoricoCosto = :codHistoricoCosto"), @NamedQuery(name = "HistoricoCosto.findByFecHistoricoCosto", query = "SELECT h FROM HistoricoCosto h WHERE h.fecHistoricoCosto = :fecHistoricoCosto"), @NamedQuery(name = "HistoricoCosto.findByCostoHistorico", query = "SELECT h FROM HistoricoCosto h WHERE h.costoHistorico = :costoHistorico"), @NamedQuery(name = "HistoricoCosto.findByUsuarioAlta", query = "SELECT h FROM HistoricoCosto h WHERE h.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "HistoricoCosto.findByUsuarioModif", query = "SELECT h FROM HistoricoCosto h WHERE h.usuarioModif = :usuarioModif"), @NamedQuery(name = "HistoricoCosto.findByFechaAlta", query = "SELECT h FROM HistoricoCosto h WHERE h.fechaAlta = :fechaAlta"), @NamedQuery(name = "HistoricoCosto.findByFechaModif", query = "SELECT h FROM HistoricoCosto h WHERE h.fechaModif = :fechaModif")})
+@SequenceGenerator(name="HISCOSTO_SEQUENCE", sequenceName="SQ_HISTORICO_COSTO", initialValue=1, allocationSize=1)
 public class HistoricoCosto implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "COD_HISTORICO_COSTO")
-    private BigDecimal codHistoricoCosto;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="HISCOSTO_SEQUENCE")
+    private Long codHistoricoCosto;
     @Basic(optional = false)
     @Column(name = "FEC_HISTORICO_COSTO")
     @Temporal(TemporalType.DATE)
@@ -54,25 +56,33 @@ public class HistoricoCosto implements Serializable {
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
     @ManyToOne(optional = false)
     private Producto codProducto;
+    @Column(name = "COSTO_COMPRA")
+    private BigInteger costoCompra;
+    @Column(name = "COSTO_ACTUAL")
+    private BigInteger costoActual;
+    @Column(name = "EXISTENCIA_ACTUAL")
+    private BigDecimal existenciaActual;
+    @Column(name = "EXISTENCIA_COMPRA")
+    private BigDecimal existenciaCompra;
 
     public HistoricoCosto() {
     }
 
-    public HistoricoCosto(BigDecimal codHistoricoCosto) {
+    public HistoricoCosto(Long codHistoricoCosto) {
         this.codHistoricoCosto = codHistoricoCosto;
     }
 
-    public HistoricoCosto(BigDecimal codHistoricoCosto, Date fecHistoricoCosto, BigInteger costoHistorico) {
+    public HistoricoCosto(Long codHistoricoCosto, Date fecHistoricoCosto, BigInteger costoHistorico) {
         this.codHistoricoCosto = codHistoricoCosto;
         this.fecHistoricoCosto = fecHistoricoCosto;
         this.costoHistorico = costoHistorico;
     }
 
-    public BigDecimal getCodHistoricoCosto() {
+    public Long getCodHistoricoCosto() {
         return codHistoricoCosto;
     }
 
-    public void setCodHistoricoCosto(BigDecimal codHistoricoCosto) {
+    public void setCodHistoricoCosto(Long codHistoricoCosto) {
         this.codHistoricoCosto = codHistoricoCosto;
     }
 
@@ -130,6 +140,38 @@ public class HistoricoCosto implements Serializable {
 
     public void setCodProducto(Producto codProducto) {
         this.codProducto = codProducto;
+    }
+
+    public BigInteger getCostoActual() {
+        return costoActual;
+    }
+
+    public void setCostoActual(BigInteger costoActual) {
+        this.costoActual = costoActual;
+    }
+
+    public BigInteger getCostoCompra() {
+        return costoCompra;
+    }
+
+    public void setCostoCompra(BigInteger costoCompra) {
+        this.costoCompra = costoCompra;
+    }
+
+    public BigDecimal getExistenciaActual() {
+        return existenciaActual;
+    }
+
+    public void setExistenciaActual(BigDecimal existenciaActual) {
+        this.existenciaActual = existenciaActual;
+    }
+
+    public BigDecimal getExistenciaCompra() {
+        return existenciaCompra;
+    }
+
+    public void setExistenciaCompra(BigDecimal existenciaCompra) {
+        this.existenciaCompra = existenciaCompra;
     }
 
     @Override
