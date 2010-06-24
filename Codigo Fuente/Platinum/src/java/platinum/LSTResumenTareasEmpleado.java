@@ -20,6 +20,7 @@ import py.com.platinum.controller.TareaController;
 import py.com.platinum.entity.Empleado;
 import py.com.platinum.entity.OrdenTrabajo;
 import py.com.platinum.entity.Tarea;
+import py.com.platinum.utils.DateUtils;
 import reportes.Formated;
 import reportes.GetConnection;
 import reportes.RptCreate;
@@ -330,8 +331,8 @@ public class LSTResumenTareasEmpleado extends AbstractPageBean {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
 
-                String[] sparamName= new String[5];
-                String[] sparamValue= new String[5];
+                String[] sparamName= new String[6];
+                String[] sparamValue= new String[6];
                 Connection conn= GetConnection.getSimpleConnection();
                 ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
 
@@ -344,6 +345,12 @@ public class LSTResumenTareasEmpleado extends AbstractPageBean {
 
                 String sTarea="";
                 String sT="";
+
+                String sFecha="";
+                String sF="";
+
+                String sFechaF="";
+                String sFF="";
 
                 String sSql="";
 
@@ -373,10 +380,27 @@ public class LSTResumenTareasEmpleado extends AbstractPageBean {
                     sT="Todos";
                 }
 
+                if (uiFechaDesde.getSelectedDate() != null){
+
+                    String simpleFecha = DateUtils.toString(uiFechaDesde.getSelectedDate(), "dd/MM/yyyy");
+                    sFecha = " and pd.fecha >= to_date('"+simpleFecha+"','dd/mm/yyyy')";
+                    sF = simpleFecha;
+                }else{
+                    sF="Todos";
+                }
+
+                if (uiFechaHasta.getSelectedDate() != null){
+                    String simpleFechaF = DateUtils.toString(uiFechaHasta.getSelectedDate(), "dd/MM/yyyy");
+                    sFechaF = " and pd.fecha <= to_date('"+simpleFechaF+"','dd/mm/yyyy')";
+                    sFF = simpleFechaF;
+                }else{
+                    sFF="Todos";
+                }
+
 //                if (calFecHasta.getValue()!=null)
 //                sFecHasta = " and TARJETAS.FECHA_ALTA <= convert(datetime,'"+f.getDateFormat((Date)calFecHasta.getValue())+"') ";
 
-                sSql = sEmpleado+sOt+sTarea;
+                sSql = sEmpleado+sOt+sTarea+sFecha+sFechaF;
 
                 RptCreate rpt= new RptCreate();
 
@@ -388,6 +412,10 @@ public class LSTResumenTareasEmpleado extends AbstractPageBean {
                 sparamValue[2]= sE;
                 sparamName[3]="tarea";
                 sparamValue[3]= sT;
+                sparamName[4]="fechaIni";
+                sparamValue[4]= sF;
+                sparamName[5]="fechaFin";
+                sparamValue[5]= sFF;
 
                 rpt.getReport(conn, "ResumenDeTareas.jrxml", sparamName, sparamValue, theApplicationsServletContext);
 

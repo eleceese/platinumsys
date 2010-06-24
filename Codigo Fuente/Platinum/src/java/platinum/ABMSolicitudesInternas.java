@@ -18,6 +18,7 @@ import com.sun.webui.jsf.component.TableRowGroup;
 import com.sun.webui.jsf.component.TextArea;
 import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.event.TableSelectPhaseListener;
+import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -162,24 +163,6 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
 
     public void setPageAlert1(PageAlert pa) {
         this.pageAlert1 = pa;
-    }
-    private TextField uiTxtFilResponsable = new TextField();
-
-    public TextField getUiTxtFilResponsable() {
-        return uiTxtFilResponsable;
-    }
-
-    public void setUiTxtFilResponsable(TextField tf) {
-        this.uiTxtFilResponsable = tf;
-    }
-    private TextField uiTxtFilProducto = new TextField();
-
-    public TextField getUiTxtFilProducto() {
-        return uiTxtFilProducto;
-    }
-
-    public void setUiTxtFilProducto(TextField tf) {
-        this.uiTxtFilProducto = tf;
     }
     private Button uiBtnBuscar = new Button();
 
@@ -379,6 +362,24 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
     public void setRadioButton1(RadioButton rb) {
         this.radioButton1 = rb;
     }
+    private DropDown uiEmpleadoFil = new DropDown();
+
+    public DropDown getUiEmpleadoFil() {
+        return uiEmpleadoFil;
+    }
+
+    public void setUiEmpleadoFil(DropDown dd) {
+        this.uiEmpleadoFil = dd;
+    }
+    private DropDown uiProductoFil = new DropDown();
+
+    public DropDown getUiProductoFil() {
+        return uiProductoFil;
+    }
+
+    public void setUiProductoFil(DropDown dd) {
+        this.uiProductoFil = dd;
+    }
 
     // </editor-fold>
     /**
@@ -484,6 +485,11 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
             addUpdatePanel.setRendered(false);
             tabSetDatosAprobacion.setRendered(false);
             gridPanelButtonDet.setRendered(false);
+            this.uiEmpleadoFil.setSelected("-1");
+            this.uiProductoFil.setSelected("-1");
+            cargarListaTodosEmpleados();
+            cargarListaTodosProductos();
+            
         }
     // Refresh the users data array in the session bean to to show
     }
@@ -576,6 +582,22 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
     public String updateButton_action() {
         updateRequest = true;
         e = null;
+         if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+            //Obtenemos la lista de
+            SolicitudInterna[] l = getSessionBean1().getListaSolicitud();
+
+            //Posicion en la grilla del elemento seleccionado
+            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+
+            //Elemento seleccionado
+            SolicitudInterna e = l[rowId];
+
+            //Guardamos el id d la Solicitud en la session
+            getSessionBean1().setId(e.getCodSolicitud());
+        }
+  
+
         this.lblEstado.setRendered(true);
         this.gridPanelEstado.setRendered(true);
         getSessionBean1().setTituloPagina("Editar Solicitud Interna");
@@ -612,6 +634,7 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
                 this.pageAlert1.setTitle("El Registro se a Eliminado correctamente");
             }
 
+            buscar();
             this.pageAlert1.setSummary("");
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
@@ -694,6 +717,7 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
                 this.pageAlert1.setType("information");
             }
 
+            buscar();
             this.pageAlert1.setTitle(cr.getMsg());
             this.pageAlert1.setSummary("");
             this.pageAlert1.setDetail("");
@@ -740,7 +764,7 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
         uiTxtCodProducto.setText(e.getCodProducto().getCodProducto());
         uiTxtDescProducto.setText(e.getCodProducto().getDescripcion());
         uiTxtUsuarioAprobacion.setText(e.getUsuarioAprobacion());
-        uiTxtFechaAprobacion.setText(new SimpleDateFormat("dd/MM/yyyy").format(e.getFechaAprobacion()));
+//        uiTxtFechaAprobacion.setText(new SimpleDateFormat("dd/MM/yyyy").format(e.getFechaAprobacion()));
         uiTxtNombreEmpleado.setText(e.getCodEmpleado().getApellidoEmpleado() + ", " + e.getCodEmpleado().getNombreEmpleado());
         uiTxtObservacion.setText(e.getObservacion());
         uiCalFecha.setSelectedDate(e.getFecha());
@@ -855,14 +879,14 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
         String pSolicitante = null, pProducto = null;
         Date pFechaDesde = null, pFechaHasta = null;
 
-        //Solicitante
-        if (this.uiTxtFilResponsable != null) {
-            pSolicitante = this.uiTxtFilResponsable.getText().toString();
+//        Solicitante
+        if (!this.uiEmpleadoFil.getSelected().toString().equals("-1")) {
+            pSolicitante = this.uiEmpleadoFil.getSelected().toString();
         }
 
         //Producto
-        if (this.uiTxtFilProducto != null) {
-            pProducto = this.uiTxtFilProducto.getText().toString();
+        if (!this.uiProductoFil.getSelected().toString().equals("-1")) {
+            pProducto = this.uiProductoFil.getSelected().toString();
         }
 
         //Fecha desde
@@ -887,8 +911,8 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
         this.pageAlert1.setRendered(false);
 
         //Ceramos los campos de busqueda
-        this.uiTxtFilProducto.setText(null);
-        this.uiTxtFilResponsable.setText(null);
+        this.uiEmpleadoFil.setSelected("-1");
+        this.uiProductoFil.setSelected("-1");
         this.uiCalFechaDesde.setSelectedDate(null);
         this.uiCalFechaHasta.setSelectedDate(null);
 
@@ -898,5 +922,90 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
         //result
         return null;
     }
+///// CARGA DE COMBO BOX EMPLEADOS
+        Empleado[] listaEmpleados;
+        Option[] listaEmpleadosOp;
+
+    public Option[] getListaEmpleadosOp() {
+        return listaEmpleadosOp;
+    }
+
+    public void setListaEmpleadosOp(Option[] listaEmpleadosOp) {
+        this.listaEmpleadosOp = listaEmpleadosOp;
+    }
+
+
+    public Empleado[] getListaEmpleados() {
+        return listaEmpleados;
+    }
+
+    public void setListaEmpleados(Empleado[] listaEmpleados) {
+        this.listaEmpleados = listaEmpleados;
+    }
+
+    public void cargarListaTodosEmpleados() {
+        EmpleadoController EmpleadoController = new EmpleadoController();
+        listaEmpleados = (Empleado[]) EmpleadoController.getAll("apellidoEmpleado").toArray(new Empleado[0]);
+
+        listaEmpleadosOp = new Option[listaEmpleados.length+1];
+        Option option;
+        for (int i = 0; i < listaEmpleados.length; i++) {
+            Empleado em = listaEmpleados[i];
+            option = new Option();
+            option.setLabel(em.getNombreEmpleado()+" "+em.getApellidoEmpleado());
+            option.setValue(em.getCodEmpleado().toString());
+            listaEmpleadosOp[i] = option;
+        }
+            option = new Option();
+            option.setLabel("Todos");
+            option.setValue("-1");
+            listaEmpleadosOp[listaEmpleados.length] = option;
+        
+    }
+       
+///// FIN CARGA DE COMBO BOX EMPLEADOS
+
+
+///// CARGA DE LISTA DE PRODUCTOS
+    /// CARGA DE COMBO BOX PRODUCTOS
+    Producto[] listaProductos;
+    Option[] listaProductosOp;
+
+    public Option[] getListaProductosOp() {
+        return listaProductosOp;
+    }
+
+    public void setListaProductosOp(Option[] listaProductosOp) {
+        this.listaProductosOp = listaProductosOp;
+    }
+
+    public Producto[] getListaProductos() {
+        return listaProductos;
+    }
+
+    public void setListaProductos(Producto[] listaProductos) {
+        this.listaProductos = listaProductos;
+    }
+
+    public void cargarListaTodosProductos() {
+        ProductoController productoController = new ProductoController();
+        listaProductos = (Producto[]) productoController.getProductosGenericos(null, null,null).toArray(new Producto[0]);
+        listaProductosOp = new Option[listaProductos.length+1];
+        Option option;
+        for (int i = 0; i < listaProductos.length; i++) {
+            Producto p = listaProductos[i];
+            option = new Option();
+            option.setLabel(p.getCodProducto().toString()+" "+p.getDescripcion()+" "+p.getCodMarca().getNombre());
+            option.setValue(p.getCodProducto().toString());
+            listaProductosOp[i] = option;
+        }
+            option = new Option();
+            option.setLabel("Todos");
+            option.setValue("-1");
+            listaProductosOp[listaProductos.length] = option;
+     }
+
+////// FIN CARGA DE LISTA DE PRODUCTOS
+
 }
 

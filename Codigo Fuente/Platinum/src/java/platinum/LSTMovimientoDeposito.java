@@ -6,6 +6,7 @@
 package platinum;
 
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
+import com.sun.webui.jsf.component.Calendar;
 import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
@@ -17,6 +18,7 @@ import py.com.platinum.controller.DepositoController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.entity.Deposito;
 import py.com.platinum.entity.Producto;
+import py.com.platinum.utils.DateUtils;
 import reportes.Formated;
 import reportes.GetConnection;
 import reportes.RptCreate;
@@ -91,6 +93,24 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
     public void setUiTipoM(DropDown dd) {
         this.uiTipoM = dd;
     }
+    private Calendar uiFechaIni = new Calendar();
+
+    public Calendar getUiFechaIni() {
+        return uiFechaIni;
+    }
+
+    public void setUiFechaIni(Calendar c) {
+        this.uiFechaIni = c;
+    }
+    private Calendar uiFechaFin = new Calendar();
+
+    public Calendar getUiFechaFin() {
+        return uiFechaFin;
+    }
+
+    public void setUiFechaFin(Calendar c) {
+        this.uiFechaFin = c;
+    }
 
     // </editor-fold>
 
@@ -162,6 +182,11 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
     public void prerender() {
         getSessionBean1().setTituloPagina("Listado de Movimientos en Déposito");
         getSessionBean1().setDetallePagina("Detalle de los movimientos en Deposito, carge los parametros y ejecute el listado");
+        uiDeposito.setSelected("-1");
+        uiProducto.setSelected("-1");
+        uiTipoM.setSelected("-1");
+
+
     }
 
     /**
@@ -217,8 +242,8 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
     public String uiEjecutar_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
-        String[] sparamName= new String[4];
-                String[] sparamValue= new String[4];
+        String[] sparamName= new String[6];
+                String[] sparamValue= new String[6];
                 Connection conn= GetConnection.getSimpleConnection();
                 ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
                 String sProducto="";
@@ -229,6 +254,12 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
 
                 String sDeposito="";
                 String ds;
+
+                String sFecha="";
+                String sF;
+
+                String sFechaF="";
+                String sFF;
 
                 String sSql="";
                 Formated f= new Formated();
@@ -259,10 +290,26 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
                     ts = "Todos";
                 }
 
+                 if (uiFechaIni.getSelectedDate() != null){
+                    String simpleFecha = DateUtils.toString(uiFechaIni.getSelectedDate(), "dd/MM/yyyy");
+                    sFecha = " and cab.fecha_entrada_salida >= to_date('"+simpleFecha+"','dd/mm/yyyy')";
+                    sF = simpleFecha;
+                }else{
+                    sF="Todos";
+                }
+
+                if (uiFechaFin.getSelectedDate() != null){
+                    String simpleFechaF = DateUtils.toString(uiFechaFin.getSelectedDate(), "dd/MM/yyyy");
+                    sFechaF = " and cab.fecha_entrada_salida <= to_date('"+simpleFechaF+"','dd/mm/yyyy')";
+                    sFF = simpleFechaF;
+                }else{
+                    sFF="Todos";
+                }
+
                 //                if (calFecHasta.getValue()!=null)
 //                sFecHasta = " and TARJETAS.FECHA_ALTA <= convert(datetime,'"+f.getDateFormat((Date)calFecHasta.getValue())+"') ";
 
-                sSql = sProducto+sDeposito+sTipo;
+                sSql = sProducto+sDeposito+sTipo+sFecha+sFechaF;
 
                 RptCreate rpt= new RptCreate();
 
@@ -274,6 +321,10 @@ public class LSTMovimientoDeposito extends AbstractPageBean {
                 sparamValue[2]= ds;
                 sparamName[3]="tipo";
                 sparamValue[3]= ts;
+                sparamName[4]="fechaIni";
+                sparamValue[4]= sF;
+                sparamName[5]="fechaFin";
+                sparamValue[5]= sFF;
 
 
                 rpt.getReport(conn, "MovimientosDeposito.jrxml", sparamName, sparamValue, theApplicationsServletContext);

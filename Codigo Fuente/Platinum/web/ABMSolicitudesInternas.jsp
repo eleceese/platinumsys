@@ -40,16 +40,18 @@
                         <div>
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
-                        <div>
+                        <div style="height: 99px">
                             <h:panelGrid binding="#{ABMSolicitudesInternas.mainContainer}" id="mainContainer" style="height: 96px; left: 264px; top: 216px; position: absolute; width: 96px">
-                                <h:panelGrid binding="#{ABMSolicitudesInternas.gridPanelBuscar}" columns="2" id="gridPanelBuscar">
-                                    <h:panelGrid columns="2" id="gridPanelUserFiltro">
-                                        <webuijsf:label id="label1Filtro" text="Responsable"/>
-                                        <webuijsf:textField binding="#{ABMSolicitudesInternas.uiTxtFilResponsable}" columns="40" id="uiTxtFilResponsable"/>
+                                <h:panelGrid binding="#{ABMSolicitudesInternas.gridPanelBuscar}" columns="2" id="gridPanelBuscar" width="695">
+                                    <h:panelGrid columns="2" id="gridPanelUserFiltro" width="359">
+                                        <webuijsf:label id="label1Filtro" text="Solicitante"/>
+                                        <webuijsf:dropDown binding="#{ABMSolicitudesInternas.uiEmpleadoFil}" id="uiEmpleadoFil"
+                                            items="#{ABMSolicitudesInternas.listaEmpleadosOp}" width="250"/>
                                     </h:panelGrid>
-                                    <h:panelGrid columns="2" id="gridPanelEmailFiltro">
+                                    <h:panelGrid columns="2" id="gridPanelEmailFiltro" width="383">
                                         <webuijsf:label id="label3Filtro" text="Producto"/>
-                                        <webuijsf:textField binding="#{ABMSolicitudesInternas.uiTxtFilProducto}" columns="40" id="uiTxtFilProducto"/>
+                                        <webuijsf:dropDown binding="#{ABMSolicitudesInternas.uiProductoFil}" id="uiProductoFil"
+                                            items="#{ABMSolicitudesInternas.listaProductosOp}" width="300"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanelFecDesde">
                                         <webuijsf:label id="lblFecDesde" text="Fecha Desde"/>
@@ -67,7 +69,8 @@
                                     <webuijsf:button actionExpression="#{ABMSolicitudesInternas.uiBtnTodos_action}" id="uiBtnTodos" text="Todos"/>
                                 </h:panelGrid>
                                 <webuijsf:pageAlert binding="#{ABMSolicitudesInternas.pageAlert1}" rendered="false" style="height: 72px"/>
-                                <webuijsf:table augmentTitle="false" binding="#{ABMSolicitudesInternas.table1}" id="table1" title="Solicitudes Internas" width="647">
+                                <webuijsf:table augmentTitle="false" binding="#{ABMSolicitudesInternas.table1}" id="table1" paginateButton="true"
+                                    paginationControls="true" title="Solicitudes Internas" width="1007">
                                     <webuijsf:tableRowGroup binding="#{ABMSolicitudesInternas.tableRowGroup1}" emptyDataMsg="No se recupero ningun registro..."
                                         id="tableRowGroup1" rows="10" selected="#{ABMSolicitudesInternas.selectedState}"
                                         sourceData="#{SessionBean1.listaSolicitud}" sourceVar="currentRow">
@@ -77,14 +80,20 @@
                                                 name="#{ABMSolicitudesInternas.radioButton1.id}" onClick="delSelect='ok'"
                                                 selected="#{ABMSolicitudesInternas.selected}" selectedValue="#{ABMSolicitudesInternas.selectedValue}" style="height: 18px"/>
                                         </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="Fecha" id="tableColumn3" width="108">
+                                            <webuijsf:staticText converter="#{SessionBean1.dateTimeConverter}" id="staticText3" text="#{currentRow.value['fecha']}"/>
+                                        </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Nro. Solicitud" id="tableColumn1">
                                             <webuijsf:staticText id="staticText1" text="#{currentRow.value['codSolicitud']}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Empleado" id="tableColumn2" width="271">
                                             <webuijsf:staticText id="staticText2" text="#{currentRow.value['codEmpleado']}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Fecha" id="tableColumn3" width="108">
-                                            <webuijsf:staticText converter="#{SessionBean1.dateTimeConverter}" id="staticText3" text="#{currentRow.value['fecha']}"/>
+                                        <webuijsf:tableColumn headerText="Observacion" id="tableColumn6" width="200">
+                                            <webuijsf:staticText id="staticText5" text="#{currentRow.value['observacion']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="Producto" id="tableColumn7" sort="codProducto">
+                                            <webuijsf:staticText id="staticText6" text="#{currentRow.value['codProducto']}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Estado" id="tableColumn4">
                                             <webuijsf:staticText id="staticText4" text="#{currentRow.value['estado']}"/>
