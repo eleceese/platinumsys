@@ -137,6 +137,33 @@ public class ExistenciaController extends AbstractJpaDao<Existencia> {
 
       }
 
+    public BigInteger getCantidadExistencia(Long codProducto) {
+        //emf.createEntityManager Levanta el contexto del JPA
+        String SQL = "SELECT sum(o.cantidadExistencia) FROM Existencia o WHERE o.codExistencia.codProducto.codProducto = :codProducto";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        if (codProducto != null) {
+            q.setParameter("codProducto", codProducto);
+        }
+
+        BigInteger cant = null;
+        try {
+            cant = (BigInteger) q.getSingleResult();
+            em.close();
+        } catch (NoResultException e) {
+            e.printStackTrace();
+        }
+
+        if (cant == null) {
+            cant = BigInteger.valueOf(Long.valueOf("0"));
+        }
+
+        return cant;
+
+      }
+
 public static void main (String[] v) {
         ExistenciaController existenciaController = new ExistenciaController();
         DepositoController depositoController = new DepositoController();
