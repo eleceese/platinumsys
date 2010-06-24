@@ -165,16 +165,13 @@ public List<SolicitudInterna> getSolicitudInternas(String responsable, String pr
         //Armamos el sql String
         String SQL = "SELECT o FROM SolicitudInterna o WHERE o.codSolicitud = o.codSolicitud";
 
-        if (responsable != null && !responsable.equals("")) {
-            SQL = SQL + " and UPPER(o.codEmpleado.apellidoEmpleado) like UPPER(:apellido)";
+           if (responsable != null && !responsable.equals("")) {
+            SQL = SQL + " and UPPER(o.codEmpleado.codEmpleado) like UPPER(:responsable)";
         }
 
-        if (responsable != null && !responsable.equals("")) {
-            SQL = SQL + " and UPPER(o.codEmpleado.nombreEmpleado) like UPPER(:nombre)";
-        }
 
         if (producto != null && !producto.equals("")) {
-            SQL = SQL + " and UPPER(o.codProducto.descripcion) like UPPER(:producto)";
+            SQL = SQL + " and UPPER(o.codProducto.codProducto) like UPPER(:producto)";
         }
 
         if (fechaDesde != null) {
@@ -196,12 +193,9 @@ public List<SolicitudInterna> getSolicitudInternas(String responsable, String pr
         Query q = em.createQuery(SQL);
 
         //Seteamos los parametros
-        if (responsable != null && !responsable.equals("")) {
-            q.setParameter("apellido", responsable);
-        }
 
         if (responsable != null && !responsable.equals("")) {
-            q.setParameter("nombre", responsable);
+            q.setParameter("responsable", responsable);
         }
 
         if (producto != null && !producto.equals("")) {

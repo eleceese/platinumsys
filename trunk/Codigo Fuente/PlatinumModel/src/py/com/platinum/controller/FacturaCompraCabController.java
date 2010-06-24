@@ -4,6 +4,8 @@
  */
 package py.com.platinum.controller;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -11,8 +13,14 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Deposito;
+import py.com.platinum.entity.Empleado;
+import py.com.platinum.entity.EntradaSalidaCabecera;
+import py.com.platinum.entity.EntradaSalidaDetalle;
 import py.com.platinum.entity.FacturaCompraCab;
 import py.com.platinum.entity.FacturaCompraDet;
+import py.com.platinum.entity.Producto;
+import py.com.platinum.entity.Existencia;
 import py.com.platinum.utilsenum.FacturaCompraEstado;
 
 /**
@@ -158,6 +166,25 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
             //Actualizamos la Cabecera
             em.merge(cabecera);
 
+                            // Creacion de la Cabecera Movimiento en Deposito
+
+                            Deposito d = new DepositoController().findById(cabecera.getCodDeposito().getCodDeposito());
+                            Empleado emp = new EmpleadoController().findById(Long.valueOf("1"));
+                            String textoCabecera;
+                            textoCabecera = "Movimiento en Deposito generado por la Factura Proveedor Nro: "+cabecera.getNroFactura().toString();
+
+                            EntradaSalidaCabecera entSalCab = new EntradaSalidaCabecera();
+
+
+                            entSalCab.setCodDeposito(d);
+                            entSalCab.setCodEmpleado(emp);
+                            entSalCab.setCodEncargado(emp);
+                            entSalCab.setFechaAlta(cabecera.getFecha());
+                            entSalCab.setNroComprobante(cabecera.getCodFacComCab());
+                            entSalCab.setTipoComprobante(cabecera.getTipo().getCodTipo());
+                            entSalCab.setObservacion(textoCabecera);
+                            em.persist(entSalCab);
+
             //Actualizamos el detalle
             if (detalle != null) {
                 for (int i = 0; i < detalle.size(); i++) {
@@ -172,9 +199,31 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
                         //Persistir
                         em.persist(det);
 
+
+
                     } else {
                         //Actualizamos
                         em.merge(det);
+
+                        // Creacion de los detalles Movimiento en Deposito
+                            EntradaSalidaDetalle entSalDet = new EntradaSalidaDetalle();
+                            Producto p = new ProductoController().findById(det.getCodProducto().getCodProducto().longValue());
+                            Existencia ex = new ExistenciaController().getExistencia(null, p.getCodProducto(), d.getCodDeposito());
+                            Double cantidadExistencia = ex.getCantidadExistencia().doubleValue();
+
+
+                            entSalDet.setCodEntradaSalida(entSalCab);
+                            entSalDet.setCodProducto(p);
+                            entSalDet.setTipoEntradaSalida("S");
+                            entSalDet.setCantidadEntSal(BigInteger.valueOf(det.getCantidad()));
+                            entSalDet.setExistencia(BigDecimal.valueOf(cantidadExistencia));
+                            entSalDet.setFechaAlta(cabecera.getFecha());
+                            em.persist(entSalDet);
+                        //
+
+
+
+
                     }
 
                 }
