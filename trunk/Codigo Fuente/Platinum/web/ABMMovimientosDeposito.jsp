@@ -202,7 +202,7 @@
                                                         <webuijsf:staticText id="staticText8" text="#{currentRow.value['codProducto']}"/>
                                                     </webuijsf:tableColumn>
                                                     <webuijsf:tableColumn headerText="Cantidad" id="tableColumn10" width="50">
-                                                        <webuijsf:staticText converter="#{ABMMovimientosDeposito.numberConverter3}" id="staticText9" text="#{currentRow.value['cantidadEntSal']}"/>
+                                                        <webuijsf:staticText converter="#{ABMMovimientosDeposito.numberConverter4}" id="staticText9" text="#{currentRow.value['cantidadEntSal']}"/>
                                                     </webuijsf:tableColumn>
                                                     <webuijsf:tableColumn headerText="Sub OT" id="tableColumn5" sort="codOrdenTrabajoDetalle">
                                                         <webuijsf:staticText id="staticText5" text="#{currentRow.value['codOrdenTrabajoDetalle']}"/>

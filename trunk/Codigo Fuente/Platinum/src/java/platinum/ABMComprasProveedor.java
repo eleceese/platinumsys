@@ -503,8 +503,8 @@ public class ABMComprasProveedor extends AbstractPageBean {
         uiLstIvaDefaultOptions.setSelectedValue("0");
 
         //Estados de la factura
-        uiLstEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("C", "Confirmado"), new com.sun.webui.jsf.model.Option("A", "Anulado")});
-        uiLstEstadoDefaultOptions.setSelectedValue("C");
+        uiLstEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("C", "Confirmado"), new com.sun.webui.jsf.model.Option("A", "Anulado"),new com.sun.webui.jsf.model.Option("N", "Nuevo")});
+        uiLstEstadoDefaultOptions.setSelectedValue("N");
         
         //Cargamos a las tablas relacionadas
         cargarRelaciones();
@@ -715,6 +715,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
         gridPanelDetLin2.setRendered(true);
         tableColumnEditarDet.setRendered(true);
         tableColumnEliminarDet.setRendered(true);
+        uiLstEstado.setReadOnly(true);
 
         //Cargar tablas realcionadas
         cargarRelaciones();
@@ -835,7 +836,8 @@ public class ABMComprasProveedor extends AbstractPageBean {
 
             //Set de los artributos
             cabecera.setCodProveedor(proveedor);
-            cabecera.setEstado(uiLstEstado.getSelected().toString());
+            cabecera.setEstado("N");
+//            cabecera.setEstado(uiLstEstado.getSelected().toString());
             cabecera.setFecha(uiCalFecha.getSelectedDate());
             cabecera.setNroFactura(uiTxtNroFac.getText().toString());
             cabecera.setCodDeposito(getSessionBean1().getCodDeposito());

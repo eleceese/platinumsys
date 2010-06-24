@@ -32,14 +32,17 @@
                                 <h:panelGrid id="gridPanel3" style="height: 24px; width: 100%"/>
                                 <h:panelGrid id="gridPanel1" style="height: 100%" width="191">
                                     <webuijsf:label id="label1" text="Desde"/>
-                                    <webuijsf:calendar id="calendar1"/>
+                                    <webuijsf:calendar binding="#{LSTTareasProduccion.uiFechaDesde}" dateFormatPattern="dd-MM-yyyy"
+                                        dateFormatPatternHelp="dd-mm-yyyy" id="uiFechaDesde"/>
                                 </h:panelGrid>
                                 <h:panelGrid id="gridPanel2" style="height: 100%" width="159">
                                     <webuijsf:label id="label4" text="Hasta"/>
-                                    <webuijsf:calendar id="calendar2"/>
+                                    <webuijsf:calendar binding="#{LSTTareasProduccion.uiFechaHasta}" dateFormatPattern="dd/MM/yyyy"
+                                        dateFormatPatternHelp="dd/mm/yyyy" id="uiFechaHasta"/>
                                 </h:panelGrid>
                                 <webuijsf:button actionExpression="#{LSTTareasProduccion.button1_action}" id="button1" text="Ejecutar"/>
                                 <webuijsf:button actionExpression="#{LSTTareasProduccion.button2_action}" id="button2" text="Cancelar"/>
+                                <webuijsf:messageGroup id="messageGroup1"/>
                             </h:panelGrid>
                         </div>
                     </webuijsf:form>

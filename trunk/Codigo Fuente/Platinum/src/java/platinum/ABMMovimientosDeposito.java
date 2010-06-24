@@ -128,6 +128,8 @@ public class ABMMovimientosDeposito extends AbstractPageBean {
         numberConverter3.setMaxIntegerDigits(40);
         numberConverter3.setLocale(new java.util.Locale("es", "", ""));
         numberConverter3.setMaxFractionDigits(3);
+        numberConverter4.setMinIntegerDigits(1);
+        numberConverter4.setLocale(new java.util.Locale("es", "", ""));
   
        
         //table1.setWidth();
@@ -536,6 +538,15 @@ public class ABMMovimientosDeposito extends AbstractPageBean {
 
     public void setNumberConverter3(NumberConverter nc) {
         this.numberConverter3 = nc;
+    }
+    private NumberConverter numberConverter4 = new NumberConverter();
+
+    public NumberConverter getNumberConverter4() {
+        return numberConverter4;
+    }
+
+    public void setNumberConverter4(NumberConverter nc) {
+        this.numberConverter4 = nc;
     }
 
     // </editor-fold>

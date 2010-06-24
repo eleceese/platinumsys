@@ -29,9 +29,9 @@
                                 <webuijsf:label for="uiTipoM" id="label5" text="Tipo de Movimiento"/>
                                 <webuijsf:dropDown binding="#{LSTMovimientoDeposito.uiTipoM}" id="uiTipoM" items="#{LSTMovimientoDeposito.uiTipoMDefaultOptions.options}"/>
                                 <webuijsf:label id="label1" text="Fecha Inicio"/>
-                                <webuijsf:calendar columns="15" id="uiFechaIni"/>
+                                <webuijsf:calendar binding="#{LSTMovimientoDeposito.uiFechaIni}" columns="15" id="uiFechaIni"/>
                                 <webuijsf:label id="label3" text="Fecha Fin"/>
-                                <webuijsf:calendar columns="15" id="uiFechaFin"/>
+                                <webuijsf:calendar binding="#{LSTMovimientoDeposito.uiFechaFin}" columns="15" id="uiFechaFin"/>
                                 <webuijsf:button actionExpression="#{LSTMovimientoDeposito.uiEjecutar_action}" id="uiEjecutar" text="Ejecutar"/>
                                 <webuijsf:button actionExpression="#{LSTMovimientoDeposito.button2_action}" id="button2" text="Cancelar"/>
                             </h:panelGrid>
