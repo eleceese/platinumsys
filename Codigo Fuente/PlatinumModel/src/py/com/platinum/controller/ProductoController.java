@@ -181,6 +181,44 @@ public class ProductoController extends AbstractJpaDao <Producto> {
         return insumos;
 
       }
+    public List<Producto> getProductosGenericos(String marca, String descripcion, String presentacion) {
+        //emf.createEntityManager Levanta el contexto del JPA
+        String SQL = "SELECT o FROM Producto o WHERE UPPER(o.codTipoProducto.descripcion) like upper('ProductoGenerico')";
+
+        if (marca != null && !marca.equals("99999") && !marca.equals("")) {
+            SQL = SQL + " and UPPER(o.codMarca.codMarca) = upper(:marca)";
+        }
+
+        if (descripcion != null && !descripcion.equals("")) {
+            SQL = SQL + " and UPPER(o.descripcion) like upper(:descripcion)";
+        }
+
+        if (presentacion != null && !presentacion.equals("99999") && !presentacion.equals("")) {
+            SQL = SQL + " and UPPER(o.codPresentacion.codPresentacion) = upper(:presentacion)";
+        }
+
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        if (marca != null && !marca.equals("99999") && !marca.equals("")) {
+            q.setParameter("marca", marca);
+        }
+
+        if (descripcion != null && !descripcion.equals("")) {
+            q.setParameter("descripcion", "%"+descripcion+"%");
+        }
+
+       if (presentacion != null && !presentacion.equals("99999") && !presentacion.equals("")) {
+            q.setParameter("presentacion", presentacion);
+        }
+
+        List<Producto> insumos = q.getResultList();
+        em.close();
+
+        return insumos;
+
+      }
 
 //public static void main (String[] v) {
 //        ProductoController productoController = new ProductoController();
