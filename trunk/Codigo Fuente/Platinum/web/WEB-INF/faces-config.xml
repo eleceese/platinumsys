@@ -244,7 +244,7 @@
     <managed-bean>
         <managed-bean-name>ABMSolicitudesInternasAprobacion</managed-bean-name>
         <managed-bean-class>platinum.ABMSolicitudesInternasAprobacion</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
+        <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
         <managed-bean-name>LSTClientesEstadisticaVenta</managed-bean-name>
