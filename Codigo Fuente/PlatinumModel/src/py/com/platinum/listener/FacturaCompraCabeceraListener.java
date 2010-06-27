@@ -4,10 +4,12 @@
  */
 package py.com.platinum.listener;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import javax.persistence.PostUpdate;
 import py.com.platinum.controller.ExistenciaController;
+import py.com.platinum.controller.HistoricoCostoController;
 import py.com.platinum.entity.Existencia;
 import py.com.platinum.entity.FacturaCompraCab;
 import py.com.platinum.entity.FacturaCompraDet;
@@ -54,6 +56,37 @@ public class FacturaCompraCabeceraListener {
 
                 //Actualizamos
                 existenciaController.update(existencia);
+            }
+
+        }
+        if (cab.getEstado().toString().equals("C")) {
+
+
+            //Actualizamos el detalle
+            List<FacturaCompraDet> lstDet = cab.getFacturaCompraDetList();
+
+            //Recorremos la lista de los detalles
+            for (int i = 0; i < lstDet.size(); i++) {
+                //Obtenemos el detalle
+                FacturaCompraDet det = lstDet.get(i);
+
+                //Actualizamos la existencia
+                existencia = existenciaController.getExistencia(null, det.getCodProducto().getCodProducto(), det.getCodFacComCab().getCodDeposito().getCodDeposito());
+
+                //Obtenemos la cantidad en deposito
+                BigInteger cantidad = existencia.getCantidadExistencia();
+
+                //Reponemos la cantidad vendida
+                cantidad = BigInteger.valueOf(cantidad.longValue() + det.getCantidad());
+
+                //Asignamos la cantidad nueva
+                existencia.setCantidadExistencia(cantidad);
+
+                //Actualizamos
+                existenciaController.update(existencia);
+
+                //Calculamos historico de costo
+                new HistoricoCostoController().calcularCostoPromedio(det.getCodProducto().getCodProducto(), BigInteger.valueOf(det.getPrecioUni()), BigDecimal.valueOf(det.getCantidad()));
             }
 
         }
