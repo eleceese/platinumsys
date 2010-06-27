@@ -12,6 +12,7 @@ import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.component.Label;
 import com.sun.webui.jsf.component.PageAlert;
 import com.sun.webui.jsf.component.RadioButton;
+import com.sun.webui.jsf.component.Tab;
 import com.sun.webui.jsf.component.TabSet;
 import com.sun.webui.jsf.component.Table;
 import com.sun.webui.jsf.component.TableRowGroup;
@@ -24,13 +25,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
+import javax.faces.event.ValueChangeEvent;
 import py.com.platinum.controller.EmpleadoController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.SolicitudInternaController;
+import py.com.platinum.controller.TipoProductoController;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.Empleado;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.SolicitudInterna;
+import py.com.platinum.entity.TipoProducto;
 import py.com.platinum.utils.StringUtils;
 
 /**
@@ -308,15 +312,6 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
     public void setUiTxtObservacion(TextArea ta) {
         this.uiTxtObservacion = ta;
     }
-    private TextField uiTxtFechaAprobacion = new TextField();
-
-    public TextField getUiTxtFechaAprobacion() {
-        return uiTxtFechaAprobacion;
-    }
-
-    public void setUiTxtFechaAprobacion(TextField tf) {
-        this.uiTxtFechaAprobacion = tf;
-    }
     private TextField uiTxtCantidadAprobada = new TextField();
 
     public TextField getUiTxtCantidadAprobada() {
@@ -379,6 +374,51 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
 
     public void setUiProductoFil(DropDown dd) {
         this.uiProductoFil = dd;
+    }
+    private TextField uiTxtNombreAprobador = new TextField();
+
+    public TextField getUiTxtNombreAprobador() {
+        return uiTxtNombreAprobador;
+    }
+
+    public void setUiTxtNombreAprobador(TextField tf) {
+        this.uiTxtNombreAprobador = tf;
+    }
+    private Calendar uiCalFechaAprobacion = new Calendar();
+
+    public Calendar getUiCalFechaAprobacion() {
+        return uiCalFechaAprobacion;
+    }
+
+    public void setUiCalFechaAprobacion(Calendar c) {
+        this.uiCalFechaAprobacion = c;
+    }
+    private Button uiBtnAprobar = new Button();
+
+    public Button getUiBtnAprobar() {
+        return uiBtnAprobar;
+    }
+
+    public void setUiBtnAprobar(Button b) {
+        this.uiBtnAprobar = b;
+    }
+    private Button uiBtnRechazar = new Button();
+
+    public Button getUiBtnRechazar() {
+        return uiBtnRechazar;
+    }
+
+    public void setUiBtnRechazar(Button b) {
+        this.uiBtnRechazar = b;
+    }
+    private Tab tab1 = new Tab();
+
+    public Tab getTab1() {
+        return tab1;
+    }
+
+    public void setTab1(Tab t) {
+        this.tab1 = t;
     }
 
     // </editor-fold>
@@ -458,10 +498,13 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
             addUpdatePanel.setRendered(true);
             uiBtnGuardarNuevo.setRendered(true);
             uiBtnGuardarEditar.setRendered(false);
+            uiBtnAprobar.setRendered(false);
+            uiBtnRechazar.setRendered(false);
             tabSetDatosAprobacion.setRendered(true);
             gridPanelButtonDet.setRendered(true);
             uiTxtDescProducto.setText("");
             uiTxtCantidad.setText("");
+
             this.limpiarCampos();
         } else if (updateRequest) {
             //if (getTableRowGroup1().getSelectedRowsCount() > 0) {
@@ -471,6 +514,21 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
             addUpdatePanel.setRendered(true);
             uiBtnGuardarNuevo.setRendered(false);
             uiBtnGuardarEditar.setRendered(true);
+            uiBtnAprobar.setRendered(false);
+            uiBtnRechazar.setRendered(false);
+            tabSetDatosAprobacion.setRendered(true);
+            gridPanelButtonDet.setRendered(true);
+            cargarCampos();
+        } else if (approveRequest) {
+            //if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            gridPanelBuscar.setRendered(false);
+            table1.setRendered(false);
+            buttonPanel.setRendered(false);
+            addUpdatePanel.setRendered(true);
+            uiBtnGuardarNuevo.setRendered(false);
+            uiBtnGuardarEditar.setRendered(false);
+            uiBtnAprobar.setRendered(true);
+            uiBtnRechazar.setRendered(true);
             tabSetDatosAprobacion.setRendered(true);
             gridPanelButtonDet.setRendered(true);
             cargarCampos();
@@ -489,7 +547,7 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
             this.uiProductoFil.setSelected("-1");
             cargarListaTodosEmpleados();
             cargarListaTodosProductos();
-            
+            buscar();
         }
     // Refresh the users data array in the session bean to to show
     }
@@ -561,6 +619,9 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
     }
 
     private boolean addRequest = false;
+    private boolean approveRequest = false;
+        private boolean aprobado = false;
+        private boolean rechazado = false;
     private boolean updateRequest = false;
     private boolean errorValidacion = false;
     private Empleado empleado;
@@ -572,16 +633,35 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
     public String addButton_action() {
         addRequest = true;
         e = null;
-        deshabilitarCampos(false);
+
+
         this.lblEstado.setRendered(false);
         this.gridPanelEstado.setRendered(false);
+        this.uiCalFecha.setSelectedDate(new Date());
         getSessionBean1().setTituloPagina("Nueva Solicitud Interna");
+
+            this.uiTxtCodProducto.setDisabled(false);
+            this.uiTxtDescProducto.setDisabled(true);
+            this.uiTxtCodEmpleado.setDisabled(false);
+            this.uiTxtNombreEmpleado.setDisabled(true);
+            this.uiCalFecha.setDisabled(false);
+            this.uiTxtCantidad.setDisabled(false);
+            this.uiTxtObservacion.setDisabled(false);
+
+
+            this.uiTxtCantidadAprobada.setDisabled(true);
+            this.uiCalFechaAprobacion.setDisabled(true);
+            this.uiTxtUsuarioAprobacion.setDisabled(true);
+            this.uiLstEstado.setDisabled(true);
+
+
+
         return null;
     }
 
     public String updateButton_action() {
-        updateRequest = true;
-        e = null;
+        
+        SolicitudInterna e = null;
          if (getTableRowGroup1().getSelectedRowsCount() > 0) {
             RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
             //Obtenemos la lista de
@@ -591,16 +671,40 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
             int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
 
             //Elemento seleccionado
-            SolicitudInterna e = l[rowId];
+            e = l[rowId];
 
             //Guardamos el id d la Solicitud en la session
             getSessionBean1().setId(e.getCodSolicitud());
-        }
-  
+                if (e.getEstado().equals("P")) {
+                        updateRequest = true;
 
-        this.lblEstado.setRendered(true);
-        this.gridPanelEstado.setRendered(true);
-        getSessionBean1().setTituloPagina("Editar Solicitud Interna");
+                        this.uiTxtCodProducto.setDisabled(true);
+                        this.uiTxtDescProducto.setDisabled(true);
+                        this.uiTxtCodEmpleado.setDisabled(true);
+                        this.uiTxtNombreEmpleado.setDisabled(true);
+                        this.uiCalFecha.setDisabled(true);
+                        this.uiTxtCantidad.setDisabled(false);
+                        this.uiTxtObservacion.setDisabled(false);
+
+                        this.uiTxtCantidadAprobada.setDisabled(true);
+                        this.uiCalFechaAprobacion.setDisabled(true);
+                        this.uiTxtUsuarioAprobacion.setDisabled(true);
+                        this.uiLstEstado.setDisabled(true);
+
+                        this.lblEstado.setRendered(true);
+                        this.gridPanelEstado.setRendered(true);
+                        getSessionBean1().setTituloPagina("Editar Solicitud Interna");
+                }else{
+
+                        this.pageAlert1.setType("error");
+                        this.pageAlert1.setTitle("No se puede modificar una solicitud que ya ha sido Procesada");
+                        this.pageAlert1.setSummary("");
+                        this.pageAlert1.setDetail("");
+                        this.pageAlert1.setRendered(true);
+                }
+         }
+
+
         return null;
     }
 
@@ -694,18 +798,30 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
         //Validamos los campos
         validarCampos();
 
-        // Apagamos la bandera de nuevo registro
-        this.updateRequest = false;
-        
+       
         //Si no hay error de validacion insertamos el registro
         if (!errorValidacion) {
             //Set de los artributos
-            r.setCantidad(Long.valueOf(uiTxtCantidad.getText().toString()));
-            r.setCodEmpleado(empleado);
-            r.setCodProducto(producto);
-            r.setFecha(uiCalFecha.getSelectedDate());
-            r.setFechaModif(new Date());
-            r.setObservacion(uiTxtObservacion.getText().toString());
+            if (approveRequest) {
+                Empleado e = new EmpleadoController().findById(Long.valueOf(uiTxtUsuarioAprobacion.getText().toString()));
+                r.setCodEmpleadoAprobador(e);
+                r.setFechaAprobacion(uiCalFechaAprobacion.getSelectedDate());
+                if (aprobado) {
+                        r.setCantidadAprobada(Long.valueOf(uiTxtCantidadAprobada.getText().toString()));
+                        r.setEstado("A");
+                }else{
+                        r.setCantidad(Long.valueOf("0"));
+                        r.setEstado("R");
+                }
+           }else{
+                r.setCantidad(Long.valueOf(uiTxtCantidad.getText().toString()));
+                r.setCodEmpleado(empleado);
+                r.setCodProducto(producto);
+                r.setFecha(uiCalFecha.getSelectedDate());
+                r.setFechaModif(new Date());
+                r.setObservacion(uiTxtObservacion.getText().toString());
+            }
+            
 
             //Insertamos el nuevo registro
             ControllerResult cr = new SolicitudInternaController().update(r);
@@ -717,6 +833,10 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
                 this.pageAlert1.setType("information");
             }
 
+              // Apagamos la bandera de nuevo registro
+        this.updateRequest = false;
+        this.approveRequest = false;
+       
             buscar();
             this.pageAlert1.setTitle(cr.getMsg());
             this.pageAlert1.setSummary("");
@@ -732,6 +852,8 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
         // case name where null will return to the same page.
         addRequest = false;
         updateRequest = false;
+        approveRequest = false;
+        errorValidacion = false;
         return null;
     }
 
@@ -744,7 +866,7 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
         uiTxtCodEmpleado.setText(null);
         uiTxtCodProducto.setText(null);
         uiTxtDescProducto.setText(null);
-        uiTxtFechaAprobacion.setText(null);
+        uiCalFechaAprobacion.setSelectedDate(null);
         uiTxtNombreEmpleado.setText(null);
         uiTxtObservacion.setText(null);
         uiCalFecha.setSelectedDate(null);
@@ -759,21 +881,40 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
         e = new SolicitudInternaController().findById(getSessionBean1().getId());
 
         uiTxtCantidad.setText(e.getCantidad());
-        uiTxtCantidadAprobada.setText(e.getCantidadAprobada());
         uiTxtCodEmpleado.setText(e.getCodEmpleado().getCodEmpleado());
         uiTxtCodProducto.setText(e.getCodProducto().getCodProducto());
         uiTxtDescProducto.setText(e.getCodProducto().getDescripcion());
-        uiTxtUsuarioAprobacion.setText(e.getUsuarioAprobacion());
-//        uiTxtFechaAprobacion.setText(new SimpleDateFormat("dd/MM/yyyy").format(e.getFechaAprobacion()));
         uiTxtNombreEmpleado.setText(e.getCodEmpleado().getApellidoEmpleado() + ", " + e.getCodEmpleado().getNombreEmpleado());
         uiTxtObservacion.setText(e.getObservacion());
         uiCalFecha.setSelectedDate(e.getFecha());
+        uiLstEstado.setSelected(e.getEstado().toString());
 
-        if (updateRequest && !e.getEstado().equals("P")) {
-            deshabilitarCampos(true);
-        }else{
-            deshabilitarCampos(false);
+        if (approveRequest) {
+            if (e.getCodEmpleadoAprobador() != null) {
+                uiTxtUsuarioAprobacion.setText(e.getCodEmpleadoAprobador().getCodEmpleado().toString());
+                String empleado = e.getCodEmpleadoAprobador().getNombreEmpleado().toString()+", "+e.getCodEmpleadoAprobador().getNombreEmpleado().toString();
+                uiTxtNombreAprobador.setText(empleado);
+            }else{
+                Empleado em = new EmpleadoController().findById(Long.valueOf(getSessionBean1().getCodEmpleado()));
+                uiTxtUsuarioAprobacion.setText(em.getCodEmpleado().toString());
+                String empleado = em.getNombreEmpleado().toString()+", "+em.getNombreEmpleado().toString();
+                uiTxtNombreAprobador.setText(empleado);
+
+            }
+
+            if (e.getCantidadAprobada() != 0) {
+                uiTxtCantidadAprobada.setText(e.getCantidadAprobada());
+            }
+
+            if (e.getFechaAprobacion() != null) {
+                uiCalFechaAprobacion.setSelectedDate(e.getFechaAprobacion());
+            }else{
+                uiCalFechaAprobacion.setSelectedDate(new Date());
+            }
+
         }
+
+
     }
 
 
@@ -821,6 +962,12 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
             if (producto == null) {
                 info(uiTxtCodProducto, "Producto ingresado no existe");
                 r = true;
+            }else{
+                TipoProducto t = new TipoProductoController().findById(producto.getCodTipoProducto().getCodTipoProducto());
+                if (!t.getDescripcion().toString().equals("ProductoGenerico") ) {
+                    info(uiTxtCodProducto, "El Producto debe ser Generico");
+                    r = true;
+                }
             }
         }
 
@@ -832,6 +979,7 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
                 info(uiTxtCantidad, "Cantidad ingresada, debe ser un Numero Entero");
                 r = true;
             }
+
         }
 
         if (uiCalFecha.getSelectedDate()== null) {
@@ -852,11 +1000,56 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
             }
         }
 
-        errorValidacion = r;
+        // VALIDACIONES PARA LA APROBACION
+        if (approveRequest) {
+                    if (uiCalFechaAprobacion.getSelectedDate()== null) {
+                        info(uiCalFecha, "Campo obligatorio, favor ingrese una fecha de Aprobacion");
+                        r = true;
+                    } else {
+                        if (uiCalFechaAprobacion.getSelectedDate().after(new Date()) ) {
+                            info(uiCalFecha, "Fecha de aprobacion ingresada debe ser menor o igual a la fecha actual");
+                            r = true;
+                        }
+                    }
+
+                    if (uiTxtUsuarioAprobacion.getText() == null || uiTxtUsuarioAprobacion.getText().equals("")) {
+                        info(uiTxtCodEmpleado, "Campo obligatorio, favor ingrese el empleado aprobador");
+                        r = true;
+                    } else {
+                        empleadoController = new EmpleadoController();
+                        empleado = empleadoController.findById(Long.valueOf(uiTxtUsuarioAprobacion.getText().toString()));
+
+                        if (empleado == null) {
+                            info(uiTxtCodEmpleado, "Empleado aprobador ingresado no existe");
+                            r = true;
+                        }
+                    }
+                    if (aprobado) {
+                                  if (uiTxtCantidadAprobada.getText() == null || uiTxtCantidadAprobada.getText().equals("")) {
+                                    info("Campo obligatorio, favor ingrese una cantidad aprobada para el Producto");
+                                    r = true;
+                                  } else {
+                                    if (!StringUtils.esNumero(uiTxtCantidadAprobada.getText().toString())) {
+                                        info("Cantidad aprobada, debe ser un Numero Entero");
+                                        r = true;
+                                    }else{
+                                        if (Long.valueOf(uiTxtCantidadAprobada.getText().toString()) > Long.valueOf(uiTxtCantidad.getText().toString())) {
+                                            info("Cantidad aprobada no puede ser mayor a cantidad Pedida");
+                                            r = true;
+                                        }else if(Long.valueOf(uiTxtCantidadAprobada.getText().toString()) <= 0){
+                                            info("Cantidad aprobada debe ser mayor a 0");
+                                            r = true;
+                                        }
+                                    }
+                                  }
+                      }
+            }
+                    errorValidacion = r;
 
         //result
         return r;
-    }
+    
+}
 
     public String uiBtnBuscar_action() {
         //ocultamos el pageAlert
@@ -1004,6 +1197,87 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
             option.setValue("-1");
             listaProductosOp[listaProductos.length] = option;
      }
+
+    public String aprobacionButton_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+      
+        SolicitudInterna e = null;
+         if (getTableRowGroup1().getSelectedRowsCount() > 0) {
+            RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+            //Obtenemos la lista de
+            SolicitudInterna[] l = getSessionBean1().getListaSolicitud();
+
+            //Posicion en la grilla del elemento seleccionado
+            int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+
+            //Elemento seleccionado
+            e = l[rowId];
+
+            //Guardamos el id d la Solicitud en la session
+            getSessionBean1().setId(e.getCodSolicitud());
+
+                    if (e.getEstado().equals("P")) {
+
+                                approveRequest = true;
+                                this.uiTxtCodProducto.setDisabled(true);
+                                this.uiTxtDescProducto.setDisabled(true);
+                                this.uiTxtCodEmpleado.setDisabled(true);
+                                this.uiTxtNombreEmpleado.setDisabled(true);
+                                this.uiCalFecha.setDisabled(true);
+                                this.uiTxtCantidad.setDisabled(true);
+                                this.uiTxtObservacion.setDisabled(true);
+
+                                this.uiTxtCantidadAprobada.setDisabled(false);
+                                this.uiCalFechaAprobacion.setDisabled(true);
+                                this.uiTxtUsuarioAprobacion.setDisabled(true);
+                                this.uiLstEstado.setDisabled(true);
+
+                                this.uiCalFechaAprobacion.setSelectedDate(new Date());
+                                this.uiTxtCantidadAprobada.setText("");
+                                this.uiTxtUsuarioAprobacion.setText("");
+                                this.uiTxtNombreAprobador.setText("");
+
+                            this.lblEstado.setRendered(true);
+                            this.gridPanelEstado.setRendered(true);
+                            getSessionBean1().setTituloPagina("Editar Solicitud Interna");
+
+
+
+                    }else{
+
+                            this.pageAlert1.setType("error");
+                            this.pageAlert1.setTitle("No se puede modificar una solicitud que ya ha sido Procesada");
+                            this.pageAlert1.setSummary("");
+                            this.pageAlert1.setDetail("");
+                            this.pageAlert1.setRendered(true);
+
+                    }
+
+         }
+        return null;
+    }
+
+    public String uiBtnRechazar_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        aprobado = false;
+        rechazado = true;
+        this.uiTxtCantidadAprobada.setText("0");
+        uiBtnGuardarEditar_action();
+
+        return null;
+    }
+
+    public String uiBtnAprobar_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        aprobado = true;
+        rechazado =false;
+        uiBtnGuardarEditar_action();
+        return null;
+    }
+
 
 ////// FIN CARGA DE LISTA DE PRODUCTOS
 

@@ -522,4 +522,9 @@
         <managed-bean-class>platinum.ABMReciboDinero</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupProductosTerInsMat</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupProductosTerInsMat</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 </faces-config>

@@ -42,7 +42,7 @@
                         <div>
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
-                        <div>
+                        <div style="height: 219px; width: 1032px">
                             <h:panelGrid binding="#{ABMComprasProveedor.mainContainer}" id="mainContainer"
                                 style="height: 96px; left: 288px; top: 216px; position: absolute" width="768">
                                 <h:panelGrid binding="#{ABMComprasProveedor.gridPanelBuscar}" columns="3" id="gridPanelBuscar">
@@ -157,7 +157,7 @@
                                         <h:panelGrid binding="#{ABMComprasProveedor.gridPanelDetLin1}" columns="7" id="gridPanelDetLin1" style="height: 24px" width="743">
                                             <webuijsf:hyperlink id="hyperlink2"
                                                 onClick="doPopup('form1:uiTxtCodProducto_field', 'form1:uiTxtDescProducto_field')" target="popup"
-                                                text="Producto" url="/faces/popup/popupMateriasInsumos.jsp"/>
+                                                text="Producto" url="/faces/popup/popupProductosTerInsMat.jsp"/>
                                             <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtCodProducto}" columns="10" id="uiTxtCodProducto"/>
                                             <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtDescProducto}" columns="30" id="uiTxtDescProducto" onFocus="document.getElementById('form1:uiTxtNroSolicitud_field').focus(); return false;"/>
                                             <webuijsf:hyperlink id="hyperlink3"
