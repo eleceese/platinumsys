@@ -19,7 +19,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import py.com.platinum.listener.FacturaCompraDetalleListener;
 
 /**
  *
@@ -27,7 +26,6 @@ import py.com.platinum.listener.FacturaCompraDetalleListener;
  */
 @Entity
 @Table(name = "FACTURA_COMPRA_DET")
-@EntityListeners(value=FacturaCompraDetalleListener.class)
 @SequenceGenerator(name="FAC_COMP_DET_SEQUENCE", sequenceName="SQ_FACTURA_COMPRA_DET", initialValue=1, allocationSize=1)
 public class FacturaCompraDet implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -50,10 +48,10 @@ public class FacturaCompraDet implements Serializable {
     @Column(name = "USUARIO_MODIF")
     private String usuarioModif;
     @Column(name = "FECHA_ALTA")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaAlta;
     @Column(name = "FECHA_MODIF")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModif;
     @JoinColumn(name = "COD_FAC_COM_CAB", referencedColumnName = "COD_FAC_COM_CAB")
     @ManyToOne
