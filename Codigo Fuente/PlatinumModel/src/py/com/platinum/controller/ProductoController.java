@@ -107,7 +107,7 @@ public class ProductoController extends AbstractJpaDao <Producto> {
 
     public List<Producto> getInsumosMaterias(String marca, String descripcion, String presentacion) {
         //emf.createEntityManager Levanta el contexto del JPA
-        String SQL = "SELECT o FROM Producto o WHERE UPPER(o.codTipoProducto.descripcion) like upper('Insumo') or UPPER(o.codTipoProducto.descripcion) like upper('MateriaPrima')";
+        String SQL = "SELECT o FROM Producto o WHERE (UPPER(o.codTipoProducto.descripcion) like upper('Insumo') or UPPER(o.codTipoProducto.descripcion) like upper('MateriaPrima'))";
 
         if (marca != null && !marca.equals("99999") && !marca.equals("")) {
             SQL = SQL + " and UPPER(o.codMarca.codMarca) = upper(:marca)";
@@ -145,7 +145,7 @@ public class ProductoController extends AbstractJpaDao <Producto> {
       }
     public List<Producto> getInsumosMateriasFinalesSemiter(String marca, String descripcion, String presentacion) {
         //emf.createEntityManager Levanta el contexto del JPA
-        String SQL = "SELECT o FROM Producto o WHERE UPPER(o.codTipoProducto.descripcion) like upper('Insumo') or UPPER(o.codTipoProducto.descripcion) like upper('MateriaPrima') or UPPER(o.codTipoProducto.descripcion) like upper('Terminado')";
+        String SQL = "SELECT o FROM Producto o WHERE (UPPER(o.codTipoProducto.descripcion) like upper('Insumo') or UPPER(o.codTipoProducto.descripcion) like upper('MateriaPrima') or UPPER(o.codTipoProducto.descripcion) like upper('Terminado'))";
 
         if (marca != null && !marca.equals("99999") && !marca.equals("")) {
             SQL = SQL + " and UPPER(o.codMarca.codMarca) = upper(:marca)";
@@ -183,7 +183,7 @@ public class ProductoController extends AbstractJpaDao <Producto> {
       }
     public List<Producto> getProductosGenericos(String marca, String descripcion, String presentacion) {
         //emf.createEntityManager Levanta el contexto del JPA
-        String SQL = "SELECT o FROM Producto o WHERE UPPER(o.codTipoProducto.descripcion) like upper('ProductoGenerico')";
+        String SQL = "SELECT o FROM Producto o WHERE (UPPER(o.codTipoProducto.descripcion) like upper('ProductoGenerico'))";
 
         if (marca != null && !marca.equals("99999") && !marca.equals("")) {
             SQL = SQL + " and UPPER(o.codMarca.codMarca) = upper(:marca)";

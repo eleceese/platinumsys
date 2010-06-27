@@ -17,10 +17,12 @@ import py.com.platinum.entity.Deposito;
 import py.com.platinum.entity.Empleado;
 import py.com.platinum.entity.EntradaSalidaCabecera;
 import py.com.platinum.entity.EntradaSalidaDetalle;
+import py.com.platinum.entity.Equivalencia;
 import py.com.platinum.entity.FacturaCompraCab;
 import py.com.platinum.entity.FacturaCompraDet;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.Existencia;
+import py.com.platinum.entity.SolicitudInterna;
 import py.com.platinum.utilsenum.FacturaCompraEstado;
 
 /**
@@ -122,6 +124,45 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
 
                     //Persistimos
                     em.persist(det);
+
+
+                    ///// Actualizacion de la utilizacion a traves de la equivalencia
+
+                                Producto p = null;
+                                SolicitudInterna solIn = null;
+                                p = det.getCodProducto();
+
+                                Long cantidad = null;
+                                cantidad = det.getCantidad();
+                                if (det.getNroSolicitud() !=null && det.getNroSolicitud().getCodSolicitud() != null) {
+                                    solIn  = det.getNroSolicitud();
+                                }
+
+                                if (solIn != null && p != null && cantidad != null) {
+
+                                        SolicitudInterna sol = new SolicitudInterna();
+                                        SolicitudInternaController sController = new SolicitudInternaController();
+                                        sol = sController.getSolicitudPorEquiv(det.getNroSolicitud().getCodSolicitud(),p.getCodProducto());
+
+                                            Equivalencia eq = new EquivalenciaController().getEqPorProductos(sol.getCodProducto().getCodProducto(), p.getCodProducto());
+                                            double relacion = eq.getRelacion().doubleValue();
+                                            double retirado = relacion * cantidad;
+                                            sol.setCantidadCompra(sol.getCantidadCompra() + Math.round(retirado));
+                                            em.merge(sol);
+                                     }
+
+                    //////////////////
+
+
+
+
+
+
+
+
+
+
+
                 }
             }
 
@@ -179,10 +220,11 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
                             entSalCab.setCodDeposito(d);
                             entSalCab.setCodEmpleado(emp);
                             entSalCab.setCodEncargado(emp);
-                            entSalCab.setFechaAlta(cabecera.getFecha());
+                            entSalCab.setFechaEntradaSalida(cabecera.getFecha());
                             entSalCab.setNroComprobante(cabecera.getCodFacComCab());
                             entSalCab.setTipoComprobante(cabecera.getTipo().getCodTipo());
                             entSalCab.setObservacion(textoCabecera);
+                            entSalCab.setFechaAlta(new Date());
                             em.persist(entSalCab);
 
             //Actualizamos el detalle
@@ -216,6 +258,7 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
                             entSalDet.setCodProducto(p);
                             entSalDet.setTipoEntradaSalida("S");
                             entSalDet.setCantidadEntSal(BigInteger.valueOf(det.getCantidad()));
+                                cantidadExistencia = cantidadExistencia + det.getCantidad();
                             entSalDet.setExistencia(BigDecimal.valueOf(cantidadExistencia));
                             entSalDet.setFechaAlta(cabecera.getFecha());
                             em.persist(entSalDet);

@@ -7,6 +7,7 @@ package py.com.platinum.controller;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.entity.SolicitudInterna;
@@ -224,5 +225,39 @@ public List<SolicitudInterna> getSolicitudInternas(String responsable, String pr
       }
 
 
+ public SolicitudInterna getSolicitudPorEquiv(Long codSolicitud, Long codRecurso) {
+
+         String SQL = "SELECT o FROM SolicitudInterna o , " +
+                 "Equivalencia e " +
+                 "WHERE e.codProductoFin.codProducto = :codRecurso " +
+                 "and o.codSolicitud = :codSolicitud " +
+                 "and o.codProducto.codProducto = e.codProductoGen.codProducto ";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+
+        if (codSolicitud != null) {
+            q.setParameter("codSolicitud", codSolicitud);
+        }
+
+        if (codRecurso != null) {
+            q.setParameter("codRecurso", codRecurso);
+        }
+
+        SolicitudInterna r = new SolicitudInterna();
+
+         try {
+             r = (SolicitudInterna) q.getSingleResult();
+         } catch (NoResultException e) {
+             r = null;
+         }
+
+        em.close();
+
+        //retornamos la lista
+        return r;
+
+     }
 
 }

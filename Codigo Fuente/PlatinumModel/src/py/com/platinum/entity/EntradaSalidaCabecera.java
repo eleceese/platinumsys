@@ -55,10 +55,10 @@ public class EntradaSalidaCabecera implements Serializable {
     @Column(name = "USUARIO_MODIF")
     private String usuarioModif;
     @Column(name = "FECHA_ALTA")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaAlta;
     @Column(name = "FECHA_MODIF")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModif;
     @JoinColumn(name = "COD_DEPOSITO", referencedColumnName = "COD_DEPOSITO")
     @ManyToOne(optional = false)

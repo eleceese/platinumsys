@@ -45,7 +45,7 @@ public class FacturaCompraCab implements Serializable {
     @Column(name = "NRO_FACTURA")
     private String nroFactura;
     @Column(name = "FECHA")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
     @JoinColumn(name = "TIPO", referencedColumnName = "COD_TIPO")
     @ManyToOne
@@ -64,10 +64,10 @@ public class FacturaCompraCab implements Serializable {
     @Column(name = "USUARIO_MODIF")
     private String usuarioModif;
     @Column(name = "FECHA_ALTA")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaAlta;
     @Column(name = "FECHA_MODIF")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModif;
     @OneToMany(mappedBy = "codFacComCab", fetch=FetchType.EAGER)
     private Set<FacturaCompraDet> facturaCompraDet;

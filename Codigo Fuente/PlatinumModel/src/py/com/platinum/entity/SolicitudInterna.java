@@ -81,6 +81,9 @@ public class SolicitudInterna implements Serializable {
     @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(optional = false)
     private Empleado codEmpleado;
+    @JoinColumn(name = "COD_EMPLEADO_APROBADOR", referencedColumnName = "COD_EMPLEADO")
+    @ManyToOne
+    private Empleado codEmpleadoAprobador;
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
     @ManyToOne(optional = false)
     private Producto codProducto;
@@ -204,6 +207,14 @@ public class SolicitudInterna implements Serializable {
 
     public void setFechaModif(Date fechaModif) {
         this.fechaModif = fechaModif;
+    }
+
+    public Empleado getCodEmpleadoAprobador() {
+        return codEmpleadoAprobador;
+    }
+
+    public void setCodEmpleadoAprobador(Empleado codEmpleadoAprobador) {
+        this.codEmpleadoAprobador = codEmpleadoAprobador;
     }
 
 
