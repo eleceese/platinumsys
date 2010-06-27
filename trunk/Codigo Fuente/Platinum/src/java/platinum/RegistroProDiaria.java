@@ -631,7 +631,7 @@ public class RegistroProDiaria extends AbstractPageBean {
                         produccionDiaria.setCantidad(Long.valueOf(this.uiDetCantidad.getText().toString()));
                         produccionDiaria.setTiempoInvertido(Long.valueOf(this.uiDetTiempo.getText().toString()));
                         produccionDiaria.setFecha(this.uiFechaAct.getSelectedDate());
-
+                        produccionDiaria.setFecha(new Date());
                         produccionesDiarias.add(produccionDiaria);
                         produccionesDiariasArray = (ProduccionDiaria[]) produccionesDiarias.toArray(new ProduccionDiaria[0]);
                         controllerResult = produccionDiariaController.create(produccionDiaria);

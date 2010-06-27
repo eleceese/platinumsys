@@ -811,7 +811,7 @@ public class ABMMovimientosDeposito extends AbstractPageBean {
           entradaSalidaCabecera.setCodEmpleado(empleadoController.findById(Long.valueOf(this.uiResponsable2Codigo.getText().toString())));
           entradaSalidaCabecera.setFechaEntradaSalida(this.uiFecha.getSelectedDate());
           entradaSalidaCabecera.setObservacion(this.uiObservacion.getText().toString());
-
+          entradaSalidaCabecera.setFechaAlta(new Date());
          detallesEntradaSalida = (EntradaSalidaDetalle[]) detalleEntradaSalidaList.toArray(new EntradaSalidaDetalle[0]);
 
           entradaSalidaCabeceraController = new EntradaSalidaCabeceraController();
@@ -1101,14 +1101,8 @@ private EntradaSalidaCabecera cabeceraEntradaSalida;
                            if (solicitud != null) {
                             detalleEntradaSalida.setCodSolicitud(solicitud);
                            }
-
                            detalleEntradaSalida.setFechaAlta(this.uiFecha.getSelectedDate());
-
-
                            detalleEntradaSalidaList.add(detalleEntradaSalida);
-
-
-
             }else{
 
                 this.uiDetalleProdCod.setDisabled(false);
@@ -1131,11 +1125,7 @@ private EntradaSalidaCabecera cabeceraEntradaSalida;
                             if (uiDetalleCodSolic.getText() != null && !uiDetalleCodSolic.getText().equals("")) {
                                     solicitud = solicitudInternaController.findById(Long.valueOf(Long.valueOf(this.uiDetalleCodSolic.getText().toString())));
                             }
-
                            EntradaSalidaDetalle entradaSalidaDetalle = detalleEntradaSalidaList.get(Integer.valueOf(itemDet).intValue());
-
-
-
                            entradaSalidaDetalle.setCodProducto(producto);
                            entradaSalidaDetalle.setCantidadEntSal(BigInteger.valueOf(Long.valueOf(this.uiDetalleCant.getText().toString())));
                            entradaSalidaDetalle.setTipoEntradaSalida(this.uiDetalleTipo.getSelected().toString());
@@ -1242,8 +1232,6 @@ if (uiDetalleCant.getText() == null || uiDetalleCant.getText().equals("") ||!Str
 
             }
         }
-
-
 
     if (otDet != null && p != null && cantidad != null) {
 

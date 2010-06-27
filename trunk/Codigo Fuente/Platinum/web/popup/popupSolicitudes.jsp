@@ -16,20 +16,26 @@
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
                         <webuijsf:table augmentTitle="false" id="table1" paginateButton="true" paginationControls="true"
-                            style="height: 77px; left: 0px; top: 0px; position: absolute" title="Seleccione una Solicitud..." width="504">
+                            style="height: 77px; left: 0px; top: 0px; position: absolute" title="Seleccione una Solicitud..." width="576">
                             <f:facet name="actionsTop"/>
                             <webuijsf:tableRowGroup id="tableRowGroup1" rows="20" sourceData="#{SessionBean1.listaSolicitud}" sourceVar="currentRow">
                                 <webuijsf:tableColumn headerText="Solicitud" id="tableColumn1">
                                     <webuijsf:hyperlink id="hyperlink1"
                                         onClick="doSave('#{currentRow.value['codProducto'].codProducto}', '#{currentRow.value['codProducto'].descripcion}', '#{currentRow.value['cantidadAprobada']}', '#{currentRow.value['codSolicitud']}', '#{currentRow.value['codProducto'].codUnidadMedida.codUnidadMedida}')" text="#{currentRow.value['codSolicitud']}"/>
                                 </webuijsf:tableColumn>
-                                <webuijsf:tableColumn headerText="Fecha" id="tableColumn2" width="70">
+                                <webuijsf:tableColumn headerText="Estado" id="tableColumn3">
+                                    <webuijsf:staticText id="staticText2" text="#{currentRow.value['estado']}"/>
+                                </webuijsf:tableColumn>
+                                <webuijsf:tableColumn headerText="Fecha" id="tableColumn2" width="81">
                                     <webuijsf:staticText converter="#{SessionBean1.dateTimeConverter}" id="staticText1" text="#{currentRow.value['fecha']}"/>
                                 </webuijsf:tableColumn>
                                 <webuijsf:tableColumn binding="#{popup$popupSolicitudes.tableColumn4}" headerText="Producto" id="tableColumn4" width="203">
                                     <webuijsf:staticText id="staticText3" text="#{currentRow.value['codProducto'].descripcion}"/>
                                 </webuijsf:tableColumn>
-                                <webuijsf:tableColumn headerText="Cantidad" id="tableColumn5">
+                                <webuijsf:tableColumn headerText="Cant" id="tableColumn6">
+                                    <webuijsf:staticText id="staticText5" text="#{currentRow.value['cantidad']}"/>
+                                </webuijsf:tableColumn>
+                                <webuijsf:tableColumn headerText="Cant Aprob" id="tableColumn5" width="78">
                                     <webuijsf:staticText id="staticText4" text="#{currentRow.value['cantidadAprobada']}"/>
                                 </webuijsf:tableColumn>
                             </webuijsf:tableRowGroup>

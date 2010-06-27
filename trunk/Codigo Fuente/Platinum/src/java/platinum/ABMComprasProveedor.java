@@ -23,12 +23,14 @@ import java.util.List;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.convert.CharacterConverter;
+import py.com.platinum.controller.EquivalenciaController;
 import py.com.platinum.controller.FacturaCompraCabController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.ProveedorController;
 import py.com.platinum.controller.SolicitudInternaController;
 import py.com.platinum.controller.TipoComprobanteController;
 import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Equivalencia;
 import py.com.platinum.entity.FacturaCompraCab;
 import py.com.platinum.entity.FacturaCompraDet;
 import py.com.platinum.entity.Producto;
@@ -839,6 +841,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
             cabecera.setEstado("N");
 //            cabecera.setEstado(uiLstEstado.getSelected().toString());
             cabecera.setFecha(uiCalFecha.getSelectedDate());
+            cabecera.setFechaAlta(new Date());
             cabecera.setNroFactura(uiTxtNroFac.getText().toString());
             cabecera.setCodDeposito(getSessionBean1().getCodDeposito());
             //Tipo de comprobante
@@ -1154,7 +1157,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
     private void validarDetalle() {
         //Apagamos la bandera de error
         this.errorValidacion = false;
-
+        Producto p=null;
         //Producto
         if (this.uiTxtCodProducto.getText() == null || this.uiTxtCodProducto.getText().equals("")) {
             info("Codigo Producto obligatorio, ingrese un valor");
@@ -1165,10 +1168,13 @@ public class ABMComprasProveedor extends AbstractPageBean {
             if (producto == null) {
                 info("Producto no existe, ingrese un codigo de producto correcto");
                 errorValidacion = true;
+            }else{
+                p = new ProductoController().findById(Long.valueOf(uiTxtCodProducto.getText().toString()));
             }
         }
 
         //Cantidad
+        Long cant = null;
         if (this.uiTxtCantidad.getText() == null || this.uiTxtCantidad.getText().equals("")) {
             info("Cantidad del Producto obligatorio, ingrese un valor");
             errorValidacion = true;
@@ -1179,6 +1185,8 @@ public class ABMComprasProveedor extends AbstractPageBean {
             if (!StringUtils.esNumero(cantidad) || !StringUtils.esNumeroDecimal(cantidad)) {
                 info("Cantidad del Producto,debe se Numero");
                 errorValidacion = true;
+            }else{
+                cant = Long.valueOf(cantidad);
             }
         }
 
@@ -1215,10 +1223,39 @@ public class ABMComprasProveedor extends AbstractPageBean {
             if (solicitud == null) {
                 info("Nro. de Solicitud Interna ingresado es incorrecto, favor ingrese un valor correcto");
                 errorValidacion = true;
+            }else{
+                SolicitudInterna sol = new SolicitudInternaController().findById(Long.valueOf(uiTxtNroSolicitud.getText().toString()));
+                if (sol.getEstado().equals("A")) {
+                    ////// VALIDACION DEL PRODUCTO ELEGIDO Y LA CANTIDAD
+
+                    if (sol != null && p != null && cant != null) {
+
+                                SolicitudInterna solIn = new SolicitudInterna();
+                                SolicitudInternaController sController = new SolicitudInternaController();
+                                solIn = sController.getSolicitudPorEquiv(sol.getCodSolicitud(),p.getCodProducto());
+                                if (solIn == null) {
+                                    this.errorValidacion= true;
+                                    info("El producto ingresado no corresponde a la Solicitud");
+                                }else{
+                                            Equivalencia eq = new EquivalenciaController().getEqPorProductos(solIn.getCodProducto().getCodProducto(), p.getCodProducto());
+                                            double relacion = eq.getRelacion().doubleValue();
+                                            double retirado = relacion * cant;
+                                            if (solIn.getCantidadCompra() + retirado > solIn.getCantidadAprobada()) {
+                                                this.errorValidacion= true;
+                                                info("Se ha superado la cantidad aprobada para la Solicitud");
+                                            }
+                                }
+                    ////// FIN VALIDACION DEL PRODUCTO ELEGIDO Y LA CANTIDAD
+                    }
+                }else{
+                        this.errorValidacion= true;
+                        info("La solicitud no ha sido aprobada");
+
+                }
             }
 
         }
-    }
+ }
 
     //Detalle selecciondo de la Grilla
     private String itemDet;

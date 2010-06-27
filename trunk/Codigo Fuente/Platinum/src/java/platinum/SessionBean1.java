@@ -149,6 +149,7 @@ public class SessionBean1 extends AbstractSessionBean {
         codDeposito = new DepositoController().findById(Long.valueOf("1"));
 
         //El siguiente Metodo Carga la Grilla De Productos al cargar la pagina de productos.
+        cargarListaTodosProductosTerSemiInsMat();
         cargarListaTodosMaquinarias();
         cargarListaTodosDepositos();
         cargarListaTodasTareasAsignadasProdDiaria();
@@ -233,6 +234,17 @@ public class SessionBean1 extends AbstractSessionBean {
     private String establecimiento = "001";
     private String bocaExpendio = "001";
     private Deposito codDeposito;
+    private String codEmpleado = "1";
+
+    public String getCodEmpleado() {
+        return codEmpleado;
+    }
+
+    public void setCodEmpleado(String codEmpleado) {
+        this.codEmpleado = codEmpleado;
+    }
+
+
 
     public Deposito getCodDeposito() {
         return codDeposito;
@@ -343,6 +355,43 @@ public class SessionBean1 extends AbstractSessionBean {
         }
 
     }
+
+ ////// CARGA DE COMBO BOX PRODUCTOS TERMINADOS
+    Producto[] listaProductosTerSemiInsMat;
+    Option [] listaProductosTerSemiInsMatOp;
+
+    public Producto[] getListaProductosTerSemiInsMat() {
+        return listaProductosTerSemiInsMat;
+    }
+
+    public void setListaProductosTerSemiInsMat(Producto[] listaProductosTerSemiInsMat) {
+        this.listaProductosTerSemiInsMat = listaProductosTerSemiInsMat;
+    }
+
+    public Option[] getListaProductosTerSemiInsMatOp() {
+        return listaProductosTerSemiInsMatOp;
+    }
+
+    public void setListaProductosTerSemiInsMatOp(Option[] listaProductosTerSemiInsMatOp) {
+        this.listaProductosTerSemiInsMatOp = listaProductosTerSemiInsMatOp;
+    }
+
+
+    public void cargarListaTodosProductosTerSemiInsMat() {
+        ProductoController productoController = new ProductoController();
+        listaProductosTerSemiInsMat = (Producto[]) productoController.getInsumosMateriasFinalesSemiter(null,null,null).toArray(new Producto[0]);
+        listaProductosTerSemiInsMatOp = new Option[listaProductosTerSemiInsMat.length];
+        Option option;
+        for (int i = 0; i < listaProductosTerSemiInsMat.length; i++) {
+            Producto p = listaProductosTerSemiInsMat[i];
+            option = new Option();
+            option.setLabel(p.getDescripcion());
+            option.setValue(p.getCodProducto().toString());
+            listaProductosTerSemiInsMatOp[i] = option;
+        }
+
+    }
+
 
 ////// CARGA DE COMBO BOX PRODUCTOS SEMITERMINADOS
     Producto[] listaProductosSemiterminados;

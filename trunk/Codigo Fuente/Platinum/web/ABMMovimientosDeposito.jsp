@@ -43,7 +43,7 @@
                         <div>
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
-                        <div>
+                        <div style="height: 490px; width: 1296px">
                             <h:panelGrid binding="#{ABMMovimientosDeposito.mainContainer}" id="mainContainer" style="height: 96px; left: 336px; top: 288px; position: absolute; width: 96px">
                                 <h:panelGrid binding="#{ABMMovimientosDeposito.gridPanelBuscar}" columns="1" id="gridPanelBuscar">
                                     <h:panelGrid columns="2" id="gridPanelFiltros" style="height: 72px" width="503">
@@ -61,8 +61,9 @@
                                         <webuijsf:button actionExpression="#{ABMMovimientosDeposito.buscarButton_action}"
                                             binding="#{ABMMovimientosDeposito.buscarButton}" id="buscarButton" text="Buscar"/>
                                     </h:panelGrid>
-                                    <webuijsf:table augmentTitle="false" id="uiTableMovimientos" title="Movimientos en Deposito" width="911">
-                                        <webuijsf:tableRowGroup binding="#{ABMMovimientosDeposito.tableRowGroup1}" id="tableRowGroup1" rows="5"
+                                    <webuijsf:table augmentTitle="false" id="uiTableMovimientos" paginateButton="true" paginationControls="true"
+                                        title="Movimientos en Deposito" width="911">
+                                        <webuijsf:tableRowGroup binding="#{ABMMovimientosDeposito.tableRowGroup1}" id="tableRowGroup1" rows="15"
                                             selected="#{ABMMovimientosDeposito.selectedState}" sourceData="#{ABMMovimientosDeposito.listaMovimientosCab}" sourceVar="currentRow">
                                             <webuijsf:tableColumn align="center" binding="#{ABMMovimientosDeposito.tableColumn1}" id="tableColumn1"
                                                 onClick="setTimeout('initAllRows()', 0)" selectId="#{ABMMovimientosDeposito.radioButton2.id}" width="41">
@@ -174,10 +175,11 @@
                                             <h:panelGrid id="gridPanel1" style="height: 26px; width: 96px"/>
                                             <webuijsf:hyperlink id="uiHiperLynkProductos2"
                                                 onClick="doPopup('form1:uiDetalleCodSolic_field', 'form1:uiDetalleSolicProduct_field')&#xd;" target="popup"
-                                                text="Nro Solicitud" url="/faces/popup/popupSolicitudesMovDep.jsp"/>
+                                                text="Nro Solicitud" url="/faces/popup/popupSolicitudesMovDep.jsp" visible="false"/>
                                             <h:panelGrid columns="2" id="gridPanel8" style="height: 26px; width: 96px">
-                                                <webuijsf:textField binding="#{ABMMovimientosDeposito.uiDetalleCodSolic}" columns="10" id="uiDetalleCodSolic"/>
-                                                <webuijsf:textField binding="#{ABMMovimientosDeposito.uiDetalleSolicProduct}" columns="50" disabled="true" id="uiDetalleSolicProduct"/>
+                                                <webuijsf:textField binding="#{ABMMovimientosDeposito.uiDetalleCodSolic}" columns="10" id="uiDetalleCodSolic" visible="false"/>
+                                                <webuijsf:textField binding="#{ABMMovimientosDeposito.uiDetalleSolicProduct}" columns="50" disabled="true"
+                                                    id="uiDetalleSolicProduct" visible="false"/>
                                             </h:panelGrid>
                                             <h:panelGrid id="gridPanel6" style="height: 26px; width: 96px"/>
                                             <webuijsf:label id="label4" text="Movimiento"/>
