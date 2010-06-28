@@ -49,8 +49,7 @@ from produccion_diaria pd
      join empleado e on pd.cod_empleado = e.cod_empleado
 
 where 1=1 $P!{parametros}
-order by pd.fecha, ot.cod_orden_trabjo, od.cod_orden_trabajo_det, ta.cod_tarea_asignada
-]]></queryString>
+order by pd.fecha, ot.cod_orden_trabjo, od.cod_orden_trabajo_det, ta.cod_tarea_asignada]]></queryString>
 
 	<field name="FECHA" class="java.sql.Timestamp"/>
 	<field name="CANTIDAD" class="java.math.BigDecimal"/>
@@ -383,7 +382,7 @@ order by pd.fecha, ot.cod_orden_trabjo, od.cod_orden_trabajo_det, ta.cod_tarea_a
 					<reportElement
 						x="657"
 						y="0"
-						width="120"
+						width="125"
 						height="17"
 						forecolor="#FFFFFF"
 						key="staticText-1"/>
