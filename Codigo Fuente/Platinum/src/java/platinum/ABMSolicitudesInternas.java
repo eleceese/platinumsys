@@ -420,6 +420,15 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
     public void setTab1(Tab t) {
         this.tab1 = t;
     }
+    private TextField uiTxtCodSolicitud = new TextField();
+
+    public TextField getUiTxtCodSolicitud() {
+        return uiTxtCodSolicitud;
+    }
+
+    public void setUiTxtCodSolicitud(TextField tf) {
+        this.uiTxtCodSolicitud = tf;
+    }
 
     // </editor-fold>
     /**
@@ -861,6 +870,7 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
      * Limpiar campos
      */
     private void limpiarCampos() {
+        uiTxtCodSolicitud.setText("---");
         uiTxtCantidad.setText(null);
         uiTxtCantidadAprobada.setText(null);
         uiTxtCodEmpleado.setText(null);
@@ -880,6 +890,7 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
         del id almacenado en la session */
         e = new SolicitudInternaController().findById(getSessionBean1().getId());
 
+        uiTxtCodSolicitud.setText(e.getCodSolicitud().toString());
         uiTxtCantidad.setText(e.getCantidad());
         uiTxtCodEmpleado.setText(e.getCodEmpleado().getCodEmpleado());
         uiTxtCodProducto.setText(e.getCodProducto().getCodProducto());

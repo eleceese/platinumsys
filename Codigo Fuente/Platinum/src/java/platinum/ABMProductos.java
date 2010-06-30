@@ -338,6 +338,24 @@ public class ABMProductos extends AbstractPageBean {
     public void setUiPresentacionFil(DropDown dd) {
         this.uiPresentacionFil = dd;
     }
+    private TextField uiContenido = new TextField();
+
+    public TextField getUiContenido() {
+        return uiContenido;
+    }
+
+    public void setUiContenido(TextField tf) {
+        this.uiContenido = tf;
+    }
+    private TextField uiPorcentajeIVA = new TextField();
+
+    public TextField getUiPorcentajeIVA() {
+        return uiPorcentajeIVA;
+    }
+
+    public void setUiPorcentajeIVA(TextField tf) {
+        this.uiPorcentajeIVA = tf;
+    }
 
     // </editor-fold>
     /**
@@ -524,7 +542,49 @@ public class ABMProductos extends AbstractPageBean {
          this.uiCostoActual.setText(producto.getCostoActual().toString());
          this.uiPrecioActual.setText(producto.getPrecioActual().toString());
          this.uiFechaAlta.setSelectedDate(producto.getFechaAlta());
-         }
+         this.uiPorcentajeIVA.setText(producto.getPorcentajeIva().toString());
+         this.uiContenido.setText(producto.getContenido().toString());
+
+
+                     ///////////////
+                         TipoProducto tipoP = new TipoProducto();
+                         tipoP = new TipoProductoController().findById(Long.valueOf(producto.getCodTipoProducto().getCodTipoProducto().toString()));
+                        if (tipoP.getDescripcion() != null && tipoP.getDescripcion().toString().equals("ProductoGenerico")) {
+                                this.uiLstMarca.setDisabled(true);
+                                this.uiLstMarca.setSelected("1");
+
+                                this.uiCostoActual.setDisabled(true);
+                                this.uiCostoActual.setText("0");
+
+                                this.uiPrecioActual.setDisabled(true);
+                                this.uiPrecioActual.setText("0");
+
+                                this.uiControlExistencia.setSelected(false);
+                                this.uiControlExistencia.setDisabled(true);
+
+                                this.uiPorcentajeIVA.setText("0");
+                                this.uiPorcentajeIVA.setDisabled(true);
+
+                                this.uiContenido.setText("0");
+                                this.uiContenido.setDisabled(false);
+
+                        } else {
+
+                            if (tipoP.getDescripcion() != null && (tipoP.getDescripcion().toString().equals("Terminado")|| tipoP.getDescripcion().toString().equals("SemiTerminado"))) {
+                                this.uiControlExistencia.setSelected(true);
+                                this.uiControlExistencia.setDisabled(true);
+                            }else{
+                                this.uiControlExistencia.setDisabled(false);
+                            }
+
+                            this.uiLstMarca.setDisabled(false);
+                            this.uiCostoActual.setDisabled(false);
+                            this.uiPrecioActual.setDisabled(false);
+                            this.uiPorcentajeIVA.setDisabled(false);
+                            this.uiContenido.setDisabled(false);
+
+                        }
+        }
          
     }
 
@@ -650,7 +710,10 @@ public class ABMProductos extends AbstractPageBean {
                             producto.setEstado("A");
                             producto.setPrecioActual(new BigInteger( this.uiPrecioActual.getText().toString()));
                             producto.setCostoActual(new BigInteger( this.uiCostoActual.getText().toString()));
-
+                            producto.setPorcentajeIva(BigDecimal.valueOf(Double.valueOf(this.uiPorcentajeIVA.getText().toString())));
+                            producto.setContenido(BigInteger.valueOf(Long.valueOf(this.uiContenido.getText().toString())));
+                            producto.setPorcentajeIva(BigDecimal.valueOf(Double.valueOf(this.uiPorcentajeIVA.getText().toString())));
+                            producto.setContenido(BigInteger.valueOf(Long.valueOf(this.uiContenido.getText().toString())));
 
                             if (this.uiControlExistencia.isChecked()) {
                                 producto.setControlaExistencia("S");
@@ -901,6 +964,11 @@ public class ABMProductos extends AbstractPageBean {
                     this.uiControlExistencia.setSelected(false);
                     this.uiControlExistencia.setDisabled(true);
 
+                    this.uiPorcentajeIVA.setText("0");
+                    this.uiPorcentajeIVA.setDisabled(true);
+
+                    this.uiContenido.setText("0");
+                    this.uiContenido.setDisabled(false);
                 
         } else {
 
@@ -916,6 +984,8 @@ public class ABMProductos extends AbstractPageBean {
                 this.uiLstMarca.setDisabled(false);
                 this.uiCostoActual.setDisabled(false);
                 this.uiPrecioActual.setDisabled(false);
+                this.uiPorcentajeIVA.setDisabled(false);
+                this.uiContenido.setDisabled(false);
                 
         }
 

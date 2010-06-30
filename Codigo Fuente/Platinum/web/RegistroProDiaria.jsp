@@ -12,10 +12,11 @@
             <webuijsf:html id="html1">
                 <webuijsf:head id="head1">
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
+                    <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <script>
-                        function RegistroEstadosOT() {
-                            var table = document.getElementById("form1:tablaFormulas");
-                            table.RegistroEstadosOT();}
+                        function initAllRows() {
+                            var table = document.getElementById("form1:table1");
+                            table.initAllRows();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
@@ -52,8 +53,6 @@
                     </script>
                     <!-- \ SCRIPT PARA MANEJAR EL DETALLE-->
                     <webuijsf:script id="scriptPopUp" type="text/javascript" url="/js/utilJS.js"/>
-                    <df:ajaxTransaction id="actualizarGrillaTareas"
-                        inputs="page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelDatos2:uiCodSubOt,page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:gridPanelSemi:uiSemiTerNombre,page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:gridPanelSemi:uiSemiTerCod" render="page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:uiCabNroOT,page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:uiOTDescripcion,page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:gridPanelSemi:uiSemiTerCod,page1:html1:body1:form1:mainContainer:gridPannelDetalle:gridPanel1:tablaTareas,page1:html1:body1:form1:mainContainer:gridPanelCabecera:gridPanelOT:gridPanelSemi:uiSemiTerNombre"/>
                 </webuijsf:head>
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
@@ -66,19 +65,46 @@
                         <h:panelGrid id="mainContainer" style="height: 408px; left: 240px; top: 240px; position: absolute" width="888">
                             <webuijsf:pageAlert binding="#{RegistroProDiaria.pageAlert1}" id="pageAlert1" rendered="false"/>
                             <br/>
+                            <h:panelGrid binding="#{RegistroProDiaria.gridPanelBusqueda}" id="gridPanelBusqueda" style="height: 288px; width: 100%">
+                                <webuijsf:table augmentTitle="false" binding="#{RegistroProDiaria.table1}" id="table1" paginateButton="true"
+                                    paginationControls="true" title="Ordenes de Trabajo" width="767">
+                                    <webuijsf:tableRowGroup binding="#{RegistroProDiaria.tableRowGroup2}" emptyDataMsg="No se encontraron registros"
+                                        id="tableRowGroup2" rows="10" selected="#{RegistroProDiaria.selectedState}" sourceData="#{RegistroProDiaria.listaOtCab}" sourceVar="currentRow">
+                                        <webuijsf:tableColumn align="center" binding="#{RegistroProDiaria.tableColumn1}" id="tableColumn1"
+                                            onClick="setTimeout('initAllRows()',0)" selectId="#{RegistroProDiaria.radioButton1.id}" width="10">
+                                            <webuijsf:radioButton binding="#{RegistroProDiaria.radioButton1}" id="radioButton1" label=""
+                                                name="#{RegistroProDiaria.radioButton1.id}" onClick="delSelect='ok'" selected="#{RegistroProDiaria.selected}" selectedValue="#{RegistroProDiaria.selectedValue}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="Nro Ot" id="tableColumn9" width="40">
+                                            <webuijsf:staticText id="staticText7" text="#{currentRow.value['codOrdenTrabjo']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="Descripcion" id="tableColumn10" width="150">
+                                            <webuijsf:staticText id="staticText8" text="#{currentRow.value['descripcion']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="Producto" id="tableColumn11" sort="codProductoOt" width="150">
+                                            <webuijsf:staticText id="staticText9" text="#{currentRow.value['codProductoOt']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="Cantidad" id="tableColumn12" width="20">
+                                            <webuijsf:staticText id="staticText10" text="#{currentRow.value['cantidadOt']}"/>
+                                        </webuijsf:tableColumn>
+                                        <webuijsf:tableColumn headerText="Estado" id="tableColumn13" sort="estadoOt" width="30">
+                                            <webuijsf:staticText id="staticText11" text="#{currentRow.value['estadoOt']}"/>
+                                        </webuijsf:tableColumn>
+                                    </webuijsf:tableRowGroup>
+                                </webuijsf:table>
+                                <h:panelGrid columns="2" id="gridPanel4" style="width: 100%; height: 100%;">
+                                    <webuijsf:button actionExpression="#{RegistroProDiaria.uiBtnSeleccionar_action}" id="uiBtnSeleccionar" text="Seleccionar"/>
+                                </h:panelGrid>
+                            </h:panelGrid>
                             <h:panelGrid binding="#{RegistroProDiaria.gridPanelCabecera}" columns="1" id="gridPanelCabecera" style="height: 72px" width="599">
                                 <h:panelGrid columns="3" id="gridResponsables" style="height: 48px; vertical-align: top" title="Responsables" width="503">
                                     <webuijsf:label id="responsable" text="Responsable:"/>
-                                    <webuijsf:dropDown binding="#{RegistroProDiaria.uiEmpleado}" id="uiEmpleado" items="#{SessionBean1.listaEmpleadosOp}" width="350"/>
+                                    <webuijsf:dropDown binding="#{RegistroProDiaria.uiEmpleado}" id="uiEmpleado" items="#{SessionBean1.listaEmpleadosOp}"
+                                        style="text-align: left" width="350"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="2" id="gridPanelDatos1" style="height: 30px" width="287">
                                     <webuijsf:label id="fecha" text="Fecha"/>
                                     <webuijsf:calendar binding="#{RegistroProDiaria.uiFechaAct}" id="uiFechaAct" style="margin-left: 41px"/>
-                                </h:panelGrid>
-                                <h:panelGrid columns="2" id="gridPanelDatos2" style="height: 30px" width="455">
-                                    <webuijsf:label id="codOtLabel" text="Codigo de SubOT"/>
-                                    <webuijsf:dropDown id="uiCodSubOt" items="#{RegistroProDiaria.listaOtsOp}"
-                                        onChange="DynaFaces.Tx.fire(&quot;actualizarGrillaTareas&quot;,&quot;uiCodSubOt&quot;)" validatorExpression="#{RegistroProDiaria.uiCodSubOt_validate}"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="2" id="gridPanelOT" style="border-width: 2px; border-style: outset; height: 100%; width: 100%">
                                     <webuijsf:label id="cod_Ot" text="Cod Ot"/>
@@ -86,13 +112,6 @@
                                         onBlur="DynaFaces.Tx.fire(&quot;grillaSemis&quot;,&quot;uiCabNroOT&quot;)" validatorExpression="#{RegistroProDiaria.uiCabNroOT_validate}"/>
                                     <webuijsf:label id="labelDesc" text="Descripcion"/>
                                     <webuijsf:textArea binding="#{RegistroProDiaria.uiOTDescripcion}" columns="60" disabled="true" id="uiOTDescripcion" rows="5"/>
-                                    <webuijsf:label id="cod_Ot1" text="SemiTerminado"/>
-                                    <h:panelGrid columns="2" id="gridPanelSemi" style="margin-left: -3px">
-                                        <webuijsf:textField binding="#{RegistroProDiaria.uiSemiTerCod}" columns="10" disabled="true" id="uiSemiTerCod"
-                                            onBlur="DynaFaces.Tx.fire(&quot;grillaTareas&quot;, &quot;uiSemiTerCod&quot;)"
-                                            validatorExpression="#{RegistroProDiaria.uiSemiTerCod_validate}" valueChangeListenerExpression="#{RegistroProDiaria.uiSemiTerCod_processValueChange}"/>
-                                        <webuijsf:textField binding="#{RegistroProDiaria.uiSemiTerNombre}" columns="50" disabled="true" id="uiSemiTerNombre"/>
-                                    </h:panelGrid>
                                 </h:panelGrid>
                                 <br/>
                                 <h:panelGrid binding="#{RegistroProDiaria.buttonsPanelAddUpdate}" columns="2" id="buttonsPanelAddUpdate" style="height: 24px" width="191">
@@ -130,7 +149,7 @@
                                 </webuijsf:tabSet>
                                 <h:panelGrid id="gridPanel1" style="height: 100%; width: 100%">
                                     <webuijsf:table augmentTitle="false" binding="#{RegistroProDiaria.tablaTareas}" id="tablaTareas" paginateButton="true"
-                                        paginationControls="true" style="height: 77px" title="Tareas" width="815">
+                                        paginationControls="true" style="height: 77px" title="Lista de Tareas Ejecutadas" width="815">
                                         <webuijsf:tableRowGroup binding="#{RegistroProDiaria.tableRowGroup1}" id="tableRowGroup1" rows="15"
                                             sourceData="#{RegistroProDiaria.produccionesDiariasArray}" sourceVar="currentRow">
                                             <webuijsf:tableColumn headerText="Fecha" id="tableColumn5" sort="fecha" width="30">

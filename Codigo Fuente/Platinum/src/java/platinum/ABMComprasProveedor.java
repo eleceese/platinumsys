@@ -593,6 +593,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
                 uiBtnGuardarEditar.setRendered(true);
                 uiBtnCancelar.setRendered(true);
                 gridPanelBtnBuscar.setRendered(false);
+
             }
         } else if (errorValidacion) {
             addUpdatePanel.setRendered(true);
@@ -709,10 +710,14 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public String addButton_action() {
         //Inicializamos las variables
         lstDetalleLIST = new ArrayList();
+        lstDetalle = (FacturaCompraDet[]) lstDetalleLIST.toArray(new FacturaCompraDet[0]);
+
         addRequest = true;
         updateDetRequest = true;
         itemDet = null;
 
+
+        this.btnConfirmar.setRendered(false);
         gridPanelDetLin1.setRendered(true);
         gridPanelDetLin2.setRendered(true);
         tableColumnEditarDet.setRendered(true);
@@ -778,6 +783,12 @@ public class ABMComprasProveedor extends AbstractPageBean {
             uiTxtCodProveedor.setText(cabecera.getCodProveedor().getCodProveedor());
             uiTxtNombreProveedor.setText(cabecera.getCodProveedor().getNombreProveedor());
             uiLstEstado.setSelected(cabecera.getEstado());
+                if (cabecera.getEstado().equals("N")) {
+                    this.btnConfirmar.setRendered(true);
+                }else{
+                    this.btnConfirmar.setRendered(false);
+                }
+            
             uiLstTipoComprobante.setSelected(cabecera.getTipo().getCodTipo().toString());
             uiCalFecha.setSelectedDate(cabecera.getFecha());
             uiTxtSubTotal.setText(String.valueOf(cabecera.getSubTotal()));

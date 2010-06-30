@@ -33,7 +33,7 @@
                         }
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
-                    <df:ajaxTransaction id="ajaxGenerico" inputs="page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel10:uiLstTipoProducto" render="page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel10:uiLstTipoProducto,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel2:uiLstMarca,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel13:uiPrecioActual,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel12:uiCostoActual,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel9:uiControlExistencia"/>
+                    <df:ajaxTransaction id="ajaxGenerico" inputs="page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel10:uiLstTipoProducto" render="page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel10:uiLstTipoProducto,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel2:uiLstMarca,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel13:uiPrecioActual,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel12:uiCostoActual,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel9:uiControlExistencia,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel4:uiPorcentajeIVA,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel7:uiContenido"/>
                 </webuijsf:head>
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
@@ -134,6 +134,11 @@
                                     <webuijsf:dropDown binding="#{ABMProductos.uiPresentacion}" id="uiPresentacion" items="#{SessionBean1.listaPresentacionsOp}" width="250"/>
                                     <webuijsf:message for="uiPresentacion" id="message5" showDetail="false" showSummary="true"/>
                                 </h:panelGrid>
+                                <webuijsf:label id="costoActual3" text="Contenido"/>
+                                <h:panelGrid columns="2" id="gridPanel7" style="height: 100%" width="575">
+                                    <webuijsf:textField binding="#{ABMProductos.uiContenido}" columns="10" id="uiContenido"/>
+                                    <webuijsf:message for="uiContenido" id="message7" showDetail="false" showSummary="true" style="width: 209px"/>
+                                </h:panelGrid>
                                 <webuijsf:label id="precioActual" text="Precio Actual"/>
                                 <h:panelGrid columns="2" id="gridPanel13" style="height: 100%" width="575">
                                     <webuijsf:textField binding="#{ABMProductos.uiPrecioActual}" columns="50" id="uiPrecioActual"/>
@@ -143,6 +148,12 @@
                                 <h:panelGrid columns="2" id="gridPanel12" style="height: 100%" width="575">
                                     <webuijsf:textField binding="#{ABMProductos.uiCostoActual}" columns="50" id="uiCostoActual"/>
                                     <webuijsf:message for="uiCostoActual" id="message12" showDetail="false" showSummary="true" style="width: 209px"/>
+                                </h:panelGrid>
+                                <webuijsf:label id="costoActual2" text="Porcentaje IVA"/>
+                                <h:panelGrid columns="3" id="gridPanel4" style="height: 100%" width="263">
+                                    <webuijsf:textField binding="#{ABMProductos.uiPorcentajeIVA}" columns="4" id="uiPorcentajeIVA"/>
+                                    <webuijsf:label id="costoActual4" text="%"/>
+                                    <webuijsf:message for="uiPorcentajeIVA" id="message4" showDetail="false" showSummary="true" style="width: 209px"/>
                                 </h:panelGrid>
                                 <webuijsf:label id="controlExistencia" text="Control Existencia"/>
                                 <h:panelGrid columns="2" id="gridPanel9" style="height: 100%" width="100%">

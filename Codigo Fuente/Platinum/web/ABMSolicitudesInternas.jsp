@@ -112,6 +112,11 @@
                                 </h:panelGrid>
                                 <h:panelGrid binding="#{ABMSolicitudesInternas.addUpdatePanel}" columns="1" id="addUpdatePanel">
                                     <h:panelGrid columns="2" id="detalle">
+                                        <webuijsf:label id="label5" text="Codigo de Solicitud"/>
+                                        <h:panelGrid columns="2" id="gridPanel2" style="height: 100%; width: 100%">
+                                            <webuijsf:textField binding="#{ABMSolicitudesInternas.uiTxtCodSolicitud}" columns="10" disabled="true"
+                                                id="uiTxtCodSolicitud" style="color: blue; font-size: 12px"/>
+                                        </h:panelGrid>
                                         <webuijsf:hyperlink id="hlkResponsable"
                                             onClick="doPopup('form1:uiTxtCodEmpleado_field', 'form1:uiTxtNombreEmpleado_field')" target="popup"
                                             text="Solicitante" url="/faces/popup/popupEmpleados.jsp"/>

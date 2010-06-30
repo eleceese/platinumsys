@@ -203,7 +203,7 @@ public class popupTareaAsignadaOTProdDiaria extends AbstractPageBean {
         } 
 
         //Obetenmos la lista
-        List<TareaAsignada> tareaAsignadasProdDiaria = new TareaAsignadaController().getAllFiltered(getSessionBean1().getIdOTDetProdDiaria(), null, param);
+        List<TareaAsignada> tareaAsignadasProdDiaria = new TareaAsignadaController().getAllFilteredOT(getSessionBean1().getIdOTProdDiaria(), null, param);
         TareaAsignada[] tareaAsignadaOT = (TareaAsignada[]) tareaAsignadasProdDiaria.toArray(new TareaAsignada[0]);
 
         //Actualizamos la lista de la session
@@ -216,7 +216,7 @@ public class popupTareaAsignadaOTProdDiaria extends AbstractPageBean {
         public String uiBtnTodos_action() {
         //Obetenmos la lista
 
-        List<TareaAsignada> tareaAsignadasProdDiaria = new TareaAsignadaController().getAllFiltered(getSessionBean1().getIdOTDetProdDiaria(), null, null);
+        List<TareaAsignada> tareaAsignadasProdDiaria = new TareaAsignadaController().getAllFilteredOT(getSessionBean1().getIdOTProdDiaria(), null, null);
         TareaAsignada[] tareaAsignadaOT = (TareaAsignada[]) tareaAsignadasProdDiaria.toArray(new TareaAsignada[0]);
 
         
