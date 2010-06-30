@@ -97,6 +97,43 @@ public class ProduccionDiariaController extends AbstractJpaDao <ProduccionDiaria
         return entities;
 
       }
+    public List<ProduccionDiaria> getAllFilteredOT(Long codProduccionDiaria, Long codTareaAsignada,Long codOrdenTrabajo, String descTarea) {
+        //emf.createEntityManager Levanta el contexto del JPA
+        String SQL = "SELECT o FROM ProduccionDiaria o WHERE o.codProduccionDiaria = o.codProduccionDiaria";
+
+        if (codProduccionDiaria != null) {
+            SQL = SQL + " and o.codProduccionDiaria = :codProduccionDiaria";
+        }
+
+        if (codTareaAsignada != null) {
+            SQL = SQL + " and o.codTareaAsignada.codTareaAsignada = :codTareaAsignada";
+        }
+        if (codOrdenTrabajo != null) {
+            SQL = SQL + " and o.codTareaAsignada.codDetOrdenTrabaj.codOrdenTrabajo.codOrdenTrabjo = :codOrdenTrabajo";
+        }
+
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        if (codProduccionDiaria != null) {
+            q.setParameter("codProduccionDiaria", codProduccionDiaria);
+        }
+
+        if (codTareaAsignada != null) {
+            q.setParameter("codTareaAsignada", codTareaAsignada);
+        }
+
+        if (codOrdenTrabajo != null) {
+            q.setParameter("codOrdenTrabajo", codOrdenTrabajo);
+        }
+
+        List<ProduccionDiaria> entities = q.getResultList();
+        em.close();
+
+        return entities;
+
+      }
 
     public static void main (String[] v) {
 

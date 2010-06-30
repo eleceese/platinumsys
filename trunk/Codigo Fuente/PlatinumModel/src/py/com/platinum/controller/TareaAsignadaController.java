@@ -74,6 +74,47 @@ public class TareaAsignadaController extends AbstractJpaDao<TareaAsignada> {
         return entities;
 
      }
+    public List<TareaAsignada> getAllFilteredOT(Long codOrdenTrabajo, Long codTarea, String nombreTarea) {
+
+         String SQL = "SELECT o FROM TareaAsignada o WHERE o.codTareaAsignada = o.codTareaAsignada";
+
+        if (codOrdenTrabajo != null) {
+            SQL = SQL + " and o.codDetOrdenTrabaj.codOrdenTrabajo.codOrdenTrabjo = :codOrdenTrabajo ";
+        }
+
+        if (codTarea != null) {
+            SQL = SQL + " and o.codTarea.codTarea = :codTarea ";
+        }
+
+         if (nombreTarea != null && !nombreTarea.equals("")) {
+            SQL = SQL + " and UPPER(o.codTarea.nombreTarea) like upper(:nombreTarea)";
+        }
+
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+
+        if (codOrdenTrabajo != null) {
+            q.setParameter("codOrdenTrabajo", codOrdenTrabajo);
+        }
+
+
+        if (codTarea != null) {
+            q.setParameter("codTarea", codTarea);
+        }
+
+        if (nombreTarea != null && !nombreTarea.equals("")) {
+            q.setParameter("nombreTarea", "%"+nombreTarea+"%");
+        }
+
+        List<TareaAsignada> entities = q.getResultList();
+        em.close();
+
+        //retornamos la lista
+        return entities;
+
+     }
 
 
     public static void main(String []args){

@@ -48,6 +48,8 @@ public class Producto implements Serializable {
     private BigInteger precioActual;
     @Column(name = "COSTO_ACTUAL")
     private BigInteger costoActual;
+    @Column(name = "CONTENIDO")
+    private BigInteger contenido;
     @Basic(optional = false)
     @Column(name = "CONTROLA_EXISTENCIA")
     private String controlaExistencia;
@@ -83,6 +85,15 @@ public class Producto implements Serializable {
         this.descripcion = descripcion;
         this.controlaExistencia = controlaExistencia;
     }
+
+    public BigInteger getContenido() {
+        return contenido;
+    }
+
+    public void setContenido(BigInteger contenido) {
+        this.contenido = contenido;
+    }
+
 
     public Long getCodProducto() {
         return codProducto;
