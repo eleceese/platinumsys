@@ -115,7 +115,7 @@ group by p.cod_producto, p.descripcion]]></queryString>
 						key="image-1"/>
 					<box></box>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["X:\\Proyecto 2\\Codigo Fuente\\Platinum\\src\\java\\reportesFuente\\logo_platinum.jpg"]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA["logo_platinum.jpg"]]></imageExpression>
 				</image>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement

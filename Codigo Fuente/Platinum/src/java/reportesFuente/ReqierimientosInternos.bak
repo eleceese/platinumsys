@@ -23,6 +23,9 @@
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
 
+	<parameter name="usuario" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["Admin"]]></defaultValueExpression>
+	</parameter>
 	<queryString><![CDATA[select s.cod_solicitud     as nro_solicitud,
        (e.apellido_empleado ||', '|| e.nombre_empleado) as solicitante,
        s.fecha             as fecha_solicitud,
@@ -129,7 +132,7 @@
 						key="image-1"/>
 					<box></box>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["X:\\Proyecto 2\\Codigo Fuente\\Platinum\\src\\java\\reportesFuente\\logo_platinum.jpg"]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA["logo_platinum.jpg"]]></imageExpression>
 				</image>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
