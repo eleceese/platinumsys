@@ -34,29 +34,37 @@ select
        p.ruc_proveedor    as ruc,
        t.desc_tipo        as desc_comprobante,
        cab.nro_factura    as nro_comprobante,
-       cab.total          as total_comprobante,
-       (case det.porc_iva
-           when 10 then (det.precio_uni * det.cantidad)
-           else 0
-        end) as importe_sin_iva_10,
-       (case det.porc_iva
-           when 10 then det.monto_iva
-           else 0
-        end) as importe_iva_10,
-       (case det.porc_iva
-           when 5 then (det.precio_uni * det.cantidad)
-           else 0
-        end) as importe_sin_iva_5,
-       (case det.porc_iva
-           when 5 then det.monto_iva
-           else 0
-        end) as importe_iva_5,
-       (case det.porc_iva
-           when 0 then det.total
-           else 0
-        end) as excenta
-        
-           
+       cab.total * decode(cab.estado, 'A', 0, 1) as total_comprobante,
+       sum(
+           (case det.porc_iva
+               when 10 then (det.precio_uni * det.cantidad) * decode(cab.estado, 'A', 0, 1)
+               else 0
+            end)
+           ) as importe_sin_iva_10,
+        sum(
+             (case det.porc_iva
+                 when 10 then det.monto_iva * decode(cab.estado, 'A', 0, 1)
+                 else 0
+              end)
+            ) as importe_iva_10,
+       sum(
+           (case det.porc_iva
+               when 5 then (det.precio_uni * det.cantidad)  * decode(cab.estado, 'A', 0, 1)
+               else 0
+            end)
+          )as importe_sin_iva_5,
+       sum(
+            (case det.porc_iva
+             when 5 then det.monto_iva * decode(cab.estado, 'A', 0, 1)
+             else 0
+             end) 
+           )as importe_iva_5,
+       sum(
+           (case det.porc_iva
+            when 0 then det.total * decode(cab.estado, 'A', 0, 1)
+            else 0
+            end)
+           ) as excenta           
   from factura_compra_cab cab
          inner join factura_compra_det det 
            on det.cod_fac_com_cab = cab.cod_fac_com_cab
@@ -64,43 +72,60 @@ select
            on t.cod_tipo = cab.tipo
          inner join proveedor          p 
            on p.cod_proveedor = cab.cod_proveedor
- where cab.estado != 'A'
- 
+ group by  cab.fecha, 
+           p.ruc_proveedor,
+           t.desc_tipo,
+           cab.nro_factura,
+           cab.total  * decode(cab.estado, 'A', 0, 1)
  union all 
  select        
        nc.fecha             as fecha_comprobante, 
        p.ruc_proveedor      as ruc,
        t.desc_tipo          as desc_comprobante,
        nc.nro_nota_credito  as nro_comprobante,
-       nc.total             as total_comprobante,
-       (case nd.porcentaje_iva
-           when 10 then (nd.precio_unitario * nd.cantidad)
-           else 0
-        end) as importe_sin_iva_10,
-       (case nd.porcentaje_iva
-           when 10 then nd.total_iva
-           else 0
-        end) as importe_iva_10,
-        (case nd.porcentaje_iva
-           when 5 then (nd.precio_unitario * nd.cantidad)
-           else 0
-        end) as importe_sin_iva_5,
-       (case nd.porcentaje_iva
-           when 5 then nd.total_iva
-           else 0
-        end) as importe_iva_5,
-       (case nd.porcentaje_iva
-           when 0 then nd.monto
-           else 0
-        end) as excenta
+       (nc.total * -1) * decode(nc.estado, 'ANULADO', 0, 1) as total_comprobante,
+       sum(
+           (case nd.porc_iva
+               when 10 then ((nd.total)* -1) * decode(nc.estado, 'ANULADO', 0, 1)
+               else 0
+            end) 
+          ) as importe_sin_iva_10,
+       sum(
+           (case nd.porc_iva
+               when 10 then (nd.monto_iva * -1) * decode(nc.estado, 'ANULADO', 0, 1)
+               else 0
+            end) 
+           ) as importe_iva_10,
+        sum(
+            (case nd.porc_iva
+               when 5 then ((nd.total)* -1) * decode(nc.estado, 'ANULADO', 0, 1)
+               else 0
+            end) 
+            )as importe_sin_iva_5,
+       sum(
+           (case nd.porc_iva
+               when 5 then (nd.monto_iva * -1) * decode(nc.estado, 'ANULADO', 0, 1)
+               else 0
+            end) 
+           ) as importe_iva_5,
+       sum(
+           (case nd.porc_iva
+               when 0 then (nd.total * -1) * decode(nc.estado, 'ANULADO', 0, 1)
+               else 0
+            end) 
+           )as excenta
   from nota_credito_prov_cab nc
-         inner join nota_credito_cli_detalle nd 
-           on nd.cod_nota_credito_cliente = nc.cod_not_cre_cab
+         inner join nota_credito_prov_det nd 
+           on nd.cod_not_cre_cab = nc.cod_not_cre_cab
          inner join tipo_comprobante   t 
            on t.cod_tipo = nc.tipo
          inner join proveedor          p 
            on p.cod_proveedor = nc.cod_proveedor
- where nc.estado != 'ANULADO'
+ group by nc.fecha, 
+       p.ruc_proveedor,
+       t.desc_tipo,
+       nc.nro_nota_credito,
+       (nc.total * -1) * decode(nc.estado, 'ANULADO', 0, 1)
  ) aux
  order by aux.fecha_comprobante, 
           aux.desc_comprobante,
@@ -117,6 +142,24 @@ select
 	<field name="IMPORTE_IVA_5" class="java.math.BigDecimal"/>
 	<field name="EXCENTA" class="java.math.BigDecimal"/>
 
+	<variable name="V_TOTAL" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL_COMPROBANTE}]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_SIN_IVA10" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{IMPORTE_SIN_IVA_10}]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_IVA10" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{IMPORTE_IVA_10}]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_SIN_IVA5" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{IMPORTE_SIN_IVA_5}]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_IVA5" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{IMPORTE_IVA_5}]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_EXCENTA" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{EXCENTA}]]></variableExpression>
+	</variable>
 		<background>
 			<band height="0"  isSplitAllowed="true" >
 			</band>
@@ -243,18 +286,7 @@ select
 			</band>
 		</pageHeader>
 		<columnHeader>
-			<band height="69"  isSplitAllowed="true" >
-				<line direction="BottomUp">
-					<reportElement
-						x="0"
-						y="0"
-						width="782"
-						height="0"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="line"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
+			<band height="77"  isSplitAllowed="true" >
 				<line direction="BottomUp">
 					<reportElement
 						x="0"
@@ -269,8 +301,8 @@ select
 				<staticText>
 					<reportElement
 						x="0"
-						y="39"
-						width="78"
+						y="38"
+						width="68"
 						height="29"
 						forecolor="#000000"
 						key="staticText"/>
@@ -279,26 +311,15 @@ select
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[DD/MM/YYYY]]></text>
 				</staticText>
-				<line direction="BottomUp">
-					<reportElement
-						x="0"
-						y="3"
-						width="782"
-						height="0"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="line-4"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
 				<staticText>
 					<reportElement
 						x="0"
 						y="3"
-						width="78"
+						width="68"
 						height="36"
 						forecolor="#000000"
 						key="staticText-5"/>
@@ -307,13 +328,13 @@ select
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[FECHA]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="77"
+						x="68"
 						y="3"
 						width="78"
 						height="65"
@@ -324,7 +345,7 @@ select
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[RUC
 	
@@ -332,10 +353,10 @@ PROVEEDOR]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="154"
-						y="39"
-						width="80"
-						height="29"
+						x="146"
+						y="38"
+						width="79"
+						height="30"
 						forecolor="#000000"
 						key="staticText-7"/>
 					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -343,15 +364,15 @@ PROVEEDOR]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[TIPO]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="233"
-						y="39"
-						width="79"
+						x="225"
+						y="38"
+						width="87"
 						height="29"
 						forecolor="#000000"
 						key="staticText-8"/>
@@ -360,15 +381,15 @@ PROVEEDOR]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[NUMERO]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="154"
+						x="146"
 						y="3"
-						width="158"
+						width="166"
 						height="36"
 						forecolor="#000000"
 						key="staticText-9"/>
@@ -377,15 +398,15 @@ PROVEEDOR]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[DOCUMENTO]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="311"
+						x="312"
 						y="3"
-						width="79"
+						width="77"
 						height="65"
 						forecolor="#000000"
 						key="staticText-10"/>
@@ -394,7 +415,7 @@ PROVEEDOR]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[IMPORTE TOTAL
 FACTURA C/ IVA]]></text>
@@ -403,7 +424,7 @@ FACTURA C/ IVA]]></text>
 					<reportElement
 						x="389"
 						y="47"
-						width="79"
+						width="78"
 						height="21"
 						forecolor="#000000"
 						key="staticText-11"/>
@@ -412,7 +433,7 @@ FACTURA C/ IVA]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[IMPORTE S/ IVA]]></text>
 				</staticText>
@@ -420,7 +441,7 @@ FACTURA C/ IVA]]></text>
 					<reportElement
 						x="467"
 						y="47"
-						width="79"
+						width="78"
 						height="21"
 						forecolor="#000000"
 						key="staticText-12"/>
@@ -429,7 +450,7 @@ FACTURA C/ IVA]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[CRED. FISCAL]]></text>
 				</staticText>
@@ -437,7 +458,7 @@ FACTURA C/ IVA]]></text>
 					<reportElement
 						x="389"
 						y="26"
-						width="157"
+						width="156"
 						height="21"
 						forecolor="#000000"
 						key="staticText-13"/>
@@ -446,7 +467,7 @@ FACTURA C/ IVA]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[10 %]]></text>
 				</staticText>
@@ -454,7 +475,7 @@ FACTURA C/ IVA]]></text>
 					<reportElement
 						x="545"
 						y="47"
-						width="79"
+						width="78"
 						height="21"
 						forecolor="#000000"
 						key="staticText-14"/>
@@ -463,7 +484,7 @@ FACTURA C/ IVA]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[IMPORTE S/ IVA]]></text>
 				</staticText>
@@ -480,7 +501,7 @@ FACTURA C/ IVA]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[CRED. FISCAL]]></text>
 				</staticText>
@@ -497,7 +518,7 @@ FACTURA C/ IVA]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[5 %]]></text>
 				</staticText>
@@ -514,15 +535,15 @@ FACTURA C/ IVA]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[IMPORTES GRAVADOS DIFERENCIADOS POR TASAS DEL IVA]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="701"
+						x="702"
 						y="3"
-						width="81"
+						width="80"
 						height="65"
 						forecolor="#000000"
 						key="staticText-18"/>
@@ -531,209 +552,158 @@ FACTURA C/ IVA]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="11"/>
+						<font size="9"/>
 					</textElement>
 				<text><![CDATA[IMPORTE NO GRABADO O EXCENTO]]></text>
 				</staticText>
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="18"  isSplitAllowed="true" >
-				<line direction="TopDown">
+			<band height="21"  isSplitAllowed="false" >
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="0"
-						y="16"
-						width="782"
-						height="0"
-						forecolor="#808080"
-						backcolor="#FFFFFF"
-						key="line"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="0"
-						y="0"
-						width="78"
+						y="2"
+						width="68"
 						height="17"
 						forecolor="#000000"
 						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
+					<box></box>
 					<textElement>
-						<font size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{FECHA_COMPROBANTE}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="78"
-						y="0"
+						x="68"
+						y="2"
 						width="78"
 						height="17"
 						forecolor="#000000"
 						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
+					<box></box>
 					<textElement>
-						<font size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{RUC}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="156"
-						y="0"
+						x="146"
+						y="2"
 						width="78"
 						height="17"
 						forecolor="#000000"
 						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
+					<box></box>
 					<textElement>
-						<font size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DESC_COMPROBANTE}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="234"
-						y="0"
-						width="78"
+						x="225"
+						y="2"
+						width="87"
 						height="17"
 						forecolor="#000000"
 						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
+					<box></box>
 					<textElement>
-						<font size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NRO_COMPROBANTE}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="312"
-						y="0"
+						y="2"
 						width="78"
 						height="17"
 						forecolor="#000000"
 						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TOTAL_COMPROBANTE}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="390"
-						y="0"
+						y="2"
 						width="78"
 						height="17"
 						forecolor="#000000"
 						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{IMPORTE_SIN_IVA_10}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="468"
-						y="0"
+						y="2"
 						width="78"
 						height="17"
 						forecolor="#000000"
 						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{IMPORTE_IVA_10}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="546"
-						y="0"
+						y="2"
 						width="78"
 						height="17"
 						forecolor="#000000"
 						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{IMPORTE_SIN_IVA_5}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="624"
-						y="0"
+						y="2"
 						width="78"
 						height="17"
 						forecolor="#000000"
 						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{IMPORTE_IVA_5}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="702"
-						y="0"
+						y="2"
 						width="78"
 						height="17"
 						forecolor="#000000"
 						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{EXCENTA}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
 		<columnFooter>
-			<band height="0"  isSplitAllowed="true" >
+			<band height="0"  isSplitAllowed="false" >
 			</band>
 		</columnFooter>
 		<pageFooter>
@@ -754,7 +724,7 @@ FACTURA C/ IVA]]></text>
 					<textElement textAlignment="Right">
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Pag. " + $V{PAGE_NUMBER} + " / "]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -808,7 +778,113 @@ FACTURA C/ IVA]]></text>
 			</band>
 		</pageFooter>
 		<summary>
-			<band height="0"  isSplitAllowed="true" >
+			<band height="26"  isSplitAllowed="true" >
+				<line direction="TopDown">
+					<reportElement
+						x="309"
+						y="3"
+						width="473"
+						height="0"
+						key="line-4"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="312"
+						y="6"
+						width="78"
+						height="17"
+						forecolor="#000000"
+						key="textField-3"
+						positionType="Float"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{V_TOTAL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="390"
+						y="6"
+						width="78"
+						height="17"
+						forecolor="#000000"
+						key="textField-4"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{V_TOTAL_SIN_IVA10}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="468"
+						y="6"
+						width="78"
+						height="17"
+						forecolor="#000000"
+						key="textField-5"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{V_TOTAL_IVA10}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="546"
+						y="6"
+						width="78"
+						height="17"
+						forecolor="#000000"
+						key="textField-6"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{V_TOTAL_SIN_IVA5}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="624"
+						y="6"
+						width="78"
+						height="17"
+						forecolor="#000000"
+						key="textField-7"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{V_TOTAL_IVA5}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="702"
+						y="6"
+						width="78"
+						height="17"
+						forecolor="#000000"
+						key="textField-8"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{V_TOTAL_EXCENTA}]]></textFieldExpression>
+				</textField>
 			</band>
 		</summary>
 </jasperReport>
