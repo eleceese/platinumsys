@@ -110,7 +110,7 @@ select
            ) as importe_iva_5,
        sum(
            (case nd.porcentaje_iva
-               when 0 then (nd.total_iva * -1) * decode(nc.estado, 'ANULADO', 0, 1)
+               when 0 then (nd.monto * -1) * decode(nc.estado, 'ANULADO', 0, 1)
                else 0
             end) 
            )as excenta
@@ -349,7 +349,7 @@ select
 					</textElement>
 				<text><![CDATA[RUC
 	
-PROVEEDOR]]></text>
+CLIENTE]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -452,7 +452,7 @@ FACTURA C/ IVA]]></text>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9"/>
 					</textElement>
-				<text><![CDATA[CRED. FISCAL]]></text>
+				<text><![CDATA[DÉBITO FISCAL]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -503,7 +503,7 @@ FACTURA C/ IVA]]></text>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9"/>
 					</textElement>
-				<text><![CDATA[CRED. FISCAL]]></text>
+				<text><![CDATA[DÉBITO FISCAL]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -562,14 +562,14 @@ FACTURA C/ IVA]]></text>
 			<band height="21"  isSplitAllowed="false" >
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="0"
+						x="8"
 						y="2"
-						width="68"
+						width="60"
 						height="17"
 						forecolor="#000000"
 						key="textField"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Left">
 						<font size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{FECHA_COMPROBANTE}]]></textFieldExpression>
@@ -885,6 +885,19 @@ FACTURA C/ IVA]]></text>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{V_TOTAL_EXCENTA}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement
+						x="224"
+						y="7"
+						width="78"
+						height="15"
+						key="staticText-19"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font size="9"/>
+					</textElement>
+				<text><![CDATA[TOTALES]]></text>
+				</staticText>
 			</band>
 		</summary>
 </jasperReport>

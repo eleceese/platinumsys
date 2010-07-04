@@ -452,7 +452,7 @@ FACTURA C/ IVA]]></text>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9"/>
 					</textElement>
-				<text><![CDATA[CRED. FISCAL]]></text>
+				<text><![CDATA[CREDITO FISCAL]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -503,7 +503,7 @@ FACTURA C/ IVA]]></text>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9"/>
 					</textElement>
-				<text><![CDATA[CRED. FISCAL]]></text>
+				<text><![CDATA[CREDITO FISCAL]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -562,9 +562,9 @@ FACTURA C/ IVA]]></text>
 			<band height="21"  isSplitAllowed="false" >
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="0"
+						x="2"
 						y="2"
-						width="68"
+						width="66"
 						height="17"
 						forecolor="#000000"
 						key="textField"/>
@@ -885,6 +885,19 @@ FACTURA C/ IVA]]></text>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{V_TOTAL_EXCENTA}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement
+						x="225"
+						y="7"
+						width="78"
+						height="15"
+						key="staticText-19"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font size="9"/>
+					</textElement>
+				<text><![CDATA[TOTALES]]></text>
+				</staticText>
 			</band>
 		</summary>
 </jasperReport>
