@@ -30,102 +30,102 @@
 from 
 (
 select        
-       cab.fecha          as fecha_comprobante, 
-       p.ruc_proveedor    as ruc,
+       cab.fecha_factura  as fecha_comprobante, 
+       p.ruc_cliente      as ruc,
        t.desc_tipo        as desc_comprobante,
-       cab.nro_factura    as nro_comprobante,
-       cab.total * decode(cab.estado, 'A', 0, 1) as total_comprobante,
+       cab.establecimiento|| '-' || cab.boca_expendio || '-' || lpad(to_char(cab.numero_factura), 10, '0')    as nro_comprobante,
+       cab.total_factura * decode(cab.estado_factura, 'ANULADO', 0, 1) as total_comprobante,
        sum(
-           (case det.porc_iva
-               when 10 then (det.precio_uni * det.cantidad) * decode(cab.estado, 'A', 0, 1)
+           (case det.porcentaje_iva
+               when 10 then (det.sub_total) * decode(cab.estado_factura, 'ANULADO', 0, 1)
                else 0
             end)
            ) as importe_sin_iva_10,
         sum(
-             (case det.porc_iva
-                 when 10 then det.monto_iva * decode(cab.estado, 'A', 0, 1)
+             (case det.porcentaje_iva
+                 when 10 then det.total_iva * decode(cab.estado_factura, 'ANULADO', 0, 1)
                  else 0
               end)
             ) as importe_iva_10,
        sum(
-           (case det.porc_iva
-               when 5 then (det.precio_uni * det.cantidad)  * decode(cab.estado, 'A', 0, 1)
+           (case det.porcentaje_iva
+               when 5 then (det.sub_total)  * decode(cab.estado_factura, 'ANULADO', 0, 1)
                else 0
             end)
           )as importe_sin_iva_5,
        sum(
-            (case det.porc_iva
-             when 5 then det.monto_iva * decode(cab.estado, 'A', 0, 1)
+            (case det.porcentaje_iva
+             when 5 then det.total_iva * decode(cab.estado_factura, 'ANULADO', 0, 1)
              else 0
              end) 
            )as importe_iva_5,
        sum(
-           (case det.porc_iva
-            when 0 then det.total * decode(cab.estado, 'A', 0, 1)
+           (case det.porcentaje_iva
+            when 0 then det.sub_total * decode(cab.estado_factura, 'ANULADO', 0, 1)
             else 0
             end)
            ) as excenta           
-  from factura_compra_cab cab
-         inner join factura_compra_det det 
-           on det.cod_fac_com_cab = cab.cod_fac_com_cab
+  from factura_cabecera cab
+         inner join factura_detalle det 
+           on det.cod_factura = cab.cod_factura
          inner join tipo_comprobante   t 
-           on t.cod_tipo = cab.tipo
-         inner join proveedor          p 
-           on p.cod_proveedor = cab.cod_proveedor
- group by  cab.fecha, 
-           p.ruc_proveedor,
+           on t.cod_tipo = cab.tipo_factura
+         inner join cliente          p 
+           on p.cod_cliente = cab.cod_cliente
+ group by  cab.fecha_factura, 
+           p.ruc_cliente,
            t.desc_tipo,
-           cab.nro_factura,
-           cab.total  * decode(cab.estado, 'A', 0, 1)
+           cab.establecimiento|| '-' || cab.boca_expendio || '-' || lpad(to_char(cab.numero_factura), 10, '0'),
+           cab.total_factura  * decode(cab.estado_factura, 'ANULADO', 0, 1)
  union all 
  select        
-       nc.fecha             as fecha_comprobante, 
-       p.ruc_proveedor      as ruc,
-       t.desc_tipo          as desc_comprobante,
-       nc.nro_nota_credito  as nro_comprobante,
-       (nc.total * -1) * decode(nc.estado, 'ANULADO', 0, 1) as total_comprobante,
+       nc.fecha_nota_credito as fecha_comprobante, 
+       p.ruc_cliente         as ruc,
+       t.desc_tipo           as desc_comprobante,
+       nc.establecimiento|| '-' || nc.boca_expendio || '-' || lpad(to_char(nc.num_nota_credto_cliente), 10, '0')  as nro_comprobante,
+       (nc.total_nota_credito * -1) * decode(nc.estado, 'ANULADO', 0, 1) as total_comprobante,
        sum(
-           (case nd.porc_iva
-               when 10 then ((nd.total)* -1) * decode(nc.estado, 'ANULADO', 0, 1)
+           (case nd.porcentaje_iva
+               when 10 then ((nd.monto)* -1) * decode(nc.estado, 'ANULADO', 0, 1)
                else 0
             end) 
           ) as importe_sin_iva_10,
        sum(
-           (case nd.porc_iva
-               when 10 then (nd.monto_iva * -1) * decode(nc.estado, 'ANULADO', 0, 1)
+           (case nd.porcentaje_iva
+               when 10 then (nd.total_iva * -1) * decode(nc.estado, 'ANULADO', 0, 1)
                else 0
             end) 
            ) as importe_iva_10,
         sum(
-            (case nd.porc_iva
-               when 5 then ((nd.total)* -1) * decode(nc.estado, 'ANULADO', 0, 1)
+            (case nd.porcentaje_iva
+               when 5 then ((nd.monto)* -1) * decode(nc.estado, 'ANULADO', 0, 1)
                else 0
             end) 
             )as importe_sin_iva_5,
        sum(
-           (case nd.porc_iva
-               when 5 then (nd.monto_iva * -1) * decode(nc.estado, 'ANULADO', 0, 1)
+           (case nd.porcentaje_iva
+               when 5 then (nd.total_iva * -1) * decode(nc.estado, 'ANULADO', 0, 1)
                else 0
             end) 
            ) as importe_iva_5,
        sum(
-           (case nd.porc_iva
-               when 0 then (nd.total * -1) * decode(nc.estado, 'ANULADO', 0, 1)
+           (case nd.porcentaje_iva
+               when 0 then (nd.monto * -1) * decode(nc.estado, 'ANULADO', 0, 1)
                else 0
             end) 
            )as excenta
-  from nota_credito_prov_cab nc
-         inner join nota_credito_prov_det nd 
-           on nd.cod_not_cre_cab = nc.cod_not_cre_cab
+  from nota_credito_cli_cabecera nc
+         inner join nota_credito_cli_detalle nd 
+           on nd.cod_nota_credito_cliente = nc.cod_nota_credito_cliente
          inner join tipo_comprobante   t 
            on t.cod_tipo = nc.tipo
-         inner join proveedor          p 
-           on p.cod_proveedor = nc.cod_proveedor
- group by nc.fecha, 
-       p.ruc_proveedor,
+         inner join cliente          p 
+           on p.cod_cliente = nc.cod_cliente
+ group by nc.fecha_nota_credito, 
+       p.ruc_cliente,
        t.desc_tipo,
-       nc.nro_nota_credito,
-       (nc.total * -1) * decode(nc.estado, 'ANULADO', 0, 1)
+       nc.establecimiento|| '-' || nc.boca_expendio || '-' || lpad(to_char(nc.num_nota_credto_cliente), 10, '0'),
+       (nc.total_nota_credito * -1) * decode(nc.estado, 'ANULADO', 0, 1)
  ) aux
  order by aux.fecha_comprobante, 
           aux.desc_comprobante,
@@ -281,7 +281,7 @@ select
 					<textElement textAlignment="Center">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
 					</textElement>
-				<text><![CDATA[LIBRO IVA COMPRA]]></text>
+				<text><![CDATA[LIBRO IVA VENTA]]></text>
 				</staticText>
 			</band>
 		</pageHeader>
