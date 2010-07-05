@@ -42,7 +42,7 @@
 	<field name="DESC_PRODUCTO" class="java.lang.String"/>
 	<field name="CANTIDAD" class="java.math.BigDecimal"/>
 
-	<variable name="Total" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+	<variable name="Total" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
 		<variableExpression><![CDATA[$F{CANTIDAD}]]></variableExpression>
 	</variable>
 		<background>
@@ -201,7 +201,7 @@
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="74"  isSplitAllowed="true" >
+			<band height="42"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="150"
@@ -265,7 +265,7 @@
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="442"
+						x="441"
 						y="2"
 						width="92"
 						height="17"
@@ -366,44 +366,6 @@
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{COD_PRODUCTO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="443"
-						y="53"
-						width="92"
-						height="16"
-						key="textField-5"
-						positionType="FixRelativeToBottom"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font size="12"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{Total}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement
-						x="376"
-						y="53"
-						width="61"
-						height="16"
-						key="staticText-8"
-						positionType="FixRelativeToBottom"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font size="12"/>
-					</textElement>
-				<text><![CDATA[Total:]]></text>
-				</staticText>
-				<line direction="TopDown">
-					<reportElement
-						x="443"
-						y="51"
-						width="92"
-						height="1"
-						key="line-1"
-						positionType="FixRelativeToBottom"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
 			</band>
 		</detail>
 		<columnFooter>
@@ -462,7 +424,45 @@
 			</band>
 		</pageFooter>
 		<summary>
-			<band height="0"  isSplitAllowed="true" >
+			<band height="40"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="443"
+						y="6"
+						width="92"
+						height="16"
+						key="textField-5"
+						positionType="FixRelativeToBottom"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{Total}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="376"
+						y="6"
+						width="61"
+						height="16"
+						key="staticText-8"
+						positionType="FixRelativeToBottom"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="12"/>
+					</textElement>
+				<text><![CDATA[Total]]></text>
+				</staticText>
+				<line direction="TopDown">
+					<reportElement
+						x="443"
+						y="4"
+						width="92"
+						height="1"
+						key="line-1"
+						positionType="FixRelativeToBottom"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
 			</band>
 		</summary>
 </jasperReport>
