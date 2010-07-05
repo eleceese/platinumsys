@@ -6,6 +6,8 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,6 +34,23 @@ public class ReciboDetalle implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="RECIBO_DET_SEQUENCE")
     @Column(name = "COD_RECIBO_DET")
     private Long codReciboDet;
+    @Column(name = "TIPO_COMPROBANTE")
+    private Integer tipoComprobante;
+    @Column(name = "NRO_COMPROBANTE")
+    private Integer nroComprobante;
+    @Column(name = "COMPROBANTE")
+    private String comprobante;
+    @Column(name = "NRO_CUOTA")
+    private Integer nroCuota;
+    @Column(name = "MONTO_CUOTA")
+    private BigInteger montoCuota;
+    @Column(name = "SALDO_CUOTA")
+    private BigInteger saldoCuota;
+    @Column(name = "MONTO_PAGO")
+    private BigInteger montoPago;
+    @Column(name = "FECHA_VENCIMIENTO")
+    @Temporal(TemporalType.DATE)
+    private Date fechaVencimiento;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -69,6 +88,14 @@ public class ReciboDetalle implements Serializable {
         this.usuarioAlta = usuarioAlta;
     }
 
+    public Date getFechaVencimiento() {
+        return fechaVencimiento;
+    }
+
+    public void setFechaVencimiento(Date fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
+
     public String getUsuarioModif() {
         return usuarioModif;
     }
@@ -101,6 +128,63 @@ public class ReciboDetalle implements Serializable {
         this.codRecibo = codRecibo;
     }
 
+    public String getComprobante() {
+        return comprobante;
+    }
+
+    public void setComprobante(String comprobante) {
+        this.comprobante = comprobante;
+    }
+
+    public BigInteger getMontoCuota() {
+        return montoCuota;
+    }
+
+    public void setMontoCuota(BigInteger montoCuota) {
+        this.montoCuota = montoCuota;
+    }
+
+    public BigInteger getMontoPago() {
+        return montoPago;
+    }
+
+    public void setMontoPago(BigInteger montoPago) {
+        this.montoPago = montoPago;
+    }
+
+    public Integer getNroComprobante() {
+        return nroComprobante;
+    }
+
+    public void setNroComprobante(Integer nroComprobante) {
+        this.nroComprobante = nroComprobante;
+    }
+
+    public Integer getNroCuota() {
+        return nroCuota;
+    }
+
+    public void setNroCuota(Integer nroCuota) {
+        this.nroCuota = nroCuota;
+    }
+
+    public BigInteger getSaldoCuota() {
+        return saldoCuota;
+    }
+
+    public void setSaldoCuota(BigInteger saldoCuota) {
+        this.saldoCuota = saldoCuota;
+    }
+
+    public Integer getTipoComprobante() {
+        return tipoComprobante;
+    }
+
+    public void setTipoComprobante(Integer tipoComprobante) {
+        this.tipoComprobante = tipoComprobante;
+    }
+
+    
     @Override
     public int hashCode() {
         int hash = 0;
