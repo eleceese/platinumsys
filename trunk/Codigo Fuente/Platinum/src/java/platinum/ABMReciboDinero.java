@@ -284,15 +284,6 @@ public class ABMReciboDinero extends AbstractPageBean {
     public void setUiTxtNroRecibo(TextField tf) {
         this.uiTxtNroRecibo = tf;
     }
-    private DropDown uiLstTipoComprobante = new DropDown();
-
-    public DropDown getUiLstTipoComprobante() {
-        return uiLstTipoComprobante;
-    }
-
-    public void setUiLstTipoComprobante(DropDown dd) {
-        this.uiLstTipoComprobante = dd;
-    }
     private DropDown uiLstEstado = new DropDown();
 
     public DropDown getUiLstEstado() {
@@ -311,23 +302,14 @@ public class ABMReciboDinero extends AbstractPageBean {
     public void setUiTxtCodCliente(TextField tf) {
         this.uiTxtCodCliente = tf;
     }
-    private TextField uiTxtTotalIva = new TextField();
+    private TextField uiTxtTotal1 = new TextField();
 
-    public TextField getUiTxtTotalIva() {
-        return uiTxtTotalIva;
+    public TextField getUiTxtTotal1() {
+        return uiTxtTotal1;
     }
 
-    public void setUiTxtTotalIva(TextField tf) {
-        this.uiTxtTotalIva = tf;
-    }
-    private TextField uiTxtCantidad = new TextField();
-
-    public TextField getUiTxtCantidad() {
-        return uiTxtCantidad;
-    }
-
-    public void setUiTxtCantidad(TextField tf) {
-        this.uiTxtCantidad = tf;
+    public void setUiTxtTotal1(TextField tf) {
+        this.uiTxtTotal1 = tf;
     }
     private TextField uiTxtSaldoCuota = new TextField();
 
@@ -392,50 +374,14 @@ public class ABMReciboDinero extends AbstractPageBean {
     public void setGridPanelBtnBuscar(HtmlPanelGrid hpg) {
         this.gridPanelBtnBuscar = hpg;
     }
-    private SingleSelectOptionsList uiLstIvaDefaultOptions = new SingleSelectOptionsList();
+    private TextField uiTxtMontoCobro = new TextField();
 
-    public SingleSelectOptionsList getUiLstIvaDefaultOptions() {
-        return uiLstIvaDefaultOptions;
+    public TextField getUiTxtMontoCobro() {
+        return uiTxtMontoCobro;
     }
 
-    public void setUiLstIvaDefaultOptions(SingleSelectOptionsList ssol) {
-        this.uiLstIvaDefaultOptions = ssol;
-    }
-    private TextField uiTxtMontoIva = new TextField();
-
-    public TextField getUiTxtMontoIva() {
-        return uiTxtMontoIva;
-    }
-
-    public void setUiTxtMontoIva(TextField tf) {
-        this.uiTxtMontoIva = tf;
-    }
-    private TextField uiTxtMontoTotal = new TextField();
-
-    public TextField getUiTxtMontoTotal() {
-        return uiTxtMontoTotal;
-    }
-
-    public void setUiTxtMontoTotal(TextField tf) {
-        this.uiTxtMontoTotal = tf;
-    }
-    private DropDown uiLstIva = new DropDown();
-
-    public DropDown getUiLstIva() {
-        return uiLstIva;
-    }
-
-    public void setUiLstIva(DropDown dd) {
-        this.uiLstIva = dd;
-    }
-    private DropDown uiLstTipoComprobante1 = new DropDown();
-
-    public DropDown getUiLstTipoComprobante1() {
-        return uiLstTipoComprobante1;
-    }
-
-    public void setUiLstTipoComprobante1(DropDown dd) {
-        this.uiLstTipoComprobante1 = dd;
+    public void setUiTxtMontoCobro(TextField tf) {
+        this.uiTxtMontoCobro = tf;
     }
     private CharacterConverter characterConverter1 = new CharacterConverter();
 
@@ -542,10 +488,6 @@ public class ABMReciboDinero extends AbstractPageBean {
      * <p>Construct a new Page bean instance.</p>
      */
     public ABMReciboDinero() {
-
-        //Tipos de IVA
-        uiLstIvaDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("0", "Exento"), new com.sun.webui.jsf.model.Option("5", "IVA 5%"), new com.sun.webui.jsf.model.Option("10", "IVA 10%")});
-        uiLstIvaDefaultOptions.setSelectedValue("0");
 
         //Estados de la factura
         FacturaVentaEstado[] lstEstado = FacturaVentaEstado.values();
@@ -684,7 +626,7 @@ public class ABMReciboDinero extends AbstractPageBean {
         uiTxtCodCliente.setText(null);
         uiTxtNombreCliente.setText(null);
         uiTxtNroRecibo.setText(null);
-        uiTxtTotalIva.setText("0");
+        uiTxtTotal1.setText("0");
         uiTxtSubTotal.setText("0");
         uiTxtTotal.setText("0");
         uiTxtPorcDescuento.setText("0");
@@ -849,11 +791,10 @@ public class ABMReciboDinero extends AbstractPageBean {
             uiTxtCodCliente.setText(cabecera.getCodCliente().getCodCliente());
             uiTxtNombreCliente.setText(cabecera.getCodCliente().getNombreCliente());
             uiLstEstado.setSelected(cabecera.getEstadoFactura());
-            uiLstTipoComprobante.setSelected(cabecera.getTipoFactura().getCodTipo().toString());
             uiCalFecha.setSelectedDate(cabecera.getFechaFactura());
             uiTxtSubTotal.setText(String.valueOf(cabecera.getSubtotalFactura()));
             uiTxtTotal.setText(String.valueOf(cabecera.getTotalFactura()));
-            uiTxtTotalIva.setText(String.valueOf(cabecera.getTotalIvaFactura()));
+            uiTxtTotal1.setText(String.valueOf(cabecera.getTotalIvaFactura()));
         }
 
 
@@ -922,7 +863,7 @@ public class ABMReciboDinero extends AbstractPageBean {
             
             //Tipo de comprobante
             cabecera.setTipoFactura(tipoComprobante);
-            cabecera.setTotalIvaFactura(Long.valueOf(uiTxtTotalIva.getText().toString()));
+            cabecera.setTotalIvaFactura(Long.valueOf(uiTxtTotal1.getText().toString()));
             cabecera.setSubtotalFactura(Long.valueOf(uiTxtSubTotal.getText().toString()));
             cabecera.setTotalFactura(Long.valueOf(uiTxtTotal.getText().toString()));
 
@@ -976,20 +917,6 @@ public class ABMReciboDinero extends AbstractPageBean {
 
             if (cliente == null) {
                 info("Codigo de Cliente ingresado no es encontrado, campo obligatorio favor ingrese un codigo correcto");
-                this.errorValidacion = true;
-            }
-        }
-
-        //Tipo de Comprobante
-        if (this.uiLstTipoComprobante.getSelected() == null) {
-            info("Tipo de Comprobante, campo obligatorio");
-            this.errorValidacion = true;
-        }else{
-            //Validamos el codigo del Cliente ingresado
-            tipoComprobante = new TipoComprobanteController().findById(Long.valueOf(this.uiLstTipoComprobante.getSelected().toString()));
-
-            if (tipoComprobante == null) {
-                info("Tipo de Comprobante ingresado no es encontrado, campo obligatorio");
                 this.errorValidacion = true;
             }
         }
@@ -1187,11 +1114,9 @@ public class ABMReciboDinero extends AbstractPageBean {
 
             //Obtenemos los datos ingresados
             detalle.setCodProducto(producto);
-            detalle.setCantidad(Long.valueOf(uiTxtCantidad.getText().toString()));
             detalle.setPrecioUnitario(Long.valueOf(uiTxtSaldoCuota.getText().toString()));
-            detalle.setPorcentajeIva(Double.valueOf(uiLstIva.getSelected().toString()));
-            detalle.setTotalIva(Long.valueOf(uiTxtMontoIva.getText().toString()));
-            detalle.setSubTotal(Long.valueOf(uiTxtMontoTotal.getText().toString()));
+           
+            detalle.setSubTotal(Long.valueOf(uiTxtMontoCobro.getText().toString()));
 
             //Agregamos a la lista
             if (itemDet == null) {
@@ -1236,20 +1161,6 @@ public class ABMReciboDinero extends AbstractPageBean {
             }
         }
 
-        //Cantidad
-        if (this.uiTxtCantidad.getText() == null || this.uiTxtCantidad.getText().equals("")) {
-            info("Cantidad del Producto obligatorio, ingrese un valor");
-            errorValidacion = true;
-        } else {
-            //Verificamos si la cantidad es un numero
-            String cantidad = this.uiTxtCantidad.getText().toString();
-
-            if (!StringUtils.esNumero(cantidad) || !StringUtils.esNumeroDecimal(cantidad)) {
-                info("Cantidad del Producto,debe se Numero");
-                errorValidacion = true;
-            }
-        }
-
         //Precio
         if (this.uiTxtSaldoCuota.getText() == null || this.uiTxtSaldoCuota.getText().equals("")) {
             info("Precio del Producto obligatorio, ingrese un valor");
@@ -1262,18 +1173,6 @@ public class ABMReciboDinero extends AbstractPageBean {
                 info("Precio del Producto, debe se Numero");
                 errorValidacion = true;
             }
-        }
-
-        //Unidad medida
-        if (this.uiLstTipoComprobante1.getSelected() == null) {
-            info("Unidad de medida, Campo obligatorio favor ingrese un valor");
-            errorValidacion = true;
-        }
-
-        //Iva
-        if (this.uiLstIva.getSelected() == null) {
-            info("Tipo de IVA, Campo obligatorio favor ingrese un valor");
-            errorValidacion = true;
         }
 
     }
@@ -1301,12 +1200,8 @@ public class ABMReciboDinero extends AbstractPageBean {
         //Obtenemos los valores del detalle q ha sido seleccionado
         uiTxtCodComprobante.setText(detalle.getCodProducto().getCodProducto());
         uiTxtNroComprobante.setText(detalle.getCodProducto().getDescripcion());
-        uiLstTipoComprobante1.setSelected(detalle.getCodProducto().getCodUnidadMedida().getCodUnidadMedida().toString());
         uiTxtSaldoCuota.setText(detalle.getPrecioUnitario());
-        uiTxtCantidad.setText(detalle.getCantidad());
-        uiLstIva.setSelected(String.valueOf(Double.valueOf(detalle.getPorcentajeIva()).longValue()));
-        uiTxtMontoIva.setText(detalle.getTotalIva());
-        uiTxtMontoTotal.setText(detalle.getSubTotal());
+        uiTxtMontoCobro.setText(detalle.getSubTotal());
 
         //result
         return null;
@@ -1371,7 +1266,7 @@ public class ABMReciboDinero extends AbstractPageBean {
 
         //Actualizamos los totales de la cabecera
         uiTxtSubTotal.setText(String.valueOf(total - totalIva));
-        uiTxtTotalIva.setText(String.valueOf(totalIva));
+        uiTxtTotal1.setText(String.valueOf(totalIva));
 
         //Aplicamos el descuento
         totalDescuento = (long) ((total + totalIva) * porcDescuento / 100);
@@ -1388,9 +1283,7 @@ public class ABMReciboDinero extends AbstractPageBean {
         uiTxtCodComprobante.setText(null);
         uiTxtNroComprobante.setText(null);
         uiTxtSaldoCuota.setText(null);
-        uiTxtCantidad.setText(null);
-        uiTxtMontoIva.setText(null);
-        uiTxtMontoTotal.setText(null);
+        uiTxtMontoCobro.setText(null);
         itemDet = null;
     }
 
@@ -1451,7 +1344,7 @@ public class ABMReciboDinero extends AbstractPageBean {
                 uiCalFecha.setSelectedDate(new Date());
                 uiLstEstado.setSelected(FacturaVentaEstado.PENDIENTE_COBRO.toString());
                 uiTxtTotal.setText(pedido.getTotal());
-                uiTxtTotalIva.setText(pedido.getTotalIva());
+                uiTxtTotal1.setText(pedido.getTotalIva());
                 uiTxtSubTotal.setText(pedido.getSubTotal());
 
                 //Detalle
