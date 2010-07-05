@@ -1,0 +1,5 @@
+--agregamos porcentaje iva al producto
+alter table producto add porcentaje_iva number(5,2);
+alter table entrada_salida_cabecera add tipo_comprobante NUMBER(10);
+alter table entrada_salida_cabecera add nro_comprobante NUMBER(15);
+alter table entrada_salida_detalle add existencia number;

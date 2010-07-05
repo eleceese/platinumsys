@@ -1,7 +1,25 @@
 
-
-
+0.  ANULAR FACTURA COMPRA, VER MENSAJE (NRO DE FACTURA YA EXISTE)
 1.  Proceso de confirmacion de facurta compra pra impactar en el stock
 2.  Agregar iva en producto y estiramos de dicha tabla para la venta
 3.  Anular facturas venta solo del dia
-4.  
+4.  Calcular costo promedio
+	
+	alter table HISTORICO_COSTO drop constraint HISTORICO_COSTO_UK1 cascade;
+  
+	alter table historico_costo add costo_compra number;
+	alter table historico_costo add costo_actual number;
+	alter table historico_costo add existencia_actual number(15,2);
+	alter table historico_costo add existencia_compra number(15,2);
+	
+
+5.  Agregar tipo, nro comprobante en cabecera de la entrada salida y en el detalle la cantidad despues del producto
+    5.1 al insertar una factura compra, factura venta, nota credito proveedor y nota credito cliente.
+	
+	
+	Antes de modificar la existencia de los productos, se debe insertar un entrada salida cab/det. con la existencia 
+    del producto sumando la cantidad del movimiento a la existencia actual sin la aplicacion del movimiento. 
+
+     Al Anular una compra se debe eliminar la entrada.
+	 
+6. enviar fecha alta usuario alta correctos desde abms
