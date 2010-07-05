@@ -173,6 +173,7 @@ public class FacturaVentaCabeceraListener {
                 pedidoCabecera.setEstadoPedido(PedidoVentaEstado.PENDIENTE);
 
                 //Actualizamos
+
                 pedidoCabeceraController.update(pedidoCabecera);
             }
 
