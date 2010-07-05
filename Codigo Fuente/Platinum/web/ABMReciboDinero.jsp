@@ -75,7 +75,7 @@
                                             <webuijsf:radioButton binding="#{ABMReciboDinero.radioButton1}" id="radioButton1" label=""
                                                 name="#{ABMReciboDinero.radioButton1.id}" onClick="delSelect='ok'" selected="#{ABMReciboDinero.selected}" selectedValue="#{ABMReciboDinero.selectedValue}"/>
                                         </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Tipo" id="tableColumnTipoComprobante" width="96">
+                                        <webuijsf:tableColumn headerText="Serie" id="tableColumnSerie" width="96">
                                             <webuijsf:staticText id="staticTextTipo" text="#{currentRow.value['tipoFactura'].descTipo}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Nro. Recibo" id="tableColumn2" width="130">
@@ -86,9 +86,6 @@
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Emisión" id="tableColumn4" width="96">
                                             <webuijsf:staticText converter="#{SessionBean1.dateTimeConverter}" id="staticText4" text="#{currentRow.value['fechaFactura']}"/>
-                                        </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn headerText="Vencimiento" id="tableColumnVencimiento" width="96">
-                                            <webuijsf:staticText converter="#{SessionBean1.dateTimeConverter}" id="staticText4" text="#{currentRow.value['fechaVencimiento']}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Estado" id="tableColumn5" width="112">
                                             <webuijsf:staticText converter="#{ABMReciboDinero.characterConverter1}" id="staticText8" text="#{currentRow.value['estadoFactura']}"/>
@@ -103,10 +100,9 @@
                                 </h:panelGrid>
                                 <h:panelGrid binding="#{ABMReciboDinero.addUpdatePanel}" columns="1" id="addUpdatePanel">
                                     <h:panelGrid cellpadding="1" columns="3" id="panelGridCabeceraCompra" style="text-align: left" width="743">
-                                        <webuijsf:label for="uiLstTipoComprobante" id="lblTipoFactura" text="SERIE"/>
+                                        <webuijsf:label id="lblTipoFactura" text="SERIE"/>
                                         <h:panelGrid cellpadding="2" cellspacing="2" columns="3" id="panelGridCabCompra1" width="335">
-                                            <webuijsf:dropDown binding="#{ABMReciboDinero.uiLstTipoComprobante}" id="uiLstTipoComprobante"
-                                                items="#{SessionBean1.listaTipoComprobanteOption}" width="100px"/>
+                                            <webuijsf:textField columns="10" id="uiTxtSerie" maxLength="15"/>
                                             <webuijsf:label id="lblNroFac" text="NRO. RECIBO"/>
                                             <webuijsf:textField binding="#{ABMReciboDinero.uiTxtNroRecibo}" id="uiTxtNroRecibo" maxLength="20" onClick="document.getElementById('form1:uiLstTipoComprobante_list').focus(); return false;"/>
                                         </h:panelGrid>
@@ -120,15 +116,15 @@
                                             target="popup" text="Cliente" url="/faces/popup/popupCliente.jsp"/>
                                         <h:panelGrid columns="2" id="gridPanelProveedor" width="335">
                                             <webuijsf:textField binding="#{ABMReciboDinero.uiTxtCodCliente}" columns="10" id="uiTxtCodCliente" maxLength="15"/>
-                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtNombreCliente}" columns="50" id="uiTxtNombreCliente"/>
+                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtNombreCliente}" columns="50" id="uiTxtNombreCliente" onFocus="document.getElementById('form1:uiBtnCancelar').focus(); return false;"/>
                                         </h:panelGrid>
                                         <h:panelGrid columns="2" id="panelGridCabCompra3" style="height: 26px; text-align: right" width="200">
                                             <webuijsf:label id="lblFecha" text="Fecha"/>
                                             <webuijsf:calendar binding="#{ABMReciboDinero.uiCalFecha}" columns="15" dateFormatPattern="dd/MM/yyyy"
                                                 id="uiCalFecha" style="margin-left: 24px"/>
                                         </h:panelGrid>
-                                        <webuijsf:label id="lblTotalIva" text="TOTAL IVA"/>
-                                        <webuijsf:textField binding="#{ABMReciboDinero.uiTxtTotalIva}" columns="20" id="uiTxtTotalIva"
+                                        <webuijsf:label id="lblTotalIva" text="TOTAL"/>
+                                        <webuijsf:textField binding="#{ABMReciboDinero.uiTxtTotal1}" columns="20" id="uiTxtTotal1"
                                             onFocus="document.getElementById('form1:uiBtnCancelar').focus(); return false;" style="text-align: right"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanel1"
@@ -143,40 +139,38 @@
                                     <webuijsf:messageGroup id="messageGroup1" showGlobalOnly="true" style="width: 719px"/>
                                     <h:panelGrid id="gridPanel2" style="width: 100%; height: 100%;">
                                         <webuijsf:label id="label5" style="font-size: 16px" text="Detalle Recibo"/>
-                                        <h:panelGrid binding="#{ABMReciboDinero.gridPanelDetLin1}" columns="7" id="gridPanelDetLin1" style="height: 24px" width="743">
+                                        <h:panelGrid binding="#{ABMReciboDinero.gridPanelDetLin1}" columns="10" id="gridPanelDetLin1" style="height: 24px" width="743">
                                             <webuijsf:hyperlink id="hyperlink2"
-                                                onClick="doPopup('form1:uiTxtCodProducto_field', 'form1:uiTxtDescProducto_field', 'form1:uiTxtPrecioUnitario_field')"
-                                                target="popup" text="Producto" url="/faces/popup/popupProductoVenta.jsp"/>
-                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtCodComprobante}" columns="10" id="uiTxtCodComprobante"/>
-                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtNroComprobante}" columns="30" id="uiTxtNroComprobante" onFocus="document.getElementById('form1:uiLstUnidadMedida_list').focus(); return false;"/>
+                                                onClick="doPopup('form1:uiTxtDescComprobante_field', 'form1:uiTxtNroComprobante_field', 'form1:uiTxtCodComprobante_field', 'form1:uiTxtNroCuota_field', 'form1:uiTxtSaldoCuota_field')"
+                                                target="popup" text="Comprobante" url="/faces/popup/popupProductoVenta.jsp"/>
+                                            <webuijsf:textField columns="18" id="uiTxtDescComprobante" onFocus="document.getElementById('form1:uiTxtMontoCobro_field').focus(); return false;"/>
+                                            <webuijsf:label id="lblnro" text="Nro.:"/>
+                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtNroComprobante}" columns="15" id="uiTxtNroComprobante" onFocus="document.getElementById('form1:uiTxtMontoCobro_field').focus(); return false;"/>
+                                            <webuijsf:label id="lblCodComprobante" text="Codigo"/>
+                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtCodComprobante}" columns="10" id="uiTxtCodComprobante" onFocus="document.getElementById('form1:uiTxtMontoCobro_field').focus(); return false;"/>
+                                            <webuijsf:label id="lblFecVencimiento" text="Vencimiento"/>
+                                            <webuijsf:textField columns="10" id="uiTxtFecVencimiento"
+                                                onFocus="document.getElementById('form1:uiTxtMontoCobro_field').focus(); return false;" style="margin-left: -20px; text-align: left"/>
+                                        </h:panelGrid>
+                                        <h:panelGrid binding="#{ABMReciboDinero.gridPanelDetLin2}" columns="12" id="gridPanelDetLin2" style="height: 24px"
+                                                width="767"> x&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                            <webuijsf:label
+                                                id="lblTipoComprobante1" text="Cuota"/>
+                                            <webuijsf:textField columns="5" id="uiTxtNroCuota" onFocus="document.getElementById('form1:uiTxtMontoCobro_field').focus(); return false;"/>
+                                            <webuijsf:label id="lblTipoComprobante1" text="DE"/>
+                                            <webuijsf:textField columns="5" id="uiTxtCantCuota" onFocus="document.getElementById('form1:uiTxtMontoCobro_field').focus(); return false;"/>
+                                            <webuijsf:label id="lblPrecio1" text="Monto Cuota"/>
+                                            <webuijsf:textField columns="15" id="uiTxtMontoCuota"
+                                                onFocus="document.getElementById('form1:uiTxtMontoCobro_field').focus(); return false;" style="margin-left: -20px; text-align: left"/>
                                             <webuijsf:label id="lblPrecio" text="Saldo Cuota"/>
                                             <webuijsf:textField binding="#{ABMReciboDinero.uiTxtSaldoCuota}" columns="15" id="uiTxtSaldoCuota"
-                                                onFocus="document.getElementById('form1:uiLstUnidadMedida_list').focus(); return false;" style="margin-left: -20px; text-align: left"/>
-                                            <webuijsf:label id="lblTipoComprobante" text="Tipo"/>
-                                            <webuijsf:dropDown binding="#{ABMReciboDinero.uiLstTipoComprobante1}" id="uiLstTipoComprobante1"
-                                                items="#{SessionBean1.listaUnidadMedidasOp}"
-                                                onClick="document.getElementById('form1:uiTxtCantidad_field').focus(); return false;"
-                                                onFocus="document.getElementById('form1:uiTxtCantidad_field').focus(); return false;" width="110"/>
-                                        </h:panelGrid>
-                                        <h:panelGrid binding="#{ABMReciboDinero.gridPanelDetLin2}" columns="10" id="gridPanelDetLin2" style="height: 24px" width="719">
-                                            <webuijsf:label id="lblCantida" text="Cantidad"/>
-                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtCantidad}" columns="10" id="uiTxtCantidad"
-                                                onBlur="calcularMonto7('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )" style="text-align: right"/>
-                                            <webuijsf:label id="lblPorcIVA" text="Tipo de Impuesto"/>
-                                            <webuijsf:dropDown binding="#{ABMReciboDinero.uiLstIva}" id="uiLstIva"
-                                                items="#{ABMReciboDinero.uiLstIvaDefaultOptions.options}"
-                                                onChange="calcularMonto7('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )"
-                                                selected="#{ABMReciboDinero.uiLstIvaDefaultOptions.selectedValue}" width="70"/>
-                                            <webuijsf:label id="lblMontoIva" text="Monto IVA"/>
-                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtMontoIva}" columns="12" id="uiTxtMontoIva"
-                                                onFocus="document.getElementById('form1:uiBtnAgregarDet').focus(); return false;" style="text-align: right"/>
-                                            <webuijsf:label id="lblMontoTotal" text="Monto Total"/>
-                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtMontoTotal}" columns="15" id="uiTxtMontoTotal"
-                                                onFocus="document.getElementById('form1:uiBtnAgregarDet').focus(); return false;" style="text-align: right"/>
+                                                onFocus="document.getElementById('form1:uiTxtMontoCobro_field').focus(); return false;" style="margin-left: -20px; text-align: left"/>
+                                            <webuijsf:label id="lblMontoTotal" text="Monto Cobro"/>
+                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtMontoCobro}" columns="15" id="uiTxtMontoCobro" style="text-align: right"/>
                                             <webuijsf:button actionExpression="#{ABMReciboDinero.uiBtnAgregarDet_action}" id="uiBtnAgregarDet" text="Agregar"/>
                                             <webuijsf:button actionExpression="#{ABMReciboDinero.uiBtnCancelarDetalle_action}" id="uiBtnCancelarDetalle" text="Cancelar"/>
                                         </h:panelGrid>
-                                        <webuijsf:table augmentTitle="false" binding="#{ABMReciboDinero.tableDetalle}" id="tableDetalle" title="Detalle" width="720">
+                                        <webuijsf:table augmentTitle="false" binding="#{ABMReciboDinero.tableDetalle}" id="tableDetalle" title="Detalle" width="743">
                                             <webuijsf:tableRowGroup binding="#{ABMReciboDinero.tableRowGroup2}" id="tableRowGroup2" rows="5"
                                                 sourceData="#{ABMReciboDinero.lstDetalle}" sourceVar="currentRow">
                                                 <webuijsf:tableColumn headerText="Cod. Producto" id="tableColumn1">

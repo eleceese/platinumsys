@@ -180,6 +180,7 @@
                                             <webuijsf:dropDown binding="#{ABMPedidoCliente.uiLstIva}" id="uiLstIva"
                                                 items="#{ABMPedidoCliente.uiLstIvaDefaultOptions.options}"
                                                 onChange="calcularMonto7('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field', 'form1:uiTxtPorcDescuento_field', 'form1:uiTxtMontoDescuento_field' )"
+                                                onFocus="document.getElementById('form1:uiTxtMontoIva').focus(); return false;"
                                                 selected="#{ABMPedidoCliente.uiLstIvaDefaultOptions.selectedValue}" width="70"/>
                                             <webuijsf:label id="lblMontoIva" text="Monto IVA"/>
                                             <webuijsf:textField binding="#{ABMPedidoCliente.uiTxtMontoIva}" columns="12" id="uiTxtMontoIva"

@@ -173,6 +173,105 @@ function doSave(val1, val2,val3,val4,val5) {
     window.close();
 }
 
+function doPopup(destination1, destination2, destination3, destination4,destination5, destination6, destination7, destination8, destination9) {
+    popup = window.open("", "popup", "height=500,width=600,toolbar=no, menubar=no,scrollbars=yes");
+
+    if( destination1 != null ){
+        destinationElement1=document.getElementById(destination1);
+    }else{
+        destinationElement1=null;
+    }
+
+    if( destination2 != null ){
+        destinationElement2=document.getElementById(destination2);
+    }else{
+        destinationElement2=null;
+    }
+
+    if( destination3 != null ){
+        destinationElement3=document.getElementById(destination3);
+    }else{
+        destinationElement3=null;
+    }
+    if( destination4 != null ){
+        destinationElement4=document.getElementById(destination4);
+    }else{
+        destinationElement4=null;
+    }
+    if( destination5 != null ){
+        destinationElement5=document.getElementById(destination5);
+    }else{
+        destinationElement5=null;
+    }
+    if( destination6 != null ){
+        destinationElement6=document.getElementById(destination6);
+    }else{
+        destinationElement6=null;
+    }
+
+    if( destination7 != null ){
+        destinationElement7=document.getElementById(destination7);
+    }else{
+        destinationElement7=null;
+    }
+
+    if( destination8 != null ){
+        destinationElement8=document.getElementById(destination8);
+    }else{
+        destinationElement8=null;
+    }
+    if( destination9 != null ){
+        destinationElement9=document.getElementById(destination9);
+    }else{
+        destinationElement9=null;
+    }
+    
+}
+
+function setVal(val1, val2, val3,val4,val5,val6, val7, val8,val9){
+    if (destinationElement1 != null){
+        destinationElement1.value = val1;
+    }
+
+    if (destinationElement2 != null){
+        destinationElement2.value = val2;
+    }
+
+    if (destinationElement3 != null){
+        destinationElement3.value = val3;
+    }
+
+    if (destinationElement4 != null){
+        destinationElement4.value = val4;
+    }
+
+    if (destinationElement5 != null){
+        destinationElement5.value = val5;
+    }
+
+    if (destinationElement6 != null){
+        destinationElement6.value = val6;
+    }
+
+    if (destinationElement7 != null){
+        destinationElement7.value = val7;
+    }
+
+    if (destinationElement8 != null){
+        destinationElement8.value = val8;
+    }
+
+    if (destinationElement9 != null){
+        destinationElement9.value = val9;
+    }
+
+}
+
+function doSave(val1, val2, val3, val4, val5, val6, val7, val8, val9) {
+    window.opener.setVal(val1, val2, val3, val4, val5, val6, val7, val8, val9);
+    window.close();
+}
+
 
 function calcularMonto5(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal ) {
     /*Inicializamos las variables*/
@@ -218,7 +317,6 @@ function calcularMonto5(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal ) 
             //Calulamos monto total y monto IVA
             vMontoTotal = vPrecio * vCantidad;
             vMontoIva   = vIva / 100 * vMontoTotal;
-            vMontoTotal = vMontoTotal + vMontoIva;
 
             //Actualizamos el value de los componentes
             eMontoIva.value   = vMontoIva;
@@ -279,17 +377,22 @@ function calcularMonto7(uiPrecio, uiCantidad, uiIva, uiMontoIva, uiMontoTotal, u
                 vPorcDescuento = ePorcDescuento.value;
             }
 
-            //Calulamos monto total y monto IVA
+            //Calulamos monto total
             vMontoTotal = vPrecio * vCantidad;
+            //Calculamos el descuento
+            vMontoDescuento = vMontoTotal * vPorcDescuento / 100;
+            //Aplicamos el descuento
+            vMontoTotal     =  vMontoTotal - vMontoDescuento;
+            //Calculamos el monto IVA
             vMontoIva   = vIva / 100 * vMontoTotal;
-            vMontoTotal = vMontoTotal + vMontoIva;
+            //Sumamos el monto iva al monto total
+            vMontoTotal = vMontoTotal;
 
             //Actualizamos el value de los componentes
             eMontoIva.value   = vMontoIva;
             eMontoTotal.value = vMontoTotal;
 
-            //Calculamos el descuento
-            vMontoDescuento = vMontoTotal * vPorcDescuento / 100;
+            
 
             //Aplicamos el descuento
             eMontoTotal.value = vMontoTotal - vMontoDescuento;
