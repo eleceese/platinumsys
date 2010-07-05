@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="classic"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="595"
+		 pageHeight="842"
+		 columnWidth="535"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<queryString><![CDATA[select to_char(fc.fecha_factura, 'DD') as dia,
+       to_char(fc.fecha_factura, 'MONTH') as mes,
+       to_char(fc.fecha_factura, 'YYYY') as anio,
+       fc.establecimiento||'-'||fc.boca_expendio||'-'||lpad(to_char(fc.numero_factura), 10, '0') as nro_comprobante,
+       (case  when t.cant_cuota = 0 then 'S' else 'N' end) as es_contado,
+       (case  when t.cant_cuota > 0 then 'S' else 'N' end) as es_credito,
+       initcap(c.apellido_cliente || ', ' || c.nombre_cliente) as cliente,
+       c.ruc_cliente       as ruc_cliente,
+       c.direccion_cliente as direccion,
+       c.telefono1_cliente as telefono,
+       fd.cod_producto     as cod_producto,
+       p.descripcion       as desc_producto,
+       fd.cantidad         as cantidad,
+       fd.precio_unitario  as precio_unitario,
+       decode(fd.porcentaje_iva, 0, (fd.total_iva+fd.sub_total), 0) as excenta,
+       decode(fd.porcentaje_iva, 5, (fd.total_iva+fd.sub_total), 0) as iva5,
+       decode(fd.porcentaje_iva, 10, (fd.total_iva+fd.sub_total), 0) as iva10,
+       fc.total_factura as total,
+       numToLetras(fc.total_factura) as total_letras
+  from factura_cabecera   fc
+       inner join factura_detalle fd on fd.cod_factura = fc.cod_factura
+       inner join tipo_comprobante t on t.cod_tipo = fc.tipo_factura
+       inner join cliente c on c.cod_cliente  = fc.cod_cliente
+       inner join producto p on p.cod_producto = fd.cod_producto
+  ]]></queryString>
+
+	<field name="DIA" class="java.lang.String"/>
+	<field name="MES" class="java.lang.String"/>
+	<field name="ANIO" class="java.lang.String"/>
+	<field name="NRO_COMPROBANTE" class="java.lang.String"/>
+	<field name="ES_CONTADO" class="java.lang.String"/>
+	<field name="ES_CREDITO" class="java.lang.String"/>
+	<field name="CLIENTE" class="java.lang.String"/>
+	<field name="RUC_CLIENTE" class="java.lang.String"/>
+	<field name="DIRECCION" class="java.lang.String"/>
+	<field name="TELEFONO" class="java.lang.String"/>
+	<field name="COD_PRODUCTO" class="java.math.BigDecimal"/>
+	<field name="DESC_PRODUCTO" class="java.lang.String"/>
+	<field name="CANTIDAD" class="java.math.BigDecimal"/>
+	<field name="PRECIO_UNITARIO" class="java.math.BigDecimal"/>
+	<field name="EXCENTA" class="java.math.BigDecimal"/>
+	<field name="IVA5" class="java.math.BigDecimal"/>
+	<field name="IVA10" class="java.math.BigDecimal"/>
+	<field name="TOTAL" class="java.math.BigDecimal"/>
+	<field name="TOTAL_LETRAS" class="java.lang.String"/>
+
+
+		<group  name="NRO_COMPROBANTE" >
+			<groupExpression><![CDATA[$F{NRO_COMPROBANTE}]]></groupExpression>
+			<groupHeader>
+			<band height="290"  isSplitAllowed="true" >
+				<rectangle>
+					<reportElement
+						x="280"
+						y="0"
+						width="255"
+						height="119"
+						key="rectangle-2"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<rectangle>
+					<reportElement
+						x="1"
+						y="0"
+						width="255"
+						height="119"
+						key="rectangle-1"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="325"
+						y="89"
+						width="165"
+						height="23"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NRO_COMPROBANTE}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="67"
+						y="129"
+						width="44"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DIA}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="139"
+						y="129"
+						width="72"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{MES}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="239"
+						y="129"
+						width="54"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ANIO}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="59"
+						y="173"
+						width="411"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{CLIENTE}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="74"
+						y="209"
+						width="122"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{RUC_CLIENTE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="9"
+						y="209"
+						width="63"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText"
+						positionType="Float"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<text><![CDATA[R.U.C. Nº:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="72"
+						y="191"
+						width="398"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DIRECCION}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="293"
+						y="209"
+						width="177"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TELEFONO}]]></textFieldExpression>
+				</textField>
+				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="43"
+						y="10"
+						width="161"
+						height="60"
+						key="image-1"/>
+					<box></box>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA["logo_platinum.jpg"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement
+						x="9"
+						y="75"
+						width="239"
+						height="37"
+						key="staticText-1"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font size="9"/>
+					</textElement>
+				<text><![CDATA[Calle Juez Enrique Pino Nº 2519 - Barrio Campo Grande
+Tel./Fax: 672 994
+Asunción - Paraguay
+]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="325"
+						y="10"
+						width="165"
+						height="79"
+						key="staticText-2"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font/>
+					</textElement>
+				<text><![CDATA[
+TIMBRADO Nº 27735457
+R.U.C.:80037724-9			
+Válido Hasta 30 de Julio de 2010			
+
+FACTURA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="288"
+						y="89"
+						width="30"
+						height="21"
+						key="staticText-3"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[NRO.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="9"
+						y="128"
+						width="53"
+						height="18"
+						key="staticText-4"/>
+					<box></box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<text><![CDATA[Asuncion]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="116"
+						y="129"
+						width="18"
+						height="18"
+						key="staticText-5"/>
+					<box></box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<text><![CDATA[de]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="216"
+						y="129"
+						width="18"
+						height="18"
+						key="staticText-6"/>
+					<box></box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<text><![CDATA[de]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="9"
+						y="155"
+						width="112"
+						height="18"
+						key="staticText-7"/>
+					<box></box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<text><![CDATA[Tipo Comprobante]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="178"
+						y="155"
+						width="50"
+						height="18"
+						key="staticText-8"/>
+					<box></box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<text><![CDATA[Contado]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="265"
+						y="155"
+						width="50"
+						height="18"
+						key="staticText-9"/>
+					<box></box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<text><![CDATA[Credito]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement
+						x="234"
+						y="155"
+						width="15"
+						height="15"
+						key="rectangle-3"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<rectangle>
+					<reportElement
+						x="318"
+						y="155"
+						width="15"
+						height="15"
+						key="rectangle-4"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<staticText>
+					<reportElement
+						x="234"
+						y="155"
+						width="14"
+						height="15"
+						key="staticText-10">
+							<printWhenExpression><![CDATA[$F{ES_CONTADO}.equals("S")]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[X]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="318"
+						y="155"
+						width="15"
+						height="15"
+						key="staticText-11">
+							<printWhenExpression><![CDATA[$F{ES_CREDITO}.equals("S")]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[X]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="9"
+						y="172"
+						width="44"
+						height="18"
+						key="staticText-12"/>
+					<box></box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<text><![CDATA[Cliente]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="9"
+						y="191"
+						width="58"
+						height="18"
+						key="staticText-13"/>
+					<box></box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<text><![CDATA[Direccion]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="228"
+						y="209"
+						width="63"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-14"
+						positionType="Float"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<text><![CDATA[Teléfono:]]></text>
+				</staticText>
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+			</groupFooter>
+		</group>
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="354"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="1"
+						y="34"
+						width="52"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{COD_PRODUCTO}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="52"
+						y="34"
+						width="174"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DESC_PRODUCTO}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="288"
+						y="34"
+						width="57"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CANTIDAD}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="225"
+						y="34"
+						width="63"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{PRECIO_UNITARIO}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="345"
+						y="34"
+						width="66"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{EXCENTA}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="411"
+						y="34"
+						width="68"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{IVA5}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="479"
+						y="34"
+						width="56"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{IVA10}]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="70"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="404"
+						y="5"
+						width="131"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TOTAL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="127"
+						y="32"
+						width="398"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TOTAL_LETRAS}]]></textFieldExpression>
+				</textField>
+			</band>
+		</summary>
+</jasperReport>
