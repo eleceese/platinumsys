@@ -58,26 +58,26 @@ insert into marca (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, F
 insert into marca (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (11, 'Caran d''ache', '', '', null, null);
 
 --Tipos de Comprobantes
-insert into tipo_comprobante values (1, 'Factura Contado - Compra', 0, 'COMPRA', 0);
-insert into tipo_comprobante values (2, 'Factura Crédito 30 días - Compra', 30, 'COMPRA', 1);
-insert into tipo_comprobante values (3, 'Factura Crédito 30 días/2 Cuotas - Compra', 30, 'COMPRA', 2);
-insert into tipo_comprobante values (4, 'Factura Crédito 30 días/3 Cuotas - Compra', 30, 'COMPRA', 3);
-insert into tipo_comprobante values (5, 'Factura Crédito 30 días/4 Cuotas - Compra', 30, 'COMPRA', 4);
-insert into tipo_comprobante values (6, 'Factura Crédito 30 días/5 Cuotas - Compra', 30, 'COMPRA', 5);
-insert into tipo_comprobante values (7, 'Factura Crédito 30 días/6 Cuotas - Compra', 30, 'COMPRA', 6);
-insert into tipo_comprobante values (8, 'Factura Contado - Venta', 0, 'VENTA', 0);
-insert into tipo_comprobante values (9, 'Factura Crédito 30 días - Venta', 30, 'VENTA', 1);
-insert into tipo_comprobante values (10, 'Factura Crédito 30 días/2 Cuotas - Venta', 30, 'VENTA', 2);
-insert into tipo_comprobante values (11, 'Factura Crédito 30 días/3 Cuotas - Venta', 30, 'VENTA', 3);
-insert into tipo_comprobante values (12, 'Factura Crédito 30 días/4 Cuotas - Venta', 30, 'VENTA', 4);
-insert into tipo_comprobante values (13, 'Factura Crédito 30 días/5 Cuotas - Venta', 30, 'VENTA', 5);
-insert into tipo_comprobante values (14, 'Factura Crédito 30 días/6 Cuotas - Venta', 30, 'VENTA', 6);
+insert into tipo_comprobante values (1, 'Factura Contado - Compra', 0, 'COMPRA', 0, 'Factura Contado');
+insert into tipo_comprobante values (2, 'Factura Crédito 30 días - Compra', 30, 'COMPRA', 1, 'Factura Crédito');
+insert into tipo_comprobante values (3, 'Factura Crédito 30 días/2 Cuotas - Compra', 30, 'COMPRA', 2, 'Factura Crédito');
+insert into tipo_comprobante values (4, 'Factura Crédito 30 días/3 Cuotas - Compra', 30, 'COMPRA', 3, 'Factura Crédito');
+insert into tipo_comprobante values (5, 'Factura Crédito 30 días/4 Cuotas - Compra', 30, 'COMPRA', 4, 'Factura Crédito');
+insert into tipo_comprobante values (6, 'Factura Crédito 30 días/5 Cuotas - Compra', 30, 'COMPRA', 5, 'Factura Crédito');
+insert into tipo_comprobante values (7, 'Factura Crédito 30 días/6 Cuotas - Compra', 30, 'COMPRA', 6, 'Factura Crédito');
+insert into tipo_comprobante values (8, 'Factura Contado - Venta', 0, 'VENTA', 0, 'Factura Contado');
+insert into tipo_comprobante values (9, 'Factura Crédito 30 días - Venta', 30, 'VENTA', 1, 'Factura Crédito');
+insert into tipo_comprobante values (10, 'Factura Crédito 30 días/2 Cuotas - Venta', 30, 'VENTA', 2, 'Factura Crédito');
+insert into tipo_comprobante values (11, 'Factura Crédito 30 días/3 Cuotas - Venta', 30, 'VENTA', 3, 'Factura Crédito');
+insert into tipo_comprobante values (12, 'Factura Crédito 30 días/4 Cuotas - Venta', 30, 'VENTA', 4, 'Factura Crédito');
+insert into tipo_comprobante values (13, 'Factura Crédito 30 días/5 Cuotas - Venta', 30, 'VENTA', 5, 'Factura Crédito');
+insert into tipo_comprobante values (14, 'Factura Crédito 30 días/6 Cuotas - Venta', 30, 'VENTA', 6, 'Factura Crédito');
 
-insert into tipo_comprobante values (15, 'Nota de Crédito - Proveedor', 0, 'PAGO PROVEEDOR', 0);
-insert into tipo_comprobante values (16, 'Nota de Crédito - Cliente', 0, 'PAGO CLIENTE', 0);
-insert into tipo_comprobante values (17, 'Recibo de Dinero - Cobranza', 0, 'COBRANZA', 0);
-insert into tipo_comprobante values (18, 'Movimiento de Caja - Cobranza', 0, 'COBRANZA', 0);
-insert into tipo_comprobante values (19, 'Pedido - Cliente', 0, 'PEDIDO CLIENTE', 0);
+insert into tipo_comprobante values (15, 'Nota de Crédito - Proveedor', 0, 'PAGO PROVEEDOR', 0, 'Nota Crédito');
+insert into tipo_comprobante values (16, 'Nota de Crédito - Cliente', 0, 'PAGO CLIENTE', 0, 'Nota Crédito');
+insert into tipo_comprobante values (17, 'Recibo de Dinero - Cobranza', 0, 'COBRANZA', 0, 'Recibo Dinero');
+insert into tipo_comprobante values (18, 'Movimiento de Caja - Cobranza', 0, 'COBRANZA', 0, 'Movimiento Caja');
+insert into tipo_comprobante values (19, 'Pedido - Cliente', 0, 'PEDIDO CLIENTE', 0, 'Pedido');
 
 --Ciudad
 insert into ciudad (CODCIUDAD, NOMBRECIUDAD) values (1, 'Asunción');

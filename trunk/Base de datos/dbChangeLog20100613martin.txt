@@ -15,5 +15,170 @@ alter table recibo_detalle drop column COD_FACTURA;
 alter table recibo_detalle add TIPO_COMPROBANTE  NUMBER(10);
 alter table recibo_detalle add NRO_COMPROBANTE   NUMBER;
 alter table recibo_detalle add NRO_CUOTA         NUMBER(5);
+alter table recibo_detalle add monto_cuota       NUMBER;
 alter table recibo_detalle add saldo_cuota       NUMBER;
 alter table recibo_detalle add monto_pago 	     NUMBER;
+alter table recibo_detalle add comprobante varchar2(30);
+alter table recibo_detalle add fecha_vencimiento DATE;
+alter table tipo_comprobante add desc_tipo_abreviado varchar2(20);
+
+
+CREATE OR REPLACE FUNCTION NUMTOLETRAS(Numero Number) RETURN Varchar2 IS
+  TYPE Textos IS TABLE OF Varchar2(20) INDEX BY BINARY_INTEGER;
+  Texto         Textos;
+  Letras        Varchar2(255) := '';
+  I             BINARY_INTEGER := 0;
+  EnTexto       Varchar2(255);
+  Unidad        Varchar2(255);
+  Grupo         Varchar2(255);
+  TextoCentena  Varchar2(255);
+  TextoDecena   Varchar2(255);
+  TextoUnidad   Varchar2(255);
+  Y             Varchar2(255);
+  Decimales     Varchar2(255);
+  DigitoCentena Number;
+  DigitoDecena  Number;
+  DigitoUnidad  Number;
+
+BEGIN
+  Texto(0) := 'UN ';
+  Texto(1) := 'UNO ';
+  Texto(2) := 'DOS ';
+  Texto(3) := 'TRES ';
+  Texto(4) := 'CUATRO ';
+  Texto(5) := 'CINCO ';
+  Texto(6) := 'SEIS ';
+  Texto(7) := 'SIETE ';
+  Texto(8) := 'OCHO ';
+  Texto(9) := 'NUEVE ';
+  Texto(10) := 'DIEZ ';
+  Texto(11) := 'VEINTE ';
+  Texto(12) := 'TREINTA ';
+  Texto(13) := 'CUARENTA ';
+  Texto(14) := 'CINCUENTA ';
+  Texto(15) := 'SESENTA ';
+  Texto(16) := 'SETENTA ';
+  Texto(17) := 'OCHENTA ';
+  Texto(18) := 'NOVENTA ';
+  Texto(19) := 'ONCE ';
+  Texto(20) := 'DOCE ';
+  Texto(21) := 'TRECE ';
+  Texto(22) := 'CATORCE ';
+  Texto(23) := 'QUINCE ';
+  Texto(24) := 'CIEN ';
+  Texto(25) := 'CIENTO ';
+  Texto(26) := 'DOSCIENTOS ';
+  Texto(27) := 'TRESCIENTOS ';
+  Texto(28) := 'CUATROCIENTOS ';
+  Texto(29) := 'QUINIENTOS ';
+  Texto(30) := 'SEISCIENTOS ';
+  Texto(31) := 'SETECIENTOS ';
+  Texto(32) := 'OCHOCIENTOS ';
+  Texto(33) := 'NOVECIENTOS ';
+  Texto(34) := 'MIL ';
+  Texto(35) := 'MILLON ';
+  Texto(36) := 'MILLONES ';
+
+  EnTexto := ltrim(rtrim(TO_CHAR(TRUNC(Numero), '99999999999'))); -- Convirtiendo el numero a un string de 12 posiciones.
+  EnTexto := lpad(EnTexto, 12, '0'); --Rellena de 0's
+
+  -- Este ciclo recorre el numero de tres en tres posiciones. 
+  FOR I IN 1 .. 4 LOOP Grupo := SUBSTR(EnTexto,
+  I * 3 - 2,
+  3); -- Obtiene el grupo de tres digitos segun el contador del ciclo.
+
+  -- Establece las unidades a usar: “mil'' o “millon''
+  IF I = 1 or I = 3 THEN
+    Unidad := Texto(34);
+  ELSE
+    If I = 2 THEN
+      IF TO_NUMBER(Grupo) = 1 THEN
+        Unidad := Texto(35);
+      ELSE
+        Unidad := Texto(36);
+      END IF;
+    ELSE
+      Unidad := '';
+    END IF;
+  END IF;
+
+  -- Si hay un numero el grupo lo evalua, sino sigue con el siguiente grupo.
+  If TO_NUMBER(Grupo) > 0 Then
+    If TO_NUMBER(Grupo) = 1 Then
+      -- Por los casos de “mil'' o “un millon'' se evalua cuando el valor sea 1.
+      IF I = 2 THEN
+        TextoUnidad := Texto(0);
+      ELSE
+        IF I = 4 THEN
+          TextoUnidad := Texto(1);
+        ELSE
+          TextoUnidad := '';
+        END IF;
+      END IF;
+      Letras := Letras || TextoUnidad || Unidad;
+    ELSE
+      --                        ' Los demas casos que no son 1.
+      -- Se asignan a variables cada digito del grupo de tres.
+      DigitoCentena := TO_NUMBER(SUBSTR(Grupo, 1, 1));
+      DigitoDecena  := TO_NUMBER(SUBSTR(Grupo, 2, 1));
+      DigitoUnidad  := TO_NUMBER(SUBSTR(Grupo, 3, 1));
+    
+      -- Si hay algo en los cientos lo analiza sino lo deja pasar.
+      If DigitoCentena <> 0 Then
+        -- En el caso que sea 100 le asigna de una vez, sino el texto que le corresponde segun la
+        -- posicion en el vector.
+        IF Grupo = '100' THEN
+          TextoCentena := Texto(24);
+        ELSE
+          TextoCentena := Texto(24 + DigitoCentena);
+        END IF;
+      End If;
+    
+      -- Analiza sino se encuentra entre el 11 y el 15.
+      If DigitoDecena = 1 And DigitoUnidad >= 1 And DigitoUnidad <= 5 Then
+        TextoDecena := Texto(18 + DigitoUnidad);
+        TextoUnidad := NULL;
+        Y           := NULL;
+      
+        -- Evalua Los demas numeros fuera del 11 al 15.
+      Else
+        -- Si hay numero en las decenas asigna la posicion correspondiente en el vector.
+        IF DigitoDecena <> 0 THEN
+          TextoDecena := Texto(9 + DigitoDecena);
+        ELSE
+          TextoDecena := '';
+        END IF;
+      
+        -- Si hay numero en las unidades asigna la posicion correspondiente en el vector.
+        IF DigitoUnidad <> 0 THEN
+          TextoUnidad := Texto(DigitoUnidad);
+        ELSE
+          TextoUnidad := '';
+        END IF;
+      
+        -- Evalua si hay que conectar con “y''.
+        IF DigitoUnidad > 0 AND DigitoDecena > 0 THEN
+          Y := 'Y ';
+        ELSE
+          Y := '';
+        END IF;
+      End If;
+      -- Une los textos generados en este grupo y los va agregando al resultado
+      -- de la funcion letras.
+      Letras := Letras || TextoCentena || TextoDecena || Y || TextoUnidad ||
+                Unidad;
+    
+    END IF;
+  END IF;
+
+END LOOP;
+
+--Evalua si hay decimales.
+IF   TRUNC(Numero) = Numero THEN Decimales := ' ';
+ELSE Decimales := 'CON ' ||
+                  SUBSTR(TO_CHAR(Numero, '99999999999.99'), 14, 2) || '/00';
+END IF;
+--Une los decimales al valor de retorno de la funcion.
+Letras := Letras || Decimales;
+
+RETURN Letras; EXCEPTION WHEN OTHERS THEN RETURN 'NO CONVERTIDO'; END;
