@@ -26,11 +26,15 @@
 	<parameter name="usuario" isForPrompting="true" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["Admin"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="fechaDesde" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="fechaHasta" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="logo_path" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="parametros" isForPrompting="false" class="java.lang.String"/>
 	<queryString><![CDATA[select p.cod_producto as cod_producto, p.descripcion as desc_producto, sum(d.cantidad_pedida) cantidad_pedido, sum(d.cantidad_entregada) cantidad_entrega
   from pedido_cabecera c, pedido_detalle d, producto p
  where c.estado_pedido != 'ANULADO'
    and d.cod_pedido = c.cod_pedido
-   and p.cod_producto= d.cod_producto
+   and p.cod_producto= d.cod_producto $P!{parametros}
 group by p.cod_producto, p.descripcion
 order by p.descripcion asc]]></queryString>
 
@@ -123,59 +127,33 @@ order by p.descripcion asc]]></queryString>
 						key="image-1"/>
 					<box></box>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["logo_platinum.jpg"]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo_path}]]></imageExpression>
 				</image>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="55"
-						y="108"
-						width="82"
-						height="17"
-						key="textField-2"/>
-					<box></box>
-					<textElement>
-						<font/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{usuario}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement
 						x="1"
-						y="107"
-						width="49"
-						height="20"
-						key="staticText-2"/>
-					<box></box>
-					<textElement verticalAlignment="Top">
-						<font/>
-					</textElement>
-				<text><![CDATA[Producto:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="205"
-						y="107"
-						width="146"
-						height="20"
+						y="105"
+						width="69"
+						height="15"
 						key="staticText-3"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Desde: 11/11/2010]]></text>
+				<text><![CDATA[Fecha Desde:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="398"
-						y="107"
-						width="134"
-						height="20"
+						x="194"
+						y="105"
+						width="64"
+						height="15"
 						key="staticText-4"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Hasta: 11/11/2010]]></text>
+				<text><![CDATA[Fecha Hasta:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -192,8 +170,34 @@ order by p.descripcion asc]]></queryString>
 					<textElement textAlignment="Center">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
 					</textElement>
-				<text><![CDATA[Estadistica Pedidos Por Prodcuto]]></text>
+				<text><![CDATA[Estadistica Pedidos ]]></text>
 				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="70"
+						y="105"
+						width="100"
+						height="18"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaDesde}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="258"
+						y="105"
+						width="100"
+						height="18"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaHasta}]]></textFieldExpression>
+				</textField>
 			</band>
 		</pageHeader>
 		<columnHeader>

@@ -181,8 +181,8 @@ public class LSTLibroIVAVenta extends AbstractPageBean {
         ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
 
         //Array de Variables
-        String[] sparamName = new String[3];
-        String[] sparamValue = new String[3];
+        String[] sparamName = new String[4];
+        String[] sparamValue = new String[4];
 
         //Parametros
         String fechaDesde, fechaHasta, sql = "";
@@ -209,6 +209,8 @@ public class LSTLibroIVAVenta extends AbstractPageBean {
         sparamValue[1] = fechaDesde;
         sparamName[2] = "fechaHasta";
         sparamValue[2] = fechaHasta;
+        sparamName[3] = "logo_path";
+        sparamValue[3] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
 
         try {
             rpt.getReport(conn, "LibroIvaVenta.jrxml", sparamName, sparamValue, theApplicationsServletContext);

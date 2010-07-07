@@ -23,11 +23,12 @@
                         <div>
                             <h:panelGrid columns="2" id="mainContainer" style="height: 221px; left: 288px; top: 235px; position: absolute; vertical-align: top" width="456">
                                 <webuijsf:label id="label1" text="Fecha Inicio"/>
-                                <webuijsf:calendar columns="15" id="textField2"/>
+                                <webuijsf:calendar binding="#{LSTRanking.uiCalDesde}" columns="15" id="uiCalDesde"/>
                                 <webuijsf:label id="label3" text="Fecha Fin"/>
-                                <webuijsf:calendar columns="15" id="textField3"/>
+                                <webuijsf:calendar binding="#{LSTRanking.uiCalHasta}" columns="15" id="uiCalHasta"/>
                                 <webuijsf:label id="labelTipoListado" text="Tipo Listado"/>
-                                <webuijsf:radioButtonGroup columns="2" id="radioButtonGroup1" items="#{LSTRanking.radioButtonGroup1DefaultOptions.options}" selected="#{LSTRanking.radioButtonGroup1DefaultOptions.selectedValue}"/>
+                                <webuijsf:radioButtonGroup binding="#{LSTRanking.uiTipoReporte}" columns="2" id="uiTipoReporte"
+                                    items="#{LSTRanking.uiTipoReporteDefaultOptions.options}" selected="#{LSTRanking.uiTipoReporteDefaultOptions.selectedValue}"/>
                                 <webuijsf:button actionExpression="#{LSTRanking.button1_action}" id="button1" text="Ejecutar"/>
                                 <webuijsf:button actionExpression="#{LSTRanking.button2_action}" id="button2" text="Cancelar"/>
                             </h:panelGrid>

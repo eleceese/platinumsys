@@ -27,21 +27,10 @@
                                     <webuijsf:textField columns="10" id="txtCodProducto" style="margin-left: 7px"/>
                                     <webuijsf:textField columns="35" id="txtDescProducto"/>
                                 </h:panelGrid>
-                                <webuijsf:label id="lblEstado" text="Estado"/>
-                                <webuijsf:dropDown id="dropDown2" items="#{LSTEstadisticaDeVenta.dropDown2DefaultOptions.options}"
-                                    selected="#{LSTEstadisticaDeVenta.dropDown2DefaultOptions.selectedValue}" style="margin-left: 11px" width="120px"/>
-                                <webuijsf:label id="lblMarca" text="Marca"/>
-                                <webuijsf:dropDown id="dropDown3" items="#{LSTEstadisticaDeVenta.dropDown3DefaultOptions.options}"
-                                    selected="#{LSTEstadisticaDeVenta.dropDown3DefaultOptions.selectedValue}" style="margin-left: 11px" width="120px"/>
-                                <webuijsf:hyperlink id="linkVendedor" text="Vendedor"/>
-                                <h:panelGrid columns="2" id="panelVendedor">
-                                    <webuijsf:textField columns="10" id="txtCodEmpleado" style="margin-left: 7px"/>
-                                    <webuijsf:textField columns="35" id="txtNombEmpleado"/>
-                                </h:panelGrid>
                                 <webuijsf:label id="lblFecInicio" text="Fecha Desde"/>
-                                <webuijsf:calendar columns="15" id="txtFecApertura"/>
+                                <webuijsf:calendar binding="#{LSTEstadisticaDeVenta.uiCalDesde}" columns="15" id="txtFecApertura"/>
                                 <webuijsf:label id="lblFecFin" text="Fecha Hasta"/>
-                                <webuijsf:calendar columns="15" id="txtFecAprobacion"/>
+                                <webuijsf:calendar binding="#{LSTEstadisticaDeVenta.uiCalHasta}" columns="15" id="uiCalHasta"/>
                                 <webuijsf:button actionExpression="#{LSTEstadisticaDeVenta.button1_action}" id="button1" text="Ejecutar"/>
                                 <webuijsf:button actionExpression="#{LSTEstadisticaDeVenta.button2_action}" id="button2" text="Cancelar"/>
                             </h:panelGrid>

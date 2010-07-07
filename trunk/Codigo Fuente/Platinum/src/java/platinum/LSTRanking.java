@@ -6,8 +6,16 @@
 package platinum;
 
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
+import com.sun.webui.jsf.component.Calendar;
+import com.sun.webui.jsf.component.RadioButtonGroup;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.sql.Connection;
+import java.sql.SQLException;
 import javax.faces.FacesException;
+import javax.servlet.ServletContext;
+import py.com.platinum.utils.DateUtils;
+import reportes.GetConnection;
+import reportes.RptCreate;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -30,17 +38,44 @@ public class LSTRanking extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-        radioButtonGroup1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("CLI", "Clientes"), new com.sun.webui.jsf.model.Option("value", "Clientes Morosos"), new com.sun.webui.jsf.model.Option("PRV", "Productos Vendidos"),new com.sun.webui.jsf.model.Option("VEN", "Vendedores"), new com.sun.webui.jsf.model.Option("value", "Producción por Empleado")});
-        radioButtonGroup1DefaultOptions.setSelectedValue("CLI");
+        uiTipoReporteDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("clientes", "Clientes"), new com.sun.webui.jsf.model.Option("clientesMorosos", "Clientes Morosos"), new com.sun.webui.jsf.model.Option("productos", "Productos Vendidos"),new com.sun.webui.jsf.model.Option("vendedores", "Vendedores"), new com.sun.webui.jsf.model.Option("produccionEmpleado", "Producción por Empleado")});
+        uiTipoReporteDefaultOptions.setSelectedValue("clientes");
     }
-    private SingleSelectOptionsList radioButtonGroup1DefaultOptions = new SingleSelectOptionsList();
+    private SingleSelectOptionsList uiTipoReporteDefaultOptions = new SingleSelectOptionsList();
 
-    public SingleSelectOptionsList getRadioButtonGroup1DefaultOptions() {
-        return radioButtonGroup1DefaultOptions;
+    public SingleSelectOptionsList getUiTipoReporteDefaultOptions() {
+        return uiTipoReporteDefaultOptions;
     }
 
-    public void setRadioButtonGroup1DefaultOptions(SingleSelectOptionsList ssol) {
-        this.radioButtonGroup1DefaultOptions = ssol;
+    public void setUiTipoReporteDefaultOptions(SingleSelectOptionsList ssol) {
+        this.uiTipoReporteDefaultOptions = ssol;
+    }
+    private Calendar uiCalDesde = new Calendar();
+
+    public Calendar getUiCalDesde() {
+        return uiCalDesde;
+    }
+
+    public void setUiCalDesde(Calendar c) {
+        this.uiCalDesde = c;
+    }
+    private Calendar uiCalHasta = new Calendar();
+
+    public Calendar getUiCalHasta() {
+        return uiCalHasta;
+    }
+
+    public void setUiCalHasta(Calendar c) {
+        this.uiCalHasta = c;
+    }
+    private RadioButtonGroup uiTipoReporte = new RadioButtonGroup();
+
+    public RadioButtonGroup getUiTipoReporte() {
+        return uiTipoReporte;
+    }
+
+    public void setUiTipoReporte(RadioButtonGroup rbg) {
+        this.uiTipoReporte = rbg;
     }
 
     // </editor-fold>
@@ -165,6 +200,13 @@ public class LSTRanking extends AbstractPageBean {
     public String button1_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
+        
+        if (uiTipoReporte.getSelected().toString().equals("clientes")) {
+            repRankingClientes();
+        } else if (uiTipoReporte.getSelected().toString().equals("productos")){
+            repRankingProducto();
+        }
+
         return null;
     }
 
@@ -172,6 +214,115 @@ public class LSTRanking extends AbstractPageBean {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         return null;
+    }
+
+    private void repRankingClientes() {
+        //Variables
+        Connection conn = GetConnection.getSimpleConnection();
+        ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
+
+        //Array de Variables
+        String[] sparamName = new String[4];
+        String[] sparamValue = new String[4];
+
+        //Parametros
+        String fechaDesde, fechaHasta, sql = "";
+
+        if (uiCalDesde.getSelectedDate() != null) {
+            fechaDesde = DateUtils.toString(uiCalDesde.getSelectedDate(), "dd/MM/yyyy");
+            sql = " and cab.fecha_factura >= to_date('" + fechaDesde + "','dd/mm/yyyy')";
+        } else {
+            fechaDesde = "TODOS";
+        }
+
+        if (uiCalHasta.getSelectedDate() != null) {
+            fechaHasta = DateUtils.toString(uiCalHasta.getSelectedDate(), "dd/MM/yyyy");
+            sql = sql + " and cab.fecha_factura <= to_date('" + fechaHasta + "','dd/mm/yyyy')";
+        } else {
+            fechaHasta = "TODOS";
+        }
+
+        RptCreate rpt = new RptCreate();
+
+        sparamName[0] = "parametros";
+        sparamValue[0] = sql;
+        sparamName[1] = "fechaDesde";
+        sparamValue[1] = fechaDesde;
+        sparamName[2] = "fechaHasta";
+        sparamValue[2] = fechaHasta;
+        sparamName[3] = "logo_path";
+        sparamValue[3] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
+
+        try {
+            rpt.getReport(conn, "RankingCliente.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+
+        } catch (Exception e) {
+            error("Error al generar el reporte ");
+            error(" " + e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException sqle) {
+                error("Error al intentar cerrar la conexion" + sqle);
+            }
+        }
+        
+    }
+
+    private void repRankingProducto() {
+        //Variables
+        Connection conn = GetConnection.getSimpleConnection();
+        ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
+
+        //Array de Variables
+        String[] sparamName = new String[4];
+        String[] sparamValue = new String[4];
+
+        //Parametros
+        String fechaDesde, fechaHasta, sql = "";
+
+        if (uiCalDesde.getSelectedDate() != null) {
+            fechaDesde = DateUtils.toString(uiCalDesde.getSelectedDate(), "dd/MM/yyyy");
+            sql = " and c.fecha_factura >= to_date('" + fechaDesde + "','dd/mm/yyyy')";
+        } else {
+            fechaDesde = "TODOS";
+        }
+
+        if (uiCalHasta.getSelectedDate() != null) {
+            fechaHasta = DateUtils.toString(uiCalHasta.getSelectedDate(), "dd/MM/yyyy");
+            sql = sql + " and c.fecha_factura <= to_date('" + fechaHasta + "','dd/mm/yyyy')";
+        } else {
+            fechaHasta = "TODOS";
+        }
+
+        RptCreate rpt = new RptCreate();
+
+        sparamName[0] = "parametros";
+        sparamValue[0] = sql;
+        sparamName[1] = "fechaDesde";
+        sparamValue[1] = fechaDesde;
+        sparamName[2] = "fechaHasta";
+        sparamValue[2] = fechaHasta;
+        sparamName[3] = "logo_path";
+        sparamValue[3] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
+
+        try {
+            rpt.getReport(conn, "RankingProductoVenta.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+
+        } catch (Exception e) {
+            error("Error al generar el reporte ");
+            error(" " + e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException sqle) {
+                error("Error al intentar cerrar la conexion" + sqle);
+            }
+        }
     }
     
 }

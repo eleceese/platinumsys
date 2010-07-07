@@ -6,8 +6,14 @@
 package platinum;
 
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
-import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import com.sun.webui.jsf.component.Calendar;
+import java.sql.Connection;
+import java.sql.SQLException;
 import javax.faces.FacesException;
+import javax.servlet.ServletContext;
+import py.com.platinum.utils.DateUtils;
+import reportes.GetConnection;
+import reportes.RptCreate;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -30,17 +36,24 @@ public class LSTPedidosProvisiones extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-        dropDown1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("item1", "Entregado"), new com.sun.webui.jsf.model.Option("item2", "Elemento 2"), new com.sun.webui.jsf.model.Option("item3", "Elemento 3")});
-        dropDown1DefaultOptions.setSelectedValue("item1");
     }
-    private SingleSelectOptionsList dropDown1DefaultOptions = new SingleSelectOptionsList();
+    private Calendar uiCalDesde = new Calendar();
 
-    public SingleSelectOptionsList getDropDown1DefaultOptions() {
-        return dropDown1DefaultOptions;
+    public Calendar getUiCalDesde() {
+        return uiCalDesde;
     }
 
-    public void setDropDown1DefaultOptions(SingleSelectOptionsList ssol) {
-        this.dropDown1DefaultOptions = ssol;
+    public void setUiCalDesde(Calendar c) {
+        this.uiCalDesde = c;
+    }
+    private Calendar uiCalHasta = new Calendar();
+
+    public Calendar getUiCalHasta() {
+        return uiCalHasta;
+    }
+
+    public void setUiCalHasta(Calendar c) {
+        this.uiCalHasta = c;
     }
 
     // </editor-fold>
@@ -163,8 +176,57 @@ public class LSTPedidosProvisiones extends AbstractPageBean {
     }
 
     public String button1_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
+ //Variables
+        Connection conn = GetConnection.getSimpleConnection();
+        ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
+
+        //Array de Variables
+        String[] sparamName = new String[4];
+        String[] sparamValue = new String[4];
+
+        //Parametros
+        String fechaDesde, fechaHasta, sql = "";
+
+        if (uiCalDesde.getSelectedDate() != null) {
+            fechaDesde = DateUtils.toString(uiCalDesde.getSelectedDate(), "dd/MM/yyyy");
+            sql = " and c.fecha_pedido >= to_date('" + fechaDesde + "','dd/mm/yyyy')";
+        } else {
+            fechaDesde = "TODOS";
+        }
+
+        if (uiCalHasta.getSelectedDate() != null) {
+            fechaHasta = DateUtils.toString(uiCalHasta.getSelectedDate(), "dd/MM/yyyy");
+            sql = sql + " and c.fecha_pedido <= to_date('" + fechaHasta + "','dd/mm/yyyy')";
+        } else {
+            fechaHasta = "TODOS";
+        }
+
+        RptCreate rpt = new RptCreate();
+
+        sparamName[0] = "parametros";
+        sparamValue[0] = sql;
+        sparamName[1] = "fechaDesde";
+        sparamValue[1] = fechaDesde;
+        sparamName[2] = "fechaHasta";
+        sparamValue[2] = fechaHasta;
+        sparamName[3] = "logo_path";
+        sparamValue[3] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
+
+        try {
+            rpt.getReport(conn, "EstadisticaPedidos.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+
+        } catch (Exception e) {
+            error("Error al generar el reporte ");
+            error(" " + e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException sqle) {
+                error("Error al intentar cerrar la conexion" + sqle);
+            }
+        }
         return null;
     }
 

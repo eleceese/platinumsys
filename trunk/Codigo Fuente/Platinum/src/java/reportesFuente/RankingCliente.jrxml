@@ -26,13 +26,17 @@
 	<parameter name="usuario" isForPrompting="true" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["Admin"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="fechaDesde" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="fechaHasta" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="parametros" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="logo_path" isForPrompting="false" class="java.lang.String"/>
 	<queryString><![CDATA[select rownum as pos, x.cod_cliente, x.cliente, x.total_compra
   from
       ( select c.cod_cliente as cod_cliente, c.apellido_cliente||', '||c.nombre_cliente as cliente, sum(d.cantidad * d.precio_unitario) total_compra
           from factura_cabecera cab, factura_detalle d, cliente c
          where cab.estado_factura != 'ANULADO'
            and d.cod_factura = cab.cod_factura
-           and c.cod_cliente = cab.cod_cliente
+           and c.cod_cliente = cab.cod_cliente $P!{parametros}
          group by c.cod_cliente, c.apellido_cliente||', '||c.nombre_cliente 
          order by 3 desc
       ) x]]></queryString>
@@ -123,59 +127,33 @@
 						key="image-1"/>
 					<box></box>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["logo_platinum.jpg"]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo_path}]]></imageExpression>
 				</image>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="55"
-						y="108"
-						width="82"
-						height="17"
-						key="textField-2"/>
-					<box></box>
-					<textElement>
-						<font/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{usuario}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement
-						x="1"
-						y="107"
-						width="49"
-						height="20"
-						key="staticText-2"/>
-					<box></box>
-					<textElement verticalAlignment="Top">
-						<font/>
-					</textElement>
-				<text><![CDATA[Producto:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="205"
-						y="107"
-						width="146"
+						x="3"
+						y="105"
+						width="70"
 						height="20"
 						key="staticText-3"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Desde: 11/11/2010]]></text>
+				<text><![CDATA[Fecha Desde: ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="398"
-						y="107"
-						width="134"
+						x="196"
+						y="105"
+						width="63"
 						height="20"
 						key="staticText-4"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Hasta: 11/11/2010]]></text>
+				<text><![CDATA[Fecha Hasta:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -194,6 +172,32 @@
 					</textElement>
 				<text><![CDATA[Ranking de Clientes]]></text>
 				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="73"
+						y="105"
+						width="100"
+						height="18"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaDesde}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="259"
+						y="105"
+						width="100"
+						height="18"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaHasta}]]></textFieldExpression>
+				</textField>
 			</band>
 		</pageHeader>
 		<columnHeader>

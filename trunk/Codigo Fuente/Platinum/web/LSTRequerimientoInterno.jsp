@@ -22,29 +22,20 @@
                         </div>
                         <div>
                             <h:panelGrid columns="2" id="mainContainer" style="height: 269px; left: 288px; top: 235px; position: absolute" width="456">
-                                <webuijsf:label id="lblTipoProducto" text="Tipo Producto"/>
-                                <webuijsf:dropDown id="dropDown1" items="#{LSTRequerimientoInterno.dropDown1DefaultOptions.options}"
-                                    selected="#{LSTRequerimientoInterno.dropDown1DefaultOptions.selectedValue}" style="margin-left: 11px" width="120px"/>
-                                <webuijsf:hyperlink id="linkProducto" text="Producto"/>
+                                <webuijsf:hyperlink id="linkProducto" onClick="doPopup('form1:uiTxtCodProducto_field', 'form1:uiTxtDescProducto_field')"
+                                    text="Producto" url="/faces/popup/popupProductosTerInsMat.jsp"/>
                                 <h:panelGrid columns="2" id="panelProducto">
-                                    <webuijsf:textField columns="10" id="txtCodProducto" style="margin-left: 7px"/>
-                                    <webuijsf:textField columns="35" id="txtDescProducto"/>
+                                    <webuijsf:textField binding="#{LSTRequerimientoInterno.uiTxtCodProducto}" columns="10" id="uiTxtCodProducto" style="margin-left: 7px"/>
+                                    <webuijsf:textField binding="#{LSTRequerimientoInterno.uiTxtDescProducto}" columns="35" id="uiTxtDescProducto"/>
                                 </h:panelGrid>
-                                <webuijsf:hyperlink id="linkEmpleado" text="Empleado"/>
-                                <h:panelGrid columns="2" id="panelEmpleado">
-                                    <webuijsf:textField columns="10" id="txtCodEmpleado" style="margin-left: 7px"/>
-                                    <webuijsf:textField columns="35" id="txtDescEmpleado"/>
-                                </h:panelGrid>
-                                <webuijsf:label id="lblSeccion" text="Sección"/>
-                                <webuijsf:dropDown id="dropDown2" items="#{LSTRequerimientoInterno.dropDown2DefaultOptions.options}"
-                                    selected="#{LSTRequerimientoInterno.dropDown2DefaultOptions.selectedValue}" style="margin-left: 11px" width="120px"/>
                                 <webuijsf:label id="lblEstado" text="Estado"/>
-                                <webuijsf:dropDown id="dropDown3" items="#{LSTRequerimientoInterno.dropDown3DefaultOptions.options}"
-                                    selected="#{LSTRequerimientoInterno.dropDown3DefaultOptions.selectedValue}" style="margin-left: 11px" width="120px"/>
-                                <webuijsf:label id="lblFecInicio" text="Fecha Apertura"/>
-                                <webuijsf:calendar columns="15" id="txtFecApertura"/>
-                                <webuijsf:label id="lblFecFin" text="Fecha Aprobación"/>
-                                <webuijsf:calendar columns="15" id="txtFecAprobacion"/>
+                                <webuijsf:dropDown binding="#{LSTRequerimientoInterno.uiLstEstado}" id="uiLstEstado"
+                                    items="#{LSTRequerimientoInterno.uiLstEstadoDefaultOptions.options}"
+                                    selected="#{LSTRequerimientoInterno.uiLstEstadoDefaultOptions.selectedValue}" style="margin-left: 11px" width="120px"/>
+                                <webuijsf:label id="lblFecInicio" text="Fecha Desde"/>
+                                <webuijsf:calendar binding="#{LSTRequerimientoInterno.uiCalDesde}" columns="15" id="uiCalDesde"/>
+                                <webuijsf:label id="lblFecFin" text="Fecha Hasta"/>
+                                <webuijsf:calendar binding="#{LSTRequerimientoInterno.uiCalHasta}" columns="15" id="uiCalHasta"/>
                                 <webuijsf:button actionExpression="#{LSTRequerimientoInterno.button1_action}" id="button1" text="Ejecutar"/>
                                 <webuijsf:button actionExpression="#{LSTRequerimientoInterno.button2_action}" id="button2" text="Cancelar"/>
                             </h:panelGrid>
