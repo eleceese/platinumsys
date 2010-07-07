@@ -125,57 +125,31 @@
 					<graphicElement stretchType="NoStretch"/>
 					<imageExpression class="java.lang.String"><![CDATA["logo_platinum.jpg"]]></imageExpression>
 				</image>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="55"
-						y="108"
-						width="82"
-						height="17"
-						key="textField-2"/>
-					<box></box>
-					<textElement>
-						<font/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{usuario}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement
-						x="1"
-						y="107"
-						width="49"
-						height="20"
-						key="staticText-2"/>
-					<box></box>
-					<textElement verticalAlignment="Top">
-						<font/>
-					</textElement>
-				<text><![CDATA[Producto:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="205"
-						y="107"
-						width="146"
+						x="3"
+						y="105"
+						width="70"
 						height="20"
 						key="staticText-3"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Desde: 11/11/2010]]></text>
+				<text><![CDATA[Fecha Desde: ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="398"
-						y="107"
-						width="134"
+						x="196"
+						y="105"
+						width="63"
 						height="20"
 						key="staticText-4"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Hasta: 11/11/2010]]></text>
+				<text><![CDATA[Fecha Hasta:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -265,7 +239,7 @@
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="442"
+						x="441"
 						y="2"
 						width="92"
 						height="17"

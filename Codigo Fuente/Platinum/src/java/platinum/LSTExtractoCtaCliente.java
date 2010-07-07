@@ -203,8 +203,8 @@ public class LSTExtractoCtaCliente extends AbstractPageBean {
         ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
 
         //Array de Variables
-        String[] sparamName = new String[4];
-        String[] sparamValue = new String[4];
+        String[] sparamName = new String[5];
+        String[] sparamValue = new String[5];
 
         //Parametros
         String fechaDesde="", fechaHasta="", sql = "", cliente = "";
@@ -223,7 +223,7 @@ public class LSTExtractoCtaCliente extends AbstractPageBean {
             fechaHasta = "TODOS";
         }
 
-        if (uiTxtCodCliente != null && !uiTxtCodCliente.getText().equals("")) {
+        if (uiTxtCodCliente.getText() != null && !uiTxtCodCliente.getText().equals("")) {
             //Validamos el cliente
             Cliente cli = new ClienteController().findById(Long.valueOf(uiTxtCodCliente.getText().toString()));
 
@@ -248,6 +248,8 @@ public class LSTExtractoCtaCliente extends AbstractPageBean {
         sparamValue[2] = fechaHasta;
         sparamName[3] = "cliente";
         sparamValue[3] = cliente;
+        sparamName[4] = "logo_path";
+        sparamValue[4] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
 
         try {
             if (error) {

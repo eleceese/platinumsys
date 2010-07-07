@@ -26,6 +26,10 @@
 	<parameter name="usuario" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["Admin"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="logo_path" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="parametros" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="fechaDesde" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="fechaHasta" isForPrompting="false" class="java.lang.String"/>
 	<queryString><![CDATA[select s.cod_solicitud     as nro_solicitud,
        (e.apellido_empleado ||', '|| e.nombre_empleado) as solicitante,
        s.fecha             as fecha_solicitud,
@@ -40,14 +44,14 @@
        producto p,
        empleado e
  where e.cod_empleado = s.cod_empleado
-   and p.cod_producto = s.cod_producto
+   and p.cod_producto = s.cod_producto $P!{parametros}
  order by s.fecha, s.cod_solicitud]]></queryString>
 
 	<field name="NRO_SOLICITUD" class="java.math.BigDecimal"/>
 	<field name="SOLICITANTE" class="java.lang.String"/>
 	<field name="FECHA_SOLICITUD" class="java.sql.Timestamp"/>
-	<field name="ESTADO" class="java.lang.String"/>
 	<field name="FECHA_APROBACION" class="java.sql.Timestamp"/>
+	<field name="ESTADO" class="java.lang.String"/>
 	<field name="PRODUCTO" class="java.lang.String"/>
 	<field name="CANT_SOLICITUD" class="java.math.BigDecimal"/>
 	<field name="CANT_APROBADA" class="java.math.BigDecimal"/>
@@ -141,59 +145,33 @@
 						key="image-1"/>
 					<box></box>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["logo_platinum.jpg"]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo_path}]]></imageExpression>
 				</image>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="59"
-						y="108"
-						width="82"
-						height="17"
-						key="textField-3"/>
-					<box></box>
-					<textElement>
-						<font/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{usuario}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement
 						x="5"
 						y="107"
-						width="49"
-						height="20"
-						key="staticText-1"/>
-					<box></box>
-					<textElement verticalAlignment="Top">
-						<font/>
-					</textElement>
-				<text><![CDATA[Producto:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="209"
-						y="107"
-						width="146"
-						height="20"
+						width="67"
+						height="13"
 						key="staticText-2"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Desde: 11/11/2010]]></text>
+				<text><![CDATA[Fecha Desde:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="402"
+						x="203"
 						y="107"
-						width="134"
-						height="20"
+						width="62"
+						height="13"
 						key="staticText-3"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Hasta: 11/11/2010]]></text>
+				<text><![CDATA[Fecha Hasta:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -210,8 +188,34 @@
 					<textElement textAlignment="Center">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
 					</textElement>
-				<text><![CDATA[Estadistica Venta Por Prodcuto]]></text>
+				<text><![CDATA[Requerimientos Internos]]></text>
 				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="78"
+						y="107"
+						width="100"
+						height="18"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaDesde}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="265"
+						y="107"
+						width="100"
+						height="18"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaDesde}]]></textFieldExpression>
+				</textField>
 			</band>
 		</pageHeader>
 		<columnHeader>
@@ -378,19 +382,6 @@
 		</columnHeader>
 		<detail>
 			<band height="19"  isSplitAllowed="true" >
-				<line direction="TopDown">
-					<reportElement
-						x="0"
-						y="17"
-						width="535"
-						height="0"
-						forecolor="#808080"
-						key="line"
-						positionType="FixRelativeToBottom"/>
-					<graphicElement stretchType="NoStretch">
-					<pen lineWidth="0.25" lineStyle="Solid"/>
-</graphicElement>
-				</line>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="0"

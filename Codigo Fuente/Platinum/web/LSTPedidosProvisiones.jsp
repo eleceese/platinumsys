@@ -23,14 +23,9 @@
                         <div>
                             <h:panelGrid columns="2" id="mainContainer" style="height: 221px; left: 288px; top: 235px; position: absolute" width="456">
                                 <webuijsf:label id="lblFecInicio" text="Fecha Desde"/>
-                                <webuijsf:calendar columns="15" id="txtFecApertura"/>
+                                <webuijsf:calendar binding="#{LSTPedidosProvisiones.uiCalDesde}" columns="15" id="uiCalDesde"/>
                                 <webuijsf:label id="lblFecFin" text="Fecha Hasta"/>
-                                <webuijsf:calendar columns="15" id="txtFecAprobacion"/>
-                                <webuijsf:label id="lblProductoGenerico" text="Producto Genérico"/>
-                                <webuijsf:textField columns="40" id="textProductoGenerico" style="margin-left: 11px"/>
-                                <webuijsf:label id="lblTipoProducto" text="Estado"/>
-                                <webuijsf:dropDown id="dropDown1" items="#{LSTPedidosProvisiones.dropDown1DefaultOptions.options}"
-                                    selected="#{LSTPedidosProvisiones.dropDown1DefaultOptions.selectedValue}" style="margin-left: 11px" width="120px"/>
+                                <webuijsf:calendar binding="#{LSTPedidosProvisiones.uiCalHasta}" columns="15" id="uiCalHasta"/>
                                 <webuijsf:button actionExpression="#{LSTPedidosProvisiones.button1_action}" id="button1" text="Ejecutar"/>
                                 <webuijsf:button actionExpression="#{LSTPedidosProvisiones.button2_action}" id="button2" text="Cancelar"/>
                             </h:panelGrid>

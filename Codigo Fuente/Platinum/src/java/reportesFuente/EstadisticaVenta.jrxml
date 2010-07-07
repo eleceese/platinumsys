@@ -35,7 +35,7 @@
   from factura_cabecera c, factura_detalle d, producto p
  where c.estado_factura != 'ANULADO'
    and d.cod_factura = c.cod_factura
-   and p.cod_producto= d.cod_producto
+   and p.cod_producto= d.cod_producto $P!{parametros}
 group by p.cod_producto, p.descripcion]]></queryString>
 
 	<field name="COD_PRODUCTO" class="java.math.BigDecimal"/>
@@ -123,24 +123,11 @@ group by p.cod_producto, p.descripcion]]></queryString>
 						key="image-1"/>
 					<box></box>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["logo_platinum.jpg"]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo_path}]]></imageExpression>
 				</image>
 				<staticText>
 					<reportElement
-						x="1"
-						y="107"
-						width="49"
-						height="14"
-						key="staticText-2"/>
-					<box></box>
-					<textElement verticalAlignment="Top">
-						<font/>
-					</textElement>
-				<text><![CDATA[Producto:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="251"
+						x="8"
 						y="107"
 						width="69"
 						height="14"
@@ -153,7 +140,7 @@ group by p.cod_producto, p.descripcion]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="397"
+						x="154"
 						y="107"
 						width="66"
 						height="14"
@@ -179,24 +166,11 @@ group by p.cod_producto, p.descripcion]]></queryString>
 					<textElement textAlignment="Center">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
 					</textElement>
-				<text><![CDATA[Estadistica Venta Por Prodcuto]]></text>
+				<text><![CDATA[Estadistica Venta ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="57"
-						y="107"
-						width="167"
-						height="18"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{producto}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="321"
+						x="78"
 						y="107"
 						width="69"
 						height="18"
@@ -209,7 +183,7 @@ group by p.cod_producto, p.descripcion]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="463"
+						x="220"
 						y="107"
 						width="72"
 						height="18"
