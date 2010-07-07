@@ -54,6 +54,15 @@
 	<field name="CANT_ADQUIRIDA" class="java.math.BigDecimal"/>
 	<field name="OBSERVACION" class="java.lang.String"/>
 
+	<variable name="V_TOTAL_SOL" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{CANT_SOLICITUD}]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_APROBADA" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{CANT_APROBADA}]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_ADQUIRIDA" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{CANT_ADQUIRIDA}]]></variableExpression>
+	</variable>
 		<background>
 			<band height="0"  isSplitAllowed="true" >
 			</band>
@@ -580,7 +589,7 @@
 				<line direction="TopDown">
 					<reportElement
 						x="615"
-						y="9"
+						y="8"
 						width="166"
 						height="0"
 						key="line-5"/>
@@ -601,7 +610,7 @@
 					<textElement textAlignment="Right">
 						<font fontName="Times-Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CANT_SOLICITUD}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{V_TOTAL_SOL}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -618,7 +627,7 @@
 					<textElement textAlignment="Right">
 						<font fontName="Times-Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CANT_APROBADA}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{V_TOTAL_APROBADA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -635,7 +644,7 @@
 					<textElement textAlignment="Right">
 						<font fontName="Times-Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CANT_ADQUIRIDA}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{V_TOTAL_ADQUIRIDA}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement

@@ -2,11 +2,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package platinum;
 
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
+import com.sun.webui.jsf.component.Calendar;
+import java.sql.Connection;
+import java.sql.SQLException;
 import javax.faces.FacesException;
+import javax.servlet.ServletContext;
+import py.com.platinum.utils.DateUtils;
+import reportes.GetConnection;
+import reportes.RptCreate;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -19,7 +25,6 @@ import javax.faces.FacesException;
  * @version Created on 07-sep-2009, 16:17:38
  * @author MartinJara
  */
-
 public class LSTLibroIVACompra extends AbstractPageBean {
     // <editor-fold defaultstate="collapsed" desc="Managed Component Definition">
 
@@ -30,9 +35,26 @@ public class LSTLibroIVACompra extends AbstractPageBean {
      */
     private void _init() throws Exception {
     }
+    private Calendar uiCalDesde = new Calendar();
+
+    public Calendar getUiCalDesde() {
+        return uiCalDesde;
+    }
+
+    public void setUiCalDesde(Calendar c) {
+        this.uiCalDesde = c;
+    }
+    private Calendar uiCalHasta = new Calendar();
+
+    public Calendar getUiCalHasta() {
+        return uiCalHasta;
+    }
+
+    public void setUiCalHasta(Calendar c) {
+        this.uiCalHasta = c;
+    }
 
     // </editor-fold>
-
     /**
      * <p>Construct a new Page bean instance.</p>
      */
@@ -49,6 +71,7 @@ public class LSTLibroIVACompra extends AbstractPageBean {
      * <p>Note that, if the current request is a postback, the property
      * values of the components do <strong>not</strong> represent any
      * values submitted with this request.  Instead, they represent the
+
      * property values that were saved for this view when it was rendered.</p>
      */
     @Override
@@ -58,7 +81,7 @@ public class LSTLibroIVACompra extends AbstractPageBean {
         // Perform application initialization that must complete
         // *before* managed components are initialized
         // TODO - add your own initialiation code here
-        
+
         // <editor-fold defaultstate="collapsed" desc="Managed Component Initialization">
         // Initialize automatically managed components
         // *Note* - this logic should NOT be modified
@@ -66,13 +89,13 @@ public class LSTLibroIVACompra extends AbstractPageBean {
             _init();
         } catch (Exception e) {
             log("Reporte Initialization Failure", e);
-            throw e instanceof FacesException ? (FacesException) e: new FacesException(e);
+            throw e instanceof FacesException ? (FacesException) e : new FacesException(e);
         }
-        
-        // </editor-fold>
-        // Perform application initialization that must complete
-        // *after* managed components are initialized
-        // TODO - add your own initialization code here
+
+    // </editor-fold>
+    // Perform application initialization that must complete
+    // *after* managed components are initialized
+    // TODO - add your own initialization code here
     }
 
     /**
@@ -112,8 +135,6 @@ public class LSTLibroIVACompra extends AbstractPageBean {
     public void destroy() {
     }
 
- 
-
     /**
      * <p>Return a reference to the scoped data bean.</p>
      *
@@ -151,8 +172,55 @@ public class LSTLibroIVACompra extends AbstractPageBean {
     }
 
     public String button1_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
+        //Variables
+        Connection conn = GetConnection.getSimpleConnection();
+        ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
+
+        //Array de Variables
+        String[] sparamName = new String[3];
+        String[] sparamValue = new String[3];
+
+        //Parametros
+        String fechaDesde, fechaHasta, sql = "";
+
+        if (uiCalDesde.getSelectedDate() != null) {
+            fechaDesde = DateUtils.toString(uiCalDesde.getSelectedDate(), "dd/MM/yyyy");
+            sql = " and aux.fecha_comprobante >= to_date('" + fechaDesde + "','dd/mm/yyyy')";
+        } else {
+            fechaDesde = "TODOS";
+        }
+
+        if (uiCalHasta.getSelectedDate() != null) {
+            fechaHasta = DateUtils.toString(uiCalHasta.getSelectedDate(), "dd/MM/yyyy");
+            sql = sql + " and aux.fecha_comprobante <= to_date('" + fechaHasta + "','dd/mm/yyyy')";
+        } else {
+            fechaHasta = "TODOS";
+        }
+
+        RptCreate rpt = new RptCreate();
+
+        sparamName[0] = "parametros";
+        sparamValue[0] = sql;
+        sparamName[1] = "fechaDesde";
+        sparamValue[1] = fechaDesde;
+        sparamName[2] = "fechaHasta";
+        sparamValue[2] = fechaHasta;
+
+        try {
+            rpt.getReport(conn, "LibroIvaCompra.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+
+        } catch (Exception e) {
+            error("Error al generar el reporte ");
+            error(" " + e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException sqle) {
+                error("Error al intentar cerrar la conexion" + sqle);
+            }
+        }
         return null;
     }
 
@@ -161,6 +229,5 @@ public class LSTLibroIVACompra extends AbstractPageBean {
         // case name where null will return to the same page.
         return null;
     }
-    
 }
 

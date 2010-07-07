@@ -30,6 +30,8 @@
                 <webuijsf:hyperlink id="abmFacturaProveedor" style="margin-left: 20px" text="Factura Proveedor" url="/faces/ABMComprasProveedor.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="abmNotaCreditoProveedor" style="margin-left: 20px" text="Nota Crédito Proveedor" url="/faces/ABMNotaCreditoProveedor.jsp"/>
+                <h2>Reportes</h2>
+                <webuijsf:hyperlink id="repLibroIvaCompra" style="margin-left: 20px" text="Libro IVA Compra" url="/faces/LSTLibroIVACompra.jsp"/>
             </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab3" title="Ventas">
                 <h2>ABM</h2>
@@ -41,6 +43,8 @@
                 <webuijsf:hyperlink id="abmFacturaVenta" style="margin-left: 20px" text="Factura Venta" url="/faces/ABMFacturaVenta.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="abmNotaCreditoCliente"  style="margin-left: 20px" text="Nota Crédito Cliente" url="/faces/ABMNotaCreditoCliente.jsp"/>
+                <h2>Reportes</h2>
+                <webuijsf:hyperlink id="repLibroIvaCompra" style="margin-left: 20px" text="Libro IVA Venta" url="/faces/LSTLibroIVAVenta.jsp"/>
             </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="Cobranzas" title="Cobranzas">
                 <h2>ABM</h2>
@@ -55,7 +59,8 @@
                 <br/>
                 <webuijsf:hyperlink id="cierraCajas" style="margin-left: 20px"  text="Cierre de Cajas" url="/faces/RegistroCierreCaja.jsp"/>
                 <br/>
-                
+                <h2>Reportes</h2>
+                <webuijsf:hyperlink id="repLSTExtractoCtaCliente" style="margin-left: 20px" text="Extracto Cuenta Cliente" url="/faces/LSTExtractoCtaCliente.jsp"/>
             </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab4" title="Produccion">
                 <webuijsf:hyperlink id="ordenesDeTrabajo" text="Ordenes de Trabajo" url="/faces/RegistroDeOrdenesDeTrabajo.jsp"/>

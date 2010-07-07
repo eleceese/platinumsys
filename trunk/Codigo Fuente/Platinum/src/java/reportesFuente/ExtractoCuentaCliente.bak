@@ -26,13 +26,20 @@
 	<parameter name="usuario" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["Admin"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="parametros" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="fechaDesde" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="fechaHasta" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="cliente" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="logo_path" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["X:\\Proyecto 2\\Codigo Fuente\\Platinum\\build\\web\\WEB-INF\\classes\\reportesFuente\\logo_platinum.jpg"]]></defaultValueExpression>
+	</parameter>
 	<queryString><![CDATA[select * 
 from (
   --Facturas
 select 0 as orden,
        c.cod_cliente      as cod_cliente, 
        c.apellido_cliente||', '||c.nombre_cliente as cliente,
-       t.desc_tipo        as desc_tipo_comprobante,
+       t.DESC_TIPO_ABREVIADO  as desc_tipo_comprobante,
        f.establecimiento||'-'||f.boca_expendio||'-'||lpad(to_char(f.numero_factura), 10, '0') as nro_comprobante,
        f.establecimiento  as cod_establecimiento, 
        f.boca_expendio    as cod_boca_expendio, 
@@ -49,7 +56,7 @@ select 0 as orden,
 group by 0,
          c.cod_cliente, 
          c.apellido_cliente||', '||c.nombre_cliente,
-         t.desc_tipo,
+         t.DESC_TIPO_ABREVIADO,
          f.establecimiento||'-'||f.boca_expendio||'-'||lpad(to_char(f.numero_factura), 10, '0'),
          f.establecimiento, 
          f.boca_expendio, 
@@ -60,7 +67,7 @@ group by 0,
 select 1 as orden, 
        c.cod_cliente, 
        c.apellido_cliente||', '||c.nombre_cliente as cliente,
-       t.desc_tipo as desc_tipo_comprobante,
+       t.DESC_TIPO_ABREVIADO as desc_tipo_comprobante,
        n.establecimiento||'-'||n.boca_expendio||'-'||lpad(to_char(n.num_nota_credto_cliente), 10, '0') as nro_comprobante, 
        n.establecimiento, 
        n.boca_expendio, 
@@ -78,13 +85,14 @@ select 1 as orden,
 group by 1, 
          c.cod_cliente, 
          c.apellido_cliente||', '||c.nombre_cliente,
-         t.desc_tipo,
+         t.DESC_TIPO_ABREVIADO,
          n.establecimiento||'-'||n.boca_expendio||'-'||lpad(to_char(n.num_nota_credto_cliente), 10, '0'), 
          n.establecimiento, 
          n.boca_expendio, 
          n.num_nota_credto_cliente,
          n.fecha_nota_credito
    ) aux
+where 1=1 $P!{parametros}
  order by aux.cliente, 
           aux.fec_comprobante, 
           aux.nro_comprobante,
@@ -188,7 +196,7 @@ group by 1,
 					<reportElement
 						x="5"
 						y="26"
-						width="176"
+						width="121"
 						height="16"
 						forecolor="#FFFFFF"
 						key="element-90"/>
@@ -204,7 +212,7 @@ group by 1,
 				</staticText>
 				<staticText>
 					<reportElement
-						x="181"
+						x="125"
 						y="26"
 						width="114"
 						height="16"
@@ -438,59 +446,59 @@ group by 1,
 						key="image-1"/>
 					<box></box>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["logo_platinum.jpg"]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo_path}]]></imageExpression>
 				</image>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="54"
-						y="107"
-						width="82"
+						x="41"
+						y="106"
+						width="236"
 						height="17"
 						key="textField-5"/>
 					<box></box>
 					<textElement>
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{usuario}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{cliente}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
 						x="0"
 						y="106"
-						width="49"
-						height="20"
+						width="41"
+						height="17"
 						key="staticText-2"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Producto:]]></text>
+				<text><![CDATA[Cliente:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="204"
+						x="280"
 						y="106"
-						width="146"
-						height="20"
+						width="69"
+						height="17"
 						key="staticText-3"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Desde: 11/11/2010]]></text>
+				<text><![CDATA[Fecha Desde:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="397"
+						x="408"
 						y="106"
-						width="134"
-						height="20"
+						width="64"
+						height="17"
 						key="staticText-4"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Hasta: 11/11/2010]]></text>
+				<text><![CDATA[Fecha Hasta:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -509,6 +517,32 @@ group by 1,
 					</textElement>
 				<text><![CDATA[Extracto Cuenta Cliente]]></text>
 				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="347"
+						y="106"
+						width="63"
+						height="17"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaDesde}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="472"
+						y="106"
+						width="62"
+						height="17"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaHasta}]]></textFieldExpression>
+				</textField>
 			</band>
 		</pageHeader>
 		<columnHeader>
@@ -521,7 +555,7 @@ group by 1,
 					<reportElement
 						x="1"
 						y="0"
-						width="180"
+						width="125"
 						height="15"
 						key="textField"/>
 					<box leftPadding="2" rightPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -536,7 +570,7 @@ group by 1,
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="181"
+						x="125"
 						y="0"
 						width="114"
 						height="15"
@@ -683,7 +717,7 @@ group by 1,
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="Times-Roman" size="11"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{SALDO}]]></textFieldExpression>
 				</textField>
@@ -701,7 +735,7 @@ group by 1,
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="Times-Roman" size="11"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Total General]]></text>
 				</staticText>
@@ -718,7 +752,7 @@ group by 1,
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="Times-Roman" size="11"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTAL}]]></textFieldExpression>
 				</textField>
@@ -736,7 +770,7 @@ group by 1,
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="Times-Roman" size="11"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Comprobante]]></text>
 				</staticText>
@@ -754,7 +788,7 @@ group by 1,
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="Times-Roman" size="11"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Saldo]]></text>
 				</staticText>
