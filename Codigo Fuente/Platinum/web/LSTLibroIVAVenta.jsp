@@ -22,14 +22,15 @@
                         </div>
                         <div>
                             <h:panelGrid columns="2" id="mainContainer" style="height: 125px; left: 288px; top: 235px; position: absolute" width="456">
-                                <webuijsf:hyperlink id="hyperlink1" text="Tipo Comprobante"/>
-                                <webuijsf:textField columns="40" id="TODOS" style="margin-left: 11px" text="TODOS"/>
-                                <webuijsf:label id="label1" text="Fecha Inicio"/>
-                                <webuijsf:calendar columns="15" id="textField2"/>
-                                <webuijsf:label id="label3" text="Fecha Fin"/>
-                                <webuijsf:calendar columns="15" id="textField3"/>
+                                <webuijsf:label id="label1" text="Fecha Desde"/>
+                                <webuijsf:calendar binding="#{LSTLibroIVAVenta.uiCalDesde}" columns="15" id="uiCalDesde"/>
+                                <webuijsf:label id="label3" text="Fecha Hasta"/>
+                                <webuijsf:calendar binding="#{LSTLibroIVAVenta.uiCalHasta}" columns="15" id="uiCalHasta"/>
                                 <webuijsf:button actionExpression="#{LSTLibroIVAVenta.button1_action}" id="button1" text="Ejecutar"/>
                                 <webuijsf:button actionExpression="#{LSTLibroIVAVenta.button2_action}" id="button2" text="Cancelar"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="2" id="mensaje" style="height: 125px; left: 288px; top: 360px; position: absolute" width="456">
+                                <webuijsf:messageGroup id="messageGroup1"/>
                             </h:panelGrid>
                         </div>
                     </webuijsf:form>

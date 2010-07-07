@@ -21,15 +21,21 @@
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
                         <div>
-                            <h:panelGrid columns="2" id="mainContainer" style="height: 125px; left: 288px; top: 235px; position: absolute" width="456">
+                            <h:panelGrid columns="2" id="mainContainer" style="height: 173px; left: 288px; top: 235px; position: absolute" width="456">
                                 <webuijsf:hyperlink id="hyperlink1" text="Cliente"/>
-                                <webuijsf:textField columns="40" id="TODOS" style="margin-left: 11px" text="TODOS"/>
-                                <webuijsf:label id="label1" text="Fecha Inicio"/>
-                                <webuijsf:calendar columns="15" id="textField2"/>
-                                <webuijsf:label id="label3" text="Fecha Fin"/>
-                                <webuijsf:calendar columns="15" id="textField3"/>
+                                <h:panelGrid columns="2" id="cliente">
+                                    <webuijsf:textField binding="#{LSTExtractoCtaCliente.uiTxtCodCliente}" columns="10" id="uiTxtCodCliente" style="margin-left: 11px"/>
+                                    <webuijsf:textField binding="#{LSTExtractoCtaCliente.uiTxtCliente}" columns="40" id="uiTxtCliente" style="margin-left: 11px"/>
+                                </h:panelGrid>
+                                <webuijsf:label id="label1" text="Fecha Desde"/>
+                                <webuijsf:calendar binding="#{LSTExtractoCtaCliente.uiCalDesde}" columns="15" id="uiCalDesde"/>
+                                <webuijsf:label id="label3" text="Fecha Hasta"/>
+                                <webuijsf:calendar binding="#{LSTExtractoCtaCliente.uiCalHasta}" columns="15" id="uiCalHasta"/>
                                 <webuijsf:button actionExpression="#{LSTExtractoCtaCliente.button1_action}" id="button1" text="Ejecutar"/>
                                 <webuijsf:button actionExpression="#{LSTExtractoCtaCliente.button2_action}" id="button2" text="Cancelar"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="2" id="mensaje" style="height: 125px; left: 288px; top: 408px; position: absolute" width="456">
+                                <webuijsf:messageGroup id="messageGroup1"/>
                             </h:panelGrid>
                         </div>
                     </webuijsf:form>

@@ -26,13 +26,19 @@
 	<parameter name="usuario" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["Admin"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="parametros" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="fechaDesde" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="fechaHasta" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="logo_path" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["X:\\Proyecto 2\\Codigo Fuente\\Platinum\\build\\web\\WEB-INF\\classes\\reportesFuente\\logo_platinum.jpg"]]></defaultValueExpression>
+	</parameter>
 	<queryString><![CDATA[select *
 from 
 (
 select        
        cab.fecha_factura  as fecha_comprobante, 
        p.ruc_cliente      as ruc,
-       t.desc_tipo        as desc_comprobante,
+       t.DESC_TIPO_ABREVIADO  as desc_comprobante,
        cab.establecimiento|| '-' || cab.boca_expendio || '-' || lpad(to_char(cab.numero_factura), 10, '0')    as nro_comprobante,
        cab.total_factura * decode(cab.estado_factura, 'ANULADO', 0, 1) as total_comprobante,
        sum(
@@ -74,14 +80,14 @@ select
            on p.cod_cliente = cab.cod_cliente
  group by  cab.fecha_factura, 
            p.ruc_cliente,
-           t.desc_tipo,
+           t.DESC_TIPO_ABREVIADO,
            cab.establecimiento|| '-' || cab.boca_expendio || '-' || lpad(to_char(cab.numero_factura), 10, '0'),
            cab.total_factura  * decode(cab.estado_factura, 'ANULADO', 0, 1)
  union all 
  select        
        nc.fecha_nota_credito as fecha_comprobante, 
        p.ruc_cliente         as ruc,
-       t.desc_tipo           as desc_comprobante,
+       t.DESC_TIPO_ABREVIADO           as desc_comprobante,
        nc.establecimiento|| '-' || nc.boca_expendio || '-' || lpad(to_char(nc.num_nota_credto_cliente), 10, '0')  as nro_comprobante,
        (nc.total_nota_credito * -1) * decode(nc.estado, 'ANULADO', 0, 1) as total_comprobante,
        sum(
@@ -123,10 +129,11 @@ select
            on p.cod_cliente = nc.cod_cliente
  group by nc.fecha_nota_credito, 
        p.ruc_cliente,
-       t.desc_tipo,
+       t.DESC_TIPO_ABREVIADO,
        nc.establecimiento|| '-' || nc.boca_expendio || '-' || lpad(to_char(nc.num_nota_credto_cliente), 10, '0'),
        (nc.total_nota_credito * -1) * decode(nc.estado, 'ANULADO', 0, 1)
  ) aux
+where 1=1 $P!{parametros}
  order by aux.fecha_comprobante, 
           aux.desc_comprobante,
           aux.nro_comprobante]]></queryString>
@@ -238,33 +245,33 @@ select
 						key="image-1"/>
 					<box></box>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["logo_platinum.jpg"]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo_path}]]></imageExpression>
 				</image>
 				<staticText>
 					<reportElement
 						x="3"
 						y="105"
-						width="146"
-						height="20"
+						width="71"
+						height="18"
 						key="staticText-2"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Desde: 11/11/2010]]></text>
+				<text><![CDATA[Fecha Desde:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						x="196"
 						y="105"
-						width="134"
-						height="20"
+						width="66"
+						height="18"
 						key="staticText-3"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Hasta: 11/11/2010]]></text>
+				<text><![CDATA[Fecha Hasta: ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -283,6 +290,32 @@ select
 					</textElement>
 				<text><![CDATA[LIBRO IVA VENTA]]></text>
 				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="79"
+						y="105"
+						width="100"
+						height="18"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaDesde}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="262"
+						y="105"
+						width="100"
+						height="18"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaHasta}]]></textFieldExpression>
+				</textField>
 			</band>
 		</pageHeader>
 		<columnHeader>

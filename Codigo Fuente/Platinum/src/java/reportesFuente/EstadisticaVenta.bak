@@ -26,6 +26,11 @@
 	<parameter name="usuario" isForPrompting="true" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["Admin"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="parametros" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="logo_path" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="fechaDesde" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="fechaHasta" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="producto" isForPrompting="false" class="java.lang.String"/>
 	<queryString><![CDATA[select p.cod_producto as cod_producto, p.descripcion as desc_producto, sum(d.cantidad) cantidad
   from factura_cabecera c, factura_detalle d, producto p
  where c.estado_factura != 'ANULADO'
@@ -37,7 +42,7 @@ group by p.cod_producto, p.descripcion]]></queryString>
 	<field name="DESC_PRODUCTO" class="java.lang.String"/>
 	<field name="CANTIDAD" class="java.math.BigDecimal"/>
 
-	<variable name="V_TOTAL" class="java.lang.String" resetType="Column" calculation="Sum">
+	<variable name="V_TOTAL" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
 		<variableExpression><![CDATA[$F{CANTIDAD}]]></variableExpression>
 	</variable>
 		<background>
@@ -120,25 +125,12 @@ group by p.cod_producto, p.descripcion]]></queryString>
 					<graphicElement stretchType="NoStretch"/>
 					<imageExpression class="java.lang.String"><![CDATA["logo_platinum.jpg"]]></imageExpression>
 				</image>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="55"
-						y="108"
-						width="82"
-						height="17"
-						key="textField-2"/>
-					<box></box>
-					<textElement>
-						<font/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{usuario}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement
 						x="1"
 						y="107"
 						width="49"
-						height="20"
+						height="14"
 						key="staticText-2"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
@@ -148,29 +140,29 @@ group by p.cod_producto, p.descripcion]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="205"
+						x="229"
 						y="107"
-						width="146"
-						height="20"
+						width="69"
+						height="14"
 						key="staticText-3"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Desde: 11/11/2010]]></text>
+				<text><![CDATA[Fecha Desde: ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						x="398"
 						y="107"
-						width="134"
-						height="20"
+						width="66"
+						height="14"
 						key="staticText-4"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Hasta: 11/11/2010]]></text>
+				<text><![CDATA[Fecha Hasta:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
