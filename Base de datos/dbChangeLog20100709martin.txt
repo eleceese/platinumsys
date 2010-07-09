@@ -1,0 +1,3 @@
+--Fernando
+alter table entrada_salida_cabecera ADD ESTADO VARCHAR2(1);
+alter table entrada_salida_detalle ADD ESTADO VARCHAR2(1);
