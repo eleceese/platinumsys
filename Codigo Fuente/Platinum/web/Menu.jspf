@@ -20,6 +20,8 @@
                 <br/>
                 <webuijsf:hyperlink id="comisiones" text="Comisiones" url="/faces/ABMComisiones.jsp"/>
                 <br/>
+                <webuijsf:hyperlink id="ciudades" text="Ciudades" url="/faces/ABMCiudades.jsp"/>
+                <br/>
             </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab2" style="" title="Compras">
                 <h2>ABM</h2>
@@ -71,13 +73,19 @@
                 <webuijsf:hyperlink id="repLSTExtractoCtaCliente" style="margin-left: 20px" text="Extracto Cuenta Cliente" url="/faces/LSTExtractoCtaCliente.jsp"/>
             </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab4" title="Produccion">
-                <webuijsf:hyperlink id="ordenesDeTrabajo" text="Ordenes de Trabajo" url="/faces/RegistroDeOrdenesDeTrabajo.jsp"/>
+                <webuijsf:hyperlink id="ordenesDeTrabajo" text="Ordenes de Trabajo" url="/faces/ABMOrdenesTrabajo.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="registroEstados" text="Manejo de Estados OT" url="/faces/RegistroEstadosOT.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="produccionDiaria" text="Produccion Diaria" url="/faces/RegistroProDiaria.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="fallos" text="Tareas Fallidas" url="/faces/ABMFallos.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="tipoProduccion" target="rightFrame" text="Tipo de Productos" url="/faces/ABMTipoProductos.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="Productos" text="Productos" url="/faces/ABMProductos.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="equivalencias" text="Equivalencias" url="/faces/ABMEquivalencia.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="Tareas" text="Tareas" url="/faces/ABMTareas.jsp"/>
                 <br/>
@@ -87,7 +95,7 @@
             <webuijsf:accordionTab contentHeight="250px" id="tab5" title="Stock">
                 <webuijsf:hyperlink id="depositos" text="Depositos" url="/faces/ABMDeposito.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="movimientos" text="Movimientos Deposito" url="/faces/RegistroMovDeposito.jsp"/>
+                <webuijsf:hyperlink id="movimientos" text="Movimientos Deposito" url="/faces/ABMMovimientosDeposito.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="inventarios" text="Apertura Inventario" url="/faces/RegistroDeInventario.jsp"/>
                 <br/>
