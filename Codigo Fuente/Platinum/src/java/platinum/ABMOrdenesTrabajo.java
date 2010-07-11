@@ -289,24 +289,54 @@ public class ABMOrdenesTrabajo extends AbstractPageBean {
 //            r = true;
 //        }
 
-        if (uiResponsableCodigo.getText().toString() == null || uiResponsableCodigo.getText().equals("") ) {
-        info("Campo obligatorio, favor ingrese el Responsable");
-            r = true;
-        }
-
+       
         if (uiDescripcionOt.getText() == null) {
         info("Campo obligatorio, favor ingrese la descripcion de la Orden de Trabajo");
             r = true;
         }
 
-        if (uiProducto.getSelected() == null || uiProducto.getSelected().equals("") ) {
-        info("Campo obligatorio, favor ingrese el Codigo de Producto");
-            r = true;
+         if (uiResponsableCodigo.getText().toString() == null
+                    || uiResponsableCodigo.getText().equals("")
+                    || !StringUtils.esNumero(uiResponsableCodigo.getText().toString())    ) {
+                        info("Favor ingrese correctamente el Responsable");
+                        r = true;
+        }else{
+                Empleado em = new Empleado();
+                em = new EmpleadoController().findById(Long.valueOf(uiResponsableCodigo.getText().toString()));
+                if (em == null) {
+                        info("Favor ingrese correctamente el Responsable");
+                        r = true;
+                }
+
         }
 
-        if (uiFormulaCodigo.getText().toString() == null || uiFormulaCodigo.getText().equals("") ) {
-        info("Campo obligatorio, favor ingrese el Codigo de Formula");
+        if (uiProducto.getSelected() == null 
+                    || uiProducto.getSelected().equals("")
+                    || !StringUtils.esNumero(uiProducto.getSelected().toString())    ) {
+            info("Campo obligatorio, favor ingrese el Codigo de Producto");
             r = true;
+        }else{
+                Producto pr = new Producto();
+                pr = new ProductoController().findById(Long.valueOf(uiProducto.getSelected().toString()));
+                if (pr == null) {
+                    info("Favor ingrese el Codigo de Producto");
+                    r = true;
+            }
+        }
+
+        if (uiFormulaCodigo.getText().toString() == null 
+                    || uiFormulaCodigo.getText().equals("")
+                    || !StringUtils.esNumero(uiFormulaCodigo.getText().toString())    ) {
+            info("Campo obligatorio, favor ingrese el Codigo de Formula");
+            r = true;
+        }else{
+            FormulaCabecera formu = new FormulaCabecera();
+            formu = new FormulaCabeceraController().findById(Long.valueOf(uiFormulaCodigo.getText().toString()));
+                    if (formu == null) {
+                        info("Favor ingrese el Codigo correcto de Formula");
+                        r = true;
+                    }
+
         }
 
         if (!StringUtils.esNumero(this.uiCantidad.getText().toString()))
@@ -374,10 +404,23 @@ private SolicitudInterna[] solicitudesAGenerarse;
 //        info("Campo obligatorio, favor ingrese el Numero de OT");
 //            r = true;
 //        }
-        if (uiResponsableCodigo.getText().toString() == null || uiResponsableCodigo.getText().equals("") ) {
-        info("Campo obligatorio, favor ingrese el Responsable");
-            r = true;
+
+        if (uiResponsableCodigo.getText().toString() == null
+                    || uiResponsableCodigo.getText().equals("")
+                    || !StringUtils.esNumero(uiResponsableCodigo.getText().toString())    ) {
+                        info("Favor ingrese correctamente el Responsable");
+                        r = true;
+        }else{
+                Empleado em = new Empleado();
+                em = new EmpleadoController().findById(Long.valueOf(uiResponsableCodigo.getText().toString()));
+                if (em == null) {
+                        info("Favor ingrese correctamente el Responsable");
+                        r = true;
+                }
+
         }
+
+
 
         if (uiDescripcionOt.getText() == null) {
         info("Campo obligatorio, favor ingrese la descripcion de la Orden de Trabajo");
@@ -385,9 +428,18 @@ private SolicitudInterna[] solicitudesAGenerarse;
         }
 
 
-        if (uiProducto.getSelected() == null || uiProducto.getSelected().equals("") ) {
-        info("Campo obligatorio, favor ingrese el Codigo de Producto");
+        if (uiProducto.getSelected() == null
+                    || uiProducto.getSelected().equals("")
+                    || !StringUtils.esNumero(uiProducto.getSelected().toString())    ) {
+            info("Campo obligatorio, favor ingrese el Codigo de Producto");
             r = true;
+        }else{
+                Producto pr = new Producto();
+                pr = new ProductoController().findById(Long.valueOf(uiProducto.getSelected().toString()));
+                if (pr == null) {
+                    info("Favor ingrese el Codigo de Producto");
+                    r = true;
+            }
         }
 
 //        if (uiFormulaCodigo.getText()== null || uiFormulaCodigo.getText().equals("") ) {
@@ -408,13 +460,7 @@ private SolicitudInterna[] solicitudesAGenerarse;
         }
 
 
-         if (uiFechaFin.getSelectedDate() == null || uiFechaFin.getSelectedDate().equals("") ) {
-        info("Campo obligatorio, la fecha de Finalizacion estimada");
-            r = true;
-        }
-
-
-        if (!StringUtils.esNumero(this.uiCostoPrevisto.getText().toString()))
+               if (!StringUtils.esNumero(this.uiCostoPrevisto.getText().toString()))
             {   r = true;
         this.info(uiCantidad, "La cantidad debe ser campo numerico");
             }
@@ -437,6 +483,7 @@ private SolicitudInterna[] solicitudesAGenerarse;
 
 
     private void _init() throws Exception {
+        dropDown1DefaultOptions.setSelectedValue("X");
        
 
     }
@@ -1384,7 +1431,6 @@ private SolicitudInterna[] solicitudesAGenerarse;
     getSessionBean1().setTituloPagina("Registro de Ordenes de Trabajo");
     getSessionBean1().setDetallePagina("Seleccione la OT deseada");
 
-
     }
 
     /**
@@ -1397,6 +1443,12 @@ private SolicitudInterna[] solicitudesAGenerarse;
     @Override
     public void preprocess() {
     }
+    public void cargarRelaciones() {
+        getSessionBean1().cargarListaTodosProductosTerminados();
+        getSessionBean1().cargarListaTodosProductos();
+        getSessionBean1().cargarListaTodosProductosSemiterminados();
+        getSessionBean1().cargarListaTodosProductosTerSemiInsMat();
+    }
     /**
      * <p>Callback method that is called just before rendering takes place.
      * This method will <strong>only</strong> be called for the page that
@@ -1406,6 +1458,7 @@ private SolicitudInterna[] solicitudesAGenerarse;
      * this page.</p>
      */
     private boolean addRequestOT = false;
+    private boolean addRequestOT2 = false;
     private boolean updateRequestOT = false;
     private boolean updateRequestOT2 = false;
     private boolean updateCostoOT = false;
@@ -1532,6 +1585,7 @@ private SolicitudInterna[] solicitudesAGenerarse;
  //              this.gridPanelDetalleSemiTerminados.setRendered(false);
         }
 
+cargarRelaciones();
 buscar_action2();
 
 
@@ -1662,7 +1716,7 @@ buscar_action2();
 
     getSessionBean1().setTituloPagina("Registro de Ordenes de Trabajo");
     getSessionBean1().setDetallePagina("Apertura de nueva OT");
-    uiEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("A", "Abierto"),new com.sun.webui.jsf.model.Option("P", "En Proceso")});
+   
 
         this.addRequestOT=true;
         this.updateRequestOT=false;
@@ -1876,29 +1930,49 @@ this.uiSemiTerCabCantProd.setText("");
 
     public void validarDetalleOt(){
         this.errorValidacion= false;
-                if (uiDetSemiTerCodProd.getText() == null || uiDetSemiTerCodProd.getText().equals("") ) {
+        if (uiDetSemiTerCodProd.getText() == null || uiDetSemiTerCodProd.getText().equals("")
+                        ||!StringUtils.esNumero(uiDetSemiTerCodProd.getText().toString())) {
                 this.errorValidacion= true;
                 info("Verifique el detalle, debe ingresar el Codigo de Producto");
-        }else if(!editarDetalleOt){
-                for (int i = 0; i < detalleOrdenTrabajoList.size(); i++) {
+        }else{
+            Producto prod = new Producto();
+                prod = new ProductoController().findById(Long.valueOf(uiDetSemiTerCodProd.getText().toString()));
+                if (prod == null || !prod.getCodTipoProducto().getDescripcion().equals("SemiTerminado")) {
+                            this.errorValidacion= true;
+                            info("Seleccione correctamente el producto");
+                } else if(!editarDetalleOt){
+                    for (int i = 0; i < detalleOrdenTrabajoList.size(); i++) {
                         OrdenTrabajoDetalle detOt = detalleOrdenTrabajoList.get(i);
                         if (detOt.getCodProducto().getCodProducto().toString().equals(uiDetSemiTerCodProd.getText().toString())) {
                             this.errorValidacion= true;
                             info("El Semiterminado ya fue asignado");
                             break;
                         }
+                    }
+                }
+
+     }
+
+        if (uiResponsableCodigo.getText() == null || uiResponsableCodigo.getText().equals("") 
+                        || !StringUtils.esNumero(uiResponsableCodigo.getText().toString())) {
+                this.errorValidacion= true;
+                info("Seleccione el empleado Responsable");
+        }else{
+                Empleado emp = new Empleado();
+                emp = new EmpleadoController().findById(Long.valueOf(uiResponsableCodigo.getText().toString()));
+                if (emp == null) {
+                    this.errorValidacion= true;
+                    info("Seleccione el empleado Responsable");
                 }
         }
 
-        if (uiResponsableCodigo.getText() == null || uiResponsableCodigo.getText().equals("") ) {
-        this.errorValidacion= true;
-        info("Seleccione el empleado Responsable");
-        }
-
-        if (uiDetSemiTerCant.getText() == null || uiDetSemiTerCant.getText().equals("") ) {
-     //   if (!StringUtils.esNumero(this.uiDet.getText().toString())){
+        if (uiDetSemiTerCant.getText() == null || uiDetSemiTerCant.getText().equals("")
+                    || (!StringUtils.esNumero(uiDetSemiTerCant.getText().toString()))) {
         this.errorValidacion= true;
         info("Verifique el detalle, debe ingresar correctamente la Cantidad");
+        }else if(Long.valueOf(uiDetSemiTerCant.getText().toString())<1){
+            this.errorValidacion= true;
+            info("Verifique el detalle, debe ingresar correctamente la Cantidad");
         }
 
     }
@@ -1949,8 +2023,22 @@ this.uiSemiTerCabCantProd.setText("");
         // case name where null will return to the same page.
 
         System.out.println(addRequestOT);
-        this.addRequestOT=true;
-        this.updateRequestOT=false;
+
+         if (updateRequestOT2) {
+             updateRequestOT2 = false;
+             updateRequestOT=true;
+             addRequestOT=false;
+         }
+
+         if (addRequestOT2) {
+             addRequestOT2 = false;
+             updateRequestOT=false;
+             addRequestOT=true;
+         }
+
+
+//  this.addRequestOT=true;
+//        this.updateRequestOT=false;
         this.updateCostoOT=false;
         this.addDetalleOt=false;
         this.errorValidacion =false;
@@ -1968,6 +2056,13 @@ this.uiSemiTerCabCantProd.setText("");
 
 //        if (updateRequestOT) {
                 limpiarDetalleSemiTer();
+
+                /// esta bandera se utiliza para controlar las banderas a la vuelta del detalle
+                if (addRequestOT) {
+                    addRequestOT2 = true;
+                }else{
+                    addRequestOT2 = false;
+                }
 
                 this.addRequestOT=false;
 
@@ -2082,10 +2177,19 @@ this.uiSemiTerCabCantProd.setText("");
 
     public void validarDetalleProducto(){
         this.errorValidacion= false;
-        if (uiSemiTerDetCodRecurso.getText() == null || uiSemiTerDetCodRecurso.getText().equals("") ) {
+        if (uiSemiTerDetCodRecurso.getText() == null 
+                || uiSemiTerDetCodRecurso.getText().equals("")
+                || !StringUtils.esNumero(uiSemiTerDetCodRecurso.getText().toString()) ) {
                         this.errorValidacion= true;
                         info("Verifique el detalle");
-        }else if((!editarDetalleSemiterRecurso)){
+        }else{
+              Producto prod = new Producto();
+              prod = new ProductoController().findById(Long.valueOf(uiSemiTerDetCodRecurso.getText().toString()));
+              if (prod == null
+                        || !prod.getCodTipoProducto().getDescripcion().toString().equals("ProductoGenerico")){
+                        this.errorValidacion= true;
+                        info("El producto debe ser Generico");
+              } else if((!editarDetalleSemiterRecurso)){
             /// una vez qe existe el codigo validamos que ya no se haya cargado
                 for (int i = 0; i < recursoAsignadoMostradoList.size(); i++) {
                         RecursoAsignado rec = recursoAsignadoMostradoList.get(i);
@@ -2096,20 +2200,34 @@ this.uiSemiTerCabCantProd.setText("");
                         }
                 }
                     
+            }
         }
 
-        if (uiSemiTerDetCantRecurso.getText() == null || uiSemiTerDetCantRecurso.getText().equals("") ) {
+        if (uiSemiTerDetCantRecurso.getText() == null ||
+                    uiSemiTerDetCantRecurso.getText().equals("") ||
+                        !StringUtils.esNumero(uiSemiTerDetCantRecurso.getText().toString()))
+        {
         this.errorValidacion= true;
-        info("Verifique el detalle");
+        info("Verifique la cantidad el detalle");
+        }else if(Long.valueOf(uiSemiTerDetCantRecurso.getText().toString())<1) {
+            this.errorValidacion= true;
+            info("Verifique la cantidad el detalle");
         }
     }
 
     public void validarDetalleTarea(){
         this.errorValidacion= false;
-        if (uiSemiTerDetCodTarea.getText() == null || uiSemiTerDetCodTarea.getText().equals("") ) {
+        if (uiSemiTerDetCodTarea.getText() == null || uiSemiTerDetCodTarea.getText().equals("")
+                    || !StringUtils.esNumero(uiSemiTerDetCodTarea.getText().toString())) {
             this.errorValidacion= true;
             info("Verifique el detalle");
-        }else if(!editarDetalleSemiterTarea){
+        }else{
+            Tarea tare = new Tarea();
+            tare = new TareaController().findById(Long.valueOf(uiSemiTerDetCodTarea.getText().toString()));
+            if (tare == null) {
+                            this.errorValidacion= true;
+                            info("Verifique el detalle");
+            } else if(!editarDetalleSemiterTarea){
                 for (int i = 0; i < tareaAsignadaMostradaList.size(); i++) {
                         TareaAsignada tar = tareaAsignadaMostradaList.get(i);
                         if (tar.getCodTarea().getCodTarea().toString().equals(uiSemiTerDetCodTarea.getText().toString()) ) {
@@ -2118,13 +2236,37 @@ this.uiSemiTerCabCantProd.setText("");
                             break;
                         }
                 }
+            }
 
-        }
+      }
+                if (uiSemiTerDetFin.isChecked()) {
+                    boolean fin = false;
+                        for (int i = 0; i < tareaAsignadaMostradaList.size(); i++) {
+                           TareaAsignada tar = tareaAsignadaMostradaList.get(i);
+                            if (tar.getTareaFin() != null && tar.getTareaFin().toString().equals("S")) {
+                                fin = true;
+                                break;
+                            }
+                       }
+                    if (fin) {
+                        this.errorValidacion= true;
+                        info("Ya existe una Tarea de Finalizacion");
+                    }
 
-        if (uiSemiTerDetCantTarea.getText() == null || uiSemiTerDetCantTarea.getText().equals("") ) {
+
+                }
+        
+
+        if (uiSemiTerDetCantTarea.getText() == null || 
+                uiSemiTerDetCantTarea.getText().equals("") ||
+                      !StringUtils.esNumero(uiSemiTerDetCantTarea.getText().toString())) {
         this.errorValidacion= true;
-        info("Verifique el detalle");
+        info("Verifique la cantidad del Detalle");
+        }else if(Long.valueOf(uiSemiTerDetCantTarea.getText().toString())<1){
+            this.errorValidacion= true;
+            info("Verifique la cantidad el detalle");
         }
+
     }
 
 
@@ -2205,7 +2347,7 @@ this.uiSemiTerCabCantProd.setText("");
                    tareaAsignadaOt.setCantidadReal(Long.valueOf("0"));
                    tareaAsignadaOt.setCodTareaAsignada(idAuxiliar);
                    if (uiSemiTerDetFin.isChecked()) {
-                    tareaAsignadaOt.setTareaFin("S");
+                       tareaAsignadaOt.setTareaFin("S");
                    }
                    tareaAsignadaMostradaList.add(tareaAsignadaOt);
                    editarDetalleSemiterTarea = false;
@@ -2242,9 +2384,13 @@ this.uiSemiTerCabCantProd.setText("");
          tareaAsignada = tareaAsignadaMostradaList.get(Integer.valueOf(itemDet).intValue());
 
          this.uiSemiTerDetCodTarea.setText(tareaAsignada.getCodTarea().getCodTarea().toString());
-//         this.uiSemiTerDet.setText(tareaAsignada.getCodTarea().getNombreTarea().toString());
+         this.uiSemiTerDetDescTarea.setText(tareaAsignada.getCodTarea().getNombreTarea().toString());
          this.uiSemiTerDetCantTarea.setText(String.valueOf(tareaAsignada.getCantidad()));
-        return null;
+         if (tareaAsignada.getTareaFin() != null && tareaAsignada.getTareaFin().toString().equals("S")) {
+           uiSemiTerDetFin.setSelected(true);
+        }
+
+         return null;
     }
 
     public String uiSemiTerDetRemoveTareaLink_action() {
@@ -2265,6 +2411,7 @@ this.uiSemiTerCabCantProd.setText("");
             tareaAsignadaMostradaList.remove(Integer.valueOf(itemDet).intValue());
         }
 
+        detalleOrdenTrabajo.setTareaAsignadaCollectionFromList(tareaAsignadaMostradaList);
         tareasAsignadasOt = (TareaAsignada[]) tareaAsignadaMostradaList.toArray(new TareaAsignada[0]);
 
         return null;
@@ -2283,7 +2430,7 @@ this.uiSemiTerCabCantProd.setText("");
 
          this.uiSemiTerDetCodRecurso.setText(recursoAsignado.getCodProducto().getCodProducto().toString());
          this.uiSemiTerDetDescRecurso.setText(recursoAsignado.getCodProducto().getDescripcion().toString());
-         this.uiSemiTerDetCantTarea.setText(String.valueOf(recursoAsignado.getCantidad()));
+         this.uiSemiTerDetCantRecurso.setText(String.valueOf(recursoAsignado.getCantidad()));
 
 
      return null;
@@ -2305,7 +2452,7 @@ this.uiSemiTerCabCantProd.setText("");
         }else{
             recursoAsignadoMostradoList.remove(Integer.valueOf(itemDet).intValue());
         }
-        
+        detalleOrdenTrabajo.setRecursoAsignadoCollectionFromList(recursoAsignadoMostradoList);
         recursosAsignadosOt = (RecursoAsignado[]) recursoAsignadoMostradoList.toArray(new RecursoAsignado[0]);
         return null;
     }
@@ -2526,6 +2673,22 @@ public String uiButtonActivarOtDet_action() {
         this.solicitudesList = solicitudesList;
     }
 
+    public boolean isAddRequestOT2() {
+        return addRequestOT2;
+    }
+
+    public void setAddRequestOT2(boolean addRequestOT2) {
+        this.addRequestOT2 = addRequestOT2;
+    }
+
+    public boolean isUpdateRequestOT2() {
+        return updateRequestOT2;
+    }
+
+    public void setUpdateRequestOT2(boolean updateRequestOT2) {
+        this.updateRequestOT2 = updateRequestOT2;
+    }
+
 
 
 /////////////// GUETERS AND SETTERS
@@ -2743,8 +2906,6 @@ public String uiButtonActivarOtDet_action() {
         cargarCamposUpdate();
         limpiarDetalleOt();
 
-        uiEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("A", "Abierto"),new com.sun.webui.jsf.model.Option("P", "En Proceso"), new com.sun.webui.jsf.model.Option("T", "Terminado")});
-
         this.updateRequestOT=true;
 
 
@@ -2783,7 +2944,7 @@ private long idEditado;
                  this.uiResponsableNombre.setText(ordenTrabajo.getCodEmpleado1().getNombreEmpleado()+" "+ ordenTrabajo.getCodEmpleado1().getApellidoEmpleado());
                  this.uiResponsableNombre.setDisabled(true);
 
-                 this.uiProducto.setSelected(ordenTrabajo.getCodProductoOt().getCodProducto());
+                 this.uiProducto.setSelected(ordenTrabajo.getCodProductoOt().getCodProducto().toString());
                  this.uiProducto.setDisabled(true);
 
                  this.uiEstado.setSelected(ordenTrabajo.getEstadoOt().toString());
@@ -2817,7 +2978,7 @@ private long idEditado;
 
                  this.uiEstado.setDisabled(true);
 
-                 if (ordenTrabajo.getEstadoOt().toString().equals("T")) {
+                 if (ordenTrabajo.getEstadoOt().toString().equals("T") ||ordenTrabajo.getEstadoOt().toString().equals("C")) {
                         this.tableColumnDelSemiTer.setRendered(false);
                         this.tableColumnEditSemiter.setRendered(false);
                         this.uiButtonAgregarDetalleOt.setRendered(false);
@@ -2977,23 +3138,16 @@ private long idEditado;
                     this.updateCostoOT = false;
 
                 }else{
-
-
-                    uiEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("C", "Cerrado"), new com.sun.webui.jsf.model.Option("T", "Terminado")});
                     this.pageAlert1.setRendered(false);
                     this.uiButtonGuardarRegistro.setRendered(false);
                     this.uibuttonGuardarEdicion.setRendered(false);
 
-
                     if (ordenTrabajo.getCostoRealOt().longValue() > 0) {
                           this.uibuttonGuardarCostos.setRendered(true);
                           this.uibuttonCalcularCostos.setRendered(false);
-
-
                     }else{
                           this.uibuttonGuardarCostos.setRendered(false);
                           this.uibuttonCalcularCostos.setRendered(true);
-                        
                     }
                   
                     getSessionBean1().setTituloPagina("Ordenes de Trabajo");
@@ -3437,6 +3591,18 @@ public String uibuttonGuardarCostos_action() {
             }
 
         return r;
+    }
+
+    public String uiButtonTodosFiltro_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        this.uiNumOtFil.setText("");
+        this.uiFechaDesdeFil.setSelectedDate(null);
+        this.uiFechaHastaFil.setSelectedDate(null);
+        this.uiTodosFil.setSelected(true);
+        this.uiEstadoFil.setSelected("X");
+
+        return null;
     }
 
 

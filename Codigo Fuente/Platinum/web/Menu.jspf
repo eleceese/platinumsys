@@ -73,33 +73,65 @@
                 <webuijsf:hyperlink id="repLSTExtractoCtaCliente" style="margin-left: 20px" text="Extracto Cuenta Cliente" url="/faces/LSTExtractoCtaCliente.jsp"/>
             </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab4" title="Produccion">
-                <webuijsf:hyperlink id="ordenesDeTrabajo" text="Ordenes de Trabajo" url="/faces/ABMOrdenesTrabajo.jsp"/>
+                <h2>ABM</h2>
+                <webuijsf:hyperlink id="Productos" style="margin-left: 20px" text="Productos" url="/faces/ABMProductos.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="registroEstados" text="Manejo de Estados OT" url="/faces/RegistroEstadosOT.jsp"/>
+                <webuijsf:hyperlink id="formulaSemi" style="margin-left: 20px" text="Formula SemiTer" url="/faces/ABMFormulaSemiTerminado.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="produccionDiaria" text="Produccion Diaria" url="/faces/RegistroProDiaria.jsp"/>
+                <webuijsf:hyperlink id="formulaTermi" style="margin-left: 20px" text="Formula Terminado" url="/faces/ABMFormulaTerminado.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="fallos" text="Tareas Fallidas" url="/faces/ABMFallos.jsp"/>
+                <webuijsf:hyperlink id="equivalencias" style="margin-left: 20px" text="Equivalencias" url="/faces/ABMEquivalencia.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="tipoProduccion" target="rightFrame" text="Tipo de Productos" url="/faces/ABMTipoProductos.jsp"/>
+                <webuijsf:hyperlink id="Tareas" style="margin-left: 20px" text="Tareas" url="/faces/ABMTareas.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="Productos" text="Productos" url="/faces/ABMProductos.jsp"/>
+                <webuijsf:hyperlink id="unidadMedida" style="margin-left: 20px" text="Unidades de Medida" url="/faces/ABMUnidadMedida.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="equivalencias" text="Equivalencias" url="/faces/ABMEquivalencia.jsp"/>
+                <webuijsf:hyperlink id="presentacion" style="margin-left: 20px" text="Presentaciones" url="/faces/ABMPresentacion.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="Tareas" text="Tareas" url="/faces/ABMTareas.jsp"/>
+                <webuijsf:hyperlink id="maquinaria" style="margin-left: 20px" text="Maquinarias" url="/faces/ABMMaquinaria.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="unidadMedida" text="Unidades de Medida" url="/faces/ABMUnidadMedida.jsp"/>
+                <h2>Transacciones</h2>
+                <webuijsf:hyperlink id="ordenesDeTrabajo" style="margin-left: 20px" text="Ordenes de Trabajo" url="/faces/ABMOrdenesTrabajo.jsp"/>
                 <br/>
-            </webuijsf:accordionTab>
+                <webuijsf:hyperlink id="registroEstados" style="margin-left: 20px" text="Manejo de Estados OT" url="/faces/RegistroEstadosOT.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="produccionDiaria" style="margin-left: 20px" text="Produccion Diaria" url="/faces/RegistroProDiaria.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="fallos" style="margin-left: 20px" text="Tareas Fallidas" url="/faces/ABMFallos.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="perdidas" style="margin-left: 20px" text="Perdidas en Produccion" url="/faces/ABMPerdidasProduccion.jsp"/>
+                <br/>
+                <h2>Reportes</h2>
+                <webuijsf:hyperlink id="LSTEstadoOrdenProduccion" style="margin-left: 20px" text="Estado de Ordenes de Trabajo" url="/faces/LSTEstadoOrdenProduccion.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="LSTOrdenesDeTrabajoRecursos" style="margin-left: 20px" text="Estado de Recursos OT" url="/faces/LSTOrdenesDeTrabajoRecursos.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="LSTTareasProduccion" style="margin-left: 20px" text="Listado de Tareas de Produccion" url="/faces/LSTTareasProduccion.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="LSTResumenTareasEmpleado" style="margin-left: 20px" text="Resumen de Tareas" url="/faces/LSTResumenTareasEmpleado.jsp"/>
+                <br/>
+           </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab5" title="Stock">
-                <webuijsf:hyperlink id="depositos" text="Depositos" url="/faces/ABMDeposito.jsp"/>
+                <h2>ABM</h2>
+                <webuijsf:hyperlink id="depositos" style="margin-left: 20px" text="Depositos" url="/faces/ABMDeposito.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="movimientos" text="Movimientos Deposito" url="/faces/ABMMovimientosDeposito.jsp"/>
+                <h2>Transacciones</h2>
+                <webuijsf:hyperlink id="movimientos" style="margin-left: 20px" text="Movimientos Deposito" url="/faces/ABMMovimientosDeposito.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="inventarios" text="Apertura Inventario" url="/faces/RegistroDeInventario.jsp"/>
+                <webuijsf:hyperlink id="inventarios" style="margin-left: 20px" text="Apertura Inventario" url="/faces/RegistroDeInventario.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="inventariosCierre"  text="Cierre Inventario" url="/faces/RegistroDeInventarioCierre.jsp"/>
+                <webuijsf:hyperlink id="inventariosCierre" style="margin-left: 20px" text="Cierre Inventario" url="/faces/RegistroDeInventarioCierre.jsp"/>
+                <br/>
+                <h2>Reportes</h2>
+                <webuijsf:hyperlink id="LSTExistenciaProducto" style="margin-left: 20px" text="Existencias en Deposito" url="/faces/LSTExistenciaProducto.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="LSTMovimientoDeposito" style="margin-left: 20px" text="Movimientos en Deposito" url="/faces/LSTMovimientoDeposito.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="LSTValoresEnDeposito" style="margin-left: 20px" text="Valores en Deposito" url="/faces/LSTValoresEnDeposito.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="LSTFichaProducto" style="margin-left: 20px" text="Ficha de Producto" url="/faces/LSTFichaProducto.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="LSTEquivalenciaProductos" style="margin-left: 20px" text="Listado de Equivalencias" url="/faces/LSTEquivalenciaProductos.jsp"/>
                 <br/>
             </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab7" title="Reportes"/>

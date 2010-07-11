@@ -340,7 +340,7 @@ public class ABMEquivalencia extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosTareas.setRendered(true);
-             
+            this.uiRelacion.setDisabled(false);
 
 
         } else if (updateRequest) {
@@ -352,6 +352,7 @@ public class ABMEquivalencia extends AbstractPageBean {
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
             this.datosTareas.setRendered(true);
+            this.uiRelacion.setDisabled(false);
             cargarCamposUpdate();
 
         } else if (errorValidacion) {
@@ -379,7 +380,10 @@ public class ABMEquivalencia extends AbstractPageBean {
 getSessionBean1().setTituloPagina("Registro de Equivalencias");
 getSessionBean1().setDetallePagina("Ingrese la Relacion entre Productos Genericos y Productos Finales");
 
+//Llama a la funcion que cargar los combo box.
+cargarComboBox();
 
+//Llama a la funcion que cargar la grilla de Equivalencias.
 buscar_action2();
     }
 
@@ -413,6 +417,10 @@ buscar_action2();
          }
     }
 
+public void cargarComboBox(){
+    cargarListaTodosProductosFin();
+    cargarListaTodosProductosGen();
+}
 public void limpiarCamposNew(){
 
         this.uiProductoFin.setSelected("");
@@ -431,18 +439,21 @@ public void limpiarCamposNew(){
 
      private String buscar_action2() {
 
-        Tarea[] listaTareas;
-        TareaController tareaController = new TareaController();
+        Equivalencia[] listaEquivalencias;
+        EquivalenciaController equivalenciaController = new EquivalenciaController();
 
-        String pCodigo=null, pNombre=null;
+        Long pProductoGen=null, pProductoFin=null;
+         if (this.uiProductoFinFil.getSelected() != null) {
+                pProductoFin = Long.valueOf(this.uiProductoFinFil.getSelected().toString());
+         }
+         if (this.uiProductoGenFil.getSelected() != null) {
+                pProductoGen = Long.valueOf(this.uiProductoGenFil.getSelected().toString());
+         }
 
-        
 
-        listaTareas = (Tarea[]) tareaController.getAllFiltered
-                                        (pCodigo,
-                                         pNombre).toArray(new Tarea[0]);
+        listaEquivalencias = (Equivalencia[]) equivalenciaController.getAllFiltered(null, pProductoGen, pProductoFin).toArray(new Equivalencia[0]);
 
-        getSessionBean1().setListaTareas(listaTareas);
+        setListaEquivalencias(listaEquivalencias);
         return null;
 
     }
@@ -605,13 +616,22 @@ public void limpiarCamposNew(){
 
 public void validarCampos() {
     errorValidacion = false;
-            
+            ProductoController productoController = new ProductoController();
+            Producto productoGen = new Producto();
+            Producto productoFin = new Producto();
+
+            productoFin = productoController.findById(Long.valueOf(this.uiProductoFin.getSelected().toString()));
+            productoGen = productoController.findById(Long.valueOf(this.uiProductoGen.getSelected().toString()));
+
+            if (productoFin.getCodUnidadMedida().getCodUnidadMedida().longValue() != productoGen.getCodUnidadMedida().getCodUnidadMedida().longValue()) {
+                errorValidacion = true;
+                this.info(uiProductoFin, "No se pueden Relacionar los Productos porque tiene distintas Unidades de Medida.");
+            }
             if (this.uiProductoGen.getSelected() == null)
                 {
                    errorValidacion = true;
                    this.info(uiProductoFin, "Favor Seleccione el Producto Generico");
             } 
-
             if (this.uiProductoFin.getSelected() == null)
                 {
                    errorValidacion = true;
@@ -624,11 +644,8 @@ public void validarCampos() {
 
                         errorValidacion = true;
                         this.info(uiProductoFin, "Ya existe una Relacion con el Producto Final en cuestion, favor verifique el Producto Final");
-
                     }
-
             }
-
             if (this.uiRelacion.getText() == null ||
                     this.uiRelacion.getText().equals(""))
             {
@@ -637,16 +654,14 @@ public void validarCampos() {
             }else if(!StringUtils.esNumeroDecimal(this.uiRelacion.getText().toString())){
                    errorValidacion = true;
                    this.info(uiProductoFin, "Verifique la relacion");
-            
             }
-
-
 }
 
     public String buscar_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         this.pageAlert1.setRendered(false);
+  
         return null;
     }
 
@@ -681,6 +696,8 @@ public void validarCampos() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         this.pageAlert1.setRendered(false);
+        this.uiProductoFinFil.setSelected("-1");
+        this.uiProductoGenFil.setSelected("-1");
 //        getSessionBean1().cargarListaTodosTipoProductos();
 //        this.uiCodigoFil.setText("");
 //        this.uiNombreFil.setText("");
@@ -746,6 +763,15 @@ public void validarCampos() {
 ////// CARGA DE COMBO BOX PRODUCTOS
     Producto[] listaProductosGen;
     Option[] listaProductosGenOp;
+    Option[] listaProductosGenOpFil;
+
+    public Option[] getListaProductosGenOpFil() {
+        return listaProductosGenOpFil;
+    }
+
+    public void setListaProductosGenOpFil(Option[] listaProductosGenOpFil) {
+        this.listaProductosGenOpFil = listaProductosGenOpFil;
+    }
 
     public Producto[] getListaProductosGen() {
         return listaProductosGen;
@@ -763,6 +789,8 @@ public void validarCampos() {
         ProductoController productoController = new ProductoController();
         listaProductosGen = (Producto[]) productoController.getAllFiltered(null, null, "ProductoGenerico", null).toArray(new Producto[0]);
         listaProductosGenOp = new Option[listaProductosGen.length];
+        listaProductosGenOpFil = new Option[listaProductosGen.length+1];
+
         Option option;
         for (int i = 0; i < listaProductosGen.length; i++) {
             Producto p = listaProductosGen[i];
@@ -770,7 +798,13 @@ public void validarCampos() {
             option.setLabel(p.getCodProducto().toString()+" "+p.getDescripcion());
             option.setValue(p.getCodProducto().toString());
             listaProductosGenOp[i] = option;
+            listaProductosGenOpFil[i] = option;
+
         }
+        option = new Option();
+        option.setLabel("Todos");
+        option.setValue("-1");
+        listaProductosGenOpFil[listaProductosGen.length] = option;
 
     }
 
@@ -778,9 +812,18 @@ public void validarCampos() {
     ////// CARGA DE COMBO BOX PRODUCTOS
     Producto[] listaProductosFin;
     Option[] listaProductosFinOp;
+    Option[] listaProductosFinOpFil;
 
     public Producto[] getListaProductosFin() {
         return listaProductosFin;
+    }
+
+    public Option[] getListaProductosFinOpFil() {
+        return listaProductosFinOpFil;
+    }
+
+    public void setListaProductosFinOpFil(Option[] listaProductosFinOpFil) {
+        this.listaProductosFinOpFil = listaProductosFinOpFil;
     }
     public void setListaProductosFin(Producto[] listaProductosFin) {
         this.listaProductosFin = listaProductosFin;
@@ -795,6 +838,7 @@ public void validarCampos() {
         ProductoController productoController = new ProductoController();
         listaProductosFin = (Producto[]) productoController.getInsumosMaterias(null, null, null).toArray(new Producto[0]);
         listaProductosFinOp = new Option[listaProductosFin.length];
+        listaProductosFinOpFil = new Option[listaProductosFin.length+1];
         Option option;
         for (int i = 0; i < listaProductosFin.length; i++) {
             Producto p = listaProductosFin[i];
@@ -802,7 +846,12 @@ public void validarCampos() {
             option.setLabel(p.getCodProducto().toString()+" "+p.getDescripcion());
             option.setValue(p.getCodProducto().toString());
             listaProductosFinOp[i] = option;
+            listaProductosFinOpFil[i] = option;
         }
+        option = new Option();
+        option.setLabel("Todos");
+        option.setValue("-1");
+        listaProductosFinOpFil[listaProductosFin.length] = option;
 
     }
 
@@ -834,7 +883,7 @@ public void validarCampos() {
     this.uiProductoFinDesc.setText(producto.getDescripcion().toString());
     this.uiProductoFinMarca.setText(producto.getCodMarca().getNombre().toString());
     this.uiProductoFinPresentacion.setText(producto.getCodPresentacion().getDescripcion().toString());
- 
+    this.uiRelacion.setText(producto.getContenido().toString());
 
     }
 

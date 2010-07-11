@@ -33,7 +33,7 @@
                         }
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
-                    <df:ajaxTransaction id="ajaxGenerico" inputs="page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel10:uiLstTipoProducto" render="page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel10:uiLstTipoProducto,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel2:uiLstMarca,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel13:uiPrecioActual,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel12:uiCostoActual,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel9:uiControlExistencia,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel4:uiPorcentajeIVA,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel7:uiContenido"/>
+                    <df:ajaxTransaction id="ajaxGenerico" inputs="page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel10:uiLstTipoProducto" render="page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel10:uiLstTipoProducto,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel2:uiLstMarca,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel13:uiPrecioActual,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel9:uiControlExistencia,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel4:uiPorcentajeIVA,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel7:uiContenido,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel12:uiCostoActual,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel8:uiStockMinimo,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel14:uiUnidadMedida,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel5:uiPresentacion,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel11:uiPorcentajeCom"/>
                 </webuijsf:head>
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
@@ -43,7 +43,7 @@
                         <div>
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
-                        <h:panelGrid id="mainContainer" style="height: 408px; left: 216px; top: 240px; position: absolute" width="888">
+                        <h:panelGrid id="mainContainer" style="height: 408px; left: 239px; top: 213px; position: absolute" width="888">
                             <webuijsf:pageAlert binding="#{ABMProductos.pageAlert1}" id="pageAlert1" rendered="false"/>
                             <h:panelGrid binding="#{ABMProductos.gridPanelBuscar}" columns="4" id="gridPanelBuscar" style="height: 72px" width="743">
                                 <webuijsf:label id="labelMarca" text="Marca"/>
@@ -155,6 +155,12 @@
                                     <webuijsf:label id="costoActual4" text="%"/>
                                     <webuijsf:message for="uiPorcentajeIVA" id="message4" showDetail="false" showSummary="true" style="width: 209px"/>
                                 </h:panelGrid>
+                                <webuijsf:label id="costoActual5" text="Porcentaje Comision"/>
+                                <h:panelGrid columns="3" id="gridPanel11" style="height: 100%" width="263">
+                                    <webuijsf:textField binding="#{ABMProductos.uiPorcentajeCom}" columns="4" converter="#{ABMProductos.numberConverter1}" id="uiPorcentajeCom"/>
+                                    <webuijsf:label id="costoActual6" text="%"/>
+                                    <webuijsf:message for="uiPorcentajeCom" id="message11" showDetail="false" showSummary="true" style="width: 209px"/>
+                                </h:panelGrid>
                                 <webuijsf:label id="controlExistencia" text="Control Existencia"/>
                                 <h:panelGrid columns="2" id="gridPanel9" style="height: 100%" width="100%">
                                     <webuijsf:checkbox binding="#{ABMProductos.uiControlExistencia}" id="uiControlExistencia" label="Si Controla"/>
@@ -165,6 +171,11 @@
                                     <webuijsf:calendar binding="#{ABMProductos.uiFechaAlta}" id="uiFechaAlta" readOnly="true"
                                         validatorExpression="#{ABMProductos.uiFechaAlta_validate}" valueChangeListenerExpression="#{ABMProductos.uiFechaAlta_processValueChange}"/>
                                     <webuijsf:message for="uiFechaAlta" id="message3" showDetail="false" showSummary="true" style="height: 24px"/>
+                                </h:panelGrid>
+                                <webuijsf:label id="stockminLabel" text="Stock Minimo"/>
+                                <h:panelGrid columns="2" id="gridPanel8">
+                                    <webuijsf:textField binding="#{ABMProductos.uiStockMinimo}" id="uiStockMinimo"/>
+                                    <webuijsf:message for="uiStockMinimo" id="message8" showDetail="false" showSummary="true"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                             <h:panelGrid binding="#{ABMProductos.buttonsPanelAddUpdate}" columns="2" id="buttonsPanelAddUpdate" style="height: 100%" width="191">

@@ -197,15 +197,6 @@ public class ABMMovimientosDeposito extends AbstractPageBean {
     public void setPageAlert1(PageAlert pa) {
         this.pageAlert1 = pa;
     }
-    private TextField uiCodigoFil = new TextField();
-
-    public TextField getUiCodigoFil() {
-        return uiCodigoFil;
-    }
-
-    public void setUiCodigoFil(TextField tf) {
-        this.uiCodigoFil = tf;
-    }
     private Button buscarButton = new Button();
 
     public Button getBuscarButton() {
@@ -494,24 +485,6 @@ public class ABMMovimientosDeposito extends AbstractPageBean {
     public void setRadioButton2(RadioButton rb) {
         this.radioButton2 = rb;
     }
-    private SingleSelectOptionsList dropDown1DefaultOptions = new SingleSelectOptionsList();
-
-    public SingleSelectOptionsList getDropDown1DefaultOptions() {
-        return dropDown1DefaultOptions;
-    }
-
-    public void setDropDown1DefaultOptions(SingleSelectOptionsList ssol) {
-        this.dropDown1DefaultOptions = ssol;
-    }
-    private SingleSelectOptionsList dropDown2DefaultOptions = new SingleSelectOptionsList();
-
-    public SingleSelectOptionsList getDropDown2DefaultOptions() {
-        return dropDown2DefaultOptions;
-    }
-
-    public void setDropDown2DefaultOptions(SingleSelectOptionsList ssol) {
-        this.dropDown2DefaultOptions = ssol;
-    }
     private NumberConverter numberConverter1 = new NumberConverter();
 
     public NumberConverter getNumberConverter1() {
@@ -547,6 +520,33 @@ public class ABMMovimientosDeposito extends AbstractPageBean {
 
     public void setNumberConverter4(NumberConverter nc) {
         this.numberConverter4 = nc;
+    }
+    private Calendar uiFechaFil = new Calendar();
+
+    public Calendar getUiFechaFil() {
+        return uiFechaFil;
+    }
+
+    public void setUiFechaFil(Calendar c) {
+        this.uiFechaFil = c;
+    }
+    private DropDown uiEmpleadoFil = new DropDown();
+
+    public DropDown getUiEmpleadoFil() {
+        return uiEmpleadoFil;
+    }
+
+    public void setUiEmpleadoFil(DropDown dd) {
+        this.uiEmpleadoFil = dd;
+    }
+    private Calendar uiFechaFil2 = new Calendar();
+
+    public Calendar getUiFechaFil2() {
+        return uiFechaFil2;
+    }
+
+    public void setUiFechaFil2(Calendar c) {
+        this.uiFechaFil2 = c;
     }
 
     // </editor-fold>
@@ -700,20 +700,25 @@ public class ABMMovimientosDeposito extends AbstractPageBean {
         EntradaSalidaCabecera[] listaEntradaSalidaCabeceras;
         EntradaSalidaCabeceraController entradaSalidaController = new EntradaSalidaCabeceraController();
 
-        String pCodigo=null, pDeposito=null;
+        String pEmpleado=null, pDeposito=null;
+        Date pFecha1 = null, pFecha2=null;
 
-        if (this.uiCodigoFil.getText()!=null) {
-            pCodigo = this.uiCodigoFil.getText().toString();
+        if (this.uiFechaFil.getSelectedDate() !=null) {
+            pFecha1 = this.uiFechaFil.getSelectedDate();
         }
-
+        if (this.uiFechaFil2.getSelectedDate() !=null) {
+            pFecha2 = this.uiFechaFil2.getSelectedDate();
+        }
         if (this.uiDepositoFil.getSelected()!=null) {
             pDeposito = this.uiDepositoFil.getSelected().toString();
         }
+        if (this.uiEmpleadoFil.getSelected()!=null) {
+            pEmpleado = this.uiEmpleadoFil.getSelected().toString();
+        }
 
 
-        listaEntradaSalidaCabeceras = (EntradaSalidaCabecera[]) entradaSalidaController.getAllFiltered(
-                                        (pCodigo),
-                                         (pDeposito),null).toArray(new EntradaSalidaCabecera[0]);
+        listaEntradaSalidaCabeceras = 
+                (EntradaSalidaCabecera[]) entradaSalidaController.getAllFiltered(null,pDeposito,pEmpleado,pFecha1,pFecha2).toArray(new EntradaSalidaCabecera[0]);
 
         
         setListaMovimientosCab(listaEntradaSalidaCabeceras);
@@ -812,6 +817,7 @@ public class ABMMovimientosDeposito extends AbstractPageBean {
           entradaSalidaCabecera.setFechaEntradaSalida(this.uiFecha.getSelectedDate());
           entradaSalidaCabecera.setObservacion(this.uiObservacion.getText().toString());
           entradaSalidaCabecera.setFechaAlta(new Date());
+
          detallesEntradaSalida = (EntradaSalidaDetalle[]) detalleEntradaSalidaList.toArray(new EntradaSalidaDetalle[0]);
 
           entradaSalidaCabeceraController = new EntradaSalidaCabeceraController();
@@ -897,8 +903,8 @@ private boolean validarCampos(){
          errorValidacion = false;
 
             if (detallesEntradaSalida.length < 1){
-//                       errorValidacion = true;
-//                       this.info(uiDetalleProdDesc, "Debe agregar los detalles de la Entrada Salida");
+                       errorValidacion = true;
+                       this.info(uiDetalleProdDesc, "Debe agregar los detalles de la Entrada Salida");
             }else{
 
                          /// Recorrido del Detalle previo a la insercion para corroborar las cantidad con sus equivalencias
@@ -928,7 +934,11 @@ private boolean validarCampos(){
                                     otDet = entSal.getCodOrdenTrabajoDetalle();
                                 }
 
-                                if (otDet != null && p != null && cantidad != null) {
+                                    if (!errorValidacion && otDet != null
+                                            && p != null && cantidad != null
+                                            && p != null
+                                            && !p.getCodTipoProducto().getDescripcion().toString().equals("Terminado")
+                                            && !p.getCodTipoProducto().getDescripcion().toString().equals("SemiTerminado")) {
 
                                         RecursoAsignado rAsignado = new RecursoAsignado();
                                         RecursoAsignadoController rController = new RecursoAsignadoController();
@@ -1160,7 +1170,23 @@ if (uiDetalleProdCod.getText() == null || uiDetalleProdCod.getText().equals("") 
          this.errorValidacion= true;
          info(uiDetalleProdDesc, "Verifique el codigo de Producto");
      }else{
-         if (detalleEntradaSalidaList != null && detalleEntradaSalidaList.size() > 0 && !editarDetalle) {
+         if (p.getCodTipoProducto().getDescripcion().toString().equals("ProductoGenerico")) {
+             this.errorValidacion= true;
+             info(uiDetalleProdDesc, "Verifique el producto, producto generico");
+         }else if(p.getCodTipoProducto().getDescripcion().equals("Terminado")
+                    && this.uiDetalleTipo.getSelected().toString().equals("S")
+                        && this.uiDetalleOTCod.getText() != null){
+                this.errorValidacion= true;
+                info(uiDetalleProdDesc, "No se puede dar de salida un Producto Final desde una OT");
+         }else if(!p.getCodTipoProducto().getDescripcion().equals("Terminado")
+             && !p.getCodTipoProducto().getDescripcion().equals("SemiTerminado")
+             && !p.getCodTipoProducto().getDescripcion().equals("ProductoGenerico")
+             && this.uiDetalleTipo.getSelected().toString().equals("E")
+             && this.uiDetalleOTCod.getText() != null
+             && !this.uiDetalleOTCod.getText().toString().equals("")){
+                        this.errorValidacion= true;
+                        info(uiDetalleProdDesc, "No se puede dar de entrada a un Insumo o Materia Prima desde una OT");
+         }else if (detalleEntradaSalidaList != null && detalleEntradaSalidaList.size() > 0 && !editarDetalle) {
              for (int i = 0; i < detalleEntradaSalidaList.size(); i++) {
                  EntradaSalidaDetalle entSalDeta = detalleEntradaSalidaList.get(i);
                  if (entSalDeta.getCodProducto().getCodProducto().equals(p.getCodProducto()) ) {
@@ -1175,40 +1201,42 @@ if (uiDetalleProdCod.getText() == null || uiDetalleProdCod.getText().equals("") 
      }
 }
 Long cantidad = null;
-if (uiDetalleCant.getText() == null || uiDetalleCant.getText().equals("") ||!StringUtils.esNumero(this.uiDetalleCant.getText().toString()) ) {
-        this.errorValidacion= true;
-        info(uiDetalleProdDesc, "Verifique la cantidad");
-}else{
-    String cant = uiDetalleCant.getText().toString();
-    if(!StringUtils.esNumero(cant)){
-        this.errorValidacion= true;
-        info(uiDetalleProdDesc, "La Cantidad debe ser numerico");
+    if (!errorValidacion) {
 
-//    }else if(StringUtils.esNumeroDecimal(cant)){
-//        this.errorValidacion= true;
-//        info(uiDetalleProdDesc, "La Cantidad debe ser entero");
-    }else{
-        cantidad = Long.valueOf(uiDetalleCant.getText().toString());
-    }
+                if (uiDetalleCant.getText() == null || uiDetalleCant.getText().equals("") ||!StringUtils.esNumero(this.uiDetalleCant.getText().toString()) ) {
+                        this.errorValidacion= true;
+                        info(uiDetalleProdDesc, "Verifique la cantidad");
+                }else{
+                    String cant = uiDetalleCant.getText().toString();
+                    if(!StringUtils.esNumero(cant)){
+                        this.errorValidacion= true;
+                        info(uiDetalleProdDesc, "La Cantidad debe ser numerico");
+
+                //    }else if(StringUtils.esNumeroDecimal(cant)){
+                //        this.errorValidacion= true;
+                //        info(uiDetalleProdDesc, "La Cantidad debe ser entero");
+                    }else{
+                        cantidad = Long.valueOf(uiDetalleCant.getText().toString());
+                    }
+                }
+
+                //
+                //        if (uiDetalleCodSolic.getText() != null && !uiDetalleCodSolic.getText().equals("")){
+                //              if (StringUtils.esNumero(this.uiDetalleCodSolic.getText().toString())){
+                //                        SolicitudInterna sol = new SolicitudInternaController().findById(Long.valueOf(uiDetalleCodSolic.getText().toString()));
+                //                        if (sol == null ) {
+                //                             this.errorValidacion= true;
+                //                             info(uiDetalleProdDesc, "Verifique el codigo se Solicitud");
+                //                        }
+                //
+                //              }else{
+                //                             this.errorValidacion= true;
+                //                             info(uiDetalleProdDesc, "Verifique el codigo se Solicitud");
+                //              }
+                //        }
+
 }
-
-
-        if (uiDetalleCodSolic.getText() != null && !uiDetalleCodSolic.getText().equals("")){
-              if (StringUtils.esNumero(this.uiDetalleCodSolic.getText().toString())){
-                        SolicitudInterna sol = new SolicitudInternaController().findById(Long.valueOf(uiDetalleCodSolic.getText().toString()));
-                        if (sol == null ) {
-                             this.errorValidacion= true;
-                             info(uiDetalleProdDesc, "Verifique el codigo se Solicitud");
-                        }
-         
-              }else{
-                             this.errorValidacion= true;
-                             info(uiDetalleProdDesc, "Verifique el codigo se Solicitud");
-              }
-        }
-
-
-        if (uiDetalleOTCod.getText() != null && !uiDetalleOTCod.getText().equals("")){
+        if (!errorValidacion && uiDetalleOTCod.getText() != null && !uiDetalleOTCod.getText().equals("") && p != null){
 
 
             if (StringUtils.esNumero(this.uiDetalleOTCod.getText().toString())){
@@ -1217,12 +1245,15 @@ if (uiDetalleCant.getText() == null || uiDetalleCant.getText().equals("") ||!Str
                          this.errorValidacion= true;
                          info(uiDetalleProdDesc, "Verifique el codigo de OT");
                     }else{
-                        if (uiDetalleTipo.getSelected().toString().equals("E")) {
-                            this.errorValidacion= true;
-                            info(uiDetalleProdDesc, "El tipo de movimiento debe ser Salida");
-                        }else if(!otDet.getEstado().toString().equals("P")){
+                        if(!otDet.getEstado().toString().equals("P") && uiDetalleTipo.getSelected().toString().equals("S")){
                          this.errorValidacion= true;
-                         info(uiDetalleProdDesc, "El codigo de OT no se encuentra en Proceso");
+                         info(uiDetalleProdDesc, "El codigo de OT no se encuentra en Proceso. No puede retirar ningun Producto");
+                        }else if(!otDet.getEstado().toString().equals("P") && uiDetalleTipo.getSelected().toString().equals("S")){
+
+
+                        }else if(p.getCodTipoProducto().getDescripcion().toString().equals("Terminado") && otDet.getCodOrdenTrabajo().getCodProductoOt().getCodProducto().longValue() != p.getCodProducto().longValue()){
+                            this.errorValidacion= true;
+                            info(uiDetalleProdDesc, "El codigo de Producto Final no corresponde a al producto en proceso de la OT seleccionada");
                         }
                     }
             }else{
@@ -1233,7 +1264,11 @@ if (uiDetalleCant.getText() == null || uiDetalleCant.getText().equals("") ||!Str
             }
         }
 
-    if (otDet != null && p != null && cantidad != null) {
+    if (!errorValidacion && otDet != null 
+            && p != null && cantidad != null
+            && p != null && !p.getCodTipoProducto().getDescripcion().toString().equals("ProductoGenerico")
+            && !p.getCodTipoProducto().getDescripcion().toString().equals("Terminado")
+            && !p.getCodTipoProducto().getDescripcion().toString().equals("SemiTerminado")) {
 
             RecursoAsignado rAsignado = new RecursoAsignado();
             RecursoAsignadoController rController = new RecursoAsignadoController();
@@ -1296,7 +1331,10 @@ private String itemDet;
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         this.uiDepositoFil.setSelected("");
-        this.uiCodigoFil.setText("");
+        this.uiEmpleadoFil.setSelected("");
+        this.uiFechaFil.setSelectedDate(null);
+        this.uiFechaFil2.setSelectedDate(null);
+
 
         return null;
     }
@@ -1358,6 +1396,43 @@ private String itemDet;
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
 
+          if (getTableRowGroup1().getSelectedRowsCount() > 0){
+              RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+              EntradaSalidaCabecera[] entradaSalidaCabeceras = this.listaMovimientosCab;
+              int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+              EntradaSalidaCabecera entradaSalidaCabecera = entradaSalidaCabeceras[rowId];
+              EntradaSalidaCabeceraController entSalCont = new EntradaSalidaCabeceraController();
+              codCabFormulaEditada = entradaSalidaCabecera.getCodEntradaSalida();
+
+                detalleEntradaSalidaList = new ArrayList();
+                detalleEntradaSalidaList = entradaSalidaCabecera.getEntradaSalidaDetalleList();
+                detallesEntradaSalida = (EntradaSalidaDetalle[]) detalleEntradaSalidaList.toArray(new EntradaSalidaDetalle[0]);
+
+                ControllerResult controllerResult = new ControllerResult();
+                if (entradaSalidaCabecera.getCodPerdida() != null){
+                        controllerResult.setCodRetorno(-1);
+                        controllerResult.setMsg("No se puede anular un Movimiento auto generado por una perdida. Debe anular la Perdida");
+                }else if(entradaSalidaCabecera.getNroComprobante() != null) {
+                        controllerResult.setCodRetorno(-1);
+                        controllerResult.setMsg("No se puede anular un Movimiento auto generado por una factura de compra. Debe anular la Factura");
+                }else{
+                        controllerResult = entSalCont.anularCabDet(entradaSalidaCabecera, detallesEntradaSalida);
+                }
+
+            if (controllerResult.getCodRetorno() ==-1) {
+                        this.pageAlert1.setType("error");
+                    } else {
+                        this.pageAlert1.setType("information");
+           }
+
+            this.pageAlert1.setTitle(controllerResult.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+
+
+
+          }
         //          if (getFormulasRW().getSelectedRowsCount() > 0) {
 //                RowKey[] selectedRowKeys = getFormulasRW().getSelectedRowKeys();
 //                FormulaCabecera[] formulasCabecera = this.listaFormulaCabeceras;

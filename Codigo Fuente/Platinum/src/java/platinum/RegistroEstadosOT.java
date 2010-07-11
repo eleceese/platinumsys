@@ -20,17 +20,23 @@ import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
+import javax.faces.convert.DoubleConverter;
+import javax.faces.convert.LongConverter;
+import javax.faces.convert.NumberConverter;
 import javax.faces.event.ValueChangeEvent;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
 import py.com.platinum.controller.EquivalenciaController;
+import py.com.platinum.controller.ExistenciaController;
 import py.com.platinum.controller.OrdenTrabajoCabeceraController;
+import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.SolicitudInternaController;
 import py.com.platinum.controller.UnidadMedidaController;
 import py.com.platinum.controllerUtil.ControllerResult;
@@ -41,6 +47,7 @@ import py.com.platinum.entity.RecursoAsignado;
 import py.com.platinum.entity.SolicitudInterna;
 import py.com.platinum.entity.TareaAsignada;
 import py.com.platinum.entity.UnidadMedida;
+import py.com.platinum.utils.StringUtils;
 
 
 
@@ -67,6 +74,15 @@ public class RegistroEstadosOT extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
+        numberConverter1.setPattern("#,##0");
+        numberConverter1.setMinIntegerDigits(1);
+        numberConverter1.setMaxIntegerDigits(40);
+        numberConverter1.setMaxFractionDigits(3);
+        numberConverter2.setPattern("#,##0");
+        numberConverter3.setPattern("#,##0");
+        numberConverter3.setMinIntegerDigits(1);
+        numberConverter3.setMaxIntegerDigits(40);
+        numberConverter3.setMaxFractionDigits(3);
     }
     private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
 
@@ -122,15 +138,6 @@ public class RegistroEstadosOT extends AbstractPageBean {
     public void setButtonGuardarEdicion(Button b) {
         this.buttonGuardarEdicion = b;
     }
-    private Button buttonGuardarNuevo = new Button();
-
-    public Button getButtonGuardarNuevo() {
-        return buttonGuardarNuevo;
-    }
-
-    public void setButtonGuardarNuevo(Button b) {
-        this.buttonGuardarNuevo = b;
-    }
     private PageAlert pageAlert1 = new PageAlert();
 
     public PageAlert getPageAlert1() {
@@ -148,15 +155,6 @@ public class RegistroEstadosOT extends AbstractPageBean {
 
     public void setUiCodigoFil(TextField tf) {
         this.uiCodigoFil = tf;
-    }
-    private TextField uiUnidadMedidaFil = new TextField();
-
-    public TextField getUiUnidadMedidaFil() {
-        return uiUnidadMedidaFil;
-    }
-
-    public void setUiUnidadMedidaFil(TextField tf) {
-        this.uiUnidadMedidaFil = tf;
     }
     private TableRowGroup ordenTrabajoRW = new TableRowGroup();
 
@@ -284,6 +282,186 @@ public class RegistroEstadosOT extends AbstractPageBean {
     public void setGridPanelGenerarSolicitudes1(HtmlPanelGrid hpg) {
         this.gridPanelGenerarSolicitudes1 = hpg;
     }
+    private TextField uiCierreCostoActual = new TextField();
+
+    public TextField getUiCierreCostoActual() {
+        return uiCierreCostoActual;
+    }
+
+    public void setUiCierreCostoActual(TextField tf) {
+        this.uiCierreCostoActual = tf;
+    }
+    private TextField uiCierreCantExistencia = new TextField();
+
+    public TextField getUiCierreCantExistencia() {
+        return uiCierreCantExistencia;
+    }
+
+    public void setUiCierreCantExistencia(TextField tf) {
+        this.uiCierreCantExistencia = tf;
+    }
+    private TextField uiCierreCostoProduccion = new TextField();
+
+    public TextField getUiCierreCostoProduccion() {
+        return uiCierreCostoProduccion;
+    }
+
+    public void setUiCierreCostoProduccion(TextField tf) {
+        this.uiCierreCostoProduccion = tf;
+    }
+    private TextField uiCierreCantidadProducida = new TextField();
+
+    public TextField getUiCierreCantidadProducida() {
+        return uiCierreCantidadProducida;
+    }
+
+    public void setUiCierreCantidadProducida(TextField tf) {
+        this.uiCierreCantidadProducida = tf;
+    }
+    private TextField uiCierreCostoProduccionUnitario = new TextField();
+
+    public TextField getUiCierreCostoProduccionUnitario() {
+        return uiCierreCostoProduccionUnitario;
+    }
+
+    public void setUiCierreCostoProduccionUnitario(TextField tf) {
+        this.uiCierreCostoProduccionUnitario = tf;
+    }
+    private TextField uiCierreCostoNuevo = new TextField();
+
+    public TextField getUiCierreCostoNuevo() {
+        return uiCierreCostoNuevo;
+    }
+
+    public void setUiCierreCostoNuevo(TextField tf) {
+        this.uiCierreCostoNuevo = tf;
+    }
+    private HtmlPanelGrid gridPanelCierreOT = new HtmlPanelGrid();
+
+    public HtmlPanelGrid getGridPanelCierreOT() {
+        return gridPanelCierreOT;
+    }
+
+    public void setGridPanelCierreOT(HtmlPanelGrid hpg) {
+        this.gridPanelCierreOT = hpg;
+    }
+    private LongConverter longConverter1 = new LongConverter();
+
+    public LongConverter getLongConverter1() {
+        return longConverter1;
+    }
+
+    public void setLongConverter1(LongConverter lc) {
+        this.longConverter1 = lc;
+    }
+    private LongConverter longConverter2 = new LongConverter();
+
+    public LongConverter getLongConverter2() {
+        return longConverter2;
+    }
+
+    public void setLongConverter2(LongConverter lc) {
+        this.longConverter2 = lc;
+    }
+    private LongConverter longConverter3 = new LongConverter();
+
+    public LongConverter getLongConverter3() {
+        return longConverter3;
+    }
+
+    public void setLongConverter3(LongConverter lc) {
+        this.longConverter3 = lc;
+    }
+    private DoubleConverter doubleConverter1 = new DoubleConverter();
+
+    public DoubleConverter getDoubleConverter1() {
+        return doubleConverter1;
+    }
+
+    public void setDoubleConverter1(DoubleConverter dc) {
+        this.doubleConverter1 = dc;
+    }
+    private NumberConverter numberConverter1 = new NumberConverter();
+
+    public NumberConverter getNumberConverter1() {
+        return numberConverter1;
+    }
+
+    public void setNumberConverter1(NumberConverter nc) {
+        this.numberConverter1 = nc;
+    }
+    private NumberConverter numberConverter2 = new NumberConverter();
+
+    public NumberConverter getNumberConverter2() {
+        return numberConverter2;
+    }
+
+    public void setNumberConverter2(NumberConverter nc) {
+        this.numberConverter2 = nc;
+    }
+    private NumberConverter numberConverter3 = new NumberConverter();
+
+    public NumberConverter getNumberConverter3() {
+        return numberConverter3;
+    }
+
+    public void setNumberConverter3(NumberConverter nc) {
+        this.numberConverter3 = nc;
+    }
+    private TextField uiCierrePrecioActual = new TextField();
+
+    public TextField getUiCierrePrecioActual() {
+        return uiCierrePrecioActual;
+    }
+
+    public void setUiCierrePrecioActual(TextField tf) {
+        this.uiCierrePrecioActual = tf;
+    }
+    private TextField uiCierreCostoActualPrecio = new TextField();
+
+    public TextField getUiCierreCostoActualPrecio() {
+        return uiCierreCostoActualPrecio;
+    }
+
+    public void setUiCierreCostoActualPrecio(TextField tf) {
+        this.uiCierreCostoActualPrecio = tf;
+    }
+    private TextField uiCierreMargen = new TextField();
+
+    public TextField getUiCierreMargen() {
+        return uiCierreMargen;
+    }
+
+    public void setUiCierreMargen(TextField tf) {
+        this.uiCierreMargen = tf;
+    }
+    private TextField uiCierrePrecioNuevo = new TextField();
+
+    public TextField getUiCierrePrecioNuevo() {
+        return uiCierrePrecioNuevo;
+    }
+
+    public void setUiCierrePrecioNuevo(TextField tf) {
+        this.uiCierrePrecioNuevo = tf;
+    }
+    private TableColumn tableColumn14 = new TableColumn();
+
+    public TableColumn getTableColumn14() {
+        return tableColumn14;
+    }
+
+    public void setTableColumn14(TableColumn tc) {
+        this.tableColumn14 = tc;
+    }
+    private TableColumn tableColumn15 = new TableColumn();
+
+    public TableColumn getTableColumn15() {
+        return tableColumn15;
+    }
+
+    public void setTableColumn15(TableColumn tc) {
+        this.tableColumn15 = tc;
+    }
 
     // </editor-fold>
     /**
@@ -329,7 +507,7 @@ public class RegistroEstadosOT extends AbstractPageBean {
 
     getSessionBean1().setTituloPagina("Registro de Cambio de Estados de OT y SUBOT");
     getSessionBean1().setDetallePagina("Activacion, Terminado y Cierre");
-
+    cargarlistaTodosOrdenTrabajoCabeceras();
 
     }
 
@@ -353,13 +531,13 @@ public class RegistroEstadosOT extends AbstractPageBean {
      */
     private boolean addRequest = false;
     private boolean updateRequest = false;
+    private boolean cierreRequest = false;
     private boolean errorValidacion = false;
     private boolean generarSolicitudes = false;
 
   //MANEJO DE LOS DETALLES
 
 private OrdenTrabajo ordenTrabajoEditada;
-
 private OrdenTrabajoDetalle[] detallesOrdenTrabajo;
 private OrdenTrabajoDetalle  detalleOrdenTrabajo;
 private List<OrdenTrabajoDetalle>  detalleOrdenTrabajoList;
@@ -400,35 +578,40 @@ private List<RecursoAsignado>  recursoAsignadoMostradoList;
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
             this.gridPanelAddUpdate.setRendered(true);
+            this.gridPanelCierreOT.setRendered(false);
             this.buttonsPanelAddUpdate.setRendered(true);
 
             this.gridPanelGenerarSolicitudes1.setRendered(true);
 
 
          }else if (updateRequest) {
-
             this.gridPanelTabla.setRendered(false);
             this.gridPanelBuscar.setRendered(false);
             this.gridPanelBotones.setRendered(false);
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
+            this.gridPanelCierreOT.setRendered(false);
+            this.gridPanelGenerarSolicitudes1.setRendered(false);
+            this.pageAlert1.setRendered(false);
 
+         } else if (cierreRequest) {
+            this.gridPanelTabla.setRendered(false);
+            this.gridPanelBuscar.setRendered(false);
+            this.gridPanelBotones.setRendered(false);
+            this.gridPanelAddUpdate.setRendered(true);
+            this.buttonsPanelAddUpdate.setRendered(true);
+            this.gridPanelCierreOT.setRendered(true);
             this.gridPanelGenerarSolicitudes1.setRendered(false);
 
-           
-
         } else if (errorValidacion) {
-            
             this.gridPanelTabla.setRendered(true);
             this.gridPanelBuscar.setRendered(true);
             this.gridPanelBotones.setRendered(true);
             this.gridPanelAddUpdate.setRendered(true);
             this.buttonsPanelAddUpdate.setRendered(true);
-
+            this.gridPanelCierreOT.setRendered(false);
 
             this.gridPanelGenerarSolicitudes1.setRendered(false);
-
-
 
         } else {
 
@@ -437,8 +620,11 @@ private List<RecursoAsignado>  recursoAsignadoMostradoList;
             this.gridPanelBotones.setRendered(true);
             this.gridPanelAddUpdate.setRendered(false);
             this.buttonsPanelAddUpdate.setRendered(false);
-            
+            this.gridPanelCierreOT.setRendered(false);
+            this.gridPanelGenerarSolicitudes1.setRendered(false);
 
+                getSessionBean1().setTituloPagina("Registro de Cambio de Estados de OT y SUBOT");
+                getSessionBean1().setDetallePagina("Activacion, Terminado y Cierre");
         }
  buscar_action2();
     }
@@ -542,12 +728,10 @@ private List<RecursoAsignado>  recursoAsignadoMostradoList;
         // case name where null will return to the same page.
         this.updateRequest=true;
         this.buttonGuardarEdicion.setRendered(true);
-        this.buttonGuardarNuevo.setRendered(false);
         recursoAsignadoMostradoList = new ArrayList();
 
-
-        getSessionBean1().setTituloPagina("Ordenes de Trabajo");
-        getSessionBean1().setDetallePagina("Gestionar Estados de Tareas");
+ getSessionBean1().setTituloPagina("Registro de Cambio de Estados de OT y SUBOT");
+    getSessionBean1().setDetallePagina("Activacion, Terminado y Cierre");
         this.pageAlert1.setRendered(false);
         cargarCamposUpdate();
         limpiarDetalleOt();
@@ -565,42 +749,7 @@ private List<RecursoAsignado>  recursoAsignadoMostradoList;
         // case name where null will return to the same page.
         this.addRequest=false;
         this.updateRequest=false;
-
-        return null;
-    }
-
-    public String buttonGuardarNuevo_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        this.addRequest=false;
-        this.updateRequest=false;
-    
-        validarCampos();
-        if (! errorValidacion){
-            UnidadMedida unidadMedida = new UnidadMedida();
-
-
-//                        producto.setFechaAlta(this.uiFechaAlta.getSelectedDate());
-            UnidadMedidaController unidadMedidaController = new UnidadMedidaController();
-
-            ControllerResult controllerResult = new ControllerResult();
-            controllerResult = unidadMedidaController.create(unidadMedida);
-
-
-             if (controllerResult.getCodRetorno() ==-1) {
-                    this.pageAlert1.setType("error");
-                    this.errorValidacion=true;
-                } else {
-                    this.pageAlert1.setType("information");
-                }
-
-                this.pageAlert1.setTitle(controllerResult.getMsg());
-                this.pageAlert1.setSummary("");
-                this.pageAlert1.setDetail("");
-                this.pageAlert1.setRendered(true);
-
-
-        }
+        this.cierreRequest=false;
 
         return null;
     }
@@ -617,33 +766,17 @@ private String buscar_action2() {
         OrdenTrabajo[] listaOrdenTrabajos;
         OrdenTrabajoCabeceraController ordenTrabajoCabeceraController = new OrdenTrabajoCabeceraController();
 
-        String pNumeroOrdenTrabajo=null, pCodProducto=null, pEstado=null;
-        Date pFechaOt=null;
-//
-//        if (this.uiNumOtFil.getText()!=null) {
-//            pNumeroOrdenTrabajo = this.uiNumOtFil.getText().toString();
-//        }
-//
-//        if (this.uiProductoFil.getSelected()!=null && !this.uiTodosFil.isChecked()) {
-//            pCodProducto = this.uiProductoFil.getSelected().toString();
-//        }
-//
-//        if (this.uiFechaDesdeFil.getSelectedDate()!=null) {
-//            pFechaOt= this.uiFechaDesdeFil.getSelectedDate();
-//        }
-//
-//        if (this.uiEstadoFil.getSelected()!=null) {
-//            if (!this.uiEstadoFil.getSelected().equals("X")){
-//                pEstado= this.uiEstadoFil.getSelected().toString();
-//            }
-//        }
-
+        String pNumeroOrdenTrabajo=null;
+        if (this.uiCodigoFil.getText() != null &&
+                            StringUtils.esNumero(this.uiCodigoFil.getText().toString())) {
+                            pNumeroOrdenTrabajo = this.uiCodigoFil.getText().toString();
+        }
 
         listaOrdenTrabajoCabeceras = (OrdenTrabajo[]) ordenTrabajoCabeceraController.getAllFiltered
                                         (pNumeroOrdenTrabajo,
-                                         pCodProducto,
-                                         pEstado,
-                                         pFechaOt).toArray(new OrdenTrabajo[0]);
+                                         null,
+                                         null,
+                                         null).toArray(new OrdenTrabajo[0]);
 
         setlistaOrdenTrabajoCabeceras(listaOrdenTrabajoCabeceras);
         return null;
@@ -726,12 +859,6 @@ private String buscar_action2() {
     }
 
     public void uiProducto_processValueChange(ValueChangeEvent event) {
-    }
-
-    public String uiButtonCalcularFormula_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        return null;
     }
 
     public boolean isAddRequest() {
@@ -830,6 +957,22 @@ private String buscar_action2() {
 
     public void setItemSolicitud(String itemSolicitud) {
         this.itemSolicitud = itemSolicitud;
+    }
+
+    public boolean isCierreRequest() {
+        return cierreRequest;
+    }
+
+    public void setCierreRequest(boolean cierreRequest) {
+        this.cierreRequest = cierreRequest;
+    }
+
+    public boolean isGenerarSolicitudes() {
+        return generarSolicitudes;
+    }
+
+    public void setGenerarSolicitudes(boolean generarSolicitudes) {
+        this.generarSolicitudes = generarSolicitudes;
     }
 
 
@@ -965,7 +1108,7 @@ private String buscar_action2() {
         return null;
     }
 
-    public String uiButtonCerrar_action() {
+    public String uiButtonTerminar_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         boolean t = true;
@@ -981,12 +1124,15 @@ private String buscar_action2() {
         if (t) {
             ordenTrabajoEditada.setEstadoOt("T");
             ordenTrabajoEditada.setFechaFinOt(new Date());
+            ordenTrabajoEditada.setFechaModif(new Date());
             
             this.uiEstado.setText("Terminado");
             for (int i = 0; i < detallesOrdenTrabajo.length; i++) {
                 OrdenTrabajoDetalle otDet = detallesOrdenTrabajo[i];
                 otDet.setEstado("T");
                 otDet.setFechaModif(new Date());
+                otDet.setFechaFin(new Date());
+
             }
             
 
@@ -994,6 +1140,122 @@ private String buscar_action2() {
             info("Para Terminar una OT todos las SubOT deben estar en estado Terminado");
             
         }
+        return null;
+    }
+
+    public String uiBtnCierreOT_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+            // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        boolean t = true;
+      
+            if (!ordenTrabajoEditada.getEstadoOt().toString().equals("T")) {
+                    t = false;
+            }
+
+
+        if (t) {
+
+        updateRequest = false;
+        cierreRequest = true;
+        this.buttonsPanelAddUpdate.setRendered(false);
+        this.tableColumn14.setRendered(false);
+        this.tableColumn15.setRendered(false);
+
+            Producto productoActual = new ProductoController().findById(ordenTrabajoEditada.getCodProductoOt().getCodProducto());
+
+            this.uiCierreCostoActual.setText(productoActual.getCostoActual().toString());
+
+            long exist = 0;
+            exist = new ExistenciaController().getCantidadExistencia(Long.valueOf(productoActual.getCodProducto().toString())).longValue();
+            this.uiCierreCantExistencia.setText(exist);
+
+            this.uiCierreCantidadProducida.setText(ordenTrabajoEditada.getCantidadProducidaOt().toString());
+
+            this.uiCierreCostoProduccion.setText(ordenTrabajoEditada.getCostoRealOt().toString());
+
+      //      Long cantidadComprar = Double.valueOf(Math.ceil(cantidadRec.doubleValue() - existencia.doubleValue())).longValue();
+            Double costoUnit = Math.ceil(Double.valueOf(ordenTrabajoEditada.getCostoRealOt().doubleValue() / ordenTrabajoEditada.getCantidadProducidaOt().doubleValue()));
+            this.uiCierreCostoProduccionUnitario.setText(costoUnit.toString());
+
+
+            Double costoNuevo = Math.ceil(Double.valueOf((ordenTrabajoEditada.getCostoRealOt().doubleValue() + (productoActual.getCostoActual().doubleValue()*exist))/(exist+ordenTrabajoEditada.getCantidadProducidaOt().longValue())));
+            this.uiCierreCostoNuevo.setText(costoNuevo);
+            this.uiCierreCostoActualPrecio.setText(costoNuevo);
+
+            this.uiCierrePrecioActual.setText(productoActual.getPrecioActual().toString());
+            this.uiCierreMargen.setText("30");
+            Double nuevoPrecio = Math.ceil(costoNuevo * 130 / 100);
+            this.uiCierrePrecioNuevo.setText(nuevoPrecio.toString());
+
+        }else{
+            info("Para Cerrar la OT debe estar marcada como Terminada");
+        }
+        return null;
+    }
+
+    public String uiBtnCalcular_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+
+        if (this.uiCierreMargen.getText() == null || this.uiCierreMargen.getText().toString().equals("")) {
+                this.info("Favor ingrese el Margen Deseado");
+        }else if (!StringUtils.esNumero(this.uiCierreMargen.getText().toString())){   errorValidacion = true;
+                this.info("La cantidad debe ser campo numerico");
+        }else{
+            Double nuevoPrecio = Math.ceil(Double.valueOf(this.uiCierreCostoNuevo.getText().toString()) * (100+(Double.valueOf(this.uiCierreMargen.getText().toString()))) / 100);
+            this.uiCierrePrecioNuevo.setText(nuevoPrecio.toString());
+
+        }
+
+        return null;
+    }
+
+    public String uiBtnCerrarGuardar_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+           ControllerResult controllerResult = new ControllerResult();
+
+
+           Double precioD = Double.valueOf(this.uiCierrePrecioNuevo.getText().toString());
+           Double costoD = Double.valueOf(this.uiCierreCostoNuevo.getText().toString());
+
+        OrdenTrabajoCabeceraController otControler = new  OrdenTrabajoCabeceraController();
+        controllerResult = otControler.updateCierre(ordenTrabajoEditada, detallesOrdenTrabajo,BigInteger.valueOf(precioD.longValue()),BigInteger.valueOf(costoD.longValue()));
+
+             if (controllerResult.getCodRetorno() ==-1) {
+                    this.pageAlert1.setType("error");
+
+             } else {
+                    cierreRequest = false;
+                    updateRequest = false;
+                    this.pageAlert1.setType("information");
+                    this.buttonsPanelAddUpdate.setRendered(true);
+                    this.tableColumn14.setRendered(true);
+                    this.tableColumn15.setRendered(true);
+                }
+
+                this.pageAlert1.setTitle(controllerResult.getMsg());
+                this.pageAlert1.setSummary("");
+                this.pageAlert1.setDetail("");
+                this.pageAlert1.setRendered(true);
+
+
+
+        return null;
+    }
+
+    public String uiBtnCancelarCierre_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        this.buttonsPanelAddUpdate.setRendered(true);
+        this.tableColumn14.setRendered(true);
+        this.tableColumn15.setRendered(true);
+        this.updateRequest = true;
+        this.cierreRequest = false;
+
+
         return null;
     }
 
