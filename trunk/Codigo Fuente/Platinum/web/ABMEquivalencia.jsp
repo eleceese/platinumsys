@@ -14,9 +14,9 @@
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
                     <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <script>
-                        function RegistroEstadosOT() {
+                        function initAllRows() {
                             var table = document.getElementById("form1:tableTareas");
-                            table.RegistroEstadosOT();}
+                            table.initAllRows();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
@@ -34,7 +34,7 @@
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <df:ajaxTransaction id="datosProdFin"
-                        inputs="page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel2:gridPanel5:gridPanel4:uiProductoFin" render="page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel2:gridPanel5:uiProductoFinDesc,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel2:gridPanel5:uiProductoFinMarca,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel2:gridPanel5:uiProductoFinPresentacion"/>
+                        inputs="page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel2:gridPanel5:gridPanel4:uiProductoFin" render="page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel2:gridPanel5:uiProductoFinDesc,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel2:gridPanel5:uiProductoFinMarca,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel2:gridPanel5:uiProductoFinPresentacion,page1:html1:body1:form1:mainContainer:gridPanelAddUpdate:gridPanel2:gridPanel5:uiRelacion"/>
                 </webuijsf:head>
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
@@ -46,16 +46,16 @@
                         </div>
                         <h:panelGrid id="mainContainer" style="height: 508px; left: 216px; top: 240px; position: absolute" width="888">
                             <webuijsf:pageAlert binding="#{ABMEquivalencia.pageAlert1}" id="pageAlert1" rendered="false"/>
-                            <h:panelGrid binding="#{ABMEquivalencia.gridPanelBuscar}" columns="2" id="gridPanelBuscar" style="height: 72px" width="695">
-                                <h:panelGrid columns="2" id="gridPanelCodigo" style="height:30px; width: 60%">
-                                    <webuijsf:label id="codigo" text="Producto Generico"/>
-                                    <webuijsf:dropDown binding="#{ABMEquivalencia.uiProductoGenFil}" id="uiProductoGenFil"
-                                        items="#{ABMEquivalencia.listaProductosGenOp}" width="300"/>
-                                </h:panelGrid>
+                            <h:panelGrid binding="#{ABMEquivalencia.gridPanelBuscar}" columns="2" id="gridPanelBuscar" style="height: 72px" width="1031">
                                 <h:panelGrid columns="2" id="gridPanelNombre" style="height: 30px" width="261">
                                     <webuijsf:label id="labelNombreTarea" text="Producto Fin"/>
                                     <webuijsf:dropDown binding="#{ABMEquivalencia.uiProductoFinFil}" id="uiProductoFinFil"
-                                        items="#{ABMEquivalencia.listaProductosFinOp}" width="300"/>
+                                        items="#{ABMEquivalencia.listaProductosFinOpFil}" width="300"/>
+                                </h:panelGrid>
+                                <h:panelGrid columns="2" id="gridPanelCodigo" style="height:30px; width: 60%">
+                                    <webuijsf:label id="codigo" text="Producto Generico"/>
+                                    <webuijsf:dropDown binding="#{ABMEquivalencia.uiProductoGenFil}" id="uiProductoGenFil"
+                                        items="#{ABMEquivalencia.listaProductosGenOpFil}" width="300"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="2" id="gridPanel1" style="height: 100%" width="167">
                                     <webuijsf:button actionExpression="#{ABMEquivalencia.buscar_action}" id="buscar" text="Buscar"/>
@@ -107,7 +107,7 @@
                             <br/>
                             <h:panelGrid binding="#{ABMEquivalencia.gridPanelBotones}" columns="3" id="gridPanelBotones" style="height: 24px; width: 150px">
                                 <webuijsf:button actionExpression="#{ABMEquivalencia.nuevo_action}" id="nuevo" text="Nuevo"/>
-                                <webuijsf:button actionExpression="#{ABMEquivalencia.editar_action}" id="editar" text="Editar"/>
+                                <webuijsf:button actionExpression="#{ABMEquivalencia.editar_action}" id="editar" text="Visualizar"/>
                                 <webuijsf:button actionExpression="#{ABMEquivalencia.eliminar_action}" id="eliminar" onClick="javascript:return confirmar()" text="Eliminar"/>
                             </h:panelGrid>
                             <br/>
@@ -148,7 +148,7 @@
                                 <webuijsf:button actionExpression="#{ABMEquivalencia.buttonGuardarNuevo_action}" binding="#{ABMEquivalencia.buttonGuardarNuevo}"
                                     id="buttonGuardarNuevo" text="Guardar"/>
                                 <webuijsf:button actionExpression="#{ABMEquivalencia.buttonGuardarEdicion_action}"
-                                    binding="#{ABMEquivalencia.buttonGuardarEdicion}" id="buttonGuardarEdicion" text="Guardar"/>
+                                    binding="#{ABMEquivalencia.buttonGuardarEdicion}" id="buttonGuardarEdicion" text="Guardar" visible="false"/>
                             </h:panelGrid>
                             <webuijsf:messageGroup id="messageGroup1"/>
                         </h:panelGrid>

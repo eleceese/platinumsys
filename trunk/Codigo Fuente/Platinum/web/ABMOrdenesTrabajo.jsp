@@ -61,7 +61,8 @@
                                     <h:panelGrid columns="2" id="gridPanelEstado1" style="height: 30px" width="239">
                                         <webuijsf:label id="labelEstado1" text="Estado OT"/>
                                         <webuijsf:dropDown binding="#{ABMOrdenesTrabajo.uiEstadoFil}" id="uiEstadoFil"
-                                            items="#{ABMOrdenesTrabajo.dropDown1DefaultOptions.options}" width="100"/>
+                                            items="#{ABMOrdenesTrabajo.dropDown1DefaultOptions.options}"
+                                            selected="#{ABMOrdenesTrabajo.dropDown1DefaultOptions.selectedValue}" width="100"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanelVacio1" style="vertical-align: top" width="431">
                                         <webuijsf:label id="label3" style="background-position: top; vertical-align: top" text="Rango de Fecha Apertura"/>
@@ -79,7 +80,7 @@
                                 </h:panelGrid>
                                 <h:panelGrid columns="2" id="gridBotonesBuscar1" style="height: 24px" width="143">
                                     <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonBuscarFiltro_action}" id="uiButtonBuscarFiltro" text="Buscar"/>
-                                    <webuijsf:button id="uiButtonTodosFiltro" text="Todos"/>
+                                    <webuijsf:button actionExpression="#{ABMOrdenesTrabajo.uiButtonTodosFiltro_action}" id="uiButtonTodosFiltro" text="Todos"/>
                                 </h:panelGrid>
                                 <h:panelGrid id="gridPanelTablaBusqueda1" style="height: 154px" width="935">
                                     <webuijsf:table augmentTitle="false" binding="#{ABMOrdenesTrabajo.tableOrdenesTrabajo1}" id="tableOrdenesTrabajo1"
@@ -128,7 +129,7 @@
                                                         <webuijsf:label id="label4" text="Producto"/>
                                                         <h:panelGrid columns="2" id="gridPanelProducto2" style="text-align: left">
                                                             <webuijsf:dropDown binding="#{ABMOrdenesTrabajo.uiProducto}" id="uiProducto"
-                                                                items="#{SessionBean1.listaProductosOp}"
+                                                                items="#{SessionBean1.listaProductosTerminadosOp}"
                                                                 valueChangeListenerExpression="#{ABMOrdenesTrabajo.uiProducto_processValueChange}" width="200"/>
                                                         </h:panelGrid>
                                                         <webuijsf:hyperlink id="linkFormula1"
@@ -367,8 +368,9 @@
                                                     </webuijsf:tableColumn>
                                                     <webuijsf:tableColumn align="center" binding="#{ABMOrdenesTrabajo.tableColumnRecursosEdit}"
                                                         id="tableColumnRecursosEdit" valign="top" width="47">
-                                                        <webuijsf:imageHyperlink binding="#{ABMOrdenesTrabajo.uiSemiTerDetEditRecursoLink}"
-                                                            id="uiSemiTerDetEditRecursoLink" imageURL="/resources/Images/edit_16x16.gif" text="">
+                                                        <webuijsf:imageHyperlink actionExpression="#{ABMOrdenesTrabajo.uiSemiTerEditRecursoLink_action}"
+                                                            binding="#{ABMOrdenesTrabajo.uiSemiTerDetEditRecursoLink}" id="uiSemiTerDetEditRecursoLink"
+                                                            imageURL="/resources/Images/edit_16x16.gif" text="">
                                                             <f:setPropertyActionListener target="#{ABMOrdenesTrabajo.itemDet}" value="#{currentRow.tableRow.rowId}"/>
                                                         </webuijsf:imageHyperlink>
                                                     </webuijsf:tableColumn>

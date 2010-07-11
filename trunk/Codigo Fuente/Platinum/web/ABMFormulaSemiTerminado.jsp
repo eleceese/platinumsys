@@ -51,7 +51,7 @@
                         </div>
                         <div>
                             <h:panelGrid binding="#{ABMFormulaSemiTerminado.mainContainer}" id="mainContainer"
-                                style="height: 96px; left: 264px; top: 192px; position: absolute" width="912">
+                                style="height: 96px; left: 240px; top: 240px; position: absolute" width="912">
                                 <h:panelGrid binding="#{ABMFormulaSemiTerminado.gridPanelBuscar}" columns="3" id="gridPanelBuscar">
                                     <h:panelGrid columns="2" id="gridPanelCodigoFil1">
                                         <webuijsf:label id="label1Filtro1" text="Codigo"/>
@@ -111,10 +111,10 @@
                                 <h:panelGrid binding="#{ABMFormulaSemiTerminado.addUpdatePanel}" columns="1" id="addUpdatePanel">
                                     <h:panelGrid columns="2" id="detalle">
                                         <webuijsf:hyperlink id="uiHyperlinkProducto"
-                                            onClick="doPopup('form1:uiProductoCodigo_field', 'form1:uiProductoNombre_field')" target="popup" text="Producto" url="/faces/popup/popupProductosSemiter.jsp"/>
+                                            onClick="doPopup('form1:uiProductoCodigo_field', 'form1:uiProductoNombre_field')" target="popup" text="Producto" url="/faces/popup/popupProductosSemiter_1.jsp"/>
                                         <h:panelGrid columns="3" id="gridPanelProd">
                                             <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiProductoCodigo}" columns="15" id="uiProductoCodigo"/>
-                                            <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiProductoNombre}" columns="50" id="uiProductoNombre"/>
+                                            <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiProductoNombre}" columns="50" disabled="true" id="uiProductoNombre"/>
                                             <webuijsf:message for="uiProductoCodigo" id="message1" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
                                         <webuijsf:label id="label2" text="Descripcion"/>
@@ -127,9 +127,9 @@
                                             <webuijsf:textField binding="#{ABMFormulaSemiTerminado.uiCantidad}" columns="30" id="uiCantidad"/>
                                             <webuijsf:message for="uiCantidad" id="message3" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
-                                        <webuijsf:label id="labelfec" text="Fecha Vigencia"/>
+                                        <webuijsf:label id="labelfec" text="Fecha de Creacion"/>
                                         <h:panelGrid columns="2" id="gridPanelfecvi">
-                                            <webuijsf:calendar binding="#{ABMFormulaSemiTerminado.uiFecha}" dateFormatPattern="dd/MM/yyyy" id="uiFecha"/>
+                                            <webuijsf:calendar disabled="true" binding="#{ABMFormulaSemiTerminado.uiFecha}" dateFormatPattern="dd/MM/yyyy" id="uiFecha"/>
                                             <webuijsf:message for="uiFecha" id="message3cal" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
                                         <webuijsf:label id="labelesta" text="Estado"/>

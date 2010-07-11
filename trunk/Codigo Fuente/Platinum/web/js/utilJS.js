@@ -149,6 +149,37 @@ function doPopup(destination1, destination2, destination3, destination4,destinat
         destinationElement5=null;
     }
 }
+function doPopupGrande(destination1, destination2, destination3, destination4,destination5) {
+    popup = window.open("", "popup", "height=500,width=870,toolbar=no, menubar=no,scrollbars=yes");
+
+    if( destination1 != null ){
+        destinationElement1=document.getElementById(destination1);
+    }else{
+        destinationElement1=null;
+    }
+
+    if( destination2 != null ){
+        destinationElement2=document.getElementById(destination2);
+    }else{
+        destinationElement2=null;
+    }
+
+    if( destination3 != null ){
+        destinationElement3=document.getElementById(destination3);
+    }else{
+        destinationElement3=null;
+    }
+    if( destination4 != null ){
+        destinationElement4=document.getElementById(destination4);
+    }else{
+        destinationElement4=null;
+    }
+    if( destination5 != null ){
+        destinationElement5=document.getElementById(destination5);
+    }else{
+        destinationElement5=null;
+    }
+}
 
 function setVal(val1, val2, val3,val4,val5){
     if (destinationElement1 != null){

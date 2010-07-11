@@ -89,7 +89,7 @@
                                         </h:panelGrid>
                                         <webuijsf:label id="labelfecha" text="Fecha"/>
                                         <h:panelGrid columns="1" id="fecha" style="text-align: left; width: 450px">
-                                            <webuijsf:calendar binding="#{RegistroDeInventario.uiFechaInv}" id="uiFechaInv"/>
+                                            <webuijsf:calendar binding="#{RegistroDeInventario.uiFechaInv}" dateFormatPattern="dd-MM-yyyy" id="uiFechaInv"/>
                                         </h:panelGrid>
                                         <webuijsf:label id="labeldeposito" text="Deposito"/>
                                         <h:panelGrid binding="#{RegistroDeInventario.deposito}" columns="1" id="deposito" style="text-align: left; width: 450px">

@@ -17,9 +17,11 @@ import javax.faces.event.ValueChangeEvent;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
+import py.com.platinum.controller.OrdenTrabajoCabeceraController;
 import py.com.platinum.controller.OrdenTrabajoDetalleController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.TareaAsignadaController;
+import py.com.platinum.entity.OrdenTrabajo;
 import py.com.platinum.entity.OrdenTrabajoDetalle;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.TareaAsignada;
@@ -204,11 +206,12 @@ public class popupOts extends AbstractPageBean {
         } 
 
         //Obetenmos la lista
-        List<TareaAsignada> tareaAsignadasProdDiaria = new TareaAsignadaController().getAllFiltered(null, null, param);
-        TareaAsignada[] tareaAsignadaOT = (TareaAsignada[]) tareaAsignadasProdDiaria.toArray(new TareaAsignada[0]);
+       List<OrdenTrabajo> listaOtsCAB = new OrdenTrabajoCabeceraController().getAllFiltered(null, param, null, null);
+        OrdenTrabajo[] otsCAB = (OrdenTrabajo[]) listaOtsCAB.toArray(new OrdenTrabajo[0]);
+
 
         //Actualizamos la lista de la session
-        getSessionBean1().setTareasAsignadasArray(tareaAsignadaOT);
+        getSessionBean1().setListaOtCab(otsCAB);
 
         //refrescamos la pagina
         return null;
@@ -217,12 +220,12 @@ public class popupOts extends AbstractPageBean {
         public String uiBtnTodos_action() {
         //Obetenmos la lista
 
-        List<TareaAsignada> tareaAsignadasProdDiaria = new TareaAsignadaController().getAllFiltered(null, null, null);
-        TareaAsignada[] tareaAsignadaOT = (TareaAsignada[]) tareaAsignadasProdDiaria.toArray(new TareaAsignada[0]);
+        List<OrdenTrabajo> listaOtsCAB = new OrdenTrabajoCabeceraController().getAllFiltered(null, null, null, null);
+        OrdenTrabajo[] otsCAB = (OrdenTrabajo[]) listaOtsCAB.toArray(new OrdenTrabajo[0]);
 
         
         //Actualizamos la lista de la session
-        getSessionBean1().setTareasAsignadasArray(tareaAsignadaOT);
+        getSessionBean1().setListaOtCab(otsCAB);
 
         //refrescamos la pagina
         return null;

@@ -36,6 +36,7 @@ import py.com.platinum.controller.ProveedorController;
 import py.com.platinum.controller.SolicitudInternaController;
 import py.com.platinum.controller.TareaAsignadaController;
 import py.com.platinum.controller.TareaController;
+import py.com.platinum.controller.TareaFallidaController;
 import py.com.platinum.controller.TipoComprobanteController;
 import py.com.platinum.controller.TipoProductoController;
 import py.com.platinum.controller.UnidadMedidaController;
@@ -65,6 +66,7 @@ import py.com.platinum.entity.Proveedor;
 import py.com.platinum.entity.SolicitudInterna;
 import py.com.platinum.entity.Tarea;
 import py.com.platinum.entity.TareaAsignada;
+import py.com.platinum.entity.TareaFallida;
 import py.com.platinum.entity.TipoComprobante;
 import py.com.platinum.entity.TipoProducto;
 import py.com.platinum.entity.UnidadMedida;
@@ -140,7 +142,7 @@ public class SessionBean1 extends AbstractSessionBean {
         // TODO - add your own initialization code here
 
         this.tituloPagina = "Bienvenidos al Sistema";
-
+        usuario = "Admin";
         dateTimeConverter.setPattern("dd/MM/yyyy");
         dateTimeConverter.setTimeZone(null);
         dateTimeConverterFull.setPattern("dd/MM/yyyy HH:mm:ss");
@@ -149,6 +151,7 @@ public class SessionBean1 extends AbstractSessionBean {
         codDeposito = new DepositoController().findById(Long.valueOf("1"));
 
         //El siguiente Metodo Carga la Grilla De Productos al cargar la pagina de productos.
+        cargarListaTodosProductosSemiterminadosAcabados();
         cargarListaTodosProductosTerSemiInsMat();
         cargarListaTodosMaquinarias();
         cargarListaTodosDepositos();
@@ -157,6 +160,7 @@ public class SessionBean1 extends AbstractSessionBean {
         cargarListaTodosProductos();
         cargarListaTodosOTCab();
         cargarListaTodosTareas();
+        cargarListaTodosTareasFallidas();
         cargarListaTodosFormulaCabecerasTer();
         cargarListaTodosEmpleados();
         cargarListaTodosFormulaCabecerasSemiTer();
@@ -180,6 +184,7 @@ public class SessionBean1 extends AbstractSessionBean {
         cargarListaPedidoVenta(null, PedidoVentaEstado.PENDIENTE);
         cargarListaFacturaCompra(null, FacturaCompraEstado.RECIBIDO);
         cargarListaFacturaVenta(null);
+        cargarListaTodosProductosTerminados();
     }
 
     /**
@@ -235,7 +240,17 @@ public class SessionBean1 extends AbstractSessionBean {
     private String bocaExpendio = "001";
     private Deposito codDeposito;
     private String codEmpleado = "1";
+    private String usuario = "Admin";
 
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
+
+    
     public String getCodEmpleado() {
         return codEmpleado;
     }
@@ -321,6 +336,8 @@ public class SessionBean1 extends AbstractSessionBean {
     }
 
 
+
+
     ////// CARGA DE COMBO BOX PRODUCTOS TERMINADOS
     Producto[] listaProductosTerminados;
     Option [] listaProductosTerminadosOp;
@@ -393,6 +410,22 @@ public class SessionBean1 extends AbstractSessionBean {
     }
 
 
+////// CARGA DE COMBO BOX PRODUCTOS SEMITERMINADOS
+    Producto[] listaProductosSemiterminadosAcabados;
+
+    public Producto[] getListaProductosSemiterminadosAcabados() {
+        return listaProductosSemiterminadosAcabados;
+    }
+
+    public void setListaProductosSemiterminadosAcabados(Producto[] listaProductosSemiterminadosAcabados) {
+        this.listaProductosSemiterminadosAcabados = listaProductosSemiterminadosAcabados;
+    }
+
+    public void cargarListaTodosProductosSemiterminadosAcabados() {
+        ProductoController productoController = new ProductoController();
+        listaProductosSemiterminadosAcabados = (Producto[]) productoController.getSemiAcabado(null, null, null).toArray(new Producto[0]);
+
+    }
 ////// CARGA DE COMBO BOX PRODUCTOS SEMITERMINADOS
     Producto[] listaProductosSemiterminados;
 
@@ -1373,5 +1406,45 @@ public class SessionBean1 extends AbstractSessionBean {
         FacturaCabeceraController c = new FacturaCabeceraController();
         listaFacturaVenta = (FacturaCabecera[]) c.getFacturaConSaldo(cliente).toArray(new FacturaCabecera[0]);
     }
+
+        ////// CARGA DE COMBO BOX Tareas Fallidas
+//////     import com.sun.webui.jsf.model.Option;
+    TareaFallida[] listaTareasFallidas;
+    Option[] listaTareasFallidasOp;
+
+    public Option[] getListaTareasFallidasOp() {
+        return listaTareasFallidasOp;
+    }
+
+    public void setListaTareasFallidasOp(Option[] listaTareasFallidasOp) {
+        this.listaTareasFallidasOp = listaTareasFallidasOp;
+    }
+
+    public TareaFallida[] getListaTareasFallidas() {
+        return listaTareasFallidas;
+    }
+
+    public void setListaTareasFallidas(TareaFallida[] listaTareasFallidas) {
+        this.listaTareasFallidas = listaTareasFallidas;
+    }
+
+    public void cargarListaTodosTareasFallidas() {
+        TareaFallidaController tareaFallidaController = new TareaFallidaController();
+        listaTareasFallidas = (TareaFallida[]) tareaFallidaController.getAll("codTareaFallida").toArray(new TareaFallida[0]);
+        listaTareasFallidasOp = new Option[listaTareasFallidas.length];
+        Option option;
+        for (int i = 0; i < listaTareasFallidas.length; i++) {
+            TareaFallida tp = listaTareasFallidas[i];
+            option = new Option();
+            option.setLabel(tp.getCodTareaAsignada().getCodTarea().getNombreTarea());
+            option.setValue(tp.getCodTareaFallida().toString());
+            listaTareasFallidasOp[i] = option;
+        }
+    }
+////// FIN CARGA DE COMBO BOX Tareas Fallidas
+
+
+
+
 
   }

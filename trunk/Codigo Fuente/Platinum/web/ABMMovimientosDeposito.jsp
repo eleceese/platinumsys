@@ -12,9 +12,9 @@
                 <webuijsf:head id="head1">
                     <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <script>
-                        function RegistroEstadosOT() {
+                        function initAllRows() {
                             var table = document.getElementById("form1:tableMovimientos");
-                            table.RegistroEstadosOT();}
+                            table.initAllRows();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
@@ -22,7 +22,7 @@
                         var delSelect;
                         function confirmar() {
                             if (delSelect!=null){
-                                if(!confirm("¿Está seguro de eliminar el Registro?")) {
+                                if(!confirm("¿Está seguro de anular el Registro?")) {
                                     return false;
                                 }else{
                                     return true;
@@ -38,32 +38,42 @@
                     <webuijsf:form id="form1">
                         <div>
                             <jsp:directive.include file="cabecera.jspf"/>
-                            <webuijsf:dropDown id="dropDown1" items="#{ABMMovimientosDeposito.dropDown1DefaultOptions.options}"/>
                         </div>
                         <div>
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
                         <div style="height: 490px; width: 1296px">
-                            <h:panelGrid binding="#{ABMMovimientosDeposito.mainContainer}" id="mainContainer" style="height: 96px; left: 336px; top: 288px; position: absolute; width: 96px">
+                            <h:panelGrid binding="#{ABMMovimientosDeposito.mainContainer}" id="mainContainer" style="height: 96px; left: 216px; top: 192px; position: absolute; width: 96px">
                                 <h:panelGrid binding="#{ABMMovimientosDeposito.gridPanelBuscar}" columns="1" id="gridPanelBuscar">
-                                    <h:panelGrid columns="2" id="gridPanelFiltros" style="height: 72px" width="503">
-                                        <h:panelGrid columns="2" id="gridPanelEmailFiltro">
+                                    <h:panelGrid columns="2" id="gridPanelFiltros" style="height: 72px" width="743">
+                                        <h:panelGrid columns="2" id="gridPanelEmailFiltro" width="287">
                                             <webuijsf:label id="depositoLabel" text="Deposito"/>
                                             <webuijsf:dropDown binding="#{ABMMovimientosDeposito.uiDepositoFil}" id="uiDepositoFil"
                                                 items="#{SessionBean1.listaDepositosOp}" width="150"/>
                                         </h:panelGrid>
-                                        <h:panelGrid columns="2" id="gridPanelCodigoFil">
-                                            <webuijsf:label id="fecha" text="Codigo"/>
-                                            <webuijsf:textField binding="#{ABMMovimientosDeposito.uiCodigoFil}" columns="20" id="uiCodigoFil"/>
+                                        <h:panelGrid columns="2" id="gridPanelEmailFiltro1" width="239">
+                                            <webuijsf:label id="depositoLabel1" text="Empleado"/>
+                                            <webuijsf:dropDown binding="#{ABMMovimientosDeposito.uiEmpleadoFil}" id="uiEmpleadoFil"
+                                                items="#{SessionBean1.listaEmpleadosOp}" width="150"/>
                                         </h:panelGrid>
-                                        <webuijsf:button actionExpression="#{ABMMovimientosDeposito.todosButton_action}"
-                                            binding="#{ABMMovimientosDeposito.todosButton}" id="todosButton" text="Todos"/>
-                                        <webuijsf:button actionExpression="#{ABMMovimientosDeposito.buscarButton_action}"
-                                            binding="#{ABMMovimientosDeposito.buscarButton}" id="buscarButton" text="Buscar"/>
+                                        <h:panelGrid columns="2" id="gridPanelCodigoFil" width="239">
+                                            <webuijsf:label id="fecha" text="Fecha Inicial"/>
+                                            <webuijsf:calendar binding="#{ABMMovimientosDeposito.uiFechaFil}" dateFormatPattern="dd/MM/yyyy" id="uiFechaFil"/>
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="2" id="gridPanelCodigoFil1">
+                                            <webuijsf:label id="fecha1" text="Fecha Final"/>
+                                            <webuijsf:calendar binding="#{ABMMovimientosDeposito.uiFechaFil2}" dateFormatPattern="dd/MM/yyyy" id="uiFechaFil2"/>
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="2" id="gridPanel10" style="height: 100%" width="119">
+                                            <webuijsf:button actionExpression="#{ABMMovimientosDeposito.buscarButton_action}"
+                                                binding="#{ABMMovimientosDeposito.buscarButton}" id="buscarButton" text="Buscar"/>
+                                            <webuijsf:button actionExpression="#{ABMMovimientosDeposito.todosButton_action}"
+                                                binding="#{ABMMovimientosDeposito.todosButton}" id="todosButton" text="Todos"/>
+                                        </h:panelGrid>
                                     </h:panelGrid>
                                     <webuijsf:table augmentTitle="false" id="uiTableMovimientos" paginateButton="true" paginationControls="true"
                                         title="Movimientos en Deposito" width="911">
-                                        <webuijsf:tableRowGroup binding="#{ABMMovimientosDeposito.tableRowGroup1}" id="tableRowGroup1" rows="15"
+                                        <webuijsf:tableRowGroup binding="#{ABMMovimientosDeposito.tableRowGroup1}" id="tableRowGroup1" rows="10"
                                             selected="#{ABMMovimientosDeposito.selectedState}" sourceData="#{ABMMovimientosDeposito.listaMovimientosCab}" sourceVar="currentRow">
                                             <webuijsf:tableColumn align="center" binding="#{ABMMovimientosDeposito.tableColumn1}" id="tableColumn1"
                                                 onClick="setTimeout('initAllRows()', 0)" selectId="#{ABMMovimientosDeposito.radioButton2.id}" width="41">
@@ -90,23 +100,17 @@
                                     </webuijsf:table>
                                     <h:panelGrid columns="3" id="buttonPanel1">
                                         <webuijsf:button actionExpression="#{ABMMovimientosDeposito.addButton1_action}" id="addButton1" text="Nuevo"/>
-                                        <webuijsf:button actionExpression="#{ABMMovimientosDeposito.updateButton1_action}" id="updateButton1" text="Editar"/>
+                                        <webuijsf:button actionExpression="#{ABMMovimientosDeposito.updateButton1_action}" id="updateButton1" rendered="false" text="Editar"/>
                                         <webuijsf:button actionExpression="#{ABMMovimientosDeposito.deleteButton1_action}" id="deleteButton1"
-                                            onClick="javascript:return confirmar()" text="Eliminar"/>
+                                            onClick="javascript:return confirmar()" text="Anular"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
                                 <webuijsf:pageAlert binding="#{ABMMovimientosDeposito.pageAlert1}" rendered="false" style="height: 72px"/>
-                                <script>
-                                function ABMComprasProveedor() {
-                                    var table = document.getElementById("form1:table1");
-                                    table.ABMComprasProveedor();
-                                }
-                                </script>
-                                <h:panelGrid binding="#{ABMMovimientosDeposito.addUpdatePanel}" columns="1" id="addUpdatePanel" style="height: 524px">
+                                <h:panelGrid binding="#{ABMMovimientosDeposito.addUpdatePanel}" columns="1" id="addUpdatePanel">
                                     <h:panelGrid columns="2" id="gridPanelDatosCabecera">
                                         <webuijsf:label id="labelfec" text="Fecha:"/>
                                         <h:panelGrid columns="2" id="gridPanelfecvi">
-                                            <webuijsf:calendar binding="#{ABMMovimientosDeposito.uiFecha}" dateFormatPattern="dd/MM/yyyy" id="uiFecha"/>
+                                            <webuijsf:calendar binding="#{ABMMovimientosDeposito.uiFecha}" dateFormatPattern="dd/MM/yyyy" disabled="true" id="uiFecha"/>
                                             <webuijsf:message for="uiFecha" id="message3cal" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>
                                         <webuijsf:hyperlink binding="#{ABMMovimientosDeposito.uiHyperEmpleado1}" id="uiHyperEmpleado1"
@@ -194,13 +198,13 @@
                                     <h:panelGrid id="gridPanelDetalle1" style="width: 100%; height: 100%;">
                                         <h:panelGrid id="gridPanelTabla1" style="height: 154px" summary="Productos" title="Productos" width="935">
                                             <webuijsf:table augmentTitle="false" id="tableProductos1" paginateButton="true" paginationControls="true"
-                                                title="Movimientos" width="719">
+                                                title="Movimientos" width="664">
                                                 <webuijsf:tableRowGroup emptyDataMsg="No se encontraron registros..." id="productos1" rows="15"
                                                     sourceData="#{ABMMovimientosDeposito.detallesEntradaSalida}" sourceVar="currentRow">
                                                     <webuijsf:tableColumn headerText="Movimiento" id="tableColumn8" sort="tipoEntradaSalida" width="139">
                                                         <webuijsf:staticText id="staticText1" text="#{currentRow.value['tipoEntradaSalida']}"/>
                                                     </webuijsf:tableColumn>
-                                                    <webuijsf:tableColumn headerText="Producto" id="tableColumn9" sort="codProducto" width="335">
+                                                    <webuijsf:tableColumn headerText="Producto" id="tableColumn9" sort="codProducto" width="435">
                                                         <webuijsf:staticText id="staticText8" text="#{currentRow.value['codProducto']}"/>
                                                     </webuijsf:tableColumn>
                                                     <webuijsf:tableColumn headerText="Cantidad" id="tableColumn10" width="50">
@@ -208,9 +212,6 @@
                                                     </webuijsf:tableColumn>
                                                     <webuijsf:tableColumn headerText="Sub OT" id="tableColumn5" sort="codOrdenTrabajoDetalle">
                                                         <webuijsf:staticText id="staticText5" text="#{currentRow.value['codOrdenTrabajoDetalle']}"/>
-                                                    </webuijsf:tableColumn>
-                                                    <webuijsf:tableColumn headerText="Solicitud" id="tableColumn6" sort="codSolicitud">
-                                                        <webuijsf:staticText id="staticText6" text="#{currentRow.value['codSolicitud']}"/>
                                                     </webuijsf:tableColumn>
                                                     <webuijsf:tableColumn align="center" id="tableColumn11" width="20">
                                                         <webuijsf:imageHyperlink actionExpression="#{ABMMovimientosDeposito.editDetailButton_action}"
@@ -231,7 +232,6 @@
                                 </h:panelGrid>
                             </h:panelGrid>
                         </div>
-                        <webuijsf:dropDown id="dropDown2" items="#{ABMMovimientosDeposito.dropDown2DefaultOptions.options}"/>
                     </webuijsf:form>
                 </webuijsf:body>
             </webuijsf:html>

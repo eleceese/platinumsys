@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Document   : cabeceraLogin
+    Created on : Jul 11, 2010, 3:41:12 PM
+    Author     : FerBoy
+-->
+<div style="height: 165px; width: 100%; -rave-layout: grid" xmlns:f="http://java.sun.com/jsf/core" xmlns:webuijsf="http://www.sun.com/webui/webuijsf">
+    <f:subview id="cabeceraLogin">
+        <!-- Masthead with Attributes -->
+        <webuijsf:masthead id="masthead"
+            productImageURL="/resources/Images/logo_platinum.jpg" 
+            style="height: 142px" >
+            <!-- Utility Bar Facets -->
+        </webuijsf:masthead>
+        <!-- PageTitle... -->
+        <webuijsf:contentPageTitle helpText="Ingrese user y password" id="pageTitle"
+            style="border-color: rgb(204, 204, 204) rgb(204, 204, 204) rgb(204, 204, 204) rgb(204, 204, 204); font-size: 14px; height: 22px; margin-left: 11%; left: 166px; top: 144px; position: absolute; text-align: left; width: 750px; -rave-layout: grid" title="Menu de acceso al sistema"/>
+        <webuijsf:markup styleClass="#{themeStyles.CONTENT_MARGIN}" tag="div"/>
+        <br/>
+    </f:subview>
+</div>

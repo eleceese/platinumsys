@@ -317,6 +317,15 @@ public class RegistroProDiaria extends AbstractPageBean {
     public void setTableRowGroup2(TableRowGroup trg) {
         this.tableRowGroup2 = trg;
     }
+    private TextField uiNroOTFil = new TextField();
+
+    public TextField getUiNroOTFil() {
+        return uiNroOTFil;
+    }
+
+    public void setUiNroOTFil(TextField tf) {
+        this.uiNroOTFil = tf;
+    }
 
     // </editor-fold>
     /**
@@ -364,7 +373,7 @@ public class RegistroProDiaria extends AbstractPageBean {
 
     getSessionBean1().setTituloPagina("Registro de Produccion Diaria");
     getSessionBean1().setDetallePagina("Detalles de Tareas en Produccion");
-
+    cargarListaTodosOTCab();
     }
 
     /**
@@ -442,7 +451,7 @@ public class RegistroProDiaria extends AbstractPageBean {
         }
     getSessionBean1().setTituloPagina("Registro de Produccion Diaria");
     getSessionBean1().setDetallePagina("Seleccione la Orden de Trabajo");
-
+    buscar_action2();
 
     }
 
@@ -587,6 +596,26 @@ public class RegistroProDiaria extends AbstractPageBean {
         public void cargarListaTodosOTCab() {
         OrdenTrabajoCabeceraController c = new OrdenTrabajoCabeceraController();
         listaOtCab = (OrdenTrabajo[]) c.getAllFiltered(null,null, "P", null).toArray(new OrdenTrabajo[0]);
+
+    }
+
+        private String buscar_action2() {
+
+        OrdenTrabajo[] listaOrdenTrabajos;
+        OrdenTrabajoCabeceraController ordenTrabajoCabeceraController = new OrdenTrabajoCabeceraController();
+
+        String pNumeroOrdenTrabajo=null;
+        if (this.uiNroOTFil.getText() != null &&
+                            StringUtils.esNumero(this.uiNroOTFil.getText().toString())) {
+                            pNumeroOrdenTrabajo = this.uiNroOTFil.getText().toString();
+        }
+
+        listaOtCab = (OrdenTrabajo[]) ordenTrabajoCabeceraController.getAllFiltered
+                                        (pNumeroOrdenTrabajo,
+                                         null,
+                                         "P",
+                                         null).toArray(new OrdenTrabajo[0]);
+        return null;
 
     }
 
@@ -911,6 +940,12 @@ private boolean validarCampos(){
         getSessionBean1().setTareasAsignadasArray(tareasAsignadasArray);
 
 
+    }
+
+    public String uiBtnBuscar_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        return null;
     }
 
 

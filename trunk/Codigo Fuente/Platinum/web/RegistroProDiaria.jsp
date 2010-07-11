@@ -47,9 +47,9 @@
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \ SCRIPT PARA MANEJAR EL DETALLE-->
                     <script>
-                        function DetalleFormula() {
+                        function ABMPresentacion() {
                             var table = document.getElementById("form1:tableDetalleFormula");
-                            table.DetalleFormula();}
+                            table.ABMPresentacion();}
                     </script>
                     <!-- \ SCRIPT PARA MANEJAR EL DETALLE-->
                     <webuijsf:script id="scriptPopUp" type="text/javascript" url="/js/utilJS.js"/>
@@ -66,6 +66,11 @@
                             <webuijsf:pageAlert binding="#{RegistroProDiaria.pageAlert1}" id="pageAlert1" rendered="false"/>
                             <br/>
                             <h:panelGrid binding="#{RegistroProDiaria.gridPanelBusqueda}" id="gridPanelBusqueda" style="height: 288px; width: 100%">
+                                <h:panelGrid columns="2" id="gridPanel3">
+                                    <webuijsf:label id="label1" text="Nro de OT"/>
+                                    <webuijsf:textField binding="#{RegistroProDiaria.uiNroOTFil}" id="uiNroOTFil"/>
+                                    <webuijsf:button actionExpression="#{RegistroProDiaria.uiBtnBuscar_action}" id="uiBtnBuscar" text="Buscar"/>
+                                </h:panelGrid>
                                 <webuijsf:table augmentTitle="false" binding="#{RegistroProDiaria.table1}" id="table1" paginateButton="true"
                                     paginationControls="true" title="Ordenes de Trabajo" width="767">
                                     <webuijsf:tableRowGroup binding="#{RegistroProDiaria.tableRowGroup2}" emptyDataMsg="No se encontraron registros"

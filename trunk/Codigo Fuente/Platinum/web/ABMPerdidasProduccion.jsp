@@ -13,9 +13,9 @@
                 <webuijsf:head id="head1">
                     <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <script>
-                        function RegistroEstadosOT() {
+                        function initAllRows() {
                             var table = document.getElementById("form1:Perdidas");
-                            table.RegistroEstadosOT();}
+                            table.initAllRows();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
@@ -34,7 +34,6 @@
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
                     <webuijsf:script id="scriptPopUp" type="text/javascript" url="/js/utilJS.js"/>
-                    <df:ajaxTransaction id="ajaxActualizaDescripcion" inputs="page1:html1:body1:form1:mainContainer:addUpdatePanel:panelDetOT:uiNroOt" render="page1:html1:body1:form1:mainContainer:addUpdatePanel:panelDetOT:uiDescProd,page1:html1:body1:form1:mainContainer:addUpdatePanel:panelDetOT:uiNroOt"/>
                 </webuijsf:head>
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
@@ -104,12 +103,10 @@
                                     <webuijsf:button actionExpression="#{ABMPerdidasProduccion.uiNuevoButton_action}"
                                         binding="#{ABMPerdidasProduccion.uiNuevoButton}" id="uiNuevoButton" text="Nuevo"/>
                                     <webuijsf:button actionExpression="#{ABMPerdidasProduccion.uiEditarButton_action}"
-                                        binding="#{ABMPerdidasProduccion.uiEditarButton}" id="uiEditarButton" text="Editar"/>
-                                    <webuijsf:button actionExpression="#{ABMPerdidasProduccion.uiBorrarButon_action}"
-                                        binding="#{ABMPerdidasProduccion.uiBorrarButon}" id="uiBorrarButon" text="Eliminar"/>
+                                        binding="#{ABMPerdidasProduccion.uiEditarButton}" id="uiEditarButton" text="Anular"/>
                                 </h:panelGrid>
                                 <h:panelGrid binding="#{ABMPerdidasProduccion.addUpdatePanel}" columns="1" id="addUpdatePanel"
-                                    style="height: 350px; margin-top: 10px" width="671">
+                                    style="height: 326px; margin-top: 10px" width="671">
                                     <h:panelGrid columns="4" id="panelGridCabeceraCompra" style="height: 20px; text-align: left" width="455">
                                         <webuijsf:hyperlink id="hyperlink1" onClick="doPopup('form1:uiResponsableCod_field', 'form1:uiResponsableNombre_field')"
                                             target="popup" text="Responsable" url="/faces/popup/popupEmpleados.jsp"/>
@@ -122,12 +119,15 @@
                                         <webuijsf:calendar binding="#{ABMPerdidasProduccion.uiFecha}" columns="15" dateFormatPattern="dd/MM/yyyy" id="uiFecha"/>
                                     </h:panelGrid>
                                     <!-- Panel de Orden de Trabajo -->
-                                    <h:panelGrid columns="2" id="panelDetOT" style="height: 70px; text-align: left; margin-top: 5px" width="671">
-                                        <webuijsf:label id="lblNroOT" text="Nro Sub OT"/>
-                                        <webuijsf:dropDown binding="#{ABMPerdidasProduccion.uiNroOt}" id="uiNroOt" items="#{ABMPerdidasProduccion.listaOtsOp}"
-                                            onChange="DynaFaces.Tx.fire(&quot;ajaxActualizaDescripcion&quot;,&quot;uiNroOt&quot;)" validatorExpression="#{ABMPerdidasProduccion.uiNroOt_validate}"/>
-                                        <webuijsf:label id="descripcion_OT" text="Descripcion"/>
-                                        <webuijsf:textArea binding="#{ABMPerdidasProduccion.uiDescProd}" columns="90" disabled="true" id="uiDescProd" rows="6"/>
+                                    <h:panelGrid columns="3" id="panelDetOT" style="height: 43px; margin-top: 5px; text-align: left" width="551">
+                                        <webuijsf:hyperlink id="uiNroOTLink" onClick="doPopup('form1:uiNroOT_field', 'form1:uiOtDesc_field')" target="popup"
+                                            text="Numero OT" url="/faces/popup/popupOts.jsp"/>
+                                        <webuijsf:textField binding="#{ABMPerdidasProduccion.uiNroOT}" id="uiNroOT"/>
+                                        <webuijsf:textField binding="#{ABMPerdidasProduccion.uiOtDesc}" columns="50" disabled="true" id="uiOtDesc"/>
+                                    </h:panelGrid>
+                                    <h:panelGrid id="gridPanel4" style="width: 100%; height: 100%;">
+                                        <webuijsf:radioButtonGroup binding="#{ABMPerdidasProduccion.radioButtonGroup1}" columns="2" id="radioButtonGroup1"
+                                            items="#{ABMPerdidasProduccion.radioButtonGroup1DefaultOptions.options}" selected="#{ABMPerdidasProduccion.radioButtonGroup1DefaultOptions.selectedValue}"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanel2" style="width: 100%; height: 100%; margin-top: 10px">
                                         <webuijsf:hyperlink id="hyperlink2" onClick="doPopup('form1:uiProductoCod_field', 'form1:uiProductoDesc_field')"
@@ -140,6 +140,9 @@
                                         <webuijsf:textField binding="#{ABMPerdidasProduccion.uiCantidad}" columns="13" id="uiCantidad"/>
                                         <webuijsf:label id="label2" text="Observacion"/>
                                         <webuijsf:textArea binding="#{ABMPerdidasProduccion.uiObservacion}" columns="90" id="uiObservacion" rows="6"/>
+                                        <webuijsf:label id="label3" text="Deposito"/>
+                                        <webuijsf:dropDown binding="#{ABMPerdidasProduccion.uiDeposito}" id="uiDeposito"
+                                            items="#{SessionBean1.listaDepositosOp}" valueChangeListenerExpression="#{ABMPerdidasProduccion.uiDeposito_processValueChange}"/>
                                     </h:panelGrid>
                                     <h:panelGrid binding="#{ABMPerdidasProduccion.gridPanel1}" columns="2" id="gridPanel1"
                                         style="direction: rtl; height: 48px; line-height: normal; margin-left: 460px; margin-top: 10px; text-align: right; vertical-align: middle" width="182">

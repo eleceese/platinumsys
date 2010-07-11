@@ -5,6 +5,7 @@
 package platinum;
 
 import com.sun.data.provider.RowKey;
+import com.sun.org.apache.bcel.internal.generic.IFEQ;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.Calendar;
@@ -995,10 +996,12 @@ private boolean validarCampos(){
                        this.info(uiDetalleProdDesc, "Debe agregar los detalles de la formula");
             }else{
                long cont = 0;
+               long cantfinal = 0;
                 for (int i = 0; i < detalleFormulaList.size(); i++) {
                     FormulaDetalle formulaDetalle = detalleFormulaList.get(i);
                     if (formulaDetalle.getSemiFin() != null && formulaDetalle.getSemiFin().toString().equals("S")) {
                         cont++;
+                        cantfinal = formulaDetalle.getCantidad().longValue();
                     }
                 }
                 if (cont == 0) {
@@ -1008,17 +1011,33 @@ private boolean validarCampos(){
                 } else if(cont > 1) {
                         errorValidacion = true;
                         this.info(uiDetalleProdDesc, "Existe mas de un detalle de finalizacion");
+                }else if(cont == 1){
+                    if (StringUtils.esNumero(this.uiCantidad.getText().toString())
+                            && cantfinal != 0
+                            && cantfinal != Long.valueOf(this.uiCantidad.getText().toString().toString()).longValue()) {
+                        errorValidacion = true;
+                        this.info(uiDetalleProdDesc, "La cantidad de la tarea de finalizacion debe coincidir con la cantidad de la tarea");
+
+                    }
+
                 }
 
             }
 
 
 
-             if (this.uiProductoCodigo.getText() == null ||
-                    this.uiProductoCodigo.getText().toString() == null ||
-                    this.uiProductoCodigo.getText().toString().equals("")){
-                        errorValidacion = true;
-                       this.info(uiProductoCodigo, "Debe seleccionar un producto");
+             if (this.uiProductoCodigo.getText() == null 
+                    ||this.uiProductoCodigo.getText().toString().equals("")
+                    || !StringUtils.esNumero(this.uiProductoCodigo.getText().toString())){
+                       errorValidacion = true;
+                       this.info(uiProductoCodigo, "Ingrese correctamente el codigo de producto");
+                }else{
+                     Producto p = new ProductoController().findById(Long.valueOf(this.uiProductoCodigo.getText().toString()));
+                     if (p == null || !p.getCodTipoProducto().getDescripcion().toString().equals("Terminado")) {
+                            errorValidacion = true;
+                            this.info(uiProductoCodigo, "El codigo de producto no corresponde a un producto Generico");
+
+                    }
                 }
 
                    if (this.uiDescripcion.getText() == null ||
@@ -1031,8 +1050,10 @@ private boolean validarCampos(){
                   if (!StringUtils.esNumero(this.uiCantidad.getText().toString()))
                         {   errorValidacion = true;
                             this.info(uiCantidad, "La cantidad debe ser campo numerico");
+                        }else if(Long.valueOf(this.uiCantidad.getText().toString()).longValue()< 1){
+                            errorValidacion = true;
+                            this.info(uiCantidad, "La cantidad debe ser mayor a 0");
                         }
-
                  return errorValidacion;
 
 }
@@ -1124,24 +1145,18 @@ private FormulaCabecera cabeceraFormula;
 
         if (!errorValidacion) {
 
+            FormulaSemiCabecera fSemi = new FormulaSemiCabeceraController().findById(Long.valueOf(this.uiDetalleCodFormula.getText().toString()));
+
             if (!editarDetalle){
 
-                            Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetalleProdCod.getText().toString()));
-
-                            FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
-                            FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabecera();
-                            formulaSemiCabecera = formulaSemiCabeceraController.findById(Long.valueOf(Long.valueOf(this.uiDetalleCodFormula.getText().toString())));
-
-
-
+                            Producto producto = fSemi.getCodProducto();
                 //           FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabeceraController().findById(Long.valueOf(this.uiDetalleCodFormula.getText().toString()));
-
-
                            detalleFormula = new FormulaDetalle();
                            detalleFormula.setCodProducto(producto);
-                           detalleFormula.setCodFormulaSemiCabecera(formulaSemiCabecera);
-                           detalleFormula.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetalleCant.getText().toString())));
-                             if (uiDetalleFin.isChecked()) {
+                           detalleFormula.setCodFormulaSemiCabecera(fSemi);
+                           detalleFormula.setCantidad(BigInteger.valueOf(fSemi.getCantidad().longValue()));
+                             
+                           if (fSemi.getFormulaFin() != null && fSemi.getFormulaFin().toString().equals("S")) {
                                 detalleFormula.setSemiFin("S");
                             }
                            detalleFormulaList.add(detalleFormula);
@@ -1150,7 +1165,7 @@ private FormulaCabecera cabeceraFormula;
 
             }else{
                 
-                            Producto producto = new ProductoController().findById(Long.valueOf(this.uiDetalleProdCod.getText().toString()));
+                            Producto producto = fSemi.getCodProducto();
 
                             FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
                             FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabecera();
@@ -1161,8 +1176,8 @@ private FormulaCabecera cabeceraFormula;
 
                            detalleFormula  = detalleFormulaList.get(Integer.valueOf(itemDet).intValue());
                            detalleFormula.setCodProducto(producto);
-                           detalleFormula.setCodFormulaSemiCabecera(formulaSemiCabecera);
-                           detalleFormula.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetalleCant.getText().toString())));
+                           detalleFormula.setCodFormulaSemiCabecera(fSemi);
+                           detalleFormula.setCantidad(BigInteger.valueOf(fSemi.getCantidad().longValue()));
                            editarDetalle = false;
            }
            detallesFormula = (FormulaDetalle[]) detalleFormulaList.toArray(new FormulaDetalle[0]);
@@ -1174,17 +1189,55 @@ private FormulaCabecera cabeceraFormula;
 
 public void validarDetalle(){
     this.errorValidacion= false;
-if (uiDetalleProdCod.getText() == null || uiDetalleProdCod.getText().equals("") ) {
+//if (uiDetalleProdCod.getText() == null || uiDetalleProdCod.getText().equals("") ) {
+//        this.errorValidacion= true;
+//        info(uiDetalleProdDesc, "Verifique el detalle");
+//}
+//
+//if (uiDetalleCant.getText() == null || uiDetalleCant.getText().equals("") ) {
+//        this.errorValidacion= true;
+//        info(uiDetalleProdDesc, "Verifique el detalle");
+//}
+if (uiDetalleCodFormula.getText() == null
+               || uiDetalleCodFormula.getText().equals("")
+               || !StringUtils.esNumero(uiDetalleCodFormula.getText().toString())) {
         this.errorValidacion= true;
-        info(uiDetalleProdDesc, "Verifique el detalle");
+        info(uiDetalleProdDesc, "Verifique el Codigo de la Formula");
+}else{
+    FormulaSemiCabecera fsemi = new FormulaSemiCabeceraController().findById(Long.valueOf(this.uiDetalleCodFormula.getText().toString()));
+    if (fsemi == null) {
+                this.errorValidacion= true;
+                info(uiDetalleProdDesc, "Verifique el Codigo de la Formula");
+    }else if(fsemi.getFormulaFin() != null && fsemi.getFormulaFin().toString().equals("S")){
+        boolean b = false;
+        for (int i = 0; i < detalleFormulaList.size(); i++) {
+            FormulaDetalle formulaDetalle = detalleFormulaList.get(i);
+            if (formulaDetalle.getSemiFin() != null && formulaDetalle.getSemiFin().equals("S")) {
+                b = true;
+                break;
+            }
+        }
+        if (b  && !editarDetalle) {
+               this.errorValidacion= true;
+               info(uiDetalleProdDesc, "Ya fue seleccionado un acabado");
+        }else if (this.uiCantidad.getText() == null
+                    ||this.uiCantidad.getText().toString().equals("")
+                    ||!StringUtils.esNumero(this.uiCantidad.getText().toString())){
+                       this.errorValidacion= true;
+                        info(uiDetalleProdDesc, "Para ingresar una tarea de Finalizacion primero Ingrese la cantidad de la Formula");
+        }else if(Long.valueOf(this.uiCantidad.getText().toString()).longValue() != fsemi.getCantidad().longValue()){
+                     this.errorValidacion= true;
+                     info(uiDetalleProdDesc, "La cantidad de la tarea de finalizacion debe coincidir con la cantidad de la formula");
+        }
+
+     }
+
+
+ }
+
 }
 
-if (uiDetalleCant.getText() == null || uiDetalleCant.getText().equals("") ) {
-        this.errorValidacion= true;
-        info(uiDetalleProdDesc, "Verifique el detalle");
-}
 
-}
 public void limpiarDetalle(){
 
 this.uiDetalleCant.setText("");
@@ -1205,7 +1258,9 @@ public String detailRemove() {
 
     if (updateRequest) {
        FormulaDetalle fDetEliminada  = detalleFormulaList.get(Integer.valueOf(itemDet).intValue());
-       detalleFormulaEliminadaList.add(fDetEliminada);
+        if (fDetEliminada.getCodFormula() != null) {
+                   detalleFormulaEliminadaList.add(fDetEliminada);
+        }
 
     }
 

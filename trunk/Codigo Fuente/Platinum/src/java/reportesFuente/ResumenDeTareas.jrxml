@@ -27,6 +27,8 @@
 	<parameter name="codOt" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="codEmpleado" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="tarea" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="fechaIni" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="fechaFin" isForPrompting="false" class="java.lang.String"/>
 	<queryString><![CDATA[select 
 e.nombre_empleado||' '||e.apellido_empleado as Empleado,
 ta.cod_tarea as CodTarea,
@@ -58,11 +60,15 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 			</band>
 		</background>
 		<title>
-			<band height="115"  isSplitAllowed="true" >
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="132"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						x="0"
-						y="77"
+						y="72"
 						width="534"
 						height="17"
 						key="staticText-2"/>
@@ -78,8 +84,8 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 				</staticText>
 				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="199"
-						y="11"
+						x="201"
+						y="3"
 						width="129"
 						height="57"
 						key="image-1"/>
@@ -89,8 +95,8 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 				</image>
 				<line direction="TopDown">
 					<reportElement
-						x="0"
-						y="67"
+						x="2"
+						y="61"
 						width="533"
 						height="0"
 						forecolor="#000000"
@@ -100,8 +106,8 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="1"
-						y="11"
+						x="3"
+						y="2"
 						width="533"
 						height="0"
 						forecolor="#000000"
@@ -112,7 +118,7 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="4"
-						y="101"
+						y="96"
 						width="58"
 						height="13"
 						forecolor="#000066"
@@ -130,7 +136,7 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="370"
-						y="101"
+						y="96"
 						width="55"
 						height="13"
 						forecolor="#000066"
@@ -148,7 +154,7 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="62"
-						y="101"
+						y="96"
 						width="105"
 						height="13"
 						forecolor="#000066"
@@ -166,7 +172,7 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="431"
-						y="101"
+						y="96"
 						width="103"
 						height="13"
 						forecolor="#000066"
@@ -184,7 +190,7 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="206"
-						y="101"
+						y="96"
 						width="58"
 						height="13"
 						forecolor="#000066"
@@ -202,7 +208,7 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="264"
-						y="101"
+						y="96"
 						width="88"
 						height="13"
 						forecolor="#000066"
@@ -217,10 +223,152 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{codOt}]]></textFieldExpression>
 				</textField>
-			</band>
-		</title>
-		<pageHeader>
-			<band height="12"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="3"
+						y="6"
+						width="183"
+						height="17"
+						forecolor="#000000"
+						key="textField-9"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="431"
+						y="7"
+						width="75"
+						height="19"
+						forecolor="#000000"
+						key="textField-10"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Pagina " + $V{PAGE_NUMBER} + " de "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="512"
+						y="7"
+						width="23"
+						height="19"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-11"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="3"
+						y="25"
+						width="161"
+						height="13"
+						forecolor="#000099"
+						key="textField-12"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left">
+						<font fontName="Helvetica" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Usuario: gonzalef"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="4"
+						y="112"
+						width="58"
+						height="13"
+						forecolor="#000066"
+						key="textField-13"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left">
+						<font fontName="Helvetica" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Fecha Ini: "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="65"
+						y="112"
+						width="105"
+						height="13"
+						forecolor="#000066"
+						key="textField-14"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left">
+						<font fontName="Helvetica" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaIni}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="207"
+						y="112"
+						width="58"
+						height="13"
+						forecolor="#000066"
+						key="textField-15"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left">
+						<font fontName="Helvetica" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Fecha Fin: "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="265"
+						y="112"
+						width="88"
+						height="13"
+						forecolor="#000066"
+						key="textField-16"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left">
+						<font fontName="Helvetica" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaFin}]]></textFieldExpression>
+				</textField>
 			</band>
 		</pageHeader>
 		<columnHeader>
@@ -391,7 +539,7 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TAREA}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0;#,##0-" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="267"
 						y="0"
@@ -409,7 +557,7 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CANTIDAD}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0;#,##0-" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="330"
 						y="0"
@@ -427,7 +575,7 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TIEMPO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="459"
 						y="0"
@@ -453,24 +601,6 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 		</columnFooter>
 		<pageFooter>
 			<band height="27"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="278"
-						y="4"
-						width="230"
-						height="19"
-						forecolor="#000000"
-						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right">
-						<font/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["Pagina " + $V{PAGE_NUMBER} + " de "]]></textFieldExpression>
-				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
@@ -490,24 +620,6 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 						<font size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="1"
-						y="6"
-						width="209"
-						height="19"
-						forecolor="#000000"
-						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font/>
-					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageFooter>

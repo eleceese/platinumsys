@@ -154,18 +154,18 @@
                                         <h:panelGrid id="gridPanel4" style="height: 48px">
                                             <webuijsf:label id="label5" style="font-size: 16px" text="Detalle Formula / Formulas de Semiterminados"/>
                                         </h:panelGrid>
-                                        <h:panelGrid columns="6" id="gridPanel3" style="height: 48px" width="839">
+                                        <h:panelGrid columns="3" id="gridPanel3" style="height: 48px">
                                             <webuijsf:hyperlink id="uiHiperLynkProductos"
-                                                onClick="doPopup('form1:uiDetalleProdCod_field', 'form1:uiDetalleProdDesc_field','form1:uiDetalleCodFormula_field','form1:uiDetalleFormula_field','form1:uiDetalleCant_field')&#xd;&#xa;"
-                                                target="popup" text="Producto" url="/faces/popup/popupFormulasSemiter.jsp"/>
-                                            <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleProdCod}" columns="10" id="uiDetalleProdCod"/>
-                                            <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleProdDesc}" columns="35" id="uiDetalleProdDesc"/>
-                                            <webuijsf:label id="label4" text="Formula"/>
-                                            <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleCodFormula}" columns="10" id="uiDetalleCodFormula"/>
-                                            <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleFormula}" columns="45" id="uiDetalleFormula"/>
+                                                onClick="doPopupGrande('form1:uiDetalleProdCod_field', 'form1:uiDetalleProdDesc_field','form1:uiDetalleCodFormula_field','form1:uiDetalleFormula_field','form1:uiDetalleCant_field')&#xd;&#xa;"
+                                                target="popup" text="Formula" url="/faces/popup/popupFormulasSemiter.jsp"/>
+                                            <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleCodFormula}"  columns="10" id="uiDetalleCodFormula"/>
+                                            <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleFormula}" disabled="true" columns="45" id="uiDetalleFormula"/>
+                                            <webuijsf:label id="label4" text="Producto"/>
+                                            <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleProdCod}" disabled="true" columns="10" id="uiDetalleProdCod"/>
+                                            <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleProdDesc}" disabled="true" columns="35" id="uiDetalleProdDesc"/>
                                             <webuijsf:label id="label1" text="Cantidad"/>
-                                            <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleCant}" id="uiDetalleCant"/>
-                                            <webuijsf:checkbox binding="#{ABMFormulaTerminado.uiDetalleFin}" id="uiDetalleFin" label="Fin"/>
+                                            <webuijsf:textField binding="#{ABMFormulaTerminado.uiDetalleCant}" disabled="true" id="uiDetalleCant"/>
+                                            <webuijsf:checkbox binding="#{ABMFormulaTerminado.uiDetalleFin}" disabled="true" id="uiDetalleFin" label="Fin"/>
                                             <webuijsf:button actionExpression="#{ABMFormulaTerminado.uiButtonAgregarDetalle_action}" id="uiButtonAgregarDetalle" text="Agregar"/>
                                             <webuijsf:message for="uiDetalleProdDesc" id="message4" showDetail="false" showSummary="true"/>
                                         </h:panelGrid>

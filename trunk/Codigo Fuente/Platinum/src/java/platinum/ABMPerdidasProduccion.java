@@ -5,12 +5,14 @@
 package platinum;
 
 import com.sun.data.provider.RowKey;
+
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.Calendar;
 import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.component.PageAlert;
 import com.sun.webui.jsf.component.RadioButton;
+import com.sun.webui.jsf.component.RadioButtonGroup;
 import com.sun.webui.jsf.component.Table;
 import com.sun.webui.jsf.component.TableColumn;
 import com.sun.webui.jsf.component.TableRowGroup;
@@ -20,21 +22,32 @@ import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
+import py.com.platinum.controller.DepositoController;
 import py.com.platinum.controller.EmpleadoController;
+import py.com.platinum.controller.ExistenciaController;
+import py.com.platinum.controller.OrdenTrabajoCabeceraController;
 import py.com.platinum.controller.OrdenTrabajoDetalleController;
 import py.com.platinum.controller.PerdidaController;
 import py.com.platinum.controller.ProductoController;
+import py.com.platinum.controller.RecursoAsignadoController;
 import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Deposito;
 import py.com.platinum.entity.Empleado;
+import py.com.platinum.entity.Existencia;
+import py.com.platinum.entity.OrdenTrabajo;
 import py.com.platinum.entity.OrdenTrabajoDetalle;
 import py.com.platinum.entity.Perdida;
 import py.com.platinum.entity.Producto;
+import py.com.platinum.entity.RecursoAsignado;
 import py.com.platinum.utils.StringUtils;
 
 /**
@@ -57,6 +70,8 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
+        radioButtonGroup1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("D", "En Deposito"), new com.sun.webui.jsf.model.Option("T", "En Taller")});
+        radioButtonGroup1DefaultOptions.setSelectedValue("D");
     }
     private HtmlPanelGrid mainContainer = new HtmlPanelGrid();
 
@@ -239,15 +254,6 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
     public void setUiFecha(Calendar c) {
         this.uiFecha = c;
     }
-    private TextArea uiDescProd = new TextArea();
-
-    public TextArea getUiDescProd() {
-        return uiDescProd;
-    }
-
-    public void setUiDescProd(TextArea ta) {
-        this.uiDescProd = ta;
-    }
     private TextField uiProductoCod = new TextField();
 
     public TextField getUiProductoCod() {
@@ -302,15 +308,6 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
     public void setRadioButton1(RadioButton rb) {
         this.radioButton1 = rb;
     }
-    private DropDown uiNroOt = new DropDown();
-
-    public DropDown getUiNroOt() {
-        return uiNroOt;
-    }
-
-    public void setUiNroOt(DropDown dd) {
-        this.uiNroOt = dd;
-    }
     private TextField uiResponsableCod = new TextField();
 
     public TextField getUiResponsableCod() {
@@ -356,12 +353,59 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
     public void setUiFecha2Fil(Calendar c) {
         this.uiFecha2Fil = c;
     }
+    private SingleSelectOptionsList radioButtonGroup1DefaultOptions = new SingleSelectOptionsList();
+
+    public SingleSelectOptionsList getRadioButtonGroup1DefaultOptions() {
+        return radioButtonGroup1DefaultOptions;
+    }
+
+    public void setRadioButtonGroup1DefaultOptions(SingleSelectOptionsList ssol) {
+        this.radioButtonGroup1DefaultOptions = ssol;
+    }
+    private TextField uiNroOT = new TextField();
+
+    public TextField getUiNroOT() {
+        return uiNroOT;
+    }
+
+    public void setUiNroOT(TextField tf) {
+        this.uiNroOT = tf;
+    }
+    private TextField uiOtDesc = new TextField();
+
+    public TextField getUiOtDesc() {
+        return uiOtDesc;
+    }
+
+    public void setUiOtDesc(TextField tf) {
+        this.uiOtDesc = tf;
+    }
+    private RadioButtonGroup radioButtonGroup1 = new RadioButtonGroup();
+
+    public RadioButtonGroup getRadioButtonGroup1() {
+        return radioButtonGroup1;
+    }
+
+    public void setRadioButtonGroup1(RadioButtonGroup rbg) {
+        this.radioButtonGroup1 = rbg;
+    }
+    private DropDown uiDeposito = new DropDown();
+
+    public DropDown getUiDeposito() {
+        return uiDeposito;
+    }
+
+    public void setUiDeposito(DropDown dd) {
+        this.uiDeposito = dd;
+    }
 
     // </editor-fold>
     /**
      * <p>Construct a new Page bean instance.</p>
      */
     public ABMPerdidasProduccion() {
+    radioButtonGroup1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("D", "En Deposito"), new com.sun.webui.jsf.model.Option("T", "En Taller")});
+    radioButtonGroup1DefaultOptions.setSelectedValue("D");
     cargarListaTodosOts();
     cargarListaTodosPerdidas();
     }
@@ -402,7 +446,8 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
         // TODO - add your own initialization code here
         getSessionBean1().setTituloPagina("Facturas Compras");
         getSessionBean1().setDetallePagina("Registro de Facturas - Proveedor");
-
+        getSessionBean1().cargarListaTodosOTCab();
+        getSessionBean1().cargarListaTodosDepositos();
     }
 
     /**
@@ -437,7 +482,7 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
 
             getSessionBean1().setTituloPagina("Registro de Perdidas en la Produccion");
             getSessionBean1().setDetallePagina("Insertar nuevo Registro");
-            limpiarCamposNew();
+            
 
         } else if (updateRequest) {
             //if (getTableRowGroup1().getSelectedRowsCount() > 0) {
@@ -498,7 +543,7 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
         }
 
 
-        listaPerdidas = (Perdida[]) perdidaController.getAllFiltered(pCodEmp,null,pNroOt, pFecha2, pFecha2).toArray(new Perdida[0]);
+        listaPerdidas = (Perdida[]) perdidaController.getAllFiltered(pCodEmp,null,pNroOt, pFecha, pFecha2).toArray(new Perdida[0]);
 
         setlistaPerdidas(listaPerdidas);
         return null;
@@ -523,10 +568,10 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
          this.uiCantidad.setText(String.valueOf(perdida.getCantidadPerdida()));
          this.uiObservacion.setText(perdida.getObservacion());
 
-         if (perdida.getCodOrdenTrabajoDetalle() != null) {
-                     this.uiNroOt.setSelected(perdida.getCodOrdenTrabajoDetalle().getCodOrdenTrabajoDet().toString());
-             }
- 
+//         if (perdida.getCodOrdenTrabajoDetalle() != null) {
+//                     this.uiNroOt.setSelected(perdida.getCodOrdenTrabajoDetalle().getCodOrdenTrabajoDet().toString());
+//             }
+//
 
          this.uiResponsableCod.setText(perdida.getCodEmpleado().getCodEmpleado().toString());
          }
@@ -622,7 +667,7 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
 
         this.addRecordButton.setRendered(true);
         this.updateRecordButton.setRendered(false);
-
+        limpiarCamposNew();
       
 
         getSessionBean1().setTituloPagina("Nueva Pérdida en Producción");
@@ -638,23 +683,36 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
     }
 
     public String uiEditarButton_action() {
-        updateRequest = true;
-        addRequest = false;
 
-        this.pageAlert1.setRendered(false);
+          if (getTableRowGroup1().getSelectedRowsCount() > 0){
+                  RowKey[] selectedRowKeys = getTableRowGroup1().getSelectedRowKeys();
+                  Perdida[] perdidas = listaPerdidas;
+                  PerdidaController perCon = new PerdidaController();
+                  int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
+                  Perdida perdida = perdidas[rowId];
+                ControllerResult controllerResult = new ControllerResult();
+              if (perdida.getCodTareaFallida() != null) {
+                    controllerResult.setCodRetorno(-1);
+                    controllerResult.setMsg("No se puede anular la perdida Generada por una Tarea Fallida. Debe anular la tarea Fallida");
+              }else{
+                    controllerResult = perCon.anular(perdida);
+              }
 
-        this.addRecordButton.setRendered(false);
-        this.updateRecordButton.setRendered(true);
-        
-        getSessionBean1().setTituloPagina("Editar Pérdida en Producción");
-        getSessionBean1().setDetallePagina("Edición de Pérdida en Producción");
-        return null;
+                if (controllerResult.getCodRetorno() ==-1) {
+                        this.pageAlert1.setType("error");
+                    } else {
+                        this.pageAlert1.setType("information");
+                }
+
+            this.pageAlert1.setTitle(controllerResult.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+         }
+            return null;
     }
 
-    public String uiBorrarButon_action() {
-        return null;
-    }
-
+  
     public String addRecordButton_action() {
 
         validarCampos();
@@ -663,33 +721,40 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
 
                             ProductoController productoController = new ProductoController();
                             EmpleadoController empleadoController = new EmpleadoController();
-                            OrdenTrabajoDetalleController otDetController = new OrdenTrabajoDetalleController();
+                            OrdenTrabajoCabeceraController otController = new OrdenTrabajoCabeceraController();
 
                             perdida.setCodEmpleado(empleadoController.findById(Long.valueOf(this.uiResponsableCod.getText().toString())));
                             perdida.setCodProducto(productoController.findById(Long.valueOf(this.uiProductoCod.getText().toString())));
-                            perdida.setCodOrdenTrabajoDetalle(otDetController.findById(Long.valueOf(this.uiNroOt.getSelected().toString())));
+                            Producto producto = new ProductoController().findById(Long.valueOf(this.uiProductoCod.getText().toString()));
+                            if (this.uiNroOT.getText() != null) {
+                                perdida.setCodOrdenTrabjo(otController.findById(Long.valueOf(this.uiNroOT.getText().toString())));
+                            }
                             perdida.setCantidadPerdida(Long.valueOf(this.uiCantidad.getText().toString()));
                             perdida.setFechaPerdida(this.uiFecha.getSelectedDate());
                             perdida.setFechaAlta(this.uiFecha.getSelectedDate());
                             perdida.setObservacion(this.uiObservacion.getText().toString());
-
+                            perdida.setCodDeposito(new DepositoController().findById(Long.valueOf(this.uiDeposito.getSelected().toString())));
+                            perdida.setTaller(radioButtonGroup1.getSelected().toString());
+                            perdida.setPrecioUnit(BigInteger.valueOf(producto.getContenido().longValue()));
+                            perdida.setTotal(BigInteger.valueOf(perdida.getCantidadPerdida() * perdida.getPrecioUnit().longValue()));
+                            
                             PerdidaController perdidaController = new PerdidaController();
 
                             ControllerResult controllerResult = new ControllerResult();
-                            controllerResult = perdidaController.create(perdida);
+                            controllerResult = perdidaController.createPerdida(perdida);
 
 
                              if (controllerResult.getCodRetorno() ==-1) {
                                     this.pageAlert1.setType("error");
                                     this.errorValidacion=true;
 
-                                    addRequest = false;
+                                    addRequest = true;
                                     updateRequest = false;
 
 
                                 } else {
                                     this.pageAlert1.setType("information");
-                                    addRequest = true;
+                                    addRequest = false;
                                     updateRequest = false;
                                 }
 
@@ -721,7 +786,7 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
 
                             p.setCodEmpleado(empleadoController.findById(Long.valueOf(this.uiResponsableCod.getText().toString())));
                             p.setCodProducto(productoController.findById(Long.valueOf(this.uiProductoCod.getText().toString())));
-                            p.setCodOrdenTrabajoDetalle(otDetController.findById(Long.valueOf(this.uiNroOt.getSelected().toString())));
+//                            p.setCodOrdenTrabajoDetalle(otDetController.findById(Long.valueOf(this.uiNroOt.getSelected().toString())));
                             p.setCantidadPerdida(Long.valueOf(this.uiCantidad.getText().toString()));
                             p.setFechaPerdida(this.uiFecha.getSelectedDate());
                             p.setFechaAlta(this.uiFecha.getSelectedDate());
@@ -773,20 +838,35 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
 //        boolean errorValidacion;
 
         //Inicializar
+        Producto p = new Producto();
+        Producto pr = null;
+        OrdenTrabajo otCab =null;
         errorValidacion = false;
 
         this.errorValidacion = false;
 
 
-        if (this.uiResponsableCod.getText() == null) {
-            info("Nombre del empleado obligatorio, ingrese un valor");
+         if (this.uiNroOT.getText() != null && !StringUtils.esNumero(this.uiNroOT.getText().toString())) {
+                info("Valor incorrecto para Nro de Ot, debe ser un numero");
+                errorValidacion = true;
+        }else if(this.uiNroOT.getText() != null){
+            OrdenTrabajo ot = new OrdenTrabajo();
+            ot = new OrdenTrabajoCabeceraController().findById(Long.valueOf(this.uiNroOT.getText().toString()));
+            if (ot != null) {
+                
+                if (!ot.getEstadoOt().toString().equals("P")) {
+                    info("Valor incorrecto para Nro de Ot, la OT debe estar en Proceso");
+                    errorValidacion = true;
+                }else{
+                    otCab = ot;
+                }
+            }
+        }
+        if (this.uiResponsableCod.getText() == null || !StringUtils.esNumero(this.uiResponsableCod.getText().toString())) {
+            info("Favor ingrese correctamente el responsable");
             errorValidacion = true;
-        }else if (!StringUtils.esNumero(this.uiResponsableCod.getText().toString())) {
-            info("Valor incorrecto para Codidgo de Responsable, debe ser un numero");
-            errorValidacion = true;
-        }else{
-
-             Empleado e   = new EmpleadoController().findById(Long.valueOf(uiResponsableCod.getText().toString()));
+        }else {
+                        Empleado e   = new EmpleadoController().findById(Long.valueOf(uiResponsableCod.getText().toString()));
                         if (e == null) {
                             this.errorValidacion= true;
                             info("Verifique el codigo del Empleado Responsable");
@@ -801,12 +881,122 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
             info("Valor incorrecto para Codidgo Producto, debe ser un numero");
             errorValidacion = true;
         }else{
-                Producto p = new ProductoController().findById(Long.valueOf(uiProductoCod.getText().toString()));
-                if (p == null) {
+                p = new ProductoController().findById(Long.valueOf(uiProductoCod.getText().toString()));
+                if (p == null ) {
                         this.errorValidacion= true;
                         info("Verifique el codigo de Producto");
+
+                }else if (p.getCodTipoProducto().getDescripcion().equals("ProductoGenerico")){
+                        this.errorValidacion= true;
+                        info("El producto no puede ser generico");
+                }else{
+                    pr = p;
+
+
+                    // en caso de selecionar D se procedera a descontar las existencias en deposito
+                    if (radioButtonGroup1.getSelected().toString().equals("D")) {
+
+                        ExistenciaController exCon = new ExistenciaController();
+                        Deposito dep = new DepositoController().findById(Long.valueOf(this.uiDeposito.getSelected().toString()));
+                        Existencia ex = exCon.getExistencia(null, p.getCodProducto(), dep.getCodDeposito());
+                        if (StringUtils.esNumero(this.uiCantidad.getText().toString())) {
+                            long canti = Long.valueOf(uiCantidad.getText().toString()).longValue();
+                            if (ex != null && ex.getCantidadExistencia().longValue() < canti) {
+                                this.errorValidacion= true;
+                                info("No existe esa cantidad En Deposito");
+                            }
+                        }
+                     }else{
+                        if (otCab == null) {
+                                this.errorValidacion= true;
+                                info("Para perdida en Taller es obligatorio el Registro de OT");
+
+                        }
+
+
+
+
+                     }
+                         // perdida de productos terminados
+                  if (p.getCodTipoProducto().getDescripcion().equals("Terminado")) {
+                                if (otCab !=null && otCab.getCodProductoOt().getCodProducto().longValue() != pr.getCodProducto().longValue()) {
+                                    this.errorValidacion= true;
+                                    info("El producto Terminado seleccionado no se produce en la OT");
+
+                                }else{
+                                   if (StringUtils.esNumero(this.uiCantidad.getText().toString())) {
+                                                long canti = Long.valueOf(uiCantidad.getText().toString()).longValue();
+                                                if (otCab.getCantidadProducidaOt().longValue() < canti) {
+                                                    this.errorValidacion= true;
+                                                    info("La cantidad de la Perdida es mayor a la cantidad Producida");
+                                                }
+                                    }
+                                }
+                        
+                        // perdida de productos semiterminados
+                        }else if(p.getCodTipoProducto().getDescripcion().equals("SemiTerminado")){
+
+                                if (otCab != null) {
+                                        boolean existe = false;
+                                        List<OrdenTrabajoDetalle>  detalleOrdenTrabajoList = new ArrayList();
+                                        detalleOrdenTrabajoList = otCab.getOrdenTrabajoDetalleListList();
+                                        OrdenTrabajoDetalle ordenTrabajoDetalle = null;
+                                        for (int i = 0; i < detalleOrdenTrabajoList.size(); i++) {
+                                        ordenTrabajoDetalle = detalleOrdenTrabajoList.get(i);
+                                            if (ordenTrabajoDetalle.getCodProducto().getCodProducto().longValue()
+                                                == p.getCodProducto().longValue()) {
+                                                existe = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!existe) {
+                                             this.errorValidacion= true;
+                                            info("El producto SemiTerminado seleccionado no se asigna  a la OT");
+                                        }else{
+                                            if (StringUtils.esNumero(this.uiCantidad.getText().toString())) {
+                                                long canti = Long.valueOf(uiCantidad.getText().toString()).longValue();
+                                                    if (ordenTrabajoDetalle.getCantidadReal().longValue() < canti) {
+                                                        this.errorValidacion= true;
+                                                        info("La cantidad de la Perdida es mayor a la cantidad Producida");
+                                                    }
+                                            }
+
+                                        }
+                                 }
+                        }else if(p.getCodTipoProducto().getDescripcion().equals("MateriaPrima")
+                                    || p.getCodTipoProducto().getDescripcion().equals("Insumo")) {
+
+                                if (otCab != null) {
+
+                                     boolean existe = false;
+                                        List<OrdenTrabajoDetalle>  detalleOrdenTrabajoList = new ArrayList();
+                                        detalleOrdenTrabajoList = otCab.getOrdenTrabajoDetalleListList();
+                                        for (int i = 0; i < detalleOrdenTrabajoList.size(); i++) {
+                                        OrdenTrabajoDetalle ordenTrabajoDetalle = detalleOrdenTrabajoList.get(i);
+                                     
+                                                    if (ordenTrabajoDetalle != null && pr != null) {
+
+                                                            RecursoAsignado rAsignado = new RecursoAsignado();
+                                                            RecursoAsignadoController rController = new RecursoAsignadoController();
+                                                            rAsignado = rController.getRecursoPorEquiv(ordenTrabajoDetalle.getCodOrdenTrabajoDet(),pr.getCodProducto());
+                                                            if (rAsignado != null) {
+                                                                existe = true;
+                                                                break;
+                                                            }
+                                                    }
+
+                                        }
+                                        if (!existe) {
+                                                this.errorValidacion= true;
+                                                info("El producto seleccionado no esta asignado a OT");
+
+                                        }
+                                        
+                                  }
+                        }
                 }
-        }
+            }
+        
         if (this.uiObservacion.getText() == null || this.uiObservacion.getText().equals("")) {
             info("Favor ingrese la observacion de la Perdida");
             errorValidacion = true;
@@ -819,8 +1009,9 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
             info("Valor incorrecto para Cantidad, debe ser un numero");
             errorValidacion = true;
         }
-        
-        
+
+       
+       
     }
 
     public void uiResponsableNombre_processValueChange(ValueChangeEvent event) {
@@ -850,7 +1041,7 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
         return listaOtsOp;
     }
 
-    public void setlistaOtsOp(Option[] listaOtsOp) {
+   public void setlistaOtsOp(Option[] listaOtsOp) {
         this.listaOtsOp = listaOtsOp;
     }
 
@@ -890,7 +1081,7 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
         mensaje = mensaje  + "Codigo de SubOT "+ otDet.getCodOrdenTrabajoDet().toString()+"\n";
         mensaje= mensaje + "Semiterminado "+ otDet.getCodProducto().getDescripcion().toString()+"\n";
         mensaje= mensaje + "Cantidad " + String.valueOf(otDet.getCantidad());
-        this.uiDescProd.setText(mensaje);
+//        this.uiDescProd.setText(mensaje);
 
     }
 ////// FIN CARGA DE COMBO BOX OTS
@@ -921,13 +1112,14 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
 
-
-        listaPerdidas = (Perdida[]) new PerdidaController().getAll("codPerdida").toArray(new Perdida[0]);
-        setlistaPerdidas(listaPerdidas);
-
+        this.uiCodOtFil.setText(null);
+        this.uiFecha1Fil.setText(null);
+        this.uiFecha2Fil.setText(null);
+        this.uiResponsableFil.setSelected(null);
         
         return null;
     }
+
   
     
 }

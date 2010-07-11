@@ -38,21 +38,18 @@
                         <div>
                             <jsp:directive.include file="cabecera.jspf"/>
                         </div>
-                        <div>
+                        <div style="height: 123px; width: 576px">
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
-                        <h:panelGrid id="mainContainer" style="height: 408px; left: 240px; top: 216px; position: absolute" width="888">
+                        <h:panelGrid id="mainContainer" style="height: 408px; left: 264px; top: 216px; position: absolute" width="888">
                             <webuijsf:pageAlert binding="#{RegistroEstadosOT.pageAlert1}" id="pageAlert1" rendered="false"/>
                             <h:panelGrid binding="#{RegistroEstadosOT.gridPanelBuscar}" columns="2" id="gridPanelBuscar" style="height: 72px" width="407">
-                                <h:panelGrid columns="2" id="gridPanelCodigo" style="height:30px; width: 60%">
-                                    <webuijsf:label id="codigo" text="Codigo"/>
+                                <h:panelGrid columns="2" id="gridPanelCodigo" style="height: 30px" width="263">
+                                    <webuijsf:label id="codigo" text="Nro OT"/>
                                     <webuijsf:textField binding="#{RegistroEstadosOT.uiCodigoFil}" id="uiCodigoFil"/>
                                 </h:panelGrid>
-                                <h:panelGrid columns="2" id="gridPanelUnidadMedida" style="height: 30px" width="263">
-                                    <webuijsf:label id="unidadMedida1" text="Unidad de Medida"/>
-                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiUnidadMedidaFil}" id="uiUnidadMedidaFil"/>
-                                </h:panelGrid>
-                                <webuijsf:button id="buscar" text="Buscar"/>
+                                <h:panelGrid columns="2" id="gridPanelUnidadMedida" style="height: 30px" width="263"/>
+                                <webuijsf:button actionExpression="#{RegistroEstadosOT.buscar_action}" id="buscar" text="Buscar"/>
                                 <webuijsf:button actionExpression="#{RegistroEstadosOT.todos_action}" id="todos" text="Todos"/>
                             </h:panelGrid>
                             <h:panelGrid binding="#{RegistroEstadosOT.gridPanelTabla}" id="gridPanelTabla" style="height: 154px" width="935">
@@ -151,12 +148,12 @@
                                             <webuijsf:tableColumn headerText="Estado" id="tableColumn13" width="30">
                                                 <webuijsf:staticText id="staticText13" text="#{currentRow.value['estado']}"/>
                                             </webuijsf:tableColumn>
-                                            <webuijsf:tableColumn align="center" id="tableColumn14" width="20">
+                                            <webuijsf:tableColumn align="center" binding="#{RegistroEstadosOT.tableColumn14}" id="tableColumn14" width="20">
                                                 <webuijsf:hyperlink actionExpression="#{RegistroEstadosOT.uiActivarLynk_action}" id="uiActivarLynk" text="Activar">
                                                     <f:setPropertyActionListener target="#{RegistroEstadosOT.itemDetalleOt}" value="#{currentRow.tableRow.rowId}"/>
                                                 </webuijsf:hyperlink>
                                             </webuijsf:tableColumn>
-                                            <webuijsf:tableColumn align="center" id="tableColumn15" width="20">
+                                            <webuijsf:tableColumn align="center" binding="#{RegistroEstadosOT.tableColumn15}" id="tableColumn15" width="20">
                                                 <webuijsf:hyperlink actionExpression="#{RegistroEstadosOT.uiCerrarLynk_action}" id="uiCerrarLynk" text="Terminar">
                                                     <f:setPropertyActionListener target="#{RegistroEstadosOT.itemDetalleOt}" value="#{currentRow.tableRow.rowId}"/>
                                                 </webuijsf:hyperlink>
@@ -193,13 +190,55 @@
                                     <webuijsf:button actionExpression="#{RegistroEstadosOT.uiButtonSolicitudVolver_action}" id="uiButtonSolicitudVolver1" text="Volver"/>
                                 </h:panelGrid>
                             </h:panelGrid>
-                            <h:panelGrid binding="#{RegistroEstadosOT.buttonsPanelAddUpdate}" columns="3" id="buttonsPanelAddUpdate" style="height: 100%" width="191">
+                            <h:panelGrid binding="#{RegistroEstadosOT.buttonsPanelAddUpdate}" columns="4" id="buttonsPanelAddUpdate" style="height: 100%" width="191">
                                 <webuijsf:button actionExpression="#{RegistroEstadosOT.cancelar_action}" id="cancelar" style="width: 65px" text="Cancelar"/>
-                                <webuijsf:button actionExpression="#{RegistroEstadosOT.uiButtonCerrar_action}" id="uiButtonCerrar" style="width: 65px" text="Terminar OT"/>
-                                <webuijsf:button actionExpression="#{RegistroEstadosOT.buttonGuardarNuevo_action}"
-                                    binding="#{RegistroEstadosOT.buttonGuardarNuevo}" id="buttonGuardarNuevo" style="width: 65px" text="Guardar"/>
+                                <webuijsf:button actionExpression="#{RegistroEstadosOT.uiButtonTerminar_action}" id="uiButtonTerminar" style="width: 65px" text="Terminar OT"/>
+                                <webuijsf:button actionExpression="#{RegistroEstadosOT.uiBtnCierreOT_action}" id="uiBtnCierreOT" text="Cierre OT"/>
                                 <webuijsf:button actionExpression="#{RegistroEstadosOT.buttonGuardarEdicion1_action}" id="buttonGuardarEdicion1"
                                     style="width: 65px" text="Guardar"/>
+                            </h:panelGrid>
+                            <h:panelGrid binding="#{RegistroEstadosOT.gridPanelCierreOT}" id="gridPanelCierreOT" style="height: 100%; width: 100%">
+                                <webuijsf:label id="label4" style="color: rgb(0, 0, 102); font-size: 14px" text="Cierre de OT - Costos Finales de Produccion"/>
+                                <webuijsf:label id="label6" style="font-size: 12px" text="Datos Actuales"/>
+                                <h:panelGrid columns="2" id="gridPanel5" style="border: 2px outset #990000; height: 100%" width="407">
+                                    <webuijsf:label id="label5" text="Costo Actual"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCostoActual}" disabled="true" id="uiCierreCostoActual"/>
+                                    <webuijsf:label id="label8" text="Cantidad en Existencia"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCantExistencia}" disabled="true" id="uiCierreCantExistencia"/>
+                                </h:panelGrid>
+                                <webuijsf:label id="label9" style="font-size: 12px" text="Datos de la Produccion"/>
+                                <h:panelGrid columns="2" id="gridPanel6" style="border: 2px outset #990000; height: 100%" width="407">
+                                    <webuijsf:label id="label10" text="Costo Total"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCostoProduccion}" converter="#{RegistroEstadosOT.numberConverter2}"
+                                        disabled="true" id="uiCierreCostoProduccion"/>
+                                    <webuijsf:label id="label11" text="Cantidad Producida"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCantidadProducida}" disabled="true" id="uiCierreCantidadProducida"/>
+                                    <webuijsf:label id="label7" text="Costo Unitario"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCostoProduccionUnitario}" disabled="true" id="uiCierreCostoProduccionUnitario"/>
+                                </h:panelGrid>
+                                <webuijsf:label id="label12" style="font-size: 12px" text="Nuevo Costo de Produccion"/>
+                                <h:panelGrid columns="2" id="gridPanel8" style="border: 2px outset #990000; height: 100%" width="407">
+                                    <webuijsf:label id="label13" text="Costo"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCostoNuevo}" disabled="true" id="uiCierreCostoNuevo"/>
+                                </h:panelGrid>
+                                <webuijsf:label id="label18" style="color: rgb(0, 0, 102); font-size: 14px" text="Cierre de OT - Actualizacion de Precios"/>
+                                <webuijsf:label id="label14" style="font-size: 12px" text="Precios"/>
+                                <h:panelGrid columns="2" id="gridPanel9" style="border: 2px outset #990000; height: 100%" width="407">
+                                    <webuijsf:label id="label15" text="Precio Actual"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierrePrecioActual}" converter="#{RegistroEstadosOT.numberConverter2}"
+                                        disabled="true" id="uiCierrePrecioActual"/>
+                                    <webuijsf:label id="label19" text="Costo"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCostoActualPrecio}" disabled="true" id="uiCierreCostoActualPrecio"/>
+                                    <webuijsf:label id="label16" text="Margen Deseado %"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreMargen}" id="uiCierreMargen"/>
+                                    <webuijsf:label id="label17" text="Nuevo Precio"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierrePrecioNuevo}" disabled="true" id="uiCierrePrecioNuevo"/>
+                                    <webuijsf:button actionExpression="#{RegistroEstadosOT.uiBtnCalcular_action}" id="uiBtnCalcular" text="Calcular"/>
+                                </h:panelGrid>
+                                <h:panelGrid columns="2" id="gridPanel7">
+                                    <webuijsf:button actionExpression="#{RegistroEstadosOT.uiBtnCerrarGuardar_action}" id="uiBtnCerrarGuardar" text="Cerrar OT"/>
+                                    <webuijsf:button actionExpression="#{RegistroEstadosOT.uiBtnCancelarCierre_action}" id="uiBtnCancelarCierre" text="Cancelar"/>
+                                </h:panelGrid>
                             </h:panelGrid>
                         </h:panelGrid>
                     </webuijsf:form>

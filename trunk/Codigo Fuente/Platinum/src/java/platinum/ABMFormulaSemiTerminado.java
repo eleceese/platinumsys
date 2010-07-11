@@ -24,6 +24,7 @@ import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -462,8 +463,7 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
         // Perform application initialization that must complete
         // *after* managed components are initialized
         // TODO - add your own initialization code here
-        getSessionBean1().setTituloPagina("Fórmulas de Producción");
-        getSessionBean1().setDetallePagina("Productos Semiterminados");
+     
 
     }
 
@@ -496,7 +496,11 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
             addUpdatePanel.setRendered(true);
             addRecordButton.setRendered(true);
             updateRecordButton.setRendered(false);
-            
+            this.uiProductoCodigo.setDisabled(false);
+                getSessionBean1().setTituloPagina("Registro de Fórmulas de Producción");
+                getSessionBean1().setDetallePagina("Nueva Formula");
+
+
         } else if (updateRequest) {
             //if (getTableRowGroup1().getSelectedRowsCount() > 0) {
                 gridPanelBuscar.setRendered(false);
@@ -506,12 +510,17 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
                 gridPanelTareas.setRendered(true);
                 addRecordButton.setRendered(false);
                 updateRecordButton.setRendered(true);
-            //}
+                    this.uiProductoCodigo.setDisabled(true);
+             getSessionBean1().setTituloPagina("Registro de Fórmulas de Producción");
+                getSessionBean1().setDetallePagina("Editar Formula");
+
+                    //}
         } else if(errorValidacion){
             addUpdatePanel.setRendered(true);
         }else {
-            getSessionBean1().setTituloPagina("Fórmulas de Producción");
-            getSessionBean1().setDetallePagina("Productos Semiterminados");
+ getSessionBean1().setTituloPagina("Registro de Fórmulas de Producción");
+                getSessionBean1().setDetallePagina("Seleccione un registro");
+
             gridPanelBuscar.setRendered(true);
             tableFormulas.setRendered(true);
             buttonPanel.setRendered(true);
@@ -677,7 +686,7 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
         uiCantidad.setText("");
         uiProductoNombre.setText("");
         uiDescripcion.setText("");
-
+        this.uiFecha.setSelectedDate(new Date());
 
         detalleFormulaSemiList = new ArrayList();
         detallesFormulaSemi = (FormulaSemiDetalle[]) detalleFormulaSemiList.toArray(new FormulaSemiDetalle[0]);
@@ -706,7 +715,7 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
         uiDescripcion.setText("");
 
         this.addRecordButton.setRendered(true);
-//        this.updateRecordButton.setRendered(false);
+//        this.updatfeRecordButton.setRendered(false);
 
 
 
@@ -873,11 +882,15 @@ public class ABMFormulaSemiTerminado extends AbstractPageBean {
 //// CARGA DE LA CABECERA
           FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabecera();
           ProductoController productoController = new ProductoController();
-
+          Producto p = productoController.findById(Long.valueOf(this.uiProductoCodigo.getText().toString()));
           formulaSemiCabecera.setCodProducto(productoController.findById(Long.valueOf(this.uiProductoCodigo.getText().toString())));
+            if (p.getCodTipoProducto().getDescripcion().toString().equals("Acabado")) {
+                formulaSemiCabecera.setFormulaFin("S");
+            }
           formulaSemiCabecera.setCantidad(new BigInteger( this.uiCantidad.getText().toString()));
           formulaSemiCabecera.setDescripcion(this.uiDescripcion.getText().toString());
           formulaSemiCabecera.setFecha(this.uiFecha.getSelectedDate());
+          formulaSemiCabecera.setFechaAlta(new Date());
           formulaSemiCabecera.setEstado(this.uiEstado.getSelected().toString());
           //formulaSemiCabecera.setEstado("A");
 
@@ -1042,18 +1055,18 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
 
     public String updateRecordButton_action() {
         //errorValidacion = validarCampos();
-        errorValidacion = false;
+        boolean r = false;
         updateRequest = true;
 
         ControllerResult controllerResult = new ControllerResult();
         FormulaSemiCabecera formulaSemiCabecera = new FormulaSemiCabecera();
-        validarCampos();
 
-        if (!errorValidacion){
+
+        if (!validarCampos()){
                 formulaSemiCabecera = new FormulaSemiCabeceraController().findById(getSessionBean1().getId());
                 ProductoController productoController = new ProductoController();
 
-                formulaSemiCabecera.setCodProducto(productoController.findById(Long.valueOf(this.uiProductoCodigo.getText().toString())));
+                //formulaSemiCabecera.setCodProducto(productoController.findById(Long.valueOf(this.uiProductoCodigo.getText().toString())));
                 formulaSemiCabecera.setCantidad(new BigInteger( this.uiCantidad.getText().toString()));
                 formulaSemiCabecera.setDescripcion(this.uiDescripcion.getText().toString());
                 formulaSemiCabecera.setFecha(this.uiFecha.getSelectedDate());
@@ -1068,136 +1081,6 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
                 tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
                 FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
                 controllerResult = formulaSemiCabeceraController.updateCabDet(formulaSemiCabecera, detallesFormulaSemi, tareasFormula, detallesFormulaSemiElim, tareasFormulaElim);
-          }
-
-//          // ELIMINAR LOS DETALLES DE PRODUCTOS BORRADOS DE LA GRILLA
-//
-//            if (detalleFormulaSemiEliminadaList.size() > 0) {
-//
-//                        for (int i = 0; i < detalleFormulaSemiEliminadaList.size(); i++) {
-//                            FormulaSemiDetalle fdetSemiElim = new FormulaSemiDetalle();
-//                            fdetSemiElim = detalleFormulaSemiEliminadaList.get(i);
-//                            FormulaSemiDetalleController formulaSemiDetalleController = new FormulaSemiDetalleController();
-//                            controllerResult = formulaSemiDetalleController.eliminar(fdetSemiElim);
-//
-//                            if (controllerResult.getCodRetorno() ==-1) {
-//                                    this.pageAlert1.setType("error");
-//                                    this.errorValidacion=true;
-//                                    break;
-//                            }
-//                        }
-//             }
-//            // FIN ELIMINAR LOS DETALLES DE PRODUCTOS BORRADOS DE LA GRILLA
-//
-//
-//            // ELIMINAR LOS DETALLES DE TAREAS DE LA GRILLA
-//
-//            if (tareaFormulaEliminadaList.size() > 0) {
-//
-//                        for (int i = 0; i < tareaFormulaEliminadaList.size(); i++) {
-//                            TareaFormula tarForElim = new TareaFormula();
-//                            tarForElim = tareaFormulaEliminadaList.get(i);
-//                            TareaFormulaController tareaFormulaController = new TareaFormulaController();
-//                            controllerResult = tareaFormulaController.eliminar(tarForElim);
-//
-//                            if (controllerResult.getCodRetorno() ==-1) {
-//                                    this.pageAlert1.setType("error");
-//                                    this.errorValidacion=true;
-//                                    break;
-//                            }
-//                        }
-//             }
-//
-//        // FIN ELIMINAR LOS DETALLES DE TAREAS DE LA GRILLA
-//
-//           //// ACTUALIZAR DETALLES RECURSOS
-//            if (controllerResult.getCodRetorno() !=-1) {
-//                    formulaSemiCabecera = new FormulaSemiCabeceraController().findById(getSessionBean1().getId());
-//                    detallesFormulaSemi = (FormulaSemiDetalle[]) detalleFormulaSemiList.toArray(new FormulaSemiDetalle[0]);
-//                    for (int i = 0; i < detallesFormulaSemi.length; i++) {
-//
-//                        FormulaSemiDetalle fSemidet = new FormulaSemiDetalle();
-//                        fSemidet = detallesFormulaSemi[i];
-//
-//                        if (fSemidet.getCodFormulaSemiCabecera() != null) {
-//
-//                            FormulaSemiDetalleController formulaSemiDetalleController = new FormulaSemiDetalleController();
-//                            controllerResult = formulaSemiDetalleController.update(fSemidet);
-//
-//                        }else{
-//
-//                            fSemidet.setCodFormulaSemiCabecera(formulaSemiCabecera);
-//                            FormulaSemiDetalleController formulaSemiDetalleController = new FormulaSemiDetalleController();
-//                            controllerResult = formulaSemiDetalleController.create(fSemidet);
-//
-//                        }
-//
-//                        if (controllerResult.getCodRetorno() ==-1) {
-//                            this.pageAlert1.setType("error");
-//                            this.errorValidacion=true;
-//                            break;
-//                        }
-//
-//                    }
-//           }
-//           //// FIN ACTUALIZAR DETALLES RECURSOS
-//
-//           //// ACTUALIZAR DETALLES TAREAS
-//            if (controllerResult.getCodRetorno() !=-1) {
-//                    formulaSemiCabecera = new FormulaSemiCabeceraController().findById(getSessionBean1().getId());
-//                    tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
-//                    for (int i = 0; i < tareasFormula.length; i++) {
-//
-//                        TareaFormula tarFor = new TareaFormula();
-//                        tarFor = tareasFormula[i];
-//
-//                        if (tarFor.getCodFormulaSemiCabecera() != null) {
-//
-//                            TareaFormulaController tareaFormulaController = new TareaFormulaController();
-//                            controllerResult = tareaFormulaController.update(tarFor);
-//
-//                        }else{
-//
-//                            tarFor.setCodFormulaSemiCabecera(formulaSemiCabecera);
-//                            TareaFormulaController tareaFormulaController = new TareaFormulaController();
-//                            controllerResult = tareaFormulaController.update(tarFor);
-//
-//                        }
-//
-//                        if (controllerResult.getCodRetorno() ==-1) {
-//                            this.pageAlert1.setType("error");
-//                            this.errorValidacion=true;
-//                            break;
-//                        }
-//
-//                    }
-//             }
-//             //// FIN ACTUALIZAR DETALLES RECURSOS
-//
-//                ///// ACTUALIZAR CABECERA
-//                if (controllerResult.getCodRetorno() !=-1) {
-//                            formulaSemiCabecera = new FormulaSemiCabeceraController().findById(getSessionBean1().getId());
-//                            ProductoController productoController = new ProductoController();
-//
-//                            formulaSemiCabecera.setCodProducto(productoController.findById(Long.valueOf(this.uiProductoCodigo.getText().toString())));
-//                            formulaSemiCabecera.setCantidad(new BigInteger( this.uiCantidad.getText().toString()));
-//                            formulaSemiCabecera.setDescripcion(this.uiDescripcion.getText().toString());
-//                            formulaSemiCabecera.setFecha(this.uiFecha.getSelectedDate());
-//                //          formulaCabecera.setEstado(this.uiEstado.getSelected().toString());
-//                            formulaSemiCabecera.setEstado("A");
-//
-//                            FormulaSemiCabeceraController formulaSemiCabeceraController = new FormulaSemiCabeceraController();
-//                            controllerResult = formulaSemiCabeceraController.update(formulaSemiCabecera);
-//
-//                            if (controllerResult.getCodRetorno() ==-1) {
-//                                    this.pageAlert1.setType("error");
-//                                    this.errorValidacion=true;
-//                                } else {
-//                                    updateRequest = false;
-//                                    this.pageAlert1.setType("information");
-//                            }
-//
-//                }
 
                 if (controllerResult.getCodRetorno() ==-1) {
                                     this.pageAlert1.setType("error");
@@ -1211,6 +1094,11 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
                 this.pageAlert1.setSummary("");
                 this.pageAlert1.setDetail("");
                 this.pageAlert1.setRendered(true);
+
+
+        }
+
+                
                 return null;
     }
 
@@ -1230,7 +1118,7 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
 
         //Inicializar
         r = false;
-
+        long cantidadFinal = 0;
         if (detalleFormulaSemiList.size() < 1){
             info(uiDetProductoCodigo, "Debe cargar los detalles de productos de la formula");
             r = true;
@@ -1240,6 +1128,7 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
                         TareaFormula tare = tareaFormulaList.get(i);
                         if (tare.getTareaFin() != null && tare.getTareaFin().toString().equals("S"))
                         {
+                            cantidadFinal = tare.getCantidadTarea().longValue();
                             b = true;
                             break;
                         }
@@ -1257,9 +1146,20 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
             r = true;
         }
 
-        if (uiProductoCodigo.getText() == null || uiProductoCodigo.getText().equals("") ) {
-            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
+        if (uiProductoCodigo.getText() == null 
+                 || uiProductoCodigo.getText().equals("")
+                 || !StringUtils.esNumero(uiProductoCodigo.getText().toString())) {
+            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo numerico de Producto");
             r = true;
+        }else{
+            Producto p = new ProductoController().findById(Long.valueOf(uiProductoCodigo.getText().toString()));
+            if (p == null 
+                    || (!p.getCodTipoProducto().getDescripcion().toString().equals("SemiTerminado")
+                    && !p.getCodTipoProducto().getDescripcion().toString().equals("Acabado"))) {
+                info(uiProductoCodigo, "Favor verifique el Codigo de Producto, debe ser un Producto SemiTerminado");
+                r = true;
+            }
+
         }
 
         if (uiDescripcion.getText() == null || uiDescripcion.getText().equals("") ) {
@@ -1267,10 +1167,17 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
             r = true;
         }
         if (!StringUtils.esNumero(this.uiCantidad.getText().toString()))
-            {   errorValidacion = true;
+            {   r = true;
                 this.info(uiCantidad, "La cantidad debe ser campo numerico");
+            }else if(Long.valueOf(this.uiCantidad.getText().toString()).longValue()<1){
+                r = true;
+                this.info(uiCantidad, "La cantidad debe ser mayor a 0");
+            }else if(cantidadFinal != 0){
+                    if(cantidadFinal != Long.valueOf(this.uiCantidad.getText().toString()).longValue()){
+                        r = true;
+                        this.info(uiCantidad, "La cantidad de la formula debe igual a la cantidad de la tarea de finalizacion");
+                    }
             }
-        
         if (uiEstado.getSelected().toString() == null || uiEstado.getSelected().toString().equals("") ) {
             info(uiEstado, "Campo obligatorio, favor ingrese el estado de la formula");
             r = true;
@@ -1303,29 +1210,64 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
 
     public void validarDetalleProducto(){
         this.errorValidacion= false;
-        if (uiDetProductoCodigo.getText() == null || uiDetProductoCodigo.getText().equals("") ) {
+        if (uiDetProductoCodigo.getText() == null 
+                || uiDetProductoCodigo.getText().equals("")
+                || !StringUtils.esNumero(uiDetProductoCodigo.getText().toString())) {
         this.errorValidacion= true;
-        info(uiDetProductoCodigo, "Verifique el detalle");
+        info(uiDetProductoCodigo, "Verifique el detalle de Recurso");
+        }else{
+            Producto p = new ProductoController().findById(Long.valueOf(uiDetProductoCodigo.getText().toString()));
+            if (p == null) {
+                this.errorValidacion= true;
+                info(uiDetProductoCodigo, "Verifique el detalle de Recurso");
+            }else if(!p.getCodTipoProducto().getDescripcion().equals("ProductoGenerico")){
+                this.errorValidacion= true;
+                info(uiDetProductoCodigo, "Favor seleccione un Producto Generico");
+            }else {
+            // CONTROLAR ACA QUENO SE REPITAN LOS PRODUCTOS GENERICOS
+
+            }
         }
 
-        if (uiDetProductoCantidad.getText() == null || uiDetProductoCantidad.getText().equals("") ) {
-        this.errorValidacion= true;
-        info(uiDetProductoCodigo, "Verifique el detalle");
+        if (uiDetProductoCantidad.getText() == null 
+                || uiDetProductoCantidad.getText().equals("")
+                || !StringUtils.esNumero(uiDetProductoCantidad.getText().toString())) {
+
+            this.errorValidacion= true;
+            info(uiDetProductoCodigo, "Verifique la cantidad del detalle");
+        }else if(Long.valueOf(uiDetProductoCantidad.getText().toString()).longValue()<1){
+                    this.errorValidacion= true;
+                    info(uiDetProductoCodigo, "La cantidad del detalle debe ser mayor a 0");
         }
     }
     public void validarDetalleTarea(){
         this.errorValidacion= false;
-        if (uiDetTareaCodigo.getText() == null || uiDetTareaCodigo.getText().equals("") ) {
+        if (uiDetTareaCodigo.getText() == null 
+                    || uiDetTareaCodigo.getText().equals("")
+                    || !StringUtils.esNumero(uiDetTareaCodigo.getText().toString())) {
         this.errorValidacion= true;
-        info(uiDetTareaCodigo, "Verifique el detalle");
+        info(uiDetTareaCodigo, "Verifique el codigo de tarea");
+        }else{
+            Tarea t = new TareaController().findById(Long.valueOf(uiDetTareaCodigo.getText().toString()));
+            if (t == null) {
+                 this.errorValidacion= true;
+                info(uiDetTareaCodigo, "Verifique el codigo de tarea");
+            }
         }
 
-        if (uiDetTareaCantidad.getText() == null || uiDetTareaCantidad.getText().equals("") ) {
+        if (uiDetTareaCantidad.getText() == null 
+                || uiDetTareaCantidad.getText().equals("")
+                || !StringUtils.esNumero(uiDetTareaCantidad.getText().toString())) {
         this.errorValidacion= true;
         info(uiDetTareaCodigo, "Verifique el detalle");
+        }else if(Long.valueOf(uiDetTareaCantidad.getText().toString()).longValue()<1){
+            this.errorValidacion= true;
+            info(uiDetTareaCodigo, "Verifique la cantidad del detalle");
         }
 
-        if (uiDetTareaOrden.getText() == null || uiDetTareaOrden.getText().equals("") ) {
+        if (uiDetTareaOrden.getText() == null 
+                || uiDetTareaOrden.getText().equals("")
+                || !StringUtils.esNumero(uiDetTareaOrden.getText().toString())) {
         this.errorValidacion= true;
         info(uiDetTareaCodigo, "Verifique el detalle");
         }
@@ -1333,20 +1275,30 @@ private FormulaSemiCabecera cabeceraFormulaSemi;
 
         if (this.uiDetTareaFin.isChecked()) {
             boolean b = false;
-                  for (int i = 0; i < tareaFormulaList.size(); i++) {
-                        TareaFormula tare = tareaFormulaList.get(i);
-                        if (tare.getTareaFin() != null && tare.getTareaFin().toString().equals("S") && !tare.getCodTarea().getCodTarea().toString().equals(this.uiDetTareaCodigo.getText().toString()))   {
-                            b = true;
-                            break;
-                        }
-                 }
-            if (b){
-                this.errorValidacion= true;
-                info(uiDetTareaCodigo, "Ya existe una tarea de finalizacion de la Formula");
+                  if (this.uiCantidad.getText() == null
+                    ||this.uiCantidad.getText().toString().equals("")
+                    ||!StringUtils.esNumero(this.uiCantidad.getText().toString())){
+                        this.errorValidacion= true;
+                        info(uiDetTareaCodigo, "Para ingresar una tarea de Finalizacion primero Ingrese la cantidad de la Formula");
+                  }else if(StringUtils.esNumero(uiDetTareaCantidad.getText().toString())
+                    && Long.valueOf(uiDetTareaCantidad.getText().toString()).longValue() != Long.valueOf(this.uiCantidad.getText().toString()).longValue()){
+                        this.errorValidacion= true;
+                        info(uiDetTareaCodigo, "La cantidad de la tarea de finalizacion debe correspoder a la cantidad de la Formula");
+                  }else{
+                            for (int i = 0; i < tareaFormulaList.size(); i++) {
+                                TareaFormula tare = tareaFormulaList.get(i);
+                                if (tare.getTareaFin() != null && tare.getTareaFin().toString().equals("S") && !tare.getCodTarea().getCodTarea().toString().equals(this.uiDetTareaCodigo.getText().toString()))   {
+                                    b = true;
+                                    break;
+                                }
+                            }
+                            if (b){
+                                this.errorValidacion= true;
+                                info(uiDetTareaCodigo, "Ya existe una tarea de finalizacion de la Formula");
+                            }
+                     }
             }
-        }
-
-    }
+}
 
 public void limpiarDetalleProducto(){
 
@@ -1422,6 +1374,7 @@ this.uiDetTareaOrden.setText("");
                   tareaFormula.setCodTarea(tarea);
                   tareaFormula.setCantidadTarea(BigInteger.valueOf(Long.valueOf(this.uiDetTareaCantidad.getText().toString())));
                   tareaFormula.setOrdenTarea(BigInteger.valueOf(Long.valueOf(this.uiDetTareaOrden.getText().toString())));
+                  editarDetalleTarea = false;
             }
             tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
             limpiarDetalleTarea();
@@ -1440,7 +1393,10 @@ this.uiDetTareaOrden.setText("");
     //// se utiliza luego al actualizar el registro
     if (updateRequest) {
         TareaFormula tarForEliminada  = tareaFormulaList.get(Integer.valueOf(itemDet).intValue());
-        tareaFormulaEliminadaList.add(tarForEliminada);
+        if (tarForEliminada.getCodFormulaSemiCabecera() != null) {
+            tareaFormulaEliminadaList.add(tarForEliminada);
+        }
+
     }
     tareaFormulaList.remove(Integer.valueOf(itemDet).intValue());
     tareasFormula = (TareaFormula[]) tareaFormulaList.toArray(new TareaFormula[0]);
@@ -1457,7 +1413,10 @@ this.uiDetTareaOrden.setText("");
         //// se utiliza luego al actualizar el registro
      if (updateRequest) {
         FormulaSemiDetalle fSemiDetEliminada  = detalleFormulaSemiList.get(Integer.valueOf(itemDet).intValue());
-        detalleFormulaSemiEliminadaList.add(fSemiDetEliminada);
+         if (fSemiDetEliminada.getCodFormulaSemiCabecera() != null) {
+               detalleFormulaSemiEliminadaList.add(fSemiDetEliminada);
+         }
+
     }
    
         detalleFormulaSemiList.remove(Integer.valueOf(itemDet).intValue());
