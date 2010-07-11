@@ -256,7 +256,7 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
 
                             entSalDet.setCodEntradaSalida(entSalCab);
                             entSalDet.setCodProducto(p);
-                            entSalDet.setTipoEntradaSalida("S");
+                            entSalDet.setTipoEntradaSalida("E");
                             entSalDet.setCantidadEntSal(BigInteger.valueOf(det.getCantidad()));
                                 cantidadExistencia = cantidadExistencia + det.getCantidad();
                             entSalDet.setExistencia(BigDecimal.valueOf(cantidadExistencia));

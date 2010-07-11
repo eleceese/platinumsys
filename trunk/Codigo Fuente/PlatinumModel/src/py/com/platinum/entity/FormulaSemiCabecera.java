@@ -50,6 +50,8 @@ public class FormulaSemiCabecera implements Serializable {
     private Long codFormulaSemiCabecera;
     @Column(name = "DESCRIPCION")
     private String descripcion;
+    @Column(name = "FORMULA_FIN")
+    private String formulaFin;
     @Basic(optional = false)
     @Column(name = "CANTIDAD")
     private BigInteger cantidad;
@@ -88,6 +90,14 @@ public class FormulaSemiCabecera implements Serializable {
 
     public List<TareaFormula> getTareaFormulaListList() {
         return new ArrayList(Arrays.asList(tareaFormulaList.toArray(new TareaFormula[0])));
+    }
+
+    public String getFormulaFin() {
+        return formulaFin;
+    }
+
+    public void setFormulaFin(String formulaFin) {
+        this.formulaFin = formulaFin;
     }
     
 

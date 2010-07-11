@@ -44,11 +44,11 @@ public class EquivalenciaController extends AbstractJpaDao<Equivalencia> {
         if (codEquivalencia != null) {
             SQL = SQL + " and o.codEquivalencia = codEquivalencia";
         }
-        if (codProductoGen != null) {
-            SQL = SQL + " and o.codEquivalencia = codEquivalencia";
+        if (codProductoGen != null && codProductoGen > 0) {
+            SQL = SQL + " and o.codProductoGen.codProducto = :codProductoGen";
         }
-        if (codProductoFin != null) {
-            SQL = SQL + " and o.codProductoFin = codProductoFin";
+        if (codProductoFin != null && codProductoFin > 0) {
+            SQL = SQL + " and o.codProductoFin.codProducto = :codProductoFin";
         }
 
 
@@ -58,10 +58,10 @@ public class EquivalenciaController extends AbstractJpaDao<Equivalencia> {
         if (codEquivalencia != null) {
             q.setParameter("codEquivalencia", codEquivalencia);
         }
-        if (codProductoFin != null) {
+        if (codProductoFin != null && codProductoFin > 0) {
             q.setParameter("codProductoFin", codProductoFin);
         }
-        if (codProductoGen != null) {
+        if (codProductoGen != null && codProductoGen > 0) {
             q.setParameter("codProductoGen", codProductoGen);
         }
 

@@ -6,6 +6,7 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -42,11 +43,21 @@ public class Perdida implements Serializable {
     @Column(name = "FECHA_PERDIDA")
     @Temporal(TemporalType.DATE)
     private Date fechaPerdida;
+    @Column(name = "COD_TAREA_FALLIDA")
+    private Long codTareaFallida;
     @Basic(optional = false)
     @Column(name = "CANTIDAD_PERDIDA")
     private long cantidadPerdida;
+    @Column(name = "PRECIO_UNIT")
+    private BigInteger precioUnit;
+    @Column(name = "TOTAL")
+    private BigInteger total;
     @Column(name = "OBSERVACION")
     private String observacion;
+    @Column(name = "TALLER")
+    private String taller;
+    @Column(name = "ESTADO")
+    private String estado;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -63,17 +74,22 @@ public class Perdida implements Serializable {
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
     @ManyToOne(optional = false)
     private Producto codProducto;
-    @JoinColumn(name = "COD_ORDEN_TRABAJO_DETALLE", referencedColumnName = "COD_ORDEN_TRABAJO_DET")
+    @JoinColumn(name = "COD_ORDEN_TRABAJO", referencedColumnName = "COD_ORDEN_TRABJO")
     @ManyToOne(fetch = FetchType.EAGER)
-    private OrdenTrabajoDetalle codOrdenTrabajoDetalle;
+    private OrdenTrabajo codOrdenTrabjo;
+    @JoinColumn(name = "COD_DEPOSITO", referencedColumnName = "COD_DEPOSITO")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Deposito codDeposito;
 
-    public OrdenTrabajoDetalle getCodOrdenTrabajoDetalle() {
-        return codOrdenTrabajoDetalle;
+    public OrdenTrabajo getCodOrdenTrabjo() {
+        return codOrdenTrabjo;
     }
 
-    public void setCodOrdenTrabajoDetalle(OrdenTrabajoDetalle codOrdenTrabajoDetalle) {
-        this.codOrdenTrabajoDetalle = codOrdenTrabajoDetalle;
+    public void setCodOrdenTrabjo(OrdenTrabajo codOrdenTrabjo) {
+        this.codOrdenTrabjo = codOrdenTrabjo;
     }
+
+
 
     public Perdida() {
     }
@@ -89,6 +105,16 @@ public class Perdida implements Serializable {
         this.cantidadPerdida = cantidadPerdida;
     }
 
+    public Deposito getCodDeposito() {
+        return codDeposito;
+    }
+
+    public void setCodDeposito(Deposito codDeposito) {
+        this.codDeposito = codDeposito;
+    }
+
+   
+
     public Long getCodPerdida() {
         return codPerdida;
     }
@@ -99,6 +125,22 @@ public class Perdida implements Serializable {
 
     public Date getFechaPerdida() {
         return fechaPerdida;
+    }
+
+    public BigInteger getPrecioUnit() {
+        return precioUnit;
+    }
+
+    public void setPrecioUnit(BigInteger precioUnit) {
+        this.precioUnit = precioUnit;
+    }
+
+    public BigInteger getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigInteger total) {
+        this.total = total;
     }
 
     public void setFechaPerdida(Date fechaPerdida) {
@@ -123,6 +165,14 @@ public class Perdida implements Serializable {
 
     public String getUsuarioAlta() {
         return usuarioAlta;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public void setUsuarioAlta(String usuarioAlta) {
@@ -168,6 +218,24 @@ public class Perdida implements Serializable {
     public void setCodProducto(Producto codProducto) {
         this.codProducto = codProducto;
     }
+
+    public String getTaller() {
+        return taller;
+    }
+
+    public void setTaller(String taller) {
+        this.taller = taller;
+    }
+
+    public Long getCodTareaFallida() {
+        return codTareaFallida;
+    }
+
+    public void setCodTareaFallida(Long codTareaFallida) {
+        this.codTareaFallida = codTareaFallida;
+    }
+
+
 
     @Override
     public int hashCode() {

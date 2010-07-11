@@ -42,8 +42,12 @@ public class EntradaSalidaDetalle implements Serializable {
     @Basic(optional = false)
     @Column(name = "CANTIDAD_ENT_SAL")
     private BigInteger cantidadEntSal;
+    @Column(name = "CANTIDAD_EQUIVALENCIA")
+    private long cantidadEquivalencia;
     @Column(name = "OBSERVACION")
     private String observacion;
+    @Column(name = "ESTADO")
+    private String estado;
     @Column(name = "ESTADO_DETALLE_ENT_SAL")
     private String estadoDetalleEntSal;
     @Basic(optional = false)
@@ -87,8 +91,24 @@ public class EntradaSalidaDetalle implements Serializable {
         return codSolicitud;
     }
 
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
     public void setCodSolicitud(SolicitudInterna codSolicitud) {
         this.codSolicitud = codSolicitud;
+    }
+
+    public long getCantidadEquivalencia() {
+        return cantidadEquivalencia;
+    }
+
+    public void setCantidadEquivalencia(long cantidadEquivalencia) {
+        this.cantidadEquivalencia = cantidadEquivalencia;
     }
 
 

@@ -46,6 +46,8 @@ public class TareaAsignada implements Serializable {
     private long cantidad;
     @Column(name = "CANTIDAD_REAL")
     private Long cantidadReal;
+    @Column(name = "CANTIDAD_FALLIDA")
+    private Long cantidadFallida;
     @Column(name = "TAREA_FIN")
     private String tareaFin;
     @Column(name = "OBSERVACION")
@@ -146,6 +148,14 @@ public class TareaAsignada implements Serializable {
 
     public void setUsuarioModif(String usuarioModif) {
         this.usuarioModif = usuarioModif;
+    }
+
+    public Long getCantidadFallida() {
+        return cantidadFallida;
+    }
+
+    public void setCantidadFallida(Long cantidadFallida) {
+        this.cantidadFallida = cantidadFallida;
     }
 
     public Date getFechaAlta() {

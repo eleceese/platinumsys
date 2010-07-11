@@ -61,7 +61,7 @@ public class FormulaSemiCabeceraController extends AbstractJpaDao <FormulaSemiCa
         String SQL = "SELECT o FROM FormulaSemiCabecera o WHERE o.codFormulaSemiCabecera= o.codFormulaSemiCabecera";
 
         if (codigo != null && !codigo.equals("99999") && !codigo.equals("")) {
-            SQL = SQL + " and UPPER(o.codFormula) like upper(:codigo)";
+            SQL = SQL + " and UPPER(o.codFormulaSemiCabecera) like upper(:codigo)";
         }
 
         if (descripcion != null && !descripcion.equals("")) {

@@ -50,6 +50,8 @@ public class EntradaSalidaCabecera implements Serializable {
     private Date horaEntradaSalida;
     @Column(name = "OBSERVACION")
     private String observacion;
+    @Column(name = "ESTADO")
+    private String estado;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -77,7 +79,9 @@ public class EntradaSalidaCabecera implements Serializable {
     private Long tipoComprobante;
     @Column(name = "NRO_COMPROBANTE")
     private Long nroComprobante;
-    
+   @Column(name = "COD_PERDIDA")
+    private Long codPerdida;
+
     public EntradaSalidaCabecera() {
     }
 
@@ -93,8 +97,15 @@ public class EntradaSalidaCabecera implements Serializable {
         this.codEntradaSalida = codEntradaSalida;
     }
 
-  
+    public String getEstado() {
+        return estado;
+    }
 
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+  
     public Date getFechaEntradaSalida() {
         return fechaEntradaSalida;
     }
@@ -173,6 +184,14 @@ public class EntradaSalidaCabecera implements Serializable {
 
     public void setCodEncargado(Empleado codEncargado) {
         this.codEncargado = codEncargado;
+    }
+
+    public Long getCodPerdida() {
+        return codPerdida;
+    }
+
+    public void setCodPerdida(Long codPerdida) {
+        this.codPerdida = codPerdida;
     }
 
    

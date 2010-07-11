@@ -5,6 +5,7 @@
 package py.com.platinum.controller;
 
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -40,10 +41,11 @@ public class EntradaSalidaCabeceraController extends AbstractJpaDao <EntradaSali
         return this.getAll(EntradaSalidaCabecera.class, orderBy);
     }
 
-    public List<EntradaSalidaCabecera> getAllFiltered(String codEntradaSalida, String codDeposito, String codEmpleado) {
+    public List<EntradaSalidaCabecera> getAllFiltered(String codEntradaSalida, String codDeposito, String codEmpleado,Date fecha1, Date fecha2) {
         //emf.createEntityManager Levanta el contexto del JPA
         String SQL = "SELECT o FROM EntradaSalidaCabecera o WHERE o.codEntradaSalida= o.codEntradaSalida";
-
+            SQL = SQL + " and UPPER(o.estado) = null";
+            
         if (codEntradaSalida != null) {
             SQL = SQL + " and UPPER(o.codEntradaSalida) like UPPER(:codEntradaSalida)";
         }
@@ -54,6 +56,14 @@ public class EntradaSalidaCabeceraController extends AbstractJpaDao <EntradaSali
 
         if (codEmpleado != null) {
             SQL = SQL + " and UPPER(o.codEmpleado) like UPPER(:codEmpleado)";
+        }
+
+        if (fecha1 != null) {
+            SQL = SQL + " and o.fechaEntradaSalida >= :fecha1";
+        }
+
+        if (fecha2 != null) {
+            SQL = SQL + " and o.fechaEntradaSalida <= :fecha2";
         }
 
         EntityManager em = emf.createEntityManager();
@@ -67,6 +77,13 @@ public class EntradaSalidaCabeceraController extends AbstractJpaDao <EntradaSali
         }
          if (codEmpleado != null) {
             q.setParameter("codEmpleado", "%"+codEmpleado+"%");
+        }
+
+        if (fecha1 != null) {
+            q.setParameter("fecha1", fecha1);
+        }
+        if (fecha2 != null) {
+            q.setParameter("fecha2", fecha2);
         }
 
         List<EntradaSalidaCabecera> entities = q.getResultList();
@@ -165,7 +182,12 @@ public class EntradaSalidaCabeceraController extends AbstractJpaDao <EntradaSali
                                     otDet = otDet = entSaldet.getCodOrdenTrabajoDetalle();
                                 }
 
-                                if (otDet != null && p != null && cantidad != null) {
+                                if (otDet != null 
+                                           &&  p != null
+                                           && !p.getCodTipoProducto().getDescripcion().toString().equals("Terminado")
+                                           && !p.getCodTipoProducto().getDescripcion().toString().equals("SemiTerminado")
+                                           && !p.getCodTipoProducto().getDescripcion().toString().equals("ProductoGenerico")
+                                           && cantidad != null) {
 
                                         RecursoAsignado rAsignado = new RecursoAsignado();
                                         RecursoAsignadoController rController = new RecursoAsignadoController();
@@ -176,7 +198,11 @@ public class EntradaSalidaCabeceraController extends AbstractJpaDao <EntradaSali
                                             double retirado = relacion * cantidad;
                                             rAsignado.setCantidadReal(rAsignado.getCantidadReal() + Math.round(retirado));
                                             em.merge(rAsignado);
-                                     }
+
+                                            // grabo el valor redondeando al hallar la equivalencia para luego revertir en caso de anulacion
+                                            entSaldet.setCantidadEquivalencia(Math.round(retirado));
+                                            em.merge(entSaldet);
+                                }
 
                     //////////////////
 
@@ -371,17 +397,6 @@ public class EntradaSalidaCabeceraController extends AbstractJpaDao <EntradaSali
                      //////////////////
 
                 }
-
-
-
-
-
-
-
-
-
-
-
              }
              //// FIN ACTUALIZAR DETALLES
 
@@ -405,5 +420,126 @@ public class EntradaSalidaCabeceraController extends AbstractJpaDao <EntradaSali
             return r;
         }
     }
+    public ControllerResult anularCabDet(EntradaSalidaCabecera cab, EntradaSalidaDetalle[] det)  {
+        ControllerResult r = new ControllerResult();
+        EntityManager em = emf.createEntityManager();
+
+        EntradaSalidaDetalle[] detallesEntSal = det;
+        EntradaSalidaCabecera entradaSalidaCabecera = cab;
+
+        try {
+            em.getTransaction().begin();
+            //// ANULAR DETALLES
+            entradaSalidaCabecera = cab;
+            for (int i = 0; i < detallesEntSal.length; i++) {
+                 EntradaSalidaDetalle entSaldet = new EntradaSalidaDetalle();
+                 EntradaSalidaDetalle entSaldetOrig = new EntradaSalidaDetalle();
+
+                 entSaldet = detallesEntSal[i];
+
+                 //**********************************************************************************************************************
+
+                                                ///// Actualizacion de la utilizacion a traves de la equivalencia
+
+                                                    Producto p = null;
+                                                    OrdenTrabajoDetalle otDet = null;
+                                                    p = entSaldet.getCodProducto();
+
+                                                    Long cantidad = null;
+                                                    cantidad = Long.valueOf(entSaldet.getCantidadEntSal().toString());
+                                                    if (entSaldet.getCodOrdenTrabajoDetalle() !=null && entSaldet.getCodOrdenTrabajoDetalle().getCodOrdenTrabajoDet() != null) {
+                                                        otDet = entSaldet.getCodOrdenTrabajoDetalle();
+                                                    }
+
+                                                    if (otDet != null
+                                                           &&  p != null
+                                                           && !p.getCodTipoProducto().getDescripcion().toString().equals("Terminado")
+                                                           && !p.getCodTipoProducto().getDescripcion().toString().equals("SemiTerminado")
+                                                           && !p.getCodTipoProducto().getDescripcion().toString().equals("ProductoGenerico")
+                                                           && cantidad != null) {
+
+                                                            RecursoAsignado rAsignado = new RecursoAsignado();
+                                                            RecursoAsignadoController rController = new RecursoAsignadoController();
+                                                            rAsignado = rController.getRecursoPorEquiv(otDet.getCodOrdenTrabajoDet(),p.getCodProducto());
+
+//                                                                Equivalencia eq = new EquivalenciaController().getEqPorProductos(rAsignado.getCodProducto().getCodProducto(), p.getCodProducto());
+//                                                                double relacion = eq.getRelacion().doubleValue();
+//                                                                double retirado = relacion * cantidad;
+                                                                rAsignado.setCantidadReal(rAsignado.getCantidadReal() - entSaldet.getCantidadEquivalencia());
+                                                                em.merge(rAsignado);
+                                                         }
+
+                                                        //////////////////
+
+                                                        //////////////////Actualizacion de las Existencias en Deposito
+                                                         Existencia exist = new Existencia();
+                                                         exist = new ExistenciaController().getExistencia(null, entSaldet.getCodProducto().getCodProducto(), entSaldet.getCodEntradaSalida().getCodDeposito().getCodDeposito());
+
+                                                         BigInteger cantidadNueva = exist.getCantidadExistencia();
+                                                         if (entSaldet.getTipoEntradaSalida().equals("E")) {
+                                                             cantidadNueva = BigInteger.valueOf(cantidadNueva.longValue() - entSaldet.getCantidadEntSal().longValue());
+
+                                                        } else {
+                                                             cantidadNueva = BigInteger.valueOf(cantidadNueva.longValue() + entSaldet.getCantidadEntSal().longValue());
+
+                                                        }
+
+
+                                                         exist.setCantidadExistencia(cantidadNueva);
+                                                         em.merge(exist);
+
+                                                         //////////////////
+                                                         ///////
+                                                         entSaldet.setEstado("A");
+                                                         em.merge(entSaldet);
+                 //**********************************************************************************************************************
+
+            }
+             //// FIN ACTUALIZAR DETALLES
+
+            ///// ACTUALIZAR CABECERA
+                cab.setEstado("A");
+                cab.setFechaModif(new Date());
+                em.merge(cab);
+            ///// FIN ACTUALIZAR CABECERA
+            em.getTransaction().commit();
+            r.setCodRetorno(0);
+            r.setMsg("Registro actualizado correctamente");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            r.setCodRetorno(-1);
+            r.setMsg("Ha ocurrido un error al actualizar el registro ");
+            try {
+                em.getTransaction().rollback();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            em.close();
+            return r;
+        }
+    }
+
+     public EntradaSalidaCabecera getMovimientoPorPerdida(Long codPerdida) {
+        //emf.createEntityManager Levanta el contexto del JPA
+        String SQL = "SELECT o FROM EntradaSalidaCabecera o WHERE o.codEntradaSalida= o.codEntradaSalida";
+
+        if (codPerdida != null) {
+            SQL = SQL + " and o.codPerdida = :codPerdida";
+        }
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+         if (codPerdida != null) {
+            q.setParameter("codPerdida", codPerdida);
+        }
+        EntradaSalidaCabecera entitie =(EntradaSalidaCabecera) q.getSingleResult();
+        em.close();
+
+        return entitie;
+
+      }
+
 
 }
