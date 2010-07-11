@@ -44,12 +44,15 @@ public class EntradaSalidaDetalleController extends AbstractJpaDao <EntradaSalid
         return this.getAll(EntradaSalidaDetalle.class, orderBy);
     }
 
-    public List<EntradaSalidaDetalle> getAllFiltered(Long codEntSalDetalle, String producto, Long codProducto, Long codOrdenTrabajoDetalle, Long codSolicitud) {
+    public List<EntradaSalidaDetalle> getAllFiltered(Long codEntradaSalida, Long codEntSalDetalle, String producto, Long codProducto, Long codOrdenTrabajoDetalle, Long codSolicitud) {
         //emf.createEntityManager Levanta el contexto del JPA
         String SQL = "SELECT o FROM EntradaSalidaDetalle o WHERE o.codEntSalDetalle = o.codEntSalDetalle";
 
+        if (codEntradaSalida != null) {
+            SQL = SQL + " and o.codEntradaSalida.codEntradaSalida = :codEntradaSalida";
+        }
         if (codEntSalDetalle != null) {
-            SQL = SQL + " o.codEntSalDetalle = :codEntSalDetalle";
+            SQL = SQL + " and o.codEntSalDetalle = :codEntSalDetalle";
         }
 
         if (producto != null && !producto.equals("")) {
@@ -72,6 +75,9 @@ public class EntradaSalidaDetalleController extends AbstractJpaDao <EntradaSalid
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
 
+        if (codEntradaSalida != null) {
+            q.setParameter("codEntradaSalida", codEntradaSalida);
+        }
         if (codEntSalDetalle != null) {
             q.setParameter("codEntSalDetalle", codEntSalDetalle);
         }

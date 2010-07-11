@@ -48,6 +48,8 @@ public class Producto implements Serializable {
     private BigInteger precioActual;
     @Column(name = "COSTO_ACTUAL")
     private BigInteger costoActual;
+    @Column(name = "STOCK_MINIMO")
+    private BigInteger stockMinimo;
     @Column(name = "CONTENIDO")
     private BigInteger contenido;
     @Basic(optional = false)
@@ -70,8 +72,18 @@ public class Producto implements Serializable {
     @Column(name = "FECHA_ALTA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaAlta;
+    @Column(name = "FECHA_MODIF")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaModif;
     @Column(name = "PORCENTAJE_IVA")
-    private BigDecimal porcentajeIva;
+    private BigDecimal porcentajeIva;    
+    @Column(name = "COMISION")
+    private BigDecimal comision;
+    @Column(name = "USUARIO_ALTA")
+    private String usuarioAlta;
+    @Column(name = "USUARIO_MODIF")
+    private String usuarioModif;
+
 
     public Producto() {
     }
@@ -111,6 +123,14 @@ public class Producto implements Serializable {
         this.descripcion = descripcion;
     }
 
+    public BigInteger getStockMinimo() {
+        return stockMinimo;
+    }
+
+    public void setStockMinimo(BigInteger stockMinimo) {
+        this.stockMinimo = stockMinimo;
+    }
+
     public String getEstado() {
         return estado;
     }
@@ -119,6 +139,15 @@ public class Producto implements Serializable {
         this.estado = estado;
     }
 
+    public BigDecimal getComision() {
+        return comision;
+    }
+
+    public void setComision(BigDecimal comision) {
+        this.comision = comision;
+    }
+
+    
     public BigInteger getPrecioActual() {
         return precioActual;
     }
@@ -204,6 +233,32 @@ public class Producto implements Serializable {
     public void setPorcentajeIva(BigDecimal porcentajeIva) {
         this.porcentajeIva = porcentajeIva;
     }
+
+    public Date getFechaModif() {
+        return fechaModif;
+    }
+
+    public void setFechaModif(Date fechaModif) {
+        this.fechaModif = fechaModif;
+    }
+
+    public String getUsuarioAlta() {
+        return usuarioAlta;
+    }
+
+    public void setUsuarioAlta(String usuarioAlta) {
+        this.usuarioAlta = usuarioAlta;
+    }
+
+    public String getUsuarioModif() {
+        return usuarioModif;
+    }
+
+    public void setUsuarioModif(String usuarioModif) {
+        this.usuarioModif = usuarioModif;
+    }
+
+
 
     @Override
     public int hashCode() {

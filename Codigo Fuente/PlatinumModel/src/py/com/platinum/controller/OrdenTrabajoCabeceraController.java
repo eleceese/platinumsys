@@ -15,6 +15,8 @@ import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.CostosFijos;
+import py.com.platinum.entity.HistoricoCosto;
+import py.com.platinum.entity.HistoricoPrecio;
 import py.com.platinum.entity.OrdenTrabajo;
 import py.com.platinum.entity.OrdenTrabajoDetCostoH;
 import py.com.platinum.entity.OrdenTrabajoDetCostoMat;
@@ -69,7 +71,7 @@ public class OrdenTrabajoCabeceraController extends AbstractJpaDao <OrdenTrabajo
         String SQL = "SELECT o FROM OrdenTrabajo o WHERE o.codOrdenTrabjo= o.codOrdenTrabjo";
 
         if (numeroOrdenTrabajo != null && !numeroOrdenTrabajo.equals("99999") && !numeroOrdenTrabajo.equals("")) {
-            SQL = SQL + " and UPPER(o.numeroOrdenTrabajo) like upper(:numeroOrdenTrabajo)";
+            SQL = SQL + " and UPPER(o.codOrdenTrabjo) like upper(:numeroOrdenTrabajo)";
         }
 
         if (codProducto != null && !codProducto.equals("99999") && !codProducto.equals("")) {
@@ -242,28 +244,31 @@ public class OrdenTrabajoCabeceraController extends AbstractJpaDao <OrdenTrabajo
                 ordenTrabajoDetalle = detallesOrdenTrabajo[i];
 
                 
-                //////////PRUEBA ///////////////
-                    List<RecursoAsignado> recursos = new ArrayList();
-                    recursos = ordenTrabajoDetalle.getRecursoAsignadoListList();
-                    for (int j = 0; j < recursos.size(); j++) {
-                    RecursoAsignado rrr = recursos.get(j);
-                        System.out.println("********RECURSO***************");
-                        System.out.println(rrr.getCodRecurso());
-
-                    }
-                 ////////// FIN PRUEBA //////////
+//                //////////PRUEBA ///////////////
+//                    List<RecursoAsignado> recursos = new ArrayList();
+//                    recursos = ordenTrabajoDetalle.getRecursoAsignadoListList();
+//                    for (int j = 0; j < recursos.size(); j++) {
+//                    RecursoAsignado rrr = recursos.get(j);
+//                        System.out.println("********RECURSO***************");
+//                        System.out.println(rrr.getCodRecurso());
+//
+//                    }
+//                 ////////// FIN PRUEBA //////////
                  
                  List<RecursoAsignado> recursosActualizar = new ArrayList<RecursoAsignado>();
                  List<TareaAsignada> tareasActualizar = new ArrayList<TareaAsignada>();
                  recursosActualizar = ordenTrabajoDetalle.getRecursoAsignadoListList();
                  tareasActualizar = ordenTrabajoDetalle.getTareaAsignadaListList();
 
-                 ordenTrabajoDetalle.setRecursoAsignadoCollection(new HashSet());
-                 ordenTrabajoDetalle.setTareaAsignadaCollection(new HashSet());
+                 
 
                  
                 if (ordenTrabajoDetalle.getCodOrdenTrabajoDet() != null) {
 //
+
+                            ordenTrabajoDetalle.setRecursoAsignadoCollection(new HashSet());
+                            ordenTrabajoDetalle.setTareaAsignadaCollection(new HashSet());
+
                             em.merge(ordenTrabajoDetalle);
                             /// ACTUALIZAR LOS DETALLES DE RECURSOS ASIGNADOS
                             List<RecursoAsignado> detalleRecursoAsignadoList = ordenTrabajoDetalle.getRecursoAsignadoListList();
@@ -304,21 +309,26 @@ public class OrdenTrabajoCabeceraController extends AbstractJpaDao <OrdenTrabajo
                             ordenTrabajoDetalle.setCodOrdenTrabajo(ordenTrabajoCabecera);
                             em.persist(ordenTrabajoDetalle);
 
-                                /// INSERTAR LOS DETALLES DE RECURSOS ASIGNADOS
+                                /// INSERTAR LOS DETALLES DE RECURSOS ASIGNADOS Y TAREAS
                                 List<RecursoAsignado> detalleRecursoAsignadoList = ordenTrabajoDetalle.getRecursoAsignadoListList();
+                                ordenTrabajoDetalle.setRecursoAsignadoCollection(new HashSet());
+
+                                 List<TareaAsignada> detalleTareaAsignadaList = ordenTrabajoDetalle.getTareaAsignadaListList();
+                                ordenTrabajoDetalle.setTareaAsignadaCollection(new HashSet());
+
                                 for (int j = 0; j < detalleRecursoAsignadoList.size(); j++) {
                                         RecursoAsignado recursoAsignado = detalleRecursoAsignadoList.get(j);
-                                        recursoAsignado.setCodOrdenTrabDet(ordenTrabajoDetalle);
-                                        em.persist(recursoAsignado);
+                                        recursoAsignado.setCodOrdenTrabDet(em.merge(ordenTrabajoDetalle));
+                                        em.persist(em.merge(recursoAsignado));
                                 }
                                 /// FIN INSERTAR LOS DETALLES DE RECURSOS ASIGNADOS
 
                                 /// ACTUALIZAR LOS DETALLES DE TAREAS ASIGNADAS
-                                List<TareaAsignada> detalleTareaAsignadaList = ordenTrabajoDetalle.getTareaAsignadaListList();
+                               
                                 for (int j = 0; j < detalleTareaAsignadaList.size(); j++) {
                                         TareaAsignada tareaAsignada = detalleTareaAsignadaList.get(j);
-                                        tareaAsignada.setCodDetOrdenTrabaj(ordenTrabajoDetalle);
-                                        em.persist(tareaAsignada);
+                                        tareaAsignada.setCodDetOrdenTrabaj(em.merge(ordenTrabajoDetalle));
+                                        em.persist(em.merge(tareaAsignada));
                                 }
                                 /// FIN ACTUALIZAR LOS DETALLES DE TAREAS ASIGNADAS
 
@@ -430,111 +440,80 @@ public class OrdenTrabajoCabeceraController extends AbstractJpaDao <OrdenTrabajo
         }
     }
 
+public ControllerResult updateCierre(OrdenTrabajo cab, OrdenTrabajoDetalle[] det,BigInteger precio, BigInteger costo)  {
+        ControllerResult r = new ControllerResult();
+        EntityManager em = emf.createEntityManager();
+
+        OrdenTrabajo ordenTrabajoCabecera = cab;
+        OrdenTrabajoDetalle[] detallesOrdenTrabajo = det;
+
+
+        try {
+            em.getTransaction().begin();
+
+            /// ACTUALIZAR LOS COSTOS Y PRECIOS DEL PRODUCTO
+            Producto prod = new Producto();
+            prod = new ProductoController().findById(cab.getCodProductoOt().getCodProducto());
+            prod.setCostoActual(costo);
+            prod.setPrecioActual(precio);
+            em.merge(prod);
+
+                HistoricoPrecio histPrec = new HistoricoPrecio();
+                histPrec.setCodProducto(prod);
+                histPrec.setFechaAlta(new Date());
+                histPrec.setFecHistorico(new Date());
+                histPrec.setPrecioHistorico(precio);
+                em.persist(histPrec);
+
+
+                HistoricoCosto histCosto = new HistoricoCosto();
+                histCosto.setCodProducto(prod);
+                histCosto.setFechaAlta(new Date());
+                histCosto.setFecHistoricoCosto(new Date());
+                histCosto.setCostoHistorico(costo);
+                em.persist(histCosto);
+
+            //// ACTUALIZAR DETALLES DE ORDEN DE TRABAJO
 
 
 
 
-//
-//    public ControllerResult deleteCabDet(OrdenTrabajo cab, OrdenTrabajoDetalle[] det) {
-//        ControllerResult r = new ControllerResult();
-//        EntityManager em = emf.createEntityManager();
-//
-//        OrdenTrabajoDetalle[] detallesFormula = det;
-//        OrdenTrabajo OrdenTrabajo = cab;
-//        try {
-//            em.getTransaction().begin();
-//
-//            /// ELIMINACION DE LOS DETALLES
-//            if (detallesFormula != null) {
-//                for (int i = 0; i < detallesFormula.length; i++) {
-//                    OrdenTrabajoDetalle fdet = new OrdenTrabajoDetalle();
-//                    fdet = detallesFormula[i];
-//                    em.remove(em.merge(fdet));
-//               }
-//            }
-//             //// FIN DE ELIMINACION DE LOS DETALLES
-//
-//            //// ELIMINACION DE LA CABECERA
-//                OrdenTrabajo = cab;
-//                em.remove(em.merge(OrdenTrabajo));
-//            ///FIN ELIMINACION DE LA CABECERA
-//
-//                em.getTransaction().commit();
-//            r.setCodRetorno(0);
-//            r.setMsg("Registro eliminado correctamente");
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            r.setCodRetorno(-1);
-//            r.setMsg("Ha ocurrid un error durante la Eliminacion del Registro ");
-//            try {
-//                em.getTransaction().rollback();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        } finally {
-//            em.close();
-//            return r;
-//        }
-//    }
-//
 
-//    public ControllerResult updateCabDet(OrdenTrabajo cab, OrdenTrabajoDetalle[] det, OrdenTrabajoDetalle[] detEli)  {
-//        ControllerResult r = new ControllerResult();
-//        EntityManager em = emf.createEntityManager();
-//
-//        OrdenTrabajoDetalle[] detallesFormula = det;
-//        OrdenTrabajoDetalle[] detallesFormulaEliminada = detEli;
-//        OrdenTrabajo OrdenTrabajo = cab;
-//
-//        try {
-//            em.getTransaction().begin();
-//            // ELIMINAR LOS DETALLES BORRADOS DE LA GRILLA
-//            if (detallesFormulaEliminada.length > 0) {
-//
-//                        for (int i = 0; i < detallesFormulaEliminada.length; i++) {
-//                            OrdenTrabajoDetalle fdetElim = new OrdenTrabajoDetalle();
-//                            fdetElim = detallesFormulaEliminada[i];
-//                            OrdenTrabajoDetalle OrdenTrabajoDetalle = em.find(OrdenTrabajoDetalle.class, fdetElim.getCodOrdenTrabajoDetalle());
-//                            em.remove(OrdenTrabajoDetalle);
-//                         }
-//             }
-//             // fin de la eliminacion
-//
-//            //// ACTUALIZAR DETALLES
-//            OrdenTrabajo = cab;
-//            for (int i = 0; i < detallesFormula.length; i++) {
-//                 OrdenTrabajoDetalle fdet = new OrdenTrabajoDetalle();
-//                 fdet = detallesFormula[i];
-//                 if (fdet.getCodOrdenTrabajoDetalle() != null) {
-//                        em.merge(fdet);
-//                 }else{
-//                        fdet.setCodFormula(OrdenTrabajo);
-//                        em.persist(fdet);
-//                 }
-//             }
-//             //// FIN ACTUALIZAR DETALLES
-//
-//            ///// ACTUALIZAR CABECERA
-//                    em.merge(cab);
-//            ///// FIN ACTUALIZAR CABECERA
-//            em.getTransaction().commit();
-//            r.setCodRetorno(0);
-//            r.setMsg("Registro actualizado correctamente");
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            r.setCodRetorno(-1);
-//            r.setMsg("Ha ocurrido un error al actualizar el registro ");
-//            try {
-//                em.getTransaction().rollback();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        } finally {
-//            em.close();
-//            return r;
-//        }
-//    }
-//
+
+
+            ordenTrabajoCabecera = cab;
+
+            for (int i = 0; i < detallesOrdenTrabajo.length; i++) {
+                OrdenTrabajoDetalle ordenTrabajoDetalle = new OrdenTrabajoDetalle();
+                ordenTrabajoDetalle = detallesOrdenTrabajo[i];
+                ordenTrabajoDetalle.setEstado("C");
+                ordenTrabajoDetalle.setFechaModif(new Date());
+                em.merge(ordenTrabajoDetalle);
+            }
+
+            ordenTrabajoCabecera = cab;
+            ordenTrabajoCabecera.setEstadoOt("C");
+            ordenTrabajoCabecera.setFechaFinOt(new Date());
+
+            em.merge(ordenTrabajoCabecera);
+            em.getTransaction().commit();
+            r.setCodRetorno(0);
+            r.setMsg("Se ha cerrado la OT Correctamente");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            r.setCodRetorno(-1);
+            r.setMsg("Error al actualizar el registro");
+            try {
+                em.getTransaction().rollback();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            em.close();
+            return r;
+        }
+    }
+
 
 
 }

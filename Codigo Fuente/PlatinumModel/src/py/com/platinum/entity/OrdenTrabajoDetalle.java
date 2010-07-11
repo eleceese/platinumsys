@@ -63,11 +63,14 @@ public class OrdenTrabajoDetalle implements Serializable {
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
     private String usuarioModif;
-    @Column(name = "FECHA_ALTA")
+    @Column(name = "FECHA_FIN")
     @Temporal(TemporalType.DATE)
+    private Date fechaFin;
+    @Column(name = "FECHA_ALTA")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaAlta;
     @Column(name = "FECHA_MODIF")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModif;
     @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(optional = false)
@@ -88,19 +91,7 @@ public class OrdenTrabajoDetalle implements Serializable {
     private Set<OrdenTrabajoDetCostoH> ordenTrabajoDetCostoCollection;
     @OneToMany(mappedBy = "codOrdenTrabajoDet", fetch=FetchType.EAGER)
     private Set<OrdenTrabajoDetCostoMat> ordenTrabajoDetMCollection;
-//    @OneToMany(mappedBy = "codOrdenTrabajoDetalle", fetch=FetchType.EAGER)
-//    private Set<EntradaSalidaDetalle> entradaSalidaCollection;
 
-//    public Set<EntradaSalidaDetalle> getEntradaSalidaCollection() {
-//        return entradaSalidaCollection;
-//    }
-//
-//    public void setEntradaSalidaCollection(Set<EntradaSalidaDetalle> entradaSalidaCollection) {
-//        this.entradaSalidaCollection = entradaSalidaCollection;
-//    }
-
-
-////////////////////////
     public Set<OrdenTrabajoDetCostoMat> getOrdenTrabajoDetMCollection() {
         return ordenTrabajoDetMCollection;
     }
@@ -111,6 +102,14 @@ public class OrdenTrabajoDetalle implements Serializable {
 
     public void setOrdenTrabajoDetMCollection(Set<OrdenTrabajoDetCostoMat> ordenTrabajoDetMCollection) {
         this.ordenTrabajoDetMCollection = ordenTrabajoDetMCollection;
+    }
+
+    public Date getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(Date fechaFin) {
+        this.fechaFin = fechaFin;
     }
 
 

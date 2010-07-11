@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.entity.HistoricoCosto;
 import py.com.platinum.entity.Producto;
@@ -31,6 +33,32 @@ public class HistoricoCostoController extends AbstractJpaDao<HistoricoCosto> {
     public List<HistoricoCosto> getAll(String orderBy) {
         return this.getAll(HistoricoCosto.class, orderBy);
     }
+
+      public List<HistoricoCosto> getHistoricos(Long codProducto) {
+        //Armamos el sql String
+        String SQL = "SELECT o FROM HistoricoCosto o WHERE o.codHistoricoCosto = o.codHistoricoCosto";
+
+        if (codProducto != null) {
+            SQL = SQL + " and o.codProducto.codProducto = :codProducto";
+        }
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Seteamos los parametros
+        if (codProducto != null ) {
+            q.setParameter("codProducto", codProducto);
+        }
+
+        //Realizamos la busqueda
+        List<HistoricoCosto> entities = q.getResultList();
+        em.close();
+
+        //retornamos la lista
+        return entities;
+
+      }
+
 
     public int calcularCostoPromedio(Long codProducto, BigInteger costoEntrada, BigDecimal existenciaEntrada){
         //Variables

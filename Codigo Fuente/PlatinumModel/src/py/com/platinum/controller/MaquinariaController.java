@@ -43,14 +43,14 @@ public class MaquinariaController extends AbstractJpaDao<Maquinarias> {
      */
     public List<Maquinarias> getMaquinariass(String codigo, String descripcion) {
         //Armamos el sql String
-        String SQL = "SELECT o FROM Maquinarias o WHERE o.codMaquinarias = o.codMaquinarias";
+        String SQL = "SELECT o FROM Maquinarias o WHERE o.codMaquinaria = o.codMaquinaria";
 
         if (codigo != null && !codigo.equals("")) {
-            SQL = SQL + " and UPPER(o.codMaquinarias) like UPPER(:codigo)";
+            SQL = SQL + " and UPPER(o.codMaquinaria) like UPPER(:codigo)";
         }
 
         if (descripcion != null && !descripcion.equals("")) {
-            SQL = SQL + " and UPPER(o.nombreMaquinarias) like UPPER(:descripcion)";
+            SQL = SQL + " and UPPER(o.descripcion) like UPPER(:descripcion)";
         }
 
         EntityManager em = emf.createEntityManager();
@@ -58,7 +58,7 @@ public class MaquinariaController extends AbstractJpaDao<Maquinarias> {
 
         //Seteamos los parametros
         if (codigo != null && !codigo.equals("")) {
-            q.setParameter("codigo", "%" + codigo + "%");
+            q.setParameter("codigo",codigo);
         }
 
         if (descripcion != null && !descripcion.equals("")) {

@@ -12,11 +12,14 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,13 +30,14 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "HISTORICO_PRECIO")
-@NamedQueries({@NamedQuery(name = "HistoricoPrecio.findAll", query = "SELECT h FROM HistoricoPrecio h"), @NamedQuery(name = "HistoricoPrecio.findByCodHistoricoPrecio", query = "SELECT h FROM HistoricoPrecio h WHERE h.codHistoricoPrecio = :codHistoricoPrecio"), @NamedQuery(name = "HistoricoPrecio.findByFecHistorico", query = "SELECT h FROM HistoricoPrecio h WHERE h.fecHistorico = :fecHistorico"), @NamedQuery(name = "HistoricoPrecio.findByPrecioHistorico", query = "SELECT h FROM HistoricoPrecio h WHERE h.precioHistorico = :precioHistorico"), @NamedQuery(name = "HistoricoPrecio.findByUsuarioAlta", query = "SELECT h FROM HistoricoPrecio h WHERE h.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "HistoricoPrecio.findByUsuarioModif", query = "SELECT h FROM HistoricoPrecio h WHERE h.usuarioModif = :usuarioModif"), @NamedQuery(name = "HistoricoPrecio.findByFechaAlta", query = "SELECT h FROM HistoricoPrecio h WHERE h.fechaAlta = :fechaAlta"), @NamedQuery(name = "HistoricoPrecio.findByFechaModif", query = "SELECT h FROM HistoricoPrecio h WHERE h.fechaModif = :fechaModif")})
+@SequenceGenerator(name="HISPRECIO_SEQUENCE", sequenceName="SQ_HISTORICO_PRECIO", initialValue=1, allocationSize=1)
 public class HistoricoPrecio implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "COD_HISTORICO_PRECIO")
-    private BigDecimal codHistoricoPrecio;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="HISPRECIO_SEQUENCE")
+    private Long codHistoricoPrecio;
     @Basic(optional = false)
     @Column(name = "FEC_HISTORICO")
     @Temporal(TemporalType.DATE)
@@ -45,10 +49,10 @@ public class HistoricoPrecio implements Serializable {
     @Column(name = "USUARIO_MODIF")
     private String usuarioModif;
     @Column(name = "FECHA_ALTA")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaAlta;
     @Column(name = "FECHA_MODIF")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModif;
     @JoinColumn(name = "COD_PRODUCTO", referencedColumnName = "COD_PRODUCTO")
     @ManyToOne(optional = false)
@@ -57,20 +61,20 @@ public class HistoricoPrecio implements Serializable {
     public HistoricoPrecio() {
     }
 
-    public HistoricoPrecio(BigDecimal codHistoricoPrecio) {
+    public HistoricoPrecio(Long codHistoricoPrecio) {
         this.codHistoricoPrecio = codHistoricoPrecio;
     }
 
-    public HistoricoPrecio(BigDecimal codHistoricoPrecio, Date fecHistorico) {
+    public HistoricoPrecio(Long codHistoricoPrecio, Date fecHistorico) {
         this.codHistoricoPrecio = codHistoricoPrecio;
         this.fecHistorico = fecHistorico;
     }
 
-    public BigDecimal getCodHistoricoPrecio() {
+    public Long getCodHistoricoPrecio() {
         return codHistoricoPrecio;
     }
 
-    public void setCodHistoricoPrecio(BigDecimal codHistoricoPrecio) {
+    public void setCodHistoricoPrecio(Long codHistoricoPrecio) {
         this.codHistoricoPrecio = codHistoricoPrecio;
     }
 
