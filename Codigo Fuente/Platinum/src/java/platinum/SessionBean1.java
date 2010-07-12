@@ -40,6 +40,7 @@ import py.com.platinum.controller.TareaFallidaController;
 import py.com.platinum.controller.TipoComprobanteController;
 import py.com.platinum.controller.TipoProductoController;
 import py.com.platinum.controller.UnidadMedidaController;
+import py.com.platinum.controller.UsuarioController;
 import py.com.platinum.entity.Banco;
 import py.com.platinum.entity.Caja;
 import py.com.platinum.entity.Cargo;
@@ -70,6 +71,7 @@ import py.com.platinum.entity.TareaFallida;
 import py.com.platinum.entity.TipoComprobante;
 import py.com.platinum.entity.TipoProducto;
 import py.com.platinum.entity.UnidadMedida;
+import py.com.platinum.entity.Usuarios;
 import py.com.platinum.utilsenum.FacturaCompraEstado;
 import py.com.platinum.utilsenum.FacturaVentaEstado;
 import py.com.platinum.utilsenum.ModuloEnum;
@@ -151,6 +153,7 @@ public class SessionBean1 extends AbstractSessionBean {
         codDeposito = new DepositoController().findById(Long.valueOf("1"));
 
         //El siguiente Metodo Carga la Grilla De Productos al cargar la pagina de productos.
+        cargarListaTodosUsuarios();
         cargarListaTodosProductosSemiterminadosAcabados();
         cargarListaTodosProductosTerSemiInsMat();
         cargarListaTodosMaquinarias();
@@ -992,6 +995,26 @@ public class SessionBean1 extends AbstractSessionBean {
         }
     }
 ////// FIN CARGA DE COMBO BOX Proveedores
+    ////// CARGA DE COMBO BOX Proveedores
+//////     import com.sun.webui.jsf.model.Option;
+    Usuarios[] listaUsuarios;
+    Option[] listaPUsuariosOp;
+
+
+    public Usuarios[] getListaUsuarios() {
+        return listaUsuarios;
+    }
+
+    public void setListaUsuarios(Usuarios[] listaUsuarios) {
+        this.listaUsuarios= listaUsuarios;
+    }
+
+    public void cargarListaTodosUsuarios() {
+        UsuarioController usuController = new UsuarioController();
+        listaUsuarios = (Usuarios[]) usuController.getAll("usuario").toArray(new Usuarios[0]);
+        
+    }
+////// FIN CARGA DE COMBO BOX Proveedores
 ////// CARGA DE COMBO BOX Formulas SEMITERMINADOS
 //////     import com.sun.webui.jsf.model.Option;
     FormulaSemiCabecera[] listaFormulaCabecerasSemiTer;
@@ -1442,6 +1465,20 @@ public class SessionBean1 extends AbstractSessionBean {
         }
     }
 ////// FIN CARGA DE COMBO BOX Tareas Fallidas
+
+
+
+
+    
+    private Usuarios usuarioLogueado;
+
+    public Usuarios getUsuarioLogueado() {
+        return usuarioLogueado;
+    }
+
+    public void setUsuarioLogueado(Usuarios usuarioLogueado) {
+        this.usuarioLogueado = usuarioLogueado;
+    }
 
 
 

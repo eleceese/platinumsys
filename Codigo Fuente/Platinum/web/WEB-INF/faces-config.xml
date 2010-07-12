@@ -593,6 +593,33 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
+        <managed-bean-name>ABMUsuarios</managed-bean-name>
+        <managed-bean-class>platinum.ABMUsuarios</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>Acceso</managed-bean-name>
+        <managed-bean-class>platinum.Acceso</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <navigation-rule>
+        <navigation-case>
+        <from-outcome>irAcceso</from-outcome>
+        <to-view-id>/Acceso.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/Acceso.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>case1</from-outcome>
+            <to-view-id>/Acceso.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>case2</from-outcome>
+            <to-view-id>/Inicio.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <managed-bean>
         <managed-bean-name>LoginModule</managed-bean-name>
         <managed-bean-class>platinum.LoginModule</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
