@@ -5,10 +5,12 @@
 package platinum;
 
 import com.sun.data.provider.RowKey;
+import com.sun.rave.faces.converter.CalendarConverter;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.Calendar;
 import com.sun.webui.jsf.component.DropDown;
+import com.sun.webui.jsf.component.Label;
 import com.sun.webui.jsf.component.PageAlert;
 import com.sun.webui.jsf.component.RadioButton;
 import com.sun.webui.jsf.component.Table;
@@ -18,34 +20,34 @@ import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.faces.FacesException;
-import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlPanelGrid;
-import javax.faces.context.FacesContext;
 import javax.faces.convert.CharacterConverter;
-import py.com.platinum.controller.FacturaCabeceraController;
-import py.com.platinum.controller.ProductoController;
+import javax.faces.convert.NumberConverter;
+import javax.faces.event.ValueChangeEvent;
+import py.com.platinum.controller.ReciboCabeceraController;
 import py.com.platinum.controller.ClienteController;
-import py.com.platinum.controller.EmpleadoController;
-import py.com.platinum.controller.PedidoCabeceraController;
+import py.com.platinum.controller.FormaPagoController;
+import py.com.platinum.controller.ParametroController;
+import py.com.platinum.controller.SaldoClienteController;
 import py.com.platinum.controller.TipoComprobanteController;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.Empleado;
-import py.com.platinum.entity.FacturaCabecera;
-import py.com.platinum.entity.FacturaDetalle;
-import py.com.platinum.entity.Producto;
+import py.com.platinum.entity.Parametros;
+import py.com.platinum.entity.ReciboCabecera;
+import py.com.platinum.entity.ReciboDetalle;
 import py.com.platinum.entity.Cliente;
-import py.com.platinum.entity.PedidoCabecera;
-import py.com.platinum.entity.PedidoDetalle;
-import py.com.platinum.entity.TipoComprobante;
-import py.com.platinum.utils.DateUtils;
+import py.com.platinum.entity.FormaPago;
+import py.com.platinum.entity.MovimientoCajaDetalle;
+import py.com.platinum.entity.SaldoCliente;
 import py.com.platinum.utils.StringUtils;
-import py.com.platinum.utilsenum.FacturaVentaEstado;
-import py.com.platinum.utilsenum.ModelUtil;
-import py.com.platinum.utilsenum.ModuloEnum;
+import py.com.platinum.utilsenum.ParametroEnum;
+import py.com.platinum.utilsenum.ReciboEstado;
+import py.com.platinum.view.VClientesSaldos;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -67,6 +69,12 @@ public class ABMReciboDinero extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
+        numberConverter1.setPattern("#,##0");
+        numberConverter1.setMinIntegerDigits(1);
+        numberConverter1.setMaxIntegerDigits(40);
+        numberConverter1.setMaxFractionDigits(3);
+        calendarConverter1.setTimeZone(null);
+        calendarConverter1.setPattern("dd/MM/yyyy");
     }
     private HtmlPanelGrid mainContainer = new HtmlPanelGrid();
 
@@ -302,14 +310,14 @@ public class ABMReciboDinero extends AbstractPageBean {
     public void setUiTxtCodCliente(TextField tf) {
         this.uiTxtCodCliente = tf;
     }
-    private TextField uiTxtTotal1 = new TextField();
+    private TextField uiTxtTotalCabecera = new TextField();
 
-    public TextField getUiTxtTotal1() {
-        return uiTxtTotal1;
+    public TextField getUiTxtTotalCabecera() {
+        return uiTxtTotalCabecera;
     }
 
-    public void setUiTxtTotal1(TextField tf) {
-        this.uiTxtTotal1 = tf;
+    public void setUiTxtTotalCabecera(TextField tf) {
+        this.uiTxtTotalCabecera = tf;
     }
     private TextField uiTxtSaldoCuota = new TextField();
 
@@ -482,21 +490,130 @@ public class ABMReciboDinero extends AbstractPageBean {
     public void setUiBtnCargarPedido(Button b) {
         this.uiBtnCargarPedido = b;
     }
+    private NumberConverter numberConverter1 = new NumberConverter();
+
+    public NumberConverter getNumberConverter1() {
+        return numberConverter1;
+    }
+
+    public void setNumberConverter1(NumberConverter nc) {
+        this.numberConverter1 = nc;
+    }
+    private TextField uiTxtSerie = new TextField();
+
+    public TextField getUiTxtSerie() {
+        return uiTxtSerie;
+    }
+
+    public void setUiTxtSerie(TextField tf) {
+        this.uiTxtSerie = tf;
+    }
+    private TextField uiTxtDescComprobante = new TextField();
+
+    public TextField getUiTxtDescComprobante() {
+        return uiTxtDescComprobante;
+    }
+
+    public void setUiTxtDescComprobante(TextField tf) {
+        this.uiTxtDescComprobante = tf;
+    }
+    private TextField uiTxtFecVencimiento = new TextField();
+
+    public TextField getUiTxtFecVencimiento() {
+        return uiTxtFecVencimiento;
+    }
+
+    public void setUiTxtFecVencimiento(TextField tf) {
+        this.uiTxtFecVencimiento = tf;
+    }
+    private TextField uiTxtNroCuota = new TextField();
+
+    public TextField getUiTxtNroCuota() {
+        return uiTxtNroCuota;
+    }
+
+    public void setUiTxtNroCuota(TextField tf) {
+        this.uiTxtNroCuota = tf;
+    }
+    private TextField uiTxtMontoCuota = new TextField();
+
+    public TextField getUiTxtMontoCuota() {
+        return uiTxtMontoCuota;
+    }
+
+    public void setUiTxtMontoCuota(TextField tf) {
+        this.uiTxtMontoCuota = tf;
+    }
+    private CalendarConverter calendarConverter1 = new CalendarConverter();
+
+    public CalendarConverter getCalendarConverter1() {
+        return calendarConverter1;
+    }
+
+    public void setCalendarConverter1(CalendarConverter cc) {
+        this.calendarConverter1 = cc;
+    }
+    private Calendar uiFilCalFecha = new Calendar();
+
+    public Calendar getUiFilCalFecha() {
+        return uiFilCalFecha;
+    }
+
+    public void setUiFilCalFecha(Calendar c) {
+        this.uiFilCalFecha = c;
+    }
+    private TextField uiTxtTotal1 = new TextField();
+
+    public TextField getUiTxtTotal1() {
+        return uiTxtTotal1;
+    }
+
+    public void setUiTxtTotal1(TextField tf) {
+        this.uiTxtTotal1 = tf;
+    }
+    private Button uiBtnImprimir = new Button();
+
+    public Button getUiBtnImprimir() {
+        return uiBtnImprimir;
+    }
+
+    public void setUiBtnImprimir(Button b) {
+        this.uiBtnImprimir = b;
+    }
+    private Label uiLblTituloDetalle = new Label();
+
+    public Label getUiLblTituloDetalle() {
+        return uiLblTituloDetalle;
+    }
+
+    public void setUiLblTituloDetalle(Label l) {
+        this.uiLblTituloDetalle = l;
+    }
+    private TextField uiTxtTotalComprobantes = new TextField();
+
+    public TextField getUiTxtTotalComprobantes() {
+        return uiTxtTotalComprobantes;
+    }
+
+    public void setUiTxtTotalComprobantes(TextField tf) {
+        this.uiTxtTotalComprobantes = tf;
+    }
 
     // </editor-fold>
+
     /**
      * <p>Construct a new Page bean instance.</p>
      */
     public ABMReciboDinero() {
 
         //Estados de la factura
-        FacturaVentaEstado[] lstEstado = FacturaVentaEstado.values();
+        ReciboEstado[] lstEstado = ReciboEstado.values();
         Option[] lstEstadoOp = new Option[lstEstado.length];
         
         Option o = new Option();
         for (int i = 0; i < lstEstado.length; i++) {
             //Obtenemos el estado
-            FacturaVentaEstado p = lstEstado[i];
+            ReciboEstado p = lstEstado[i];
             
             //Seteamos el value y el label del option
             o.setValue(p.toString());
@@ -510,7 +627,10 @@ public class ABMReciboDinero extends AbstractPageBean {
         }
 
         uiLstEstadoDefaultOptions.setOptions(lstEstadoOp);
-        uiLstEstadoDefaultOptions.setSelectedValue(FacturaVentaEstado.PENDIENTE_COBRO.toString());
+        uiLstEstadoDefaultOptions.setSelectedValue(ReciboEstado.PENDIENTE.toString());
+
+        controller = new ReciboCabeceraController();
+        saldoController = new SaldoClienteController();
 
         //Cargamos a las tablas relacionadas
         cargarRelaciones();
@@ -601,8 +721,8 @@ public class ABMReciboDinero extends AbstractPageBean {
         } else if (errorValidacion) {
             addUpdatePanel.setRendered(true);
         } else if (!updateDetRequest) {
-            getSessionBean1().setTituloPagina("Facturas Venta");
-            getSessionBean1().setDetallePagina("Registro de Facturas - Cliente");
+            getSessionBean1().setTituloPagina("Recibo Dinero");
+            getSessionBean1().setDetallePagina("Cobranzas");
             gridPanelBuscar.setRendered(true);
             table1.setRendered(true);
             buttonPanel.setRendered(true);
@@ -617,6 +737,19 @@ public class ABMReciboDinero extends AbstractPageBean {
 
     }
 
+    private void actualizarListaComprobantes() {
+        String s = uiTxtCodCliente.getText().toString();
+
+        String notIN = getNotINComprobantes();
+
+        //Obetenmos la lista
+        List<VClientesSaldos> l = new SaldoClienteController().getComprobantesConSaldos(null, Long.valueOf(s), notIN);
+
+        //Actualizamos la lista de la session
+        lstSaldosList = l;
+        lstSaldos = (VClientesSaldos[])lstSaldosList.toArray(new VClientesSaldos[0]);
+    }
+
 
     /**
      * Limpiar campos
@@ -625,14 +758,8 @@ public class ABMReciboDinero extends AbstractPageBean {
         //Limpiamos los campos de la cabecera
         uiTxtCodCliente.setText(null);
         uiTxtNombreCliente.setText(null);
-        uiTxtNroRecibo.setText(null);
         uiTxtTotal1.setText("0");
-        uiTxtSubTotal.setText("0");
-        uiTxtTotal.setText("0");
-        uiTxtPorcDescuento.setText("0");
-        uiTxtMontoDescuento.setText("0");
         uiCalFecha.setSelectedDate(null);
-        uiTxtNroPedido.setText(null);
 
         //Limpiamos los campos del detalle
         limpiarCamposDetalle();
@@ -717,26 +844,36 @@ public class ABMReciboDinero extends AbstractPageBean {
     public String addButton_action() {
         //Inicializamos las variables
         lstDetalleLIST = new ArrayList();
-        lstDetalle = (FacturaDetalle[]) lstDetalleLIST.toArray(new FacturaDetalle[0]);
+        lstDetalle = (ReciboDetalle[]) lstDetalleLIST.toArray(new ReciboDetalle[0]);
+        lstDetalleLISTFC = new ArrayList();
+        lstDetalleFC = (MovimientoCajaDetalle[]) lstDetalleLISTFC.toArray(new MovimientoCajaDetalle[0]);
         addRequest = true;
         updateDetRequest = true;
         itemDet = null;
-        pedido = null;
-        tipoComprobante = null;
         cliente = null;
-        producto = null;
 
         //Cargar tablas realcionadas
         cargarRelaciones();
 
         //Actualizamos le titulo de la pagina
-        getSessionBean1().setTituloPagina("Nueva Factura Venta");
-        getSessionBean1().setDetallePagina("Factura - Cliente");
+        getSessionBean1().setTituloPagina("Nuevo Recibo de Dinero");
+        getSessionBean1().setDetallePagina("Cobro a Cliente - Cobranza");
         gridPanelDetLin1.setRendered(true);
         gridPanelDetLin2.setRendered(true);
         tableColumnEditarDet.setRendered(true);
         tableColumnEliminarDet.setRendered(true);
 
+        //Obtenemos la serie del recibo
+        String ser = "A";
+        Parametros p = new ParametroController().getParametro(ParametroEnum.SERIE_RECIBO.toString());
+
+        if (p != null) {
+            ser = p.getValorTexto();
+        }
+
+        uiTxtSerie.setText(ser);
+        uiTxtNroRecibo.setText(controller.getNroRecibo(ser));
+        uiBtnImprimir.setDisabled(true);
 
         //result
         return null;
@@ -753,14 +890,14 @@ public class ABMReciboDinero extends AbstractPageBean {
         updateRequest = true;
         updateDetRequest = true;
         itemDet = null;
-        lstDetalleEliminar = new ArrayList<FacturaDetalle>();
+        lstDetalleEliminar = new ArrayList<ReciboDetalle>();
 
         //Cargamos los datos de las relaciones con esta entidad
         cargarRelaciones();
 
         //Actualizamos le titulo de la pagina
-        getSessionBean1().setTituloPagina("Ver Detalle Factura Venta");
-        getSessionBean1().setDetallePagina("Facturas - Cliente");
+        getSessionBean1().setTituloPagina("Ver Detalle Recibo Dinero");
+        getSessionBean1().setDetallePagina("Cobranza Comprobantes a Clientes");
         gridPanelDetLin1.setRendered(false);
         gridPanelDetLin2.setRendered(false);
         tableColumnEditarDet.setRendered(false);
@@ -779,22 +916,22 @@ public class ABMReciboDinero extends AbstractPageBean {
             //Elemento seleccionado
             cabecera = lstCabecera[rowId];
 
-            //Obetenemos el detalle
-            lstDetalleLIST = cabecera.getFacturaDetalleList();
-            lstDetalle = (FacturaDetalle[]) lstDetalleLIST.toArray(new FacturaDetalle[0]);
+            //Obetenemos el detall
+            lstDetalleLIST = cabecera.getReciboDetalleList();
+            lstDetalle = (ReciboDetalle[]) lstDetalleLIST.toArray(new ReciboDetalle[0]);
 
             //Detalles a eliminar
             lstDetalleEliminar = new ArrayList();
 
             //Obetenemos los atributos de la cabecera
-            uiTxtNroRecibo.setText(cabecera.getEstablecimiento() + "-"  + cabecera.getBocaExpendio() + "-" + cabecera.getNumeroFactura());
+            uiTxtNroRecibo.setText(cabecera.getNumeroRecibo());
             uiTxtCodCliente.setText(cabecera.getCodCliente().getCodCliente());
             uiTxtNombreCliente.setText(cabecera.getCodCliente().getNombreCliente());
-            uiLstEstado.setSelected(cabecera.getEstadoFactura());
-            uiCalFecha.setSelectedDate(cabecera.getFechaFactura());
-            uiTxtSubTotal.setText(String.valueOf(cabecera.getSubtotalFactura()));
-            uiTxtTotal.setText(String.valueOf(cabecera.getTotalFactura()));
-            uiTxtTotal1.setText(String.valueOf(cabecera.getTotalIvaFactura()));
+            uiTxtSerie.setText(cabecera.getSerieRecibo());
+            uiLstEstado.setSelected(cabecera.getEstado().toString());
+            uiCalFecha.setSelectedDate(cabecera.getFecha());
+            uiTxtSubTotal.setText(cabecera.getMontoTotal());
+            uiTxtTotal1.setText(cabecera.getMontoTotal());
         }
 
 
@@ -815,11 +952,10 @@ public class ABMReciboDinero extends AbstractPageBean {
             int rowId = Integer.parseInt(selectedRowKeys[0].getRowId());
 
             //Elemento seleccionado
-            FacturaCabecera e = lstCabecera[rowId];
+            ReciboCabecera e = lstCabecera[rowId];
 
             //Eliminados el registro
-            FacturaCabeceraController controller = new FacturaCabeceraController();
-            ControllerResult r = controller.eliminar(e, e.getFacturaDetalleList());
+            ControllerResult r = controller.eliminar(e, e.getReciboDetalleList());
 
             //Mensaje
             if (r.getCodRetorno() == -1) {
@@ -846,36 +982,18 @@ public class ABMReciboDinero extends AbstractPageBean {
         //Si no hay error de validacion insertamos el registro
         if (!errorValidacion) {
             //Nuevo
-            cabecera = new FacturaCabecera();
+            cabecera = new ReciboCabecera();
 
             //Set de los artributos
+            cabecera.setSerieRecibo(uiTxtSerie.getText().toString());
             cabecera.setCodCliente(cliente);
-            cabecera.setFechaFactura(uiCalFecha.getSelectedDate());
-            cabecera.setFechaVencimiento(DateUtils.fechaMas(uiCalFecha.getSelectedDate(), tipoComprobante.getCantDias()));
-            cabecera.setCodPedido(pedido);
-            cabecera.setEstablecimiento(getSessionBean1().getEstablecimiento());
-            cabecera.setBocaExpendio(getSessionBean1().getBocaExpendio());
-            codEmpleado = new EmpleadoController().findById(Long.valueOf("1"));
-            cabecera.setCodEmpleado(codEmpleado);
-            cabecera.setPorcDescuento(Long.valueOf(uiTxtPorcDescuento.getText().toString()));
-            cabecera.setMontoDescuento(Long.valueOf(uiTxtMontoDescuento.getText().toString()));
-            cabecera.setCodDeposito(getSessionBean1().getCodDeposito());
-            
-            //Tipo de comprobante
-            cabecera.setTipoFactura(tipoComprobante);
-            cabecera.setTotalIvaFactura(Long.valueOf(uiTxtTotal1.getText().toString()));
-            cabecera.setSubtotalFactura(Long.valueOf(uiTxtSubTotal.getText().toString()));
-            cabecera.setTotalFactura(Long.valueOf(uiTxtTotal.getText().toString()));
-
-            //El estado dependiendo del tipo de comprobante
-            if (tipoComprobante.getCantCuota() > 0) {
-                cabecera.setEstadoFactura(ModelUtil.getFacturaVentaEstado(uiLstEstado.getSelected().toString()));
-            } else {
-                cabecera.setEstadoFactura(FacturaVentaEstado.COBRADO);
-            }
+            cabecera.setFecha(uiCalFecha.getSelectedDate());
+            cabecera.setEstado(ReciboEstado.PAGADO);
+            cabecera.setFechaAlta(new Date());
+            cabecera.setMontoTotal(BigInteger.valueOf(Long.valueOf(uiTxtTotal1.getText().toString())));
 
             //Insertamos la cebecera y del detalle
-            ControllerResult cr = new FacturaCabeceraController().crear(cabecera, lstDetalleLIST);
+            ControllerResult cr = controller.crear(cabecera, lstDetalleLIST);
 
             //Verificamos el tipo de mensaje
             if (cr.getCodRetorno() == -1) {
@@ -883,10 +1001,11 @@ public class ABMReciboDinero extends AbstractPageBean {
                 errorValidacion = true;
             } else {
                 // Apagamos la bandera de nuevo registro
-                this.addRequest = false;
-                this.updateDetRequest = false;
+                //this.addRequest = false;
+                //this.updateDetRequest = false;
                 this.pageAlert1.setType("information");
-                uiTxtNroRecibo.setText(cabecera.getNumeroFactura());
+                uiTxtNroRecibo.setText(cabecera.getNumeroRecibo());
+                uiBtnImprimir.setDisabled(false);
             }
 
             this.pageAlert1.setTitle(cr.getMsg());
@@ -897,6 +1016,28 @@ public class ABMReciboDinero extends AbstractPageBean {
 
         //result
         return null;
+    }
+
+    private VClientesSaldos mapReciboDetTOVClienteSaldo(ReciboDetalle get) {
+        //Variables
+        VClientesSaldos r = new VClientesSaldos();
+
+        if (get != null) {
+            r.setCodComprobante(BigInteger.valueOf(get.getNroComprobante()));
+            r.setCodSaldoCliente(BigInteger.valueOf(get.getCodSaldoCliente()));
+
+            //Desc. comprobante
+            String desc = new TipoComprobanteController().findById(get.getTipoComprobante().longValue()).getDescTipoAbreviado();
+            r.setDescTipoComprobante(desc);
+            r.setFecVencimiento(get.getFechaVencimiento());
+            r.setNroComprobante(get.getComprobante());
+            r.setNroCuota(get.getNroCuota());
+            r.setOrden(BigInteger.valueOf(Long.valueOf("0")));
+            r.setSaldoComprobante(get.getSaldoCuota());
+            r.setTotalComprobante(get.getMontoCuota());
+        }
+
+        return r;
     }
 
     /**
@@ -921,18 +1062,10 @@ public class ABMReciboDinero extends AbstractPageBean {
             }
         }
 
-        //Pedido
+        //Fecha
         if (this.uiCalFecha.getSelectedDate() == null) {
-            info("Fecha Factura, campo obligatorio");
+            info("Fecha, campo obligatorio");
             this.errorValidacion = true;
-        }
-
-        if (uiTxtNroPedido.getText()!= null ){
-            pedido = pedidoController.findById(Long.valueOf(uiTxtNroPedido.getText().toString()));
-            if (pedido == null) {
-                errorValidacion = true;
-                info("Numero de Pedido ingresado incorrecto, favor verifique");
-            }
         }
     }
 
@@ -941,21 +1074,18 @@ public class ABMReciboDinero extends AbstractPageBean {
         errorValidacion = false;
 
         //Verificamos el estado del comprobante
-        if (cabecera.getEstadoFactura().toString().equals(FacturaVentaEstado.ANULADO.toString())) {
-            info("La Factura ya fue Anulada");
-            errorValidacion = true;
-        } else if(cabecera.getEstadoFactura().toString().equals(FacturaVentaEstado.COBRADO.toString())){
-            info("La Factura no puede ser Anulada, por que ya fue Cobrada al Cliente");
+        if (cabecera.getEstado().toString().equals(ReciboEstado.ANULADO.toString())) {
+            info("El Recibo ya fue Anulada");
             errorValidacion = true;
         }
         
         //Si no hay error de validacion insertamos el registro
         if (!errorValidacion) {
 
-            cabecera.setEstadoFactura(FacturaVentaEstado.ANULADO);
+            cabecera.setEstado(ReciboEstado.ANULADO);
 
             //Insertamos la cebecera y del detalle
-            ControllerResult cr = new FacturaCabeceraController().update(cabecera);
+            ControllerResult cr = new ReciboCabeceraController().update(cabecera);
 
             //Verificamos el tipo de mensaje
             if (cr.getCodRetorno() == -1) {
@@ -965,6 +1095,7 @@ public class ABMReciboDinero extends AbstractPageBean {
                 // Apagamos la bandera de Editar registro
                 this.updateRequest = false;
                 this.updateDetRequest = false;
+                this.addRequest = false;
                 this.pageAlert1.setType("information");
             }
 
@@ -999,56 +1130,62 @@ public class ABMReciboDinero extends AbstractPageBean {
         //Result
         return null;
     }
-    private FacturaCabecera cabecera;
-    private FacturaCabecera[] lstCabecera;
-    private FacturaDetalle detalle;
-    private FacturaDetalle[] lstDetalle;
-    private List<FacturaDetalle> lstDetalleLIST;
-    private List<FacturaDetalle> lstDetalleEliminar;
-    private Producto producto;
+    private ReciboCabeceraController controller;
+    private ReciboCabecera cabecera;
+    private ReciboCabecera[] lstCabecera;
+    private ReciboDetalle detalle;
+    private ReciboDetalle[] lstDetalle;
+    private FormaPago formaPago;
+    private FormaPagoController formaPagoController;
+    private MovimientoCajaDetalle[] lstDetalleFC;
+    private List<MovimientoCajaDetalle> lstDetalleLISTFC;
+    private List<ReciboDetalle> lstDetalleLIST;
+    private List<ReciboDetalle> lstDetalleEliminar;
     private Cliente cliente;
-    private TipoComprobante tipoComprobante;
+    private SaldoCliente saldo;
+    private SaldoClienteController saldoController;
     private Empleado codEmpleado  = new Empleado();
-    private PedidoCabecera pedido = new PedidoCabecera();
-    private PedidoCabeceraController pedidoController = new PedidoCabeceraController();
+    private VClientesSaldos[] lstSaldos;
+    private List<VClientesSaldos> lstSaldosList = null;
 
-    public FacturaCabecera getCabecera() {
+
+    public ReciboCabecera getCabecera() {
         return cabecera;
     }
 
-    public void setCabecera(FacturaCabecera cabecera) {
+    public void setCabecera(ReciboCabecera cabecera) {
         this.cabecera = cabecera;
     }
 
-    public FacturaDetalle getDetalle() {
+    public ReciboDetalle getDetalle() {
         return detalle;
     }
 
-    public void setDetalle(FacturaDetalle detalle) {
+    public void setDetalle(ReciboDetalle detalle) {
         this.detalle = detalle;
     }
 
-    public FacturaCabecera[] getLstCabecera() {
+    public ReciboCabecera[] getLstCabecera() {
         return lstCabecera;
     }
 
-    public void setLstCabecera(FacturaCabecera[] lstCabecera) {
+    public void setLstCabecera(ReciboCabecera[] lstCabecera) {
         this.lstCabecera = lstCabecera;
     }
 
-    public FacturaDetalle[] getLstDetalle() {
+    public ReciboDetalle[] getLstDetalle() {
         return lstDetalle;
     }
 
-    public void setLstDetalle(FacturaDetalle[] lstDetalle) {
+    public void setLstDetalle(ReciboDetalle[] lstDetalle) {
         this.lstDetalle = lstDetalle;
     }
 
-    public List<FacturaDetalle> getLstDetalleLIST() {
+    public List<ReciboDetalle> getLstDetalleLIST() {
         return lstDetalleLIST;
     }
 
-    public void setLstDetalleLIST(List<FacturaDetalle> lstDetalleLIST) {
+    public void setLstDetalleLIST(List<ReciboDetalle> lstDetalleLIST) {
         this.lstDetalleLIST = lstDetalleLIST;
     }
 
@@ -1058,13 +1195,13 @@ public class ABMReciboDinero extends AbstractPageBean {
      */
     public void buscar() {
         //Verificamos el contenido de los campos de busqueda
-        FacturaCabeceraController c = new FacturaCabeceraController();
+        ReciboCabeceraController c = new ReciboCabeceraController();
         Date pFechaFactura = null;
-        String pNroFactura = null, pCliente = null;
+        String pNroRecibo = null, pCliente = null;
 
         //Nro. Pendido
         if (this.uiFilTxtNroRecibo.getText() != null) {
-            pNroFactura = this.uiFilTxtNroRecibo.getText().toString();
+            pNroRecibo = this.uiFilTxtNroRecibo.getText().toString();
         }
 
         //Cliente
@@ -1078,7 +1215,7 @@ public class ABMReciboDinero extends AbstractPageBean {
         }
 
         //Buscamos la lista de registros
-        lstCabecera = (FacturaCabecera[]) c.getFacturaCabecera(pNroFactura, pCliente, pFechaFactura).toArray(new FacturaCabecera[0]);
+        lstCabecera = (ReciboCabecera[]) c.getReciboCabeceras(pNroRecibo, pCliente, pFechaFactura).toArray(new ReciboCabecera[0]);
 
     }
 
@@ -1109,14 +1246,21 @@ public class ABMReciboDinero extends AbstractPageBean {
 
             //Controlamos si es Nuevo Detalle
             if (itemDet == null) {
-                detalle = new FacturaDetalle();
+                detalle = new ReciboDetalle();
             }
 
             //Obtenemos los datos ingresados
-            detalle.setCodProducto(producto);
-            detalle.setPrecioUnitario(Long.valueOf(uiTxtSaldoCuota.getText().toString()));
-           
-            detalle.setSubTotal(Long.valueOf(uiTxtMontoCobro.getText().toString()));
+            detalle.setCodRecibo(cabecera);
+            detalle.setComprobante(uiTxtNroComprobante.getText().toString());
+            detalle.setFechaAlta(new Date());
+            detalle.setFechaVencimiento(saldo.getFechaVencimiento());
+            detalle.setMontoCuota(BigInteger.valueOf(saldo.getMontoCuota()));
+            detalle.setMontoPago(BigInteger.valueOf(Long.valueOf(uiTxtMontoCobro.getText().toString())));
+            detalle.setNroComprobante(saldo.getNroComprobante().intValue());
+            detalle.setNroCuota(saldo.getNroCuota().intValue());
+            detalle.setSaldoCuota(BigInteger.valueOf(saldo.getSaldoCuota()));
+            detalle.setTipoComprobante(saldo.getTipoComprobante().intValue());
+            detalle.setCodSaldoCliente(saldo.getCodSaldoCliente());
 
             //Agregamos a la lista
             if (itemDet == null) {
@@ -1124,7 +1268,7 @@ public class ABMReciboDinero extends AbstractPageBean {
             }
 
             //Actualizamos la grilla
-            lstDetalle = (FacturaDetalle[]) lstDetalleLIST.toArray(new FacturaDetalle[0]);
+            lstDetalle = (ReciboDetalle[]) lstDetalleLIST.toArray(new ReciboDetalle[0]);
 
             //Ceramos el item seleccionado
             itemDet = null;
@@ -1135,6 +1279,7 @@ public class ABMReciboDinero extends AbstractPageBean {
             //Calculamos los totales
             calcularTotales();
 
+            actualizarListaComprobantes();
         }
 
         //result
@@ -1148,29 +1293,32 @@ public class ABMReciboDinero extends AbstractPageBean {
         //Apagamos la bandera de error
         this.errorValidacion = false;
 
-        //Producto
-        if (this.uiTxtCodComprobante.getText() == null || this.uiTxtCodComprobante.getText().equals("")) {
-            info("Codigo Producto obligatorio, ingrese un valor");
+        //Comprobante
+        if (this.uiTxtDescComprobante.getText() == null || this.uiTxtDescComprobante.getText().equals("")) {
+            info("Seleccione un comprobante, Obligatrio");
             errorValidacion = true;
-        } else {
-            //Obtenemos el producto
-            producto = new ProductoController().findById(Long.valueOf(uiTxtCodComprobante.getText().toString()));
-            if (producto == null) {
-                info("Producto no existe, ingrese un codigo de producto correcto");
+        }else{
+            String c = this.uiTxtDescComprobante.getText().toString();
+            c = c.substring(c.indexOf("-")+1);
+            Long cod = Long.valueOf(c);
+            saldo = saldoController.findById(cod);
+
+            if (saldo == null) {
+                info("Comprobante ingresado no es valido, Obligatrio");
                 errorValidacion = true;
             }
         }
 
-        //Precio
-        if (this.uiTxtSaldoCuota.getText() == null || this.uiTxtSaldoCuota.getText().equals("")) {
-            info("Precio del Producto obligatorio, ingrese un valor");
+        //Monto Pago
+        if (this.uiTxtMontoCobro.getText() == null || this.uiTxtMontoCobro.getText().equals("")) {
+            info("Monto Pago  obligatorio, ingrese un valor");
             errorValidacion = true;
         } else {
             //Verificamos si la precio es un numero
-            String cantidad = this.uiTxtSaldoCuota.getText().toString();
+            String cantidad = this.uiTxtMontoCobro.getText().toString();
 
             if (!StringUtils.esNumero(cantidad)) {
-                info("Precio del Producto, debe se Numero");
+                info("Monto Pago, debe se Numero");
                 errorValidacion = true;
             }
         }
@@ -1197,11 +1345,17 @@ public class ABMReciboDinero extends AbstractPageBean {
         //Obtenemos el detalle seleccionado
         this.detalle = lstDetalleLIST.get(Integer.valueOf(itemDet).intValue());
 
+        VClientesSaldos s = mapReciboDetTOVClienteSaldo(detalle);
+
         //Obtenemos los valores del detalle q ha sido seleccionado
-        uiTxtCodComprobante.setText(detalle.getCodProducto().getCodProducto());
-        uiTxtNroComprobante.setText(detalle.getCodProducto().getDescripcion());
-        uiTxtSaldoCuota.setText(detalle.getPrecioUnitario());
-        uiTxtMontoCobro.setText(detalle.getSubTotal());
+        uiTxtDescComprobante.setText(s.getDescTipoComprobante());
+        uiTxtNroComprobante.setText(s.getNroComprobante());
+        uiTxtCodComprobante.setText(s.getCodComprobante());
+        uiTxtFecVencimiento.setText(s.getFecVencimiento());
+        uiTxtNroCuota.setText(s.getNroCuota());
+        uiTxtMontoCuota.setText(s.getTotalComprobante());
+        uiTxtSaldoCuota.setText(s.getSaldoComprobante());
+        uiTxtMontoCobro.setText(detalle.getMontoPago());
 
         //result
         return null;
@@ -1225,13 +1379,15 @@ public class ABMReciboDinero extends AbstractPageBean {
         lstDetalleLIST.remove(Integer.valueOf(itemDet).intValue());
 
         //Actualizamos la grilla
-        lstDetalle = (FacturaDetalle[]) lstDetalleLIST.toArray(new FacturaDetalle[0]);
+        lstDetalle = (ReciboDetalle[]) lstDetalleLIST.toArray(new ReciboDetalle[0]);
 
         //Calculamos los totales
         calcularTotales();
 
         //Ceramos el item seleccionado
         itemDet = null;
+
+        actualizarListaComprobantes();
 
         //result
         return null;
@@ -1242,37 +1398,25 @@ public class ABMReciboDinero extends AbstractPageBean {
      */
     private void calcularTotales() {
         //Variables
-        double porcDescuento;
-        long total, totalIva, totalDescuento;
+        long total;
 
         //Inicializamos
         total = 0;
-        totalIva = 0;
-        totalDescuento = 0;
-        porcDescuento  = Double.valueOf(uiTxtPorcDescuento.getText().toString());
 
         //Recorremos el detalle para recalcular los totales
         for (int i = 0; i < lstDetalleLIST.size(); i++) {
             //Obetenemos el detalle
-            FacturaDetalle det = lstDetalleLIST.get(i);
-
-            //Sumamos el monto iva
-            totalIva += det.getTotalIva();
+            ReciboDetalle det = lstDetalleLIST.get(i);
 
             //Sumamos el monto total
-            total += det.getSubTotal();
+            total += det.getMontoPago().longValue();
 
         }
 
-        //Actualizamos los totales de la cabecera
-        uiTxtSubTotal.setText(String.valueOf(total - totalIva));
-        uiTxtTotal1.setText(String.valueOf(totalIva));
-
         //Aplicamos el descuento
-        totalDescuento = (long) ((total + totalIva) * porcDescuento / 100);
-        total = total + totalIva - totalDescuento;
-        uiTxtTotal.setText(String.valueOf(total));
-        uiTxtMontoDescuento.setText(String.valueOf(totalDescuento));
+        
+        uiTxtTotal1.setText(String.valueOf(total));
+        uiTxtTotalComprobantes.setText(String.valueOf(total));
     }
 
     /**
@@ -1280,9 +1424,14 @@ public class ABMReciboDinero extends AbstractPageBean {
      */
     private void limpiarCamposDetalle() {
         //Limpiamos los campos
+        uiTxtDescComprobante.setText(null);
         uiTxtCodComprobante.setText(null);
         uiTxtNroComprobante.setText(null);
+        uiTxtNroCuota.setText(null);
+        uiTxtFecVencimiento.setText(null);
+        uiTxtNroCuota.setText(null);
         uiTxtSaldoCuota.setText(null);
+        uiTxtMontoCuota.setText(null);
         uiTxtMontoCobro.setText(null);
         itemDet = null;
     }
@@ -1305,79 +1454,96 @@ public class ABMReciboDinero extends AbstractPageBean {
      * Carga los datos de las tablas relacionadas a esta entidad
      */
     private void cargarRelaciones() {
-        //Cargamos la lista de Productos
-        getSessionBean1().cargarListaTodosProductos();
-
         //Cargamos la lista de Clientees
         getSessionBean1().cargarListaCliente();
 
-        //Cargamos la lista de unidades de medida
-        getSessionBean1().cargarListaTodosUnidadMedidas();
-
-        //Cargamos la lista de tipos de comprobantes
-        getSessionBean1().cargarListaTipoComprobantePorModulo(ModuloEnum.VENTA);
-
-
     }
 
-    public String uiBtnCargarPedido_action() {
-        //Inicializamos
-        errorValidacion = false;
+    private Long codClienteSeleccionado;
 
-        if (uiTxtNroPedido.getText()== null && uiTxtNroPedido.getText().toString().trim().equals("")){
-            errorValidacion = true;
-            info("Debe Seleccionar un Pedido para poder cargar datos de un Pedido");
-        }else{
-            
+    public Long getCodClienteSeleccionado() {
+        return codClienteSeleccionado;
+    }
 
-            pedido = pedidoController.findById(Long.valueOf(uiTxtNroPedido.getText().toString()));
+    public void setCodClienteSeleccionado(Long codClienteSeleccionado) {
+        this.codClienteSeleccionado = codClienteSeleccionado;
+    }
+    
+    public VClientesSaldos[] getLstSaldos() {
+        return lstSaldos;
+    }
 
-            if (pedido == null) {
-                errorValidacion = true;
-                info("Numero de Pedido ingresado incorrecto, favor verifique");
-            }else{
-                /* Cargamos los datos del pedido */
+    public void setLstSaldos(VClientesSaldos[] lstSaldos) {
+        this.lstSaldos = lstSaldos;
+    }
 
-                //Cabecera
-                uiTxtCodCliente.setText(pedido.getCodCliente().getCodCliente());
-                uiTxtNombreCliente.setText(pedido.getCodCliente().getApellidoCliente() + ", " + pedido.getCodCliente().getNombreCliente());
-                uiCalFecha.setSelectedDate(new Date());
-                uiLstEstado.setSelected(FacturaVentaEstado.PENDIENTE_COBRO.toString());
-                uiTxtTotal.setText(pedido.getTotal());
-                uiTxtTotal1.setText(pedido.getTotalIva());
-                uiTxtSubTotal.setText(pedido.getSubTotal());
+    public List<VClientesSaldos> getLstSaldosList() {
+        return lstSaldosList;
+    }
 
-                //Detalle
-                List<PedidoDetalle> detallePedido = pedido.getPedidoDetalleList();
+    public void setLstSaldosList(List<VClientesSaldos> lstSaldosList) {
+        this.lstSaldosList = lstSaldosList;
+        lstSaldos = (VClientesSaldos[]) lstSaldosList.toArray(new VClientesSaldos[0]);
+    }
 
-                lstDetalleLIST = new ArrayList<FacturaDetalle>();
-                
-                //Recorremos la lista de detalle del pedido
-                for (int i = 0; i < detallePedido.size(); i++) {
-                    //Obtenemos el detalle
-                    PedidoDetalle x = detallePedido.get(i);
+    public String hyperlink2_action() {
 
-                    //Creamos el detalle de la factura
-                    detalle = new FacturaDetalle();
-                    detalle.setCantidad(x.getCantidadPedida());
-                    detalle.setCodPedidoDetalle(x);
-                    detalle.setCodProducto(x.getCodProducto());
-                    detalle.setFechaAlta(new Date());
-                    detalle.setPorcentajeIva(x.getPorcIva());
-                    detalle.setPrecioUnitario(x.getPrecioUnitario());
-                    detalle.setSubTotal(x.getTotal());
-                    detalle.setTotalIva(x.getMontoIva());
+        
+            return null;
+       
+    }
 
-                    //Agregamos a la lista
-                    lstDetalleLIST.add(detalle);
+    public void uiTxtCodCliente_processValueChange(ValueChangeEvent event) {
+
+        if(uiTxtCodCliente.getText() != null){
+            actualizarListaComprobantes();
+        }
+
+    }
+    
+    public String getNotINComprobantes() {
+        //Variables
+        String s;
+        StringBuilder sb = new StringBuilder("");
+        if (lstDetalle != null) {
+
+            for (int i = 0; i < lstDetalle.length; i++) {
+                ReciboDetalle d = lstDetalle[i];
+                if (i == (lstDetalle.length -1)) {
+                    sb.append(d.getCodSaldoCliente().toString());
+                } else {
+                    sb.append(d.getCodSaldoCliente().toString() + ", ");
                 }
-
-                //Actualizamos el array detalle
-                lstDetalle = (FacturaDetalle[]) lstDetalleLIST.toArray(new FacturaDetalle[0]);
             }
         }
 
+        //Result
+        if (lstDetalle == null || lstDetalle.length == 0 ) {
+            s = null;
+        }else{
+            s = "( "+ sb.toString() +" )";
+        }
+
         //result
-        return null;
+        return s;
+
     }
+
+    public MovimientoCajaDetalle[] getLstDetalleFC() {
+        return lstDetalleFC;
+    }
+
+    public void setLstDetalleFC(MovimientoCajaDetalle[] lstDetalleFC) {
+        this.lstDetalleFC = lstDetalleFC;
+    }
+
+    public List<MovimientoCajaDetalle> getLstDetalleLISTFC() {
+        return lstDetalleLISTFC;
+    }
+
+    public void setLstDetalleLISTFC(List<MovimientoCajaDetalle> lstDetalleLISTFC) {
+        this.lstDetalleLISTFC = lstDetalleLISTFC;
+    }
+
+    
 }
