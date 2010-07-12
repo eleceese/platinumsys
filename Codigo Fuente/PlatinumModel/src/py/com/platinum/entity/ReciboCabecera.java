@@ -72,6 +72,8 @@ public class ReciboCabecera implements Serializable {
     private Cliente codCliente;
     @OneToMany(mappedBy = "codRecibo", fetch=FetchType.EAGER)
     private Set<ReciboDetalle> reciboDetalle;
+    @OneToMany(mappedBy = "codRecibo", fetch=FetchType.EAGER)
+    private Set<MovimientoCajaDetalle> movimientoCajaDetalle;
 
     public ReciboCabecera() {
     }
@@ -187,6 +189,14 @@ public class ReciboCabecera implements Serializable {
     
     public String getNumero() {
         return StringUtils.lpad(numeroRecibo.toString(), 8, "0");
+    }
+
+    public Set<MovimientoCajaDetalle> getMovimientoCajaDetalle() {
+        return movimientoCajaDetalle;
+    }
+
+    public void setMovimientoCajaDetalle(Set<MovimientoCajaDetalle> movimientoCajaDetalle) {
+        this.movimientoCajaDetalle = movimientoCajaDetalle;
     }
 
     @Override

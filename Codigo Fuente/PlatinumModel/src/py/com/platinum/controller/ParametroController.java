@@ -73,5 +73,25 @@ public class ParametroController extends AbstractJpaDao<Parametros> {
         return entities;
 
       }
+    public Parametros getParametro(String descripcion) {
+        //Armamos el sql String
+        String SQL = "SELECT o FROM Parametros o WHERE UPPER(o.descripcion) = UPPER(:descripcion)";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Seteamos los parametros
+        if (descripcion != null && !descripcion.equals("")) {
+            q.setParameter("descripcion", descripcion);
+        }
+
+        //Realizamos la busqueda
+        Parametros entities = (Parametros) q.getSingleResult();
+        em.close();
+
+        //retornamos la lista
+        return entities;
+
+      }
 
 }   

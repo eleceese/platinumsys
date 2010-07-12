@@ -50,9 +50,9 @@ public class MovimientoCajaDetalle implements Serializable {
     @JoinColumn(name = "COD_FORMA_PAGO", referencedColumnName = "COD_FORMA_PAGO")
     @ManyToOne
     private FormaPago codFormaPago;
-    @JoinColumn(name = "COD_MOVIMIENTO_CAJA", referencedColumnName = "COD_MOVIMIENTO_CAJA")
-    @ManyToOne
-    private MovimientoCajaCabecera codMovimientoCaja;
+    @JoinColumn(name = "COD_RECIBO_CAB", referencedColumnName = "COD_RECIBO")
+    @ManyToOne(optional = false)
+    private ReciboCabecera codRecibo;
 
     public MovimientoCajaDetalle() {
     }
@@ -133,12 +133,12 @@ public class MovimientoCajaDetalle implements Serializable {
         this.codFormaPago = codFormaPago;
     }
 
-    public MovimientoCajaCabecera getCodMovimientoCaja() {
-        return codMovimientoCaja;
+    public ReciboCabecera getCodRecibo() {
+        return codRecibo;
     }
 
-    public void setCodMovimientoCaja(MovimientoCajaCabecera codMovimientoCaja) {
-        this.codMovimientoCaja = codMovimientoCaja;
+    public void setCodRecibo(ReciboCabecera codRecibo) {
+        this.codRecibo = codRecibo;
     }
 
     @Override

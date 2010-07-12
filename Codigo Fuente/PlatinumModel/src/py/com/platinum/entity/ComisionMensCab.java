@@ -11,12 +11,13 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,11 +28,12 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "COMISION_MENS_CAB")
-@NamedQueries({@NamedQuery(name = "ComisionMensCab.findAll", query = "SELECT c FROM ComisionMensCab c"), @NamedQuery(name = "ComisionMensCab.findByCodComMenCab", query = "SELECT c FROM ComisionMensCab c WHERE c.codComMenCab = :codComMenCab"), @NamedQuery(name = "ComisionMensCab.findByFecha", query = "SELECT c FROM ComisionMensCab c WHERE c.fecha = :fecha"), @NamedQuery(name = "ComisionMensCab.findByFecInicial", query = "SELECT c FROM ComisionMensCab c WHERE c.fecInicial = :fecInicial"), @NamedQuery(name = "ComisionMensCab.findByFecFinal", query = "SELECT c FROM ComisionMensCab c WHERE c.fecFinal = :fecFinal"), @NamedQuery(name = "ComisionMensCab.findByEstado", query = "SELECT c FROM ComisionMensCab c WHERE c.estado = :estado"), @NamedQuery(name = "ComisionMensCab.findByTotal", query = "SELECT c FROM ComisionMensCab c WHERE c.total = :total"), @NamedQuery(name = "ComisionMensCab.findByUsuarioAlta", query = "SELECT c FROM ComisionMensCab c WHERE c.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "ComisionMensCab.findByUsuarioModif", query = "SELECT c FROM ComisionMensCab c WHERE c.usuarioModif = :usuarioModif"), @NamedQuery(name = "ComisionMensCab.findByFechaAlta", query = "SELECT c FROM ComisionMensCab c WHERE c.fechaAlta = :fechaAlta"), @NamedQuery(name = "ComisionMensCab.findByFechaModif", query = "SELECT c FROM ComisionMensCab c WHERE c.fechaModif = :fechaModif")})
+@SequenceGenerator(name="VENTA_COMISION_MENSUALCAB_SEQUENCE", sequenceName="SQ_COMISION_MENS_CAB")
 public class ComisionMensCab implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="VENTA_COMISION_MENSUALCAB_SEQUENCE")
     @Column(name = "COD_COM_MEN_CAB")
     private Long codComMenCab;
     @Column(name = "FECHA")

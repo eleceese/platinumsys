@@ -6,7 +6,6 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.Column;
@@ -20,6 +19,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.controller.TipoComprobanteController;
 
 /**
  *
@@ -61,6 +61,8 @@ public class ReciboDetalle implements Serializable {
     @Column(name = "FECHA_MODIF")
     @Temporal(TemporalType.DATE)
     private Date fechaModif;
+    @Column(name = "COD_SALDO_CLIENTE")
+    private Long codSaldoCliente;
     @JoinColumn(name = "COD_RECIBO", referencedColumnName = "COD_RECIBO")
     @ManyToOne(optional = false)
     private ReciboCabecera codRecibo;
@@ -132,6 +134,10 @@ public class ReciboDetalle implements Serializable {
         return comprobante;
     }
 
+    public String getDescTipoComprobante() {
+        return new TipoComprobanteController().findById(getTipoComprobante().longValue()).getDescTipoAbreviado();
+    }
+
     public void setComprobante(String comprobante) {
         this.comprobante = comprobante;
     }
@@ -182,6 +188,14 @@ public class ReciboDetalle implements Serializable {
 
     public void setTipoComprobante(Integer tipoComprobante) {
         this.tipoComprobante = tipoComprobante;
+    }
+
+    public Long getCodSaldoCliente() {
+        return codSaldoCliente;
+    }
+
+    public void setCodSaldoCliente(Long codSaldoCliente) {
+        this.codSaldoCliente = codSaldoCliente;
     }
 
     

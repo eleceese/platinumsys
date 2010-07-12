@@ -6,15 +6,11 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
-import java.util.Set;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -33,6 +29,8 @@ public class TipoComprobante implements Serializable {
     private Long codTipo;
     @Column(name = "DESC_TIPO", nullable = false, length = 50)
     private String descTipo;
+    @Column(name = "DESC_TIPO_ABREVIADO")
+    private String descTipoAbreviado;
     @Column(name = "CANT_DIAS", nullable = false)
     private int cantDias;
     @Column(name = "MODULO", length = 30)
@@ -91,6 +89,14 @@ public class TipoComprobante implements Serializable {
 
     public void setCantCuota(Long cantCuota) {
         this.cantCuota = cantCuota;
+    }
+
+    public String getDescTipoAbreviado() {
+        return descTipoAbreviado;
+    }
+
+    public void setDescTipoAbreviado(String descTipoAbreviado) {
+        this.descTipoAbreviado = descTipoAbreviado;
     }
 
     @Override
