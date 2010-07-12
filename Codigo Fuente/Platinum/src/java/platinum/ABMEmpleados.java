@@ -427,6 +427,15 @@ public class ABMEmpleados extends AbstractPageBean {
     public void setUiTxtTelefono2(TextField tf) {
         this.uiTxtTelefono2 = tf;
     }
+    private TextField uiTxtCostoHoraProd = new TextField();
+
+    public TextField getUiTxtCostoHoraProd() {
+        return uiTxtCostoHoraProd;
+    }
+
+    public void setUiTxtCostoHoraProd(TextField tf) {
+        this.uiTxtCostoHoraProd = tf;
+    }
 
     // </editor-fold>
     /**
@@ -743,7 +752,7 @@ public class ABMEmpleados extends AbstractPageBean {
             r.setTelefono1Empleado((String) uiTxtTelefono1.getText());
             r.setTelefono2Empleado((String) uiTxtTelefono2.getText());
             r.setTipoEmpleado(uiRadTipoEmpleado.getSelected().toString());
-
+            r.setCostoHora(Long.valueOf(uiTxtCostoHoraProd.getText().toString()));
             //Insertamos el nuevo registro
             ControllerResult cr = new EmpleadoController().create(r);
 
@@ -806,7 +815,7 @@ public class ABMEmpleados extends AbstractPageBean {
             r.setTelefono1Empleado((String) uiTxtTelefono1.getText());
             r.setTelefono2Empleado((String) uiTxtTelefono2.getText());
             r.setTipoEmpleado(uiRadTipoEmpleado.getSelected().toString());
-
+            r.setCostoHora(Long.valueOf(uiTxtCostoHoraProd.getText().toString()));
             //Insertamos el nuevo registro
             ControllerResult cr = new EmpleadoController().update(r);
 
@@ -945,6 +954,14 @@ public class ABMEmpleados extends AbstractPageBean {
             info(uiTxtSalario, "Valor incorrecto para Salario, debe ser un numero");
             errorValidacion = true;
         }
+        //Costo Hora Produccion
+        if (this.uiTxtCostoHoraProd.getText() == null) {
+            info(uiTxtCostoHoraProd, "Costo Hora Produccion del empleado obligatorio, ingrese un valor");
+            errorValidacion = true;
+        } else if (!StringUtils.esNumero(this.uiTxtCostoHoraProd.getText().toString())) {
+            info(uiTxtCostoHoraProd, "Valor incorrecto para Costo Hora Produccion, debe ser un numero");
+            errorValidacion = true;
+        }
 
         //Cantidad hijos
         if (this.uiTxtCantHijos.getText() != null) {
@@ -998,6 +1015,7 @@ public class ABMEmpleados extends AbstractPageBean {
         uiLstSexo.setSelected(e.getSexoEmpleado());
         uiRadEstadoCivil.setSelected(e.getEstadoCivilEmpleado());
         uiRadTipoEmpleado.setSelected(e.getTipoEmpleado());
+        uiTxtCostoHoraProd.setText(e.getCostoHora().toString());
 
     }
 }

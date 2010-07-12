@@ -8,6 +8,7 @@ import com.sun.data.provider.RowKey;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.Calendar;
+import com.sun.webui.jsf.component.Checkbox;
 import com.sun.webui.jsf.component.PageAlert;
 import com.sun.webui.jsf.component.RadioButton;
 import com.sun.webui.jsf.component.StaticText;
@@ -83,6 +84,10 @@ public class RegistroEstadosOT extends AbstractPageBean {
         numberConverter3.setMinIntegerDigits(1);
         numberConverter3.setMaxIntegerDigits(40);
         numberConverter3.setMaxFractionDigits(3);
+        numberConverter4.setPattern("#,##0");
+        numberConverter5.setMinIntegerDigits(1);
+        numberConverter5.setMaxIntegerDigits(40);
+        numberConverter5.setLocale(new java.util.Locale("es", "AR", ""));
     }
     private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
 
@@ -461,6 +466,42 @@ public class RegistroEstadosOT extends AbstractPageBean {
 
     public void setTableColumn15(TableColumn tc) {
         this.tableColumn15 = tc;
+    }
+    private Checkbox uiChekActualizarCosto = new Checkbox();
+
+    public Checkbox getUiChekActualizarCosto() {
+        return uiChekActualizarCosto;
+    }
+
+    public void setUiChekActualizarCosto(Checkbox c) {
+        this.uiChekActualizarCosto = c;
+    }
+    private Checkbox uiCheckActualizarPrecio = new Checkbox();
+
+    public Checkbox getUiCheckActualizarPrecio() {
+        return uiCheckActualizarPrecio;
+    }
+
+    public void setUiCheckActualizarPrecio(Checkbox c) {
+        this.uiCheckActualizarPrecio = c;
+    }
+    private NumberConverter numberConverter4 = new NumberConverter();
+
+    public NumberConverter getNumberConverter4() {
+        return numberConverter4;
+    }
+
+    public void setNumberConverter4(NumberConverter nc) {
+        this.numberConverter4 = nc;
+    }
+    private NumberConverter numberConverter5 = new NumberConverter();
+
+    public NumberConverter getNumberConverter5() {
+        return numberConverter5;
+    }
+
+    public void setNumberConverter5(NumberConverter nc) {
+        this.numberConverter5 = nc;
     }
 
     // </editor-fold>
@@ -1157,12 +1198,7 @@ private String buscar_action2() {
 
         if (t) {
 
-        updateRequest = false;
-        cierreRequest = true;
-        this.buttonsPanelAddUpdate.setRendered(false);
-        this.tableColumn14.setRendered(false);
-        this.tableColumn15.setRendered(false);
-
+       
             Producto productoActual = new ProductoController().findById(ordenTrabajoEditada.getCodProductoOt().getCodProducto());
 
             this.uiCierreCostoActual.setText(productoActual.getCostoActual().toString());
@@ -1176,18 +1212,44 @@ private String buscar_action2() {
             this.uiCierreCostoProduccion.setText(ordenTrabajoEditada.getCostoRealOt().toString());
 
       //      Long cantidadComprar = Double.valueOf(Math.ceil(cantidadRec.doubleValue() - existencia.doubleValue())).longValue();
-            Double costoUnit = Math.ceil(Double.valueOf(ordenTrabajoEditada.getCostoRealOt().doubleValue() / ordenTrabajoEditada.getCantidadProducidaOt().doubleValue()));
-            this.uiCierreCostoProduccionUnitario.setText(costoUnit.toString());
+            double costoRealOTVar = ordenTrabajoEditada.getCostoRealOt().doubleValue(); 
+            double CantidadProducidaOtVar = ordenTrabajoEditada.getCantidadProducidaOt().doubleValue();
+            
+            if (costoRealOTVar == 0 || CantidadProducidaOtVar == 0) {
+                if (costoRealOTVar == 0){
+                    info("No se puede costear debido a que los costos de produccion son 0");
+                } else{
+                        info("No se puede costear debido a que la cantidad producida es 0");
+                }
+                
+                  
+            }else{
+            
+                    updateRequest = false;
+                    cierreRequest = true;
+                    this.buttonsPanelAddUpdate.setRendered(false);
+                    this.tableColumn14.setRendered(false);
+                    this.tableColumn15.setRendered(false);
+
+                    
+                    Double costoUnit = Math.ceil(Double.valueOf(ordenTrabajoEditada.getCostoRealOt().doubleValue() / ordenTrabajoEditada.getCantidadProducidaOt().doubleValue()));
+                    this.uiCierreCostoProduccionUnitario.setText(costoUnit.longValue());
 
 
-            Double costoNuevo = Math.ceil(Double.valueOf((ordenTrabajoEditada.getCostoRealOt().doubleValue() + (productoActual.getCostoActual().doubleValue()*exist))/(exist+ordenTrabajoEditada.getCantidadProducidaOt().longValue())));
-            this.uiCierreCostoNuevo.setText(costoNuevo);
-            this.uiCierreCostoActualPrecio.setText(costoNuevo);
+                    Double costoNuevo = Math.ceil(Double.valueOf((ordenTrabajoEditada.getCostoRealOt().doubleValue() + (productoActual.getCostoActual().doubleValue()*exist))/(exist+ordenTrabajoEditada.getCantidadProducidaOt().longValue())));
+                    this.uiCierreCostoNuevo.setText(costoNuevo.longValue());
+                    this.uiCierreCostoActualPrecio.setText(costoNuevo.longValue());
 
-            this.uiCierrePrecioActual.setText(productoActual.getPrecioActual().toString());
-            this.uiCierreMargen.setText("30");
-            Double nuevoPrecio = Math.ceil(costoNuevo * 130 / 100);
-            this.uiCierrePrecioNuevo.setText(nuevoPrecio.toString());
+                    this.uiCierrePrecioActual.setText(productoActual.getPrecioActual().toString());
+                    this.uiCierreMargen.setText("30");
+                    Double nuevoPrecio = Math.ceil(costoNuevo * 130 / 100);
+                    this.uiCierrePrecioNuevo.setText(nuevoPrecio.longValue());
+
+            
+            }
+
+
+
 
         }else{
             info("Para Cerrar la OT debe estar marcada como Terminada");
@@ -1216,13 +1278,21 @@ private String buscar_action2() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
            ControllerResult controllerResult = new ControllerResult();
+           boolean actualizarCosto = false;
+           if (uiChekActualizarCosto.isChecked()) {
+             actualizarCosto = true;
+           }
 
+           boolean actualizarPrecio = false;
+           if (uiCheckActualizarPrecio.isChecked()) {
+             actualizarPrecio = true;
+           }
 
            Double precioD = Double.valueOf(this.uiCierrePrecioNuevo.getText().toString());
            Double costoD = Double.valueOf(this.uiCierreCostoNuevo.getText().toString());
 
         OrdenTrabajoCabeceraController otControler = new  OrdenTrabajoCabeceraController();
-        controllerResult = otControler.updateCierre(ordenTrabajoEditada, detallesOrdenTrabajo,BigInteger.valueOf(precioD.longValue()),BigInteger.valueOf(costoD.longValue()));
+        controllerResult = otControler.updateCierre(ordenTrabajoEditada, detallesOrdenTrabajo,BigInteger.valueOf(precioD.longValue()),BigInteger.valueOf(costoD.longValue()),actualizarCosto,actualizarPrecio);
 
              if (controllerResult.getCodRetorno() ==-1) {
                     this.pageAlert1.setType("error");

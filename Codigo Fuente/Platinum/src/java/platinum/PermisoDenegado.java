@@ -6,11 +6,11 @@
 package platinum;
 
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.sun.webui.jsf.component.PasswordField;
+import com.sun.webui.jsf.component.TextField;
 import javax.faces.FacesException;
-import javax.servlet.http.HttpServletResponse;
+import py.com.platinum.controller.UsuarioController;
+import py.com.platinum.entity.Usuarios;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author MartinJara
  */
 
-public class Inicio extends AbstractPageBean {
+public class PermisoDenegado extends AbstractPageBean {
     // <editor-fold defaultstate="collapsed" desc="Managed Component Definition">
 
     /**
@@ -40,7 +40,7 @@ public class Inicio extends AbstractPageBean {
     /**
      * <p>Construct a new Page bean instance.</p>
      */
-    public Inicio() {
+    public PermisoDenegado() {
     }
 
     /**
@@ -77,17 +77,6 @@ public class Inicio extends AbstractPageBean {
         // Perform application initialization that must complete
         // *after* managed components are initialized
         // TODO - add your own initialization code here
-     
-        if (getSessionBean1().getUsuarioLogueado() == null) {
-            
-                         HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
-                    try {
-                        response.sendRedirect("/Platinum/faces/Acceso.jsp");
-                        getFacesContext().responseComplete();
-                    } catch (IOException ex) {
-                        Logger.getLogger(cabecera.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-        }
 
     getSessionBean1().setTituloPagina("");
     getSessionBean1().setDetallePagina("Menu Principal del Sistema");
