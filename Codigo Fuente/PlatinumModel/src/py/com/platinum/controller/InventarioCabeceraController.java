@@ -4,6 +4,8 @@
  */
 package py.com.platinum.controller;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -12,6 +14,9 @@ import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.Deposito;
+import py.com.platinum.entity.Empleado;
+import py.com.platinum.entity.EntradaSalidaCabecera;
+import py.com.platinum.entity.EntradaSalidaDetalle;
 import py.com.platinum.entity.Existencia;
 import py.com.platinum.entity.InventarioCabecera;
 import py.com.platinum.entity.InventarioDetalle;
@@ -261,6 +266,13 @@ public class InventarioCabeceraController extends AbstractJpaDao <InventarioCabe
         try {
             em.getTransaction().begin();
 
+            // PREPARAMOS LOS MOVIMIENTOS EN DEPOSITO EN CASO DE  DIFERENCIAS
+
+            EntradaSalidaDetalle[] detallesEntradaSalida;
+            EntradaSalidaDetalle  detalleEntradaSalida;
+            List<EntradaSalidaDetalle>  detalleEntradaSalidaList = new ArrayList();
+            detallesEntradaSalida = (EntradaSalidaDetalle[]) detalleEntradaSalidaList.toArray(new EntradaSalidaDetalle[0]);
+
             //// ACTUALIZAR DETALLES
             InventarioCabecera = cab;
             for (int i = 0; i < detallesInventario.length; i++) {
@@ -270,15 +282,60 @@ public class InventarioCabeceraController extends AbstractJpaDao <InventarioCabe
                  ///// AJUSTAR LAS EXISTENCIAS EN EL DEPOSITO EN CUESTION
                  Existencia exi = new Existencia();
                  exi = new ExistenciaController().getExistencia(null, fdet.getCodProducto().getCodProducto(), dep.getCodDeposito());
-                 if (exi.getCantidadExistencia() != fdet.getCantidadcontada()) {
+                 if (exi.getCantidadExistencia().longValue() != fdet.getCantidadcontada().longValue()) {
+                     
+                     
+                     //// preparamos los detalles de movimientos
+                     detalleEntradaSalida = new EntradaSalidaDetalle();
+                     detalleEntradaSalida.setCodProducto(fdet.getCodProducto());
+                     if (exi.getCantidadExistencia().longValue() < fdet.getCantidadcontada().longValue()) {
+                            detalleEntradaSalida.setTipoEntradaSalida("E");
+                            detalleEntradaSalida.setCantidadEntSal(BigInteger.valueOf(fdet.getCantidadcontada().longValue() - exi.getCantidadExistencia().longValue()));
+                     }else{
+                            detalleEntradaSalida.setTipoEntradaSalida("S");
+                            detalleEntradaSalida.setCantidadEntSal(BigInteger.valueOf(exi.getCantidadExistencia().longValue() - fdet.getCantidadcontada().longValue()));
+                     }
+                     detalleEntradaSalida.setFechaAlta(new Date());
+                     detalleEntradaSalida.setObservacion("Ajuste de Inventario");
+                     detalleEntradaSalidaList.add(detalleEntradaSalida);
+                     detallesEntradaSalida = (EntradaSalidaDetalle[]) detalleEntradaSalidaList.toArray(new EntradaSalidaDetalle[0]);
+
+
                         exi.setCantidadExistencia(fdet.getCantidadcontada());
                         em.merge(exi);
+
                  }
 
             }
             //// FIN ACTUALIZAR LAS EXISTENCIAS
             //// FIN ACTUALIZAR DETALLES
 
+            /// en el caso de registrarse algun ajuste se insertaran los movimientos en deposito
+            if (detallesEntradaSalida != null && detallesEntradaSalida.length > 0) {
+                            Deposito d = cab.getCodDeposito();
+                            Empleado emp = cab.getCodEmpleado();
+                            String textoCabecera;
+                            textoCabecera = "Movimiento en deposito Generado por AJUSTE DE INVENTARIO NRO: "+cab.getCodInventario().toString();
+
+                            EntradaSalidaCabecera entSalCab = new EntradaSalidaCabecera();
+
+
+                            entSalCab.setCodDeposito(d);
+                            entSalCab.setCodEmpleado(emp);
+                            entSalCab.setCodEncargado(emp);
+                            entSalCab.setFechaEntradaSalida(new Date());
+                            entSalCab.setObservacion(textoCabecera);
+                            entSalCab.setFechaAlta(new Date());
+                            em.persist(entSalCab);
+
+                             for (int i = 0; i < detallesEntradaSalida.length; i++) {
+                                EntradaSalidaDetalle entradaSalidaDetalle = detallesEntradaSalida[i];
+                                entradaSalidaDetalle.setCodEntradaSalida(em.merge(entSalCab));
+                                em.persist(em.merge(entradaSalidaDetalle));
+                             }
+
+
+            }
             ///// ACTUALIZAR CABECERA
                     cab.setEstado("C");
                     em.merge(cab);
