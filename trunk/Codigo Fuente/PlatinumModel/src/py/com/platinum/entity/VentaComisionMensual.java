@@ -57,6 +57,7 @@ public class VentaComisionMensual implements Serializable {
     @OneToMany(mappedBy = "codComision")
     private Set<ComisionMensCab> comisionMensCabCollection;
 
+
     public VentaComisionMensual() {
     }
 
@@ -135,7 +136,7 @@ public class VentaComisionMensual implements Serializable {
     public void setComisionMensCabCollection(Set<ComisionMensCab> comisionMensCabCollection) {
         this.comisionMensCabCollection = comisionMensCabCollection;
     }
-
+ 
     @Override
     public int hashCode() {
         int hash = 0;

@@ -64,6 +64,9 @@ public class ComisionMensCab implements Serializable {
     private Empleado codEmpleado;
     @OneToMany(mappedBy = "codComMenCab")
     private List<ComisionMensDet> comisionMensDetCollection;
+    @JoinColumn(name = "COD_COMISION", referencedColumnName = "COD_COMISION")
+    @ManyToOne
+    private ComisionMensCab codComision;
 
     public ComisionMensCab() {
     }
@@ -166,6 +169,14 @@ public class ComisionMensCab implements Serializable {
 
     public void setComisionMensDetCollection(List<ComisionMensDet> comisionMensDetCollection) {
         this.comisionMensDetCollection = comisionMensDetCollection;
+    }
+
+    public ComisionMensCab getCodComision() {
+        return codComision;
+    }
+
+    public void setCodComision(ComisionMensCab codComision) {
+        this.codComision = codComision;
     }
 
     @Override
