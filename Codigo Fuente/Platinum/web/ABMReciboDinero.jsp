@@ -122,8 +122,10 @@
                                     <webuijsf:button actionExpression="#{ABMReciboDinero.updateButton_action}" binding="#{ABMReciboDinero.updateButton}"
                                         id="updateButton" text="Ver Detalle"/>
                                 </h:panelGrid>
-                                <h:panelGrid binding="#{ABMReciboDinero.addUpdatePanel}" columns="1" id="addUpdatePanel">
-                                    <h:panelGrid cellpadding="1" columns="3" id="panelGridCabeceraCompra" style="text-align: left" width="863">
+                                <h:panelGrid binding="#{ABMReciboDinero.addUpdatePanel}" columns="1"
+                                        id="addUpdatePanel">-
+                                    <h:panelGrid cellpadding="1" columns="3"
+                                        id="panelGridCabeceraCompra" style="text-align: left" width="863">
                                         <webuijsf:label id="lblTipoFactura" text="SERIE"/>
                                         <h:panelGrid cellpadding="2" cellspacing="2" columns="3" id="panelGridCabCompra1" width="335">
                                             <webuijsf:textField binding="#{ABMReciboDinero.uiTxtSerie}" columns="10" id="uiTxtSerie" maxLength="15"/>
@@ -248,16 +250,17 @@
                                     <h:panelGrid id="gridPanelFormaCobro" style="width: 100%; height: 100%;">
                                         <webuijsf:label id="uiLblTituloDetalle1" style="font-size: 16px" text="Detalle Recibo - Forma Cobro"/>
                                         <h:panelGrid columns="11" id="gridPanelDetLin1" style="height: 24px" width="887">
-                                            <webuijsf:hyperlink id="linkFormaCobro" target="popup" text="Forma Cobro" url="/faces/popup/popupClientesSaldos.jsp"/>
-                                            <webuijsf:textField columns="5" id="uiTxtCodFormaCobro"/>
-                                            <webuijsf:textField id="uiTxtDescFormaCobro" onFocus="document.getElementById('form1:uiTxtMontoCobro_field').focus(); return false;"/>
+                                            <webuijsf:hyperlink id="linkFormaCobro" target="popup" text="Forma Cobro" url="/faces/popup/popupFormaCobro.jsp"/>
+                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtCodFormaCobro}" columns="5" id="uiTxtCodFormaCobro"/>
+                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtDescFormaCobro}" id="uiTxtDescFormaCobro" onFocus="document.getElementById('form1:uiTxtMontoCobro_field').focus(); return false;"/>
                                             <webuijsf:label id="lblMontoTotal" text="Serie"/>
-                                            <webuijsf:textField columns="5" id="uiTxtSerieFormaCobro" style="text-align: right"/>
+                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtSerieFormaCobro}" columns="5" id="uiTxtSerieFormaCobro" style="text-align: right"/>
                                             <webuijsf:label id="lblMontoTotal" text="Nro. Documento"/>
-                                            <webuijsf:textField columns="15" id="uiTxtNroFormaCobro" style="text-align: right"/>
+                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtNroFormaCobro}" columns="15" id="uiTxtNroFormaCobro" style="text-align: right"/>
                                             <webuijsf:label id="lblMontoTotal" text="Monto Cobro"/>
-                                            <webuijsf:textField columns="15" converter="#{ABMReciboDinero.numberConverter1}" id="uiTxtMontoCobro" style="text-align: right"/>
-                                            <webuijsf:button id="uiBtnAgregarDetFC" text="Agregar"/>
+                                            <webuijsf:textField columns="15" converter="#{ABMReciboDinero.numberConverter1}" id="uiTxtMontoFormaCobro" style="text-align: right"/>
+                                            <webuijsf:button actionExpression="#{ABMReciboDinero.uiBtnAgregarDetFC_action}"
+                                                binding="#{ABMReciboDinero.uiBtnAgregarDetFC}" id="uiBtnAgregarDetFC" text="Agregar"/>
                                             <webuijsf:button id="uiBtnCancelarDetalleFC" text="Cancelar"/>
                                         </h:panelGrid>
                                         <webuijsf:table augmentTitle="false" id="tableDetalleFC" title="Detalle Forma Cobro" width="863">
@@ -278,12 +281,16 @@
                                                     <webuijsf:staticText id="staticText6PorcFC" text="#{currentRow.value['monto']}"/>
                                                 </webuijsf:tableColumn>
                                                 <webuijsf:tableColumn align="center" id="tableColumnEditarDetFC" width="40">
-                                                    <webuijsf:imageHyperlink id="uilnkEditarDetalleFC" imageURL="/resources/img/edit_16x16.gif" text="">
+                                                    <webuijsf:imageHyperlink actionExpression="#{ABMReciboDinero.uilnkEditarDetalleFC_action}"
+                                                        binding="#{ABMReciboDinero.uilnkEditarDetalleFC}" id="uilnkEditarDetalleFC"
+                                                        imageURL="/resources/img/edit_16x16.gif" text="">
                                                         <f:setPropertyActionListener target="#{ABMReciboDinero.itemDet}" value="#{currentRow.tableRow.rowId}"/>
                                                     </webuijsf:imageHyperlink>
                                                 </webuijsf:tableColumn>
                                                 <webuijsf:tableColumn align="center" id="tableColumnEliminarDetFC" width="40">
-                                                    <webuijsf:imageHyperlink id="uilnkEliminarDetalleFC" imageURL="/resources/img/delete.png" text="">
+                                                    <webuijsf:imageHyperlink actionExpression="#{ABMReciboDinero.uilnkEliminarDetalleFC_action}"
+                                                        binding="#{ABMReciboDinero.uilnkEliminarDetalleFC}" id="uilnkEliminarDetalleFC"
+                                                        imageURL="/resources/img/delete.png" text="">
                                                         <f:setPropertyActionListener target="#{ABMReciboDinero.itemDet}" value="#{currentRow.tableRow.rowId}"/>
                                                     </webuijsf:imageHyperlink>
                                                 </webuijsf:tableColumn>

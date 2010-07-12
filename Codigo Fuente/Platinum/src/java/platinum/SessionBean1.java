@@ -40,6 +40,7 @@ import py.com.platinum.controller.TareaFallidaController;
 import py.com.platinum.controller.TipoComprobanteController;
 import py.com.platinum.controller.TipoProductoController;
 import py.com.platinum.controller.UnidadMedidaController;
+import py.com.platinum.controller.VentaComisionMensualController;
 import py.com.platinum.controller.UsuarioController;
 import py.com.platinum.entity.Banco;
 import py.com.platinum.entity.Caja;
@@ -60,7 +61,6 @@ import py.com.platinum.entity.OrdenTrabajo;
 import py.com.platinum.entity.OrdenTrabajoDetalle;
 import py.com.platinum.entity.PedidoCabecera;
 import py.com.platinum.entity.Presentacion;
-import py.com.platinum.entity.ProduccionDiaria;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.Seccion;
 import py.com.platinum.entity.Proveedor;
@@ -71,9 +71,9 @@ import py.com.platinum.entity.TareaFallida;
 import py.com.platinum.entity.TipoComprobante;
 import py.com.platinum.entity.TipoProducto;
 import py.com.platinum.entity.UnidadMedida;
+import py.com.platinum.entity.VentaComisionMensual;
 import py.com.platinum.entity.Usuarios;
 import py.com.platinum.utilsenum.FacturaCompraEstado;
-import py.com.platinum.utilsenum.FacturaVentaEstado;
 import py.com.platinum.utilsenum.ModuloEnum;
 import py.com.platinum.utilsenum.PedidoVentaEstado;
 
@@ -161,6 +161,7 @@ public class SessionBean1 extends AbstractSessionBean {
         cargarListaTodasTareasAsignadasProdDiaria();
         cargarListaTodosOrdenTrabajoDetallesProdDiaria();
         cargarListaTodosProductos();
+        cargarListaVentaComisionMensual();
         cargarListaTodosOTCab();
         cargarListaTodosTareas();
         cargarListaTodosTareasFallidas();
@@ -746,6 +747,29 @@ public class SessionBean1 extends AbstractSessionBean {
 
         //Obtenemos la lista de Banco ordenado por nombre del Banco
         listaBanco = (Banco[]) BancoController.getAll("nombreBanco").toArray(new Banco[0]);
+    }
+
+    //Cargar lista VentaComisionMensual
+    VentaComisionMensual[] listaVentaComisionMensual;
+
+    public VentaComisionMensual[] getListaVentaComisionMensual() {
+        return listaVentaComisionMensual;
+    }
+
+    public void setListaVentaComisionMensual(VentaComisionMensual[] listaVentaComisionMensual) {
+        this.listaVentaComisionMensual = listaVentaComisionMensual;
+    }
+
+
+    /**
+     * Obtenemos la lista de VentaComisionMensual de la base de datos
+     */
+    public void cargarListaVentaComisionMensual() {
+        //Variables
+        VentaComisionMensualController VentaComisionMensualController = new VentaComisionMensualController();
+
+        //Obtenemos la lista de VentaComisionMensual ordenado por nombre del VentaComisionMensual
+        listaVentaComisionMensual = (VentaComisionMensual[]) VentaComisionMensualController.getAll("nombreVentaComisionMensual").toArray(new VentaComisionMensual[0]);
     }
 
     //Cargar lista FormaPago
