@@ -6,11 +6,11 @@
 package platinum;
 
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.sun.webui.jsf.component.PasswordField;
+import com.sun.webui.jsf.component.TextField;
 import javax.faces.FacesException;
-import javax.servlet.http.HttpServletResponse;
+import py.com.platinum.controller.UsuarioController;
+import py.com.platinum.entity.Usuarios;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author MartinJara
  */
 
-public class Inicio extends AbstractPageBean {
+public class Acceso extends AbstractPageBean {
     // <editor-fold defaultstate="collapsed" desc="Managed Component Definition">
 
     /**
@@ -34,13 +34,31 @@ public class Inicio extends AbstractPageBean {
      */
     private void _init() throws Exception {
     }
+    private TextField uiUser = new TextField();
+
+    public TextField getUiUser() {
+        return uiUser;
+    }
+
+    public void setUiUser(TextField tf) {
+        this.uiUser = tf;
+    }
+    private PasswordField uiPassword = new PasswordField();
+
+    public PasswordField getUiPassword() {
+        return uiPassword;
+    }
+
+    public void setUiPassword(PasswordField pf) {
+        this.uiPassword = pf;
+    }
 
     // </editor-fold>
 
     /**
      * <p>Construct a new Page bean instance.</p>
      */
-    public Inicio() {
+    public Acceso() {
     }
 
     /**
@@ -77,17 +95,6 @@ public class Inicio extends AbstractPageBean {
         // Perform application initialization that must complete
         // *after* managed components are initialized
         // TODO - add your own initialization code here
-     
-        if (getSessionBean1().getUsuarioLogueado() == null) {
-            
-                         HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
-                    try {
-                        response.sendError(403);
-                        getFacesContext().responseComplete();
-                    } catch (IOException ex) {
-                        Logger.getLogger(cabecera.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-        }
 
     getSessionBean1().setTituloPagina("");
     getSessionBean1().setDetallePagina("Menu Principal del Sistema");
@@ -154,6 +161,41 @@ public class Inicio extends AbstractPageBean {
      */
     protected ApplicationBean1 getApplicationBean1() {
         return (ApplicationBean1) getBean("ApplicationBean1");
+    }
+
+    public String uiBtnAcceder_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        boolean error = false;
+        Usuarios usu = null;
+        if (this.uiUser.getText() == null || this.uiUser.getText().toString().equals("")
+                ||this.uiPassword.getText() == null || this.uiPassword.getText().toString().equals("")) {
+            info("Favor ingrese el usuario y password");
+            error = true;
+        }else{
+            usu = new UsuarioController().getUsuario(this.uiUser.getText().toString());
+            if (usu == null) {
+                info("El usuario ingresado no existe en el sistema");
+                error = true;
+            }else{
+                if (usu.getPassword().toString().equals(this.uiPassword.getText().toString())) {
+                    error = false;
+                }else{
+                    info("Password incorrecto, intente nuevamente");
+                    error = true;
+                }
+            }
+
+        }
+
+       if(error){
+        return "case1";
+       }else{
+        getSessionBean1().setUsuarioLogueado(usu);
+        return "case2";
+       }
+
+        
     }
 
 }

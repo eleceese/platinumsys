@@ -658,6 +658,8 @@ buscar_action2();
         this.updateRequest=false;
         this.addRequestIniciado=false;
 
+        limpiarDetalle();
+        this.uiFechaInv.setSelectedDate(new Date());
         
         return null;
     }
@@ -684,6 +686,7 @@ buscar_action2();
         // case name where null will return to the same page.
         this.addRequest=false;
         this.updateRequest=false;
+        this.errorValidacion=false;
 
         return null;
     }
@@ -1219,7 +1222,10 @@ public void cargarCamposUpdate(){
 
                  }else{
                             inventarioCabecera.setEstado("N");
-                            controllerResult = invCont.update(inventarioCabecera);
+                            InventarioDetalle[] invDet = (InventarioDetalle[]) inventarioCabecera.getInventarioDetalleCollection().toArray(new InventarioDetalle[0]);
+
+
+                            controllerResult = invCont.anularCabDet(inventarioCabecera,invDet);
 
                             if (controllerResult.getCodRetorno() ==-1) {
                                     this.pageAlert1.setType("error");

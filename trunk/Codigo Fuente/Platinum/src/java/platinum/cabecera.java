@@ -10,7 +10,14 @@ import com.sun.rave.web.ui.appbase.AbstractFragmentBean;
 import com.sun.webui.jsf.component.ContentPageTitle;
 import com.sun.webui.jsf.component.Hyperlink;
 import com.sun.webui.jsf.component.Masthead;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.FacesException;
+import javax.servlet.http.HttpServletResponse;
+
+
+
 
 /**
  * <p>Fragment bean that corresponds to a similarly named JSP page
@@ -121,6 +128,7 @@ public class cabecera extends AbstractFragmentBean {
         // Perform application initialization that must complete
         // *after* managed components are initialized
         // TODO - add your own initialization code here
+
     }
 
     /**

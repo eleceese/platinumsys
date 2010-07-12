@@ -8,8 +8,8 @@
     <f:subview id="cabecera">
         <!-- Masthead with Attributes -->
         <webuijsf:masthead binding="#{cabecera.masthead}" brandImageDescription="Sistema de Gestión" dateTime="true" id="masthead"
-            productImageDescription="Descripcion" productImageURL="/resources/Images/logo_platinum.jpg" roleInfo="Administrador Del Sistema"
-            roleInfoLabel="Rol:" serverInfo="Desarrollo" style="height: 142px" userInfo="Fernando Boy">
+        productImageDescription="Descripcion" productImageURL="/resources/Images/logo_platinum.jpg" roleInfo="#{SessionBean1.usuarioLogueado.rol}"
+        roleInfoLabel="Rol:" serverInfo="Desarrollo" style="height: 142px" userInfo="#{SessionBean1.usuarioLogueado.usuario}">
             <!-- Utility Bar Facets -->
             <f:facet name="consoleLink">
                 <webuijsf:hyperlink id="hyp1" immediate="true" text="Acerca de la Aplicación"/>
