@@ -102,8 +102,8 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
             tx.begin();
 
             //Obtenemos el numero de la factura
-            Long nroFactura= getNroRecibo(cabecera.getSerieRecibo());
-            cabecera.setNumeroRecibo(new BigInteger(nroFactura.toString()));
+            Long nro= getNroRecibo(cabecera.getSerieRecibo());
+            cabecera.setNumeroRecibo(new BigInteger(nro.toString()));
 
             //Persistimos la Cabecera
             em.persist(cabecera);

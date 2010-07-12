@@ -43,7 +43,6 @@
     <class>py.com.platinum.entity.InventarioDetalle</class>
     <class>py.com.platinum.entity.ReciboCabecera</class>
     <class>py.com.platinum.entity.TareaFormula</class>
-    <class>py.com.platinum.entity.MovimientoCajaCabecera</class>
     <class>py.com.platinum.entity.Cliente</class>
     <class>py.com.platinum.entity.TareaAsignada</class>
     <class>py.com.platinum.entity.ReciboDetalle</class>
@@ -69,8 +68,10 @@
     <class>py.com.platinum.entity.Parametros</class>
     <class>py.com.platinum.entity.Maquinarias</class>
     <class>py.com.platinum.view.MaquinariaCantidadHora</class>
+    <class>py.com.platinum.view.VClientesSaldos</class>
     <class>py.com.platinum.entity.TareaFallida</class>
     <class>py.com.platinum.entity.Usuarios</class>
+    <class>py.com.platinum.entity.VentaComisionMensual</class>
     <properties>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
       <property name="hibernate.connection.username" value="platinum"/>

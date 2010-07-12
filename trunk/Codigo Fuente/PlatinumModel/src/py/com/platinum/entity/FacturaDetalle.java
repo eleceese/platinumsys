@@ -6,6 +6,7 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,6 +48,8 @@ public class FacturaDetalle implements Serializable {
     private Long totalIva;
     @Column(name = "SUB_TOTAL", nullable=false)
     private Long subTotal;
+    @Column(name = "PORC_COMISION")
+    private BigDecimal porcComision;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -176,6 +179,14 @@ public class FacturaDetalle implements Serializable {
 
     public void setCodPedidoDetalle(PedidoDetalle codPedidoDetalle) {
         this.codPedidoDetalle = codPedidoDetalle;
+    }
+
+    public BigDecimal getPorcComision() {
+        return porcComision;
+    }
+
+    public void setPorcComision(BigDecimal porcComision) {
+        this.porcComision = porcComision;
     }
 
     @Override

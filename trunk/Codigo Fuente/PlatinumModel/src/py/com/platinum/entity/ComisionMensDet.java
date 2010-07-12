@@ -11,11 +11,12 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,11 +27,12 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "COMISION_MENS_DET")
-@NamedQueries({@NamedQuery(name = "ComisionMensDet.findAll", query = "SELECT c FROM ComisionMensDet c"), @NamedQuery(name = "ComisionMensDet.findByCodComMenDet", query = "SELECT c FROM ComisionMensDet c WHERE c.codComMenDet = :codComMenDet"), @NamedQuery(name = "ComisionMensDet.findByDetComPorc", query = "SELECT c FROM ComisionMensDet c WHERE c.detComPorc = :detComPorc"), @NamedQuery(name = "ComisionMensDet.findByDetComMontoComision", query = "SELECT c FROM ComisionMensDet c WHERE c.detComMontoComision = :detComMontoComision"), @NamedQuery(name = "ComisionMensDet.findByDetComMontoVenta", query = "SELECT c FROM ComisionMensDet c WHERE c.detComMontoVenta = :detComMontoVenta"), @NamedQuery(name = "ComisionMensDet.findByUsuarioAlta", query = "SELECT c FROM ComisionMensDet c WHERE c.usuarioAlta = :usuarioAlta"), @NamedQuery(name = "ComisionMensDet.findByUsuarioModif", query = "SELECT c FROM ComisionMensDet c WHERE c.usuarioModif = :usuarioModif"), @NamedQuery(name = "ComisionMensDet.findByFechaAlta", query = "SELECT c FROM ComisionMensDet c WHERE c.fechaAlta = :fechaAlta"), @NamedQuery(name = "ComisionMensDet.findByFechaModif", query = "SELECT c FROM ComisionMensDet c WHERE c.fechaModif = :fechaModif")})
+@SequenceGenerator(name="VENTA_COMISION_MENSUALDET_SEQUENCE", sequenceName="SQ_COMISION_MENS_DET")
 public class ComisionMensDet implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="VENTA_COMISION_MENSUALDET_SEQUENCE")
     @Column(name = "COD_COM_MEN_DET")
     private Long codComMenDet;
     @Column(name = "DET_COM_PORC")
