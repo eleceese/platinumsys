@@ -11,8 +11,6 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,7 +19,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import py.com.platinum.utilsenum.VentaComisionEstado;
 
 /**
  *
@@ -42,8 +39,7 @@ public class VentaComisionMensual implements Serializable {
     @Column(name = "ANIO")
     private String anio;
     @Column(name = "ESTADO")
-    @Enumerated(EnumType.STRING)
-    private VentaComisionEstado estado;
+    private String estado;
     @Column(name = "USUARIO_ALTA")
     private String usuarioAlta;
     @Column(name = "USUARIO_MODIF")
@@ -89,11 +85,11 @@ public class VentaComisionMensual implements Serializable {
         this.anio = anio;
     }
 
-    public VentaComisionEstado getEstado() {
+    public String getEstado() {
         return estado;
     }
 
-    public void setEstado(VentaComisionEstado estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 

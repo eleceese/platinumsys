@@ -28,6 +28,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import py.com.platinum.listener.FacturaVentaCabeceraListener;
+import py.com.platinum.utils.DateUtils;
 import py.com.platinum.utils.StringUtils;
 import py.com.platinum.utilsenum.FacturaVentaEstado;
 

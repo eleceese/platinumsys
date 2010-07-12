@@ -11,9 +11,12 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Empleado;
 import py.com.platinum.entity.FacturaCabecera;
 import py.com.platinum.entity.FacturaDetalle;
+import py.com.platinum.utils.DateUtils;
 import py.com.platinum.utilsenum.FacturaCompraEstado;
+import py.com.platinum.utilsenum.FacturaVentaEstado;
 
 /**
  *
@@ -377,6 +380,34 @@ public class FacturaCabeceraController extends AbstractJpaDao<FacturaCabecera> {
         
         //Realizamos la busqueda
         List<FacturaCabecera> entities = q.getResultList();
+        em.close();
+
+        //retornamos la lista
+        return entities;
+
+    }
+
+    public Empleado[] getListaEmpleadoComision(Date ini, Date fin) {
+                //Armamos el sql String
+        String SQL =
+                     " select distinct f.codEmpleado     "
+                    +"   from FacturaCabecera f,  FacturaDetalle d     "
+                    +"  where f.fechaFactura >= :ini                   "
+                    +"    and f.fechaFactura <= :fin                   "
+                    +"    and f.estadoFactura != :estado               "
+                    +"    and d.codFactura.codFactura = f.codFactura  "
+                    +"    and d.porcComision is not null               ";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        q.setParameter("ini", ini);
+        q.setParameter("fin", fin);
+        q.setParameter("estado", FacturaVentaEstado.ANULADO);
+
+        //Realizamos la busqueda
+        Empleado[] entities = (Empleado[])q.getResultList().toArray(new Empleado[0]);
+        
         em.close();
 
         //retornamos la lista
