@@ -520,11 +520,16 @@
     <managed-bean>
         <managed-bean-name>ABMReciboDinero</managed-bean-name>
         <managed-bean-class>platinum.ABMReciboDinero</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
+        <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
         <managed-bean-name>popup$popupProductosTerInsMat</managed-bean-name>
         <managed-bean-class>platinum.popup.popupProductosTerInsMat</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupClientesSaldos</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupClientesSaldos</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
@@ -585,6 +590,11 @@
     <managed-bean>
         <managed-bean-name>Login</managed-bean-name>
         <managed-bean-class>platinum.Login</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>LoginModule</managed-bean-name>
+        <managed-bean-class>platinum.LoginModule</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 </faces-config>

@@ -1192,7 +1192,8 @@ public class ABMFacturaVenta extends AbstractPageBean {
             detalle.setPorcentajeIva(Double.valueOf(uiLstIva.getSelected().toString()));
             detalle.setTotalIva(Long.valueOf(uiTxtMontoIva.getText().toString()));
             detalle.setSubTotal(Long.valueOf(uiTxtMontoTotal.getText().toString()));
-
+            detalle.setPorcComision(producto.getComision());
+            
             //Agregamos a la lista
             if (itemDet == null) {
                 lstDetalleLIST.add(detalle);
