@@ -925,6 +925,7 @@ public class ABMFacturaVenta extends AbstractPageBean {
             cabecera.setTotalIvaFactura(Long.valueOf(uiTxtTotalIva.getText().toString()));
             cabecera.setSubtotalFactura(Long.valueOf(uiTxtSubTotal.getText().toString()));
             cabecera.setTotalFactura(Long.valueOf(uiTxtTotal.getText().toString()));
+            cabecera.setCodEmpleado(getSessionBean1().getUsuarioLogueado().getCodEmpleado());
 
             //El estado dependiendo del tipo de comprobante
             if (tipoComprobante.getCantCuota() > 0) {

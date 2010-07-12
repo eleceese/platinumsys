@@ -47,6 +47,8 @@
                 <webuijsf:hyperlink id="abmFacturaVenta" style="margin-left: 20px" text="Factura Venta" url="/faces/ABMFacturaVenta.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="abmNotaCreditoCliente"  style="margin-left: 20px" text="Nota Crédito Cliente" url="/faces/ABMNotaCreditoCliente.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="abmComisiones"  style="margin-left: 20px" text="Comisiones" url="/faces/ABMComisionMensual.jsp"/>
                 <h2>Reportes</h2>
                 <webuijsf:hyperlink id="repPedido" style="margin-left: 20px" text="Pedidos" url="/faces/LSTPedidosProvisiones.jsp"/>
                 <br/>

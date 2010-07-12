@@ -10,6 +10,7 @@ import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.Calendar;
 import com.sun.webui.jsf.component.DropDown;
+import com.sun.webui.jsf.component.ImageHyperlink;
 import com.sun.webui.jsf.component.Label;
 import com.sun.webui.jsf.component.PageAlert;
 import com.sun.webui.jsf.component.RadioButton;
@@ -598,6 +599,70 @@ public class ABMReciboDinero extends AbstractPageBean {
     public void setUiTxtTotalComprobantes(TextField tf) {
         this.uiTxtTotalComprobantes = tf;
     }
+    private Button uiBtnAgregarDetFC = new Button();
+
+    public Button getUiBtnAgregarDetFC() {
+        return uiBtnAgregarDetFC;
+    }
+
+    public void setUiBtnAgregarDetFC(Button b) {
+        this.uiBtnAgregarDetFC = b;
+    }
+
+    private TextField uiTxtNroFormaCobro = new TextField();
+
+    public TextField getUiTxtNroFormaCobro() {
+        return uiTxtNroFormaCobro;
+    }
+
+    public void setUiTxtNroFormaCobro(TextField tf) {
+        this.uiTxtNroFormaCobro = tf;
+    }
+    private TextField uiTxtDescFormaCobro = new TextField();
+
+    public TextField getUiTxtDescFormaCobro() {
+        return uiTxtDescFormaCobro;
+    }
+
+    public void setUiTxtDescFormaCobro(TextField tf) {
+        this.uiTxtDescFormaCobro = tf;
+    }
+    private TextField uiTxtCodFormaCobro = new TextField();
+
+    public TextField getUiTxtCodFormaCobro() {
+        return uiTxtCodFormaCobro;
+    }
+
+    public void setUiTxtCodFormaCobro(TextField tf) {
+        this.uiTxtCodFormaCobro = tf;
+    }
+    private ImageHyperlink uilnkEditarDetalleFC = new ImageHyperlink();
+
+    public ImageHyperlink getUilnkEditarDetalleFC() {
+        return uilnkEditarDetalleFC;
+    }
+
+    public void setUilnkEditarDetalleFC(ImageHyperlink ih) {
+        this.uilnkEditarDetalleFC = ih;
+    }
+    private ImageHyperlink uilnkEliminarDetalleFC = new ImageHyperlink();
+
+    public ImageHyperlink getUilnkEliminarDetalleFC() {
+        return uilnkEliminarDetalleFC;
+    }
+
+    public void setUilnkEliminarDetalleFC(ImageHyperlink ih) {
+        this.uilnkEliminarDetalleFC = ih;
+    }
+    private TextField uiTxtSerieFormaCobro = new TextField();
+
+    public TextField getUiTxtSerieFormaCobro() {
+        return uiTxtSerieFormaCobro;
+    }
+
+    public void setUiTxtSerieFormaCobro(TextField tf) {
+        this.uiTxtSerieFormaCobro = tf;
+    }
 
     // </editor-fold>
 
@@ -1137,6 +1202,7 @@ public class ABMReciboDinero extends AbstractPageBean {
     private ReciboDetalle[] lstDetalle;
     private FormaPago formaPago;
     private FormaPagoController formaPagoController;
+    private MovimientoCajaDetalle DetalleFC;
     private MovimientoCajaDetalle[] lstDetalleFC;
     private List<MovimientoCajaDetalle> lstDetalleLISTFC;
     private List<ReciboDetalle> lstDetalleLIST;
@@ -1543,6 +1609,33 @@ public class ABMReciboDinero extends AbstractPageBean {
 
     public void setLstDetalleLISTFC(List<MovimientoCajaDetalle> lstDetalleLISTFC) {
         this.lstDetalleLISTFC = lstDetalleLISTFC;
+    }
+
+    public String uilnkEditarDetalleFC_action() {
+        //Obtenemos el detalle seleccionado
+        this.DetalleFC = lstDetalleLISTFC.get(Integer.valueOf(itemDet).intValue());
+        
+        //Obtenemos los valores del detalle q ha sido seleccionado
+        uiTxtCodFormaCobro.setText(this.DetalleFC.getCodFormaPago().getCodFormaPago());
+        uiTxtDescFormaCobro.setText(this.DetalleFC.getCodFormaPago().getNombreFormaPago());
+        uiTxtSerieFormaCobro.setText(this.DetalleFC.getSerieCheque());
+        uiTxtNroFormaCobro.setText(this.DetalleFC.getNumeroCheque());
+        uiTxtMontoCobro.setText(this.DetalleFC.getMonto());
+        
+        //result
+        return null;
+    }
+
+    public String uilnkEliminarDetalleFC_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        return null;
+    }
+
+    public String uiBtnAgregarDetFC_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        return null;
     }
 
     
