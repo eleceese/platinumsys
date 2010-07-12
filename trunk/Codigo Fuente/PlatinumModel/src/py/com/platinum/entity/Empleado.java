@@ -68,6 +68,8 @@ public class Empleado implements Serializable {
     private BigInteger hijosEmpleado;
     @Column(name = "SALARIO_EMPLEADO")
     private BigInteger salarioEmpleado;
+    @Column(name = "COSTO_HORA")
+    private Long costoHora;
     @Column(name = "TIPO_EMPLEADO")
     private String tipoEmpleado;
     @Column(name = "ESTADO_EMPLEADO")
@@ -148,6 +150,15 @@ public class Empleado implements Serializable {
         this.nacionalidadEmpleado = nacionalidadEmpleado;
     }
 
+    public Long getCostoHora() {
+        return costoHora;
+    }
+
+    public void setCostoHora(Long costoHora) {
+        this.costoHora = costoHora;
+    }
+
+    
     public Date getFechaNacimientoEmpleado() {
         return fechaNacimientoEmpleado;
     }

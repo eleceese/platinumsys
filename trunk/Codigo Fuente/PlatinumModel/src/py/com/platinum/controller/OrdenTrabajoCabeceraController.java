@@ -395,8 +395,8 @@ public class OrdenTrabajoCabeceraController extends AbstractJpaDao <OrdenTrabajo
                 for (int j = 0; j < costosFijosActualizar.size(); j++) {
                                         CostosFijos costoFijo = costosFijosActualizar.get(j);
                                         costoFijo.setCodOrdenTrabajoDet(ordenTrabajoDetalle);
-                                        costoFijo.setCostoUnitario(BigInteger.valueOf(Long.valueOf("3321")));
-                                        costoFijo.setCantidad(BigInteger.valueOf(Long.valueOf("121")));
+//                                        costoFijo.setCostoUnitario(BigInteger.valueOf(Long.valueOf("3321")));
+//                                        costoFijo.setCantidad(BigInteger.valueOf(Long.valueOf("121")));
 
                                         em.persist(em.merge(costoFijo));
                }
@@ -440,7 +440,7 @@ public class OrdenTrabajoCabeceraController extends AbstractJpaDao <OrdenTrabajo
         }
     }
 
-public ControllerResult updateCierre(OrdenTrabajo cab, OrdenTrabajoDetalle[] det,BigInteger precio, BigInteger costo)  {
+public ControllerResult updateCierre(OrdenTrabajo cab, OrdenTrabajoDetalle[] det,BigInteger precio, BigInteger costo,boolean acCosto,boolean acPrecio)  {
         ControllerResult r = new ControllerResult();
         EntityManager em = emf.createEntityManager();
 
@@ -454,9 +454,18 @@ public ControllerResult updateCierre(OrdenTrabajo cab, OrdenTrabajoDetalle[] det
             /// ACTUALIZAR LOS COSTOS Y PRECIOS DEL PRODUCTO
             Producto prod = new Producto();
             prod = new ProductoController().findById(cab.getCodProductoOt().getCodProducto());
-            prod.setCostoActual(costo);
-            prod.setPrecioActual(precio);
+            if (acCosto) {
+                prod.setCostoActual(costo);
+
+
+
+            }
+            if (acPrecio) {
+                prod.setPrecioActual(precio);
+            }
             em.merge(prod);
+
+            if (acPrecio) {
 
                 HistoricoPrecio histPrec = new HistoricoPrecio();
                 histPrec.setCodProducto(prod);
@@ -465,6 +474,8 @@ public ControllerResult updateCierre(OrdenTrabajo cab, OrdenTrabajoDetalle[] det
                 histPrec.setPrecioHistorico(precio);
                 em.persist(histPrec);
 
+            }
+            if (acCosto) {
 
                 HistoricoCosto histCosto = new HistoricoCosto();
                 histCosto.setCodProducto(prod);
@@ -473,13 +484,9 @@ public ControllerResult updateCierre(OrdenTrabajo cab, OrdenTrabajoDetalle[] det
                 histCosto.setCostoHistorico(costo);
                 em.persist(histCosto);
 
+            }
+
             //// ACTUALIZAR DETALLES DE ORDEN DE TRABAJO
-
-
-
-
-
-
 
             ordenTrabajoCabecera = cab;
 
@@ -489,6 +496,22 @@ public ControllerResult updateCierre(OrdenTrabajo cab, OrdenTrabajoDetalle[] det
                 ordenTrabajoDetalle.setEstado("C");
                 ordenTrabajoDetalle.setFechaModif(new Date());
                 em.merge(ordenTrabajoDetalle);
+                //////////////////////////////////
+               if (acCosto) {
+
+
+                Producto productoActual =ordenTrabajoDetalle.getCodProducto();
+                    long exist = 0;
+                    exist = new ExistenciaController().getCantidadExistencia(Long.valueOf(productoActual.getCodProducto().toString())).longValue();
+                    double costoRealOTVar = ordenTrabajoDetalle.getCostoReal().doubleValue();
+                     double CantidadProducidaOtVar = ordenTrabajoDetalle.getCantidadReal().doubleValue();
+
+                        Double costoUnit = Math.ceil(Double.valueOf(ordenTrabajoDetalle.getCostoReal().doubleValue() / ordenTrabajoDetalle.getCantidadReal().doubleValue()));
+                        Double costoNuevo = Math.ceil(Double.valueOf((ordenTrabajoDetalle.getCostoReal().doubleValue() + (productoActual.getCostoActual().doubleValue()*exist))/(exist+ordenTrabajoDetalle.getCantidadReal().longValue())));
+                productoActual.setCostoActual(BigInteger.valueOf(costoNuevo.longValue()));
+                em.merge(productoActual);
+                ///////////////////////////////////
+                }
             }
 
             ordenTrabajoCabecera = cab;
