@@ -66,7 +66,7 @@ public class ComisionMensCab implements Serializable {
     private List<ComisionMensDet> comisionMensDetCollection;
     @JoinColumn(name = "COD_COMISION", referencedColumnName = "COD_COMISION")
     @ManyToOne
-    private ComisionMensCab codComision;
+    private VentaComisionMensual codComision;
 
     public ComisionMensCab() {
     }
@@ -171,11 +171,11 @@ public class ComisionMensCab implements Serializable {
         this.comisionMensDetCollection = comisionMensDetCollection;
     }
 
-    public ComisionMensCab getCodComision() {
+    public VentaComisionMensual getCodComision() {
         return codComision;
     }
 
-    public void setCodComision(ComisionMensCab codComision) {
+    public void setCodComision(VentaComisionMensual codComision) {
         this.codComision = codComision;
     }
 
