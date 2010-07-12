@@ -537,8 +537,14 @@ public class RegistroDeInventario extends AbstractPageBean {
                 this.gridPanelDetalle.setRendered(true);
             }
 
+                getSessionBean1().setTituloPagina("Registro de Inventario");
+        getSessionBean1().setDetallePagina("Registro de nuevo inventario, previo al cierre y ajuste de Existencias");
+
+
         } else if (updateRequest) {
 
+                getSessionBean1().setTituloPagina("Editar Registro de Inventario");
+        getSessionBean1().setDetallePagina("Editar el inventario previo al cierre y ajuste de Existencias");
             this.gridPanelbusqueda.setRendered(false);
             this.gridPanelCabecera1.setRendered(true);
             this.gridPanelDetalle.setRendered(true);

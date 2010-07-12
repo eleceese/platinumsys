@@ -625,6 +625,11 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
+        <managed-bean-name>PermisoDenegado</managed-bean-name>
+        <managed-bean-class>platinum.PermisoDenegado</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
         <managed-bean-name>ABMComisionMensual</managed-bean-name>
         <managed-bean-class>platinum.ABMComisionMensual</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>

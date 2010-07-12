@@ -122,9 +122,7 @@
                 <h2>Transacciones</h2>
                 <webuijsf:hyperlink id="movimientos" style="margin-left: 20px" text="Movimientos Deposito" url="/faces/ABMMovimientosDeposito.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="inventarios" style="margin-left: 20px" text="Apertura Inventario" url="/faces/RegistroDeInventario.jsp"/>
-                <br/>
-                <webuijsf:hyperlink id="inventariosCierre" style="margin-left: 20px" text="Cierre Inventario" url="/faces/RegistroDeInventarioCierre.jsp"/>
+                <webuijsf:hyperlink id="inventarios" style="margin-left: 20px" text="Gestion de Inventario" url="/faces/RegistroDeInventario.jsp"/>
                 <br/>
                 <h2>Reportes</h2>
                 <webuijsf:hyperlink id="LSTExistenciaProducto" style="margin-left: 20px" text="Existencias en Deposito" url="/faces/LSTExistenciaProducto.jsp"/>

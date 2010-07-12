@@ -73,7 +73,7 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>faces/Inicio.jsp</welcome-file>
+        <welcome-file>faces/Acceso.jsp</welcome-file>
         </welcome-file-list>
     <error-page>
         <exception-type>javax.servlet.ServletException</exception-type>

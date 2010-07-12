@@ -62,71 +62,6 @@ public class RegistroDeOrdenesDeTrabajo extends AbstractPageBean {
         tipoDoc1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Cedula de Identidad"), new com.sun.webui.jsf.model.Option("2", "DNI"), new com.sun.webui.jsf.model.Option("3", "Pasaporte")});
         radioButtonGroup1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("e", "Entrada"), new com.sun.webui.jsf.model.Option("s", "Salida")});
         referencia1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Orden de Trabajo"), new com.sun.webui.jsf.model.Option("2", "Venta"), new com.sun.webui.jsf.model.Option("3", "Trabajo Diario")});
-        uiEstadoFIlDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "En Progreso"), new com.sun.webui.jsf.model.Option("2", "Parada"), new com.sun.webui.jsf.model.Option("3", "Terminado"), new com.sun.webui.jsf.model.Option("4", "Cancelado")});
-        uiEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "En Proceso"), new com.sun.webui.jsf.model.Option("2", "Terminado"), new com.sun.webui.jsf.model.Option("3", "En Espera")});
-    }
-    private DefaultTableDataProvider defaultTableDataProvider = new DefaultTableDataProvider();
-
-    public DefaultTableDataProvider getDefaultTableDataProvider() {
-        return defaultTableDataProvider;
-    }
-
-    public void setDefaultTableDataProvider(DefaultTableDataProvider dtdp) {
-        this.defaultTableDataProvider = dtdp;
-    }
-    private HtmlPanelGrid gridPanelCabecera1 = new HtmlPanelGrid();
-
-    public HtmlPanelGrid getGridPanelCabecera1() {
-        return gridPanelCabecera1;
-    }
-
-    public void setGridPanelCabecera1(HtmlPanelGrid hpg) {
-        this.gridPanelCabecera1 = hpg;
-    }
-    private HtmlPanelGrid gridPanelTabla = new HtmlPanelGrid();
-
-    public HtmlPanelGrid getGridPanelTabla() {
-        return gridPanelTabla;
-    }
-
-    public void setGridPanelTabla(HtmlPanelGrid hpg) {
-        this.gridPanelTabla = hpg;
-    }
-    private HtmlPanelGrid gridPanelAddUpdate = new HtmlPanelGrid();
-
-    public HtmlPanelGrid getGridPanelAddUpdate() {
-        return gridPanelAddUpdate;
-    }
-
-    public void setGridPanelAddUpdate(HtmlPanelGrid hpg) {
-        this.gridPanelAddUpdate = hpg;
-    }
-    private HtmlPanelGrid buttonsPanelAddUpdate = new HtmlPanelGrid();
-
-    public HtmlPanelGrid getButtonsPanelAddUpdate() {
-        return buttonsPanelAddUpdate;
-    }
-
-    public void setButtonsPanelAddUpdate(HtmlPanelGrid hpg) {
-        this.buttonsPanelAddUpdate = hpg;
-    }
-    private Button addRecordButton = new Button();
-
-    public Button getAddRecordButton() {
-        return addRecordButton;
-    }
-
-    public void setAddRecordButton(Button b) {
-        this.addRecordButton = b;
-    }
-    private PageAlert pageAlert1 = new PageAlert();
-
-    public PageAlert getPageAlert1() {
-        return pageAlert1;
-    }
-
-    public void setPageAlert1(PageAlert pa) {
-        this.pageAlert1 = pa;
     }
     private SingleSelectOptionsList tipoDoc1DefaultOptions = new SingleSelectOptionsList();
 
@@ -154,249 +89,6 @@ public class RegistroDeOrdenesDeTrabajo extends AbstractPageBean {
 
     public void setReferencia1DefaultOptions(SingleSelectOptionsList ssol) {
         this.referencia1DefaultOptions = ssol;
-    }
-    private TableColumn selec = new TableColumn();
-
-    public TableColumn getSelec() {
-        return selec;
-    }
-
-    public void setSelec(TableColumn tc) {
-        this.selec = tc;
-    }
-    private SingleSelectOptionsList uiEstadoFIlDefaultOptions = new SingleSelectOptionsList();
-
-    public SingleSelectOptionsList getUiEstadoFIlDefaultOptions() {
-        return uiEstadoFIlDefaultOptions;
-    }
-
-    public void setUiEstadoFIlDefaultOptions(SingleSelectOptionsList ssol) {
-        this.uiEstadoFIlDefaultOptions = ssol;
-    }
-    private SingleSelectOptionsList uiEstadoDefaultOptions = new SingleSelectOptionsList();
-
-    public SingleSelectOptionsList getUiEstadoDefaultOptions() {
-        return uiEstadoDefaultOptions;
-    }
-
-    public void setUiEstadoDefaultOptions(SingleSelectOptionsList ssol) {
-        this.uiEstadoDefaultOptions = ssol;
-    }
-    private HtmlPanelGrid gridPanelBuscar = new HtmlPanelGrid();
-
-    public HtmlPanelGrid getGridPanelBuscar() {
-        return gridPanelBuscar;
-    }
-
-    public void setGridPanelBuscar(HtmlPanelGrid hpg) {
-        this.gridPanelBuscar = hpg;
-    }
-    private HtmlPanelGrid gridPanelCabecera = new HtmlPanelGrid();
-
-    public HtmlPanelGrid getGridPanelCabecera() {
-        return gridPanelCabecera;
-    }
-
-    public void setGridPanelCabecera(HtmlPanelGrid hpg) {
-        this.gridPanelCabecera = hpg;
-    }
-    private HtmlPanelGrid gridPanelDetalleOT = new HtmlPanelGrid();
-
-    public HtmlPanelGrid getGridPanelDetalleOT() {
-        return gridPanelDetalleOT;
-    }
-
-    public void setGridPanelDetalleOT(HtmlPanelGrid hpg) {
-        this.gridPanelDetalleOT = hpg;
-    }
-    private HtmlPanelGrid gridPanelDetalleSemiTerminados = new HtmlPanelGrid();
-
-    public HtmlPanelGrid getGridPanelDetalleSemiTerminados() {
-        return gridPanelDetalleSemiTerminados;
-    }
-
-    public void setGridPanelDetalleSemiTerminados(HtmlPanelGrid hpg) {
-        this.gridPanelDetalleSemiTerminados = hpg;
-    }
-    private Button botonDeFormula = new Button();
-
-    public Button getBotonDeFormula() {
-        return botonDeFormula;
-    }
-
-    public void setBotonDeFormula(Button b) {
-        this.botonDeFormula = b;
-    }
-    private DropDown uiProductoFil = new DropDown();
-
-    public DropDown getUiProductoFil() {
-        return uiProductoFil;
-    }
-
-    public void setUiProductoFil(DropDown dd) {
-        this.uiProductoFil = dd;
-    }
-    private DropDown uiEstadoFIl = new DropDown();
-
-    public DropDown getUiEstadoFIl() {
-        return uiEstadoFIl;
-    }
-
-    public void setUiEstadoFIl(DropDown dd) {
-        this.uiEstadoFIl = dd;
-    }
-    private Calendar uiFechaDesdeFil = new Calendar();
-
-    public Calendar getUiFechaDesdeFil() {
-        return uiFechaDesdeFil;
-    }
-
-    public void setUiFechaDesdeFil(Calendar c) {
-        this.uiFechaDesdeFil = c;
-    }
-    private Calendar uiFechaHastaFil = new Calendar();
-
-    public Calendar getUiFechaHastaFil() {
-        return uiFechaHastaFil;
-    }
-
-    public void setUiFechaHastaFil(Calendar c) {
-        this.uiFechaHastaFil = c;
-    }
-    private TextField uiNumOtFil = new TextField();
-
-    public TextField getUiNumOtFil() {
-        return uiNumOtFil;
-    }
-
-    public void setUiNumOtFil(TextField tf) {
-        this.uiNumOtFil = tf;
-    }
-    private TextField uiCostoReal = new TextField();
-
-    public TextField getUiCostoReal() {
-        return uiCostoReal;
-    }
-
-    public void setUiCostoReal(TextField tf) {
-        this.uiCostoReal = tf;
-    }
-    private TextField uiCostoPrevisto = new TextField();
-
-    public TextField getUiCostoPrevisto() {
-        return uiCostoPrevisto;
-    }
-
-    public void setUiCostoPrevisto(TextField tf) {
-        this.uiCostoPrevisto = tf;
-    }
-    private TextField uiCantidadProducida = new TextField();
-
-    public TextField getUiCantidadProducida() {
-        return uiCantidadProducida;
-    }
-
-    public void setUiCantidadProducida(TextField tf) {
-        this.uiCantidadProducida = tf;
-    }
-    private DropDown uiEstado = new DropDown();
-
-    public DropDown getUiEstado() {
-        return uiEstado;
-    }
-
-    public void setUiEstado(DropDown dd) {
-        this.uiEstado = dd;
-    }
-    private Calendar uiFechaFin = new Calendar();
-
-    public Calendar getUiFechaFin() {
-        return uiFechaFin;
-    }
-
-    public void setUiFechaFin(Calendar c) {
-        this.uiFechaFin = c;
-    }
-    private Calendar uiFechaIni = new Calendar();
-
-    public Calendar getUiFechaIni() {
-        return uiFechaIni;
-    }
-
-    public void setUiFechaIni(Calendar c) {
-        this.uiFechaIni = c;
-    }
-    private TextField uiCantidad = new TextField();
-
-    public TextField getUiCantidad() {
-        return uiCantidad;
-    }
-
-    public void setUiCantidad(TextField tf) {
-        this.uiCantidad = tf;
-    }
-    private TextArea uiDescripcionOt = new TextArea();
-
-    public TextArea getUiDescripcionOt() {
-        return uiDescripcionOt;
-    }
-
-    public void setUiDescripcionOt(TextArea ta) {
-        this.uiDescripcionOt = ta;
-    }
-    private TextField uiFormulaCodigo = new TextField();
-
-    public TextField getUiFormulaCodigo() {
-        return uiFormulaCodigo;
-    }
-
-    public void setUiFormulaCodigo(TextField tf) {
-        this.uiFormulaCodigo = tf;
-    }
-    private TextField uiFormulaNombre = new TextField();
-
-    public TextField getUiFormulaNombre() {
-        return uiFormulaNombre;
-    }
-
-    public void setUiFormulaNombre(TextField tf) {
-        this.uiFormulaNombre = tf;
-    }
-    private DropDown uiProducto = new DropDown();
-
-    public DropDown getUiProducto() {
-        return uiProducto;
-    }
-
-    public void setUiProducto(DropDown dd) {
-        this.uiProducto = dd;
-    }
-    private TextField uiResponsableNombre = new TextField();
-
-    public TextField getUiResponsableNombre() {
-        return uiResponsableNombre;
-    }
-
-    public void setUiResponsableNombre(TextField tf) {
-        this.uiResponsableNombre = tf;
-    }
-    private TextField uiResponsableCodigo = new TextField();
-
-    public TextField getUiResponsableCodigo() {
-        return uiResponsableCodigo;
-    }
-
-    public void setUiResponsableCodigo(TextField tf) {
-        this.uiResponsableCodigo = tf;
-    }
-    private TextField uiNroOT = new TextField();
-
-    public TextField getUiNroOT() {
-        return uiNroOT;
-    }
-
-    public void setUiNroOT(TextField tf) {
-        this.uiNroOT = tf;
     }
 
     // </editor-fold>
@@ -476,34 +168,7 @@ public class RegistroDeOrdenesDeTrabajo extends AbstractPageBean {
     @Override
     public void prerender() {
 
-        if (addRequestOT) {
      
-            this.gridPanelBuscar.setRendered(false);
-            this.gridPanelCabecera.setRendered(true);
-            this.gridPanelDetalleOT.setRendered(true);
-            this.gridPanelDetalleSemiTerminados.setRendered(false);
-
-        } else if (updateRequestOT) {
-
-            this.gridPanelBuscar.setRendered(false);
-            this.gridPanelCabecera.setRendered(true);
-            this.gridPanelDetalleOT.setRendered(true);
-            this.gridPanelDetalleSemiTerminados.setRendered(false);
-
-        } else if (addDetalleOt) {
-
-            this.gridPanelBuscar.setRendered(false);
-            this.gridPanelCabecera.setRendered(false);
-            this.gridPanelDetalleOT.setRendered(false);
-            this.gridPanelDetalleSemiTerminados.setRendered(true);
-
-        } else {
-
-            this.gridPanelBuscar.setRendered(true);
-            this.gridPanelCabecera.setRendered(false);
-            this.gridPanelDetalleOT.setRendered(false);
-            this.gridPanelDetalleSemiTerminados.setRendered(false);
-        }
 
 buscar_action2();
 
@@ -517,22 +182,22 @@ buscar_action2();
         String pNumeroOrdenTrabajo=null, pCodProducto=null, pEstado=null;
         Date pFechaOt=null;
 
-        if (this.uiNumOtFil.getText()!=null) {
-            pNumeroOrdenTrabajo = this.uiNumOtFil.getText().toString();
-        }
-
-        if (this.uiProductoFil.getSelected()!=null) {
-            pCodProducto = this.uiProductoFil.getSelected().toString();
-        }
-
-        if (this.uiFechaDesdeFil.getSelectedDate()!=null) {
-            pFechaOt= this.uiFechaDesdeFil.getSelectedDate();
-        }
-
-        if (this.uiEstadoFIl.getSelected()!=null) {
-//            pEstado= this.uiEstadoFIl.getSelected().toString();
-            pEstado= "A";
-        }
+//        if (this.uiNumOtFil.getText()!=null) {
+//            pNumeroOrdenTrabajo = this.uiNumOtFil.getText().toString();
+//        }
+//
+//        if (this.uiProductoFil.getSelected()!=null) {
+//            pCodProducto = this.uiProductoFil.getSelected().toString();
+//        }
+//
+//        if (this.uiFechaDesdeFil.getSelectedDate()!=null) {
+//            pFechaOt= this.uiFechaDesdeFil.getSelectedDate();
+//        }
+//
+//        if (this.uiEstadoFIl.getSelected()!=null) {
+////            pEstado= this.uiEstadoFIl.getSelected().toString();
+//            pEstado= "A";
+//        }
 
         listaOrdenTrabajoCabeceras = (OrdenTrabajo[]) ordenTrabajoCabeceraController.getAllFiltered
                                         (pNumeroOrdenTrabajo,
@@ -593,48 +258,8 @@ buscar_action2();
         tareasAsignadasOt = (TareaAsignada[]) tareaAsignadaList.toArray(new TareaAsignada[0]);
 
         //Si no hay error de validacion
-        if (! errorValidacion){
+       
 
-            //// CARGA DE LA CABECERA
-          OrdenTrabajo ordenTrabajo = new OrdenTrabajo();
-          ProductoController productoController = new ProductoController();
-          EmpleadoController empleadoController = new EmpleadoController();
-          FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
-
-
-          ordenTrabajo.setNumeroOrdenTrabajo(new Long( this.uiNroOT.getText().toString()));
-          ordenTrabajo.setCodEmpleado1(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
-          ordenTrabajo.setCodEmpleado2(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
-          ordenTrabajo.setCodProductoOt(productoController.findById(Long.valueOf(this.uiProducto.getSelected().toString())));
-          ordenTrabajo.setCantidadOt(new BigInteger(this.uiCantidad.getText().toString()));
-          ordenTrabajo.setCantidadProducidaOt(new BigInteger(this.uiCantidadProducida.getText().toString()));
-          ordenTrabajo.setFechaInicialOt(this.uiFechaIni.getSelectedDate());
-          ordenTrabajo.setFechaFinOt(this.uiFechaFin.getSelectedDate());
-          ordenTrabajo.setCostoEstimadoOt(new BigInteger(this.uiCostoPrevisto.getText().toString()));
-          ordenTrabajo.setCostoRealOt(new BigInteger(this.uiCostoReal.getText().toString()));
-          ordenTrabajo.setEstadoOt("A");
-
-          OrdenTrabajoCabeceraController ordenTrabajoCabeceraController = new OrdenTrabajoCabeceraController();
-          ControllerResult controllerResult = new ControllerResult();
-
-          controllerResult = ordenTrabajoCabeceraController.createCabDet(ordenTrabajo, detallesOrdenTrabajo);
-
-          if (controllerResult.getCodRetorno() != -1) {
-                addRequestOT = false;
-                this.pageAlert1.setType("information");
-        }else{
-
-        this.pageAlert1.setType("error");
-        this.errorValidacion=true;
-
-        }
-
-            this.pageAlert1.setTitle(controllerResult.getMsg());
-            this.pageAlert1.setSummary("");
-            this.pageAlert1.setDetail("");
-            this.pageAlert1.setRendered(true);
-          
-       }
            return null;
  }
 
@@ -650,71 +275,6 @@ buscar_action2();
 //            info(uiDetProductoCodigo, "Debe cargar los detalles de productos de la formula");
             r = true;
         }
-
-        if (uiResponsableCodigo.getText().toString() == null || uiResponsableCodigo.getText().equals("") ) {
-//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
-            r = true;
-        }
-
-        if (uiResponsableNombre.getText().toString() == null || uiResponsableNombre.getText().equals("") ) {
-//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
-            r = true;
-        }
-
-        if (uiProducto.getSelected() == null || uiProducto.getSelected().equals("") ) {
-//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
-            r = true;
-        }
-
-        if (uiFormulaCodigo.getText().toString() == null || uiFormulaCodigo.getText().equals("") ) {
-//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
-            r = true;
-        }
-
-        if (uiFormulaNombre.getText().toString() == null || uiFormulaNombre.getText().equals("") ) {
-//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
-            r = true;
-        }
-
-        if (uiFormulaNombre.getText().toString() == null || uiFormulaNombre.getText().equals("") ) {
-//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
-            r = true;
-        }
-
-        if (!StringUtils.esNumero(this.uiCantidad.getText().toString()))
-            {   r = true;
-//                this.info(uiCantidad, "La cantidad debe ser campo numerico");
-            }
-
-         if (uiFechaIni.getSelectedDate() == null || uiFechaIni.getSelectedDate().equals("") ) {
-//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
-            r = true;
-        }
-
-
-         if (uiFechaFin.getSelectedDate() == null || uiFechaFin.getSelectedDate().equals("") ) {
-//            info(uiProductoCodigo, "Campo obligatorio, favor ingrese el Codigo de Producto");
-            r = true;
-        }
-
-
-        if (!StringUtils.esNumero(this.uiCostoPrevisto.getText().toString()))
-            {   r = true;
-//                this.info(uiCantidad, "La cantidad debe ser campo numerico");
-            }
-
-
-        if (!StringUtils.esNumero(this.uiCostoReal.getText().toString()))
-            {   r = true;
-//                this.info(uiCantidad, "La cantidad debe ser campo numerico");
-            }
-
-
-        if (uiEstado.getSelected().toString() == null || uiEstado.getSelected().toString().equals("") ) {
-//            info(uiEstado, "Campo obligatorio, favor ingrese el estado de la formula");
-            r = true;
-        }
-        //result
 
         return r;
     }
@@ -760,20 +320,6 @@ private List<RecursoAsignado>  recursoAsignadoEliminadoList;
 
     public String buttonNuevo_action() {
         // TODO: Replace with your code
-
-        this.uiNroOT.setText("");
-        this.uiResponsableCodigo.setText("");
-        this.uiResponsableNombre.setText("");
-        this.pageAlert1.setRendered(false);
-        this.uiProducto.setSelected("");
-        this.uiFormulaCodigo.setText("");
-        this.uiFormulaNombre.setText("");
-        this.uiCantidad.setText("");
-        this.uiFechaDesdeFil.setSelectedDate(null);
-        this.uiFechaHastaFil.setSelectedDate(null);
-        this.uiCantidadProducida.setText("");
-        this.uiCostoReal.setText("");
-        this.uiCostoPrevisto.setText("");
 
         detalleOrdenTrabajoList = new ArrayList();
         detallesOrdenTrabajo = (OrdenTrabajoDetalle[]) detalleOrdenTrabajoList.toArray(new OrdenTrabajoDetalle[0]);
@@ -987,48 +533,7 @@ private List<RecursoAsignado>  recursoAsignadoEliminadoList;
         tareasAsignadasOt = (TareaAsignada[]) tareaAsignadaList.toArray(new TareaAsignada[0]);
 
         //Si no hay error de validacion
-        if (! errorValidacion){
-
-            //// CARGA DE LA CABECERA
-          OrdenTrabajo ordenTrabajo = new OrdenTrabajo();
-          ProductoController productoController = new ProductoController();
-          EmpleadoController empleadoController = new EmpleadoController();
-          FormulaCabeceraController formulaCabeceraController = new FormulaCabeceraController();
-
-
-          ordenTrabajo.setNumeroOrdenTrabajo(new Long( this.uiNroOT.getText().toString()));
-          ordenTrabajo.setCodEmpleado1(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
-          ordenTrabajo.setCodEmpleado2(empleadoController.findById(Long.valueOf(this.uiResponsableCodigo.getText().toString())));
-          ordenTrabajo.setCodProductoOt(productoController.findById(Long.valueOf(this.uiProducto.getSelected().toString())));
-          ordenTrabajo.setCantidadOt(new BigInteger(this.uiCantidad.getText().toString()));
-          ordenTrabajo.setCantidadProducidaOt(new BigInteger(this.uiCantidadProducida.getText().toString()));
-          ordenTrabajo.setFechaInicialOt(this.uiFechaIni.getSelectedDate());
-          ordenTrabajo.setFechaFinOt(this.uiFechaFin.getSelectedDate());
-          ordenTrabajo.setCostoEstimadoOt(new BigInteger(this.uiCostoPrevisto.getText().toString()));
-          ordenTrabajo.setCostoRealOt(new BigInteger(this.uiCostoReal.getText().toString()));
-          ordenTrabajo.setEstadoOt("A");
-
-          OrdenTrabajoCabeceraController ordenTrabajoCabeceraController = new OrdenTrabajoCabeceraController();
-          ControllerResult controllerResult = new ControllerResult();
-
-          controllerResult = ordenTrabajoCabeceraController.createCabDet(ordenTrabajo, detallesOrdenTrabajo);
-
-          if (controllerResult.getCodRetorno() != -1) {
-                addRequestOT = false;
-                this.pageAlert1.setType("information");
-        }else{
-
-        this.pageAlert1.setType("error");
-        this.errorValidacion=true;
-
-        }
-
-            this.pageAlert1.setTitle(controllerResult.getMsg());
-            this.pageAlert1.setSummary("");
-            this.pageAlert1.setDetail("");
-            this.pageAlert1.setRendered(true);
-
-       }
+   
 
         return null;
     }

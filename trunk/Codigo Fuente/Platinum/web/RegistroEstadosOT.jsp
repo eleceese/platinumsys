@@ -13,9 +13,9 @@
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
                     <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <script>
-                        function ABMReciboDinero() {
+                        function initAllRows() {
                             var table = document.getElementById("form1:tableOrdenesTrabajo");
-                            table.ABMReciboDinero();}
+                            table.initAllRows();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
@@ -209,31 +209,35 @@
                                 <webuijsf:label id="label9" style="font-size: 12px" text="Datos de la Produccion"/>
                                 <h:panelGrid columns="2" id="gridPanel6" style="border: 2px outset #990000; height: 100%" width="407">
                                     <webuijsf:label id="label10" text="Costo Total"/>
-                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCostoProduccion}" converter="#{RegistroEstadosOT.numberConverter2}"
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCostoProduccion}" 
                                         disabled="true" id="uiCierreCostoProduccion"/>
                                     <webuijsf:label id="label11" text="Cantidad Producida"/>
-                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCantidadProducida}" disabled="true" id="uiCierreCantidadProducida"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCantidadProducida}" disabled="true"  id="uiCierreCantidadProducida"/>
                                     <webuijsf:label id="label7" text="Costo Unitario"/>
-                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCostoProduccionUnitario}" disabled="true" id="uiCierreCostoProduccionUnitario"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCostoProduccionUnitario}" disabled="true"  id="uiCierreCostoProduccionUnitario"/>
                                 </h:panelGrid>
                                 <webuijsf:label id="label12" style="font-size: 12px" text="Nuevo Costo de Produccion"/>
-                                <h:panelGrid columns="2" id="gridPanel8" style="border: 2px outset #990000; height: 100%" width="407">
+                                <h:panelGrid columns="3" id="gridPanel8" style="border: 2px outset #990000; height: 100%" width="407">
                                     <webuijsf:label id="label13" text="Costo"/>
-                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCostoNuevo}" disabled="true" id="uiCierreCostoNuevo"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCostoNuevo}" columns="40"
+                                        converter="#{RegistroEstadosOT.numberConverter4}" disabled="true" id="uiCierreCostoNuevo"/>
+                                    <webuijsf:checkbox binding="#{RegistroEstadosOT.uiChekActualizarCosto}" id="uiChekActualizarCosto" label="Actualizar costo de Produccion"/>
                                 </h:panelGrid>
                                 <webuijsf:label id="label18" style="color: rgb(0, 0, 102); font-size: 14px" text="Cierre de OT - Actualizacion de Precios"/>
                                 <webuijsf:label id="label14" style="font-size: 12px" text="Precios"/>
                                 <h:panelGrid columns="2" id="gridPanel9" style="border: 2px outset #990000; height: 100%" width="407">
                                     <webuijsf:label id="label15" text="Precio Actual"/>
-                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierrePrecioActual}" converter="#{RegistroEstadosOT.numberConverter2}"
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierrePrecioActual}" 
                                         disabled="true" id="uiCierrePrecioActual"/>
                                     <webuijsf:label id="label19" text="Costo"/>
-                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCostoActualPrecio}" disabled="true" id="uiCierreCostoActualPrecio"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreCostoActualPrecio}"  disabled="true" id="uiCierreCostoActualPrecio"/>
                                     <webuijsf:label id="label16" text="Margen Deseado %"/>
                                     <webuijsf:textField binding="#{RegistroEstadosOT.uiCierreMargen}" id="uiCierreMargen"/>
                                     <webuijsf:label id="label17" text="Nuevo Precio"/>
-                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierrePrecioNuevo}" disabled="true" id="uiCierrePrecioNuevo"/>
+                                    <webuijsf:textField binding="#{RegistroEstadosOT.uiCierrePrecioNuevo}" disabled="true" id="uiCierrePrecioNuevo" />
                                     <webuijsf:button actionExpression="#{RegistroEstadosOT.uiBtnCalcular_action}" id="uiBtnCalcular" text="Calcular"/>
+                                    <webuijsf:checkbox binding="#{RegistroEstadosOT.uiCheckActualizarPrecio}" id="uiCheckActualizarPrecio"
+                                        label="Actualizar Precio de Venta" valueChangeListenerExpression="#{RegistroEstadosOT.uiCheckActualizarPrecio_processValueChange}"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="2" id="gridPanel7">
                                     <webuijsf:button actionExpression="#{RegistroEstadosOT.uiBtnCerrarGuardar_action}" id="uiBtnCerrarGuardar" text="Cerrar OT"/>

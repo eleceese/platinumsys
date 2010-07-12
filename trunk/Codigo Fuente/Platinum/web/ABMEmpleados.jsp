@@ -183,6 +183,11 @@
                                     <webuijsf:textField binding="#{ABMEmpleados.uiTxtSalario}" id="uiTxtSalario" style="text-align: right"/>
                                     <webuijsf:message for="uiTxtSalario" id="message16" showDetail="false" showSummary="true" style="uiTxtSalario"/>
                                 </h:panelGrid>
+                                <webuijsf:label id="label12" text="Costo Hora Prod"/>
+                                <h:panelGrid columns="2" id="gridPanel13" style="width: 100%; height: 100%;">
+                                    <webuijsf:textField binding="#{ABMEmpleados.uiTxtCostoHoraProd}" id="uiTxtCostoHoraProd" style="text-align: right"/>
+                                    <webuijsf:message for="uiTxtCostoHoraProd" id="message13" showDetail="false" showSummary="true" style="uiTxtSalario"/>
+                                </h:panelGrid>
                             </h:panelGrid>
                             <h:panelGrid binding="#{ABMEmpleados.buttonsPanelAddUpdate}" columns="2" id="buttonsPanelAddUpdate" style="height: 100%" width="191">
                                 <webuijsf:button actionExpression="#{ABMEmpleados.uiBtnGuardarNuevo_action}" binding="#{ABMEmpleados.uiBtnGuardarNuevo}"

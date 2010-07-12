@@ -14,9 +14,9 @@
                     <webuijsf:link id="link1" url="/resources/stylesheet.css"/>
                     <!-- \SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <script>
-                        function ABMCiudades() {
+                        function initAllRows() {
                             var table = document.getElementById("form1:table1");
-                            table.ABMCiudades();}
+                            table.initAllRows();}
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->

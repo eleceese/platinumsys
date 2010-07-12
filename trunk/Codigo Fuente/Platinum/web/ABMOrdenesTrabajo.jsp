@@ -90,7 +90,8 @@
                                             <webuijsf:tableColumn align="center" binding="#{ABMOrdenesTrabajo.tableColumn1}" id="tableColumn1"
                                                 onClick="setTimeout('initAllRows()', 0)" selectId="#{ABMOrdenesTrabajo.radioButton1.id}" valign="top">
                                                 <webuijsf:radioButton binding="#{ABMOrdenesTrabajo.radioButton1}" id="radioButton1" label=""
-                                                    selected="#{ABMOrdenesTrabajo.selected}" selectedValue="#{ABMOrdenesTrabajo.selectedValue}" valueChangeListenerExpression="#{ABMOrdenesTrabajo.radioButton1_processValueChange}"/>
+                                                    name="#{ABMOrdenesTrabajo.radioButton1.id}" selected="#{ABMOrdenesTrabajo.selected}"
+                                                    selectedValue="#{ABMOrdenesTrabajo.selectedValue}" valueChangeListenerExpression="#{ABMOrdenesTrabajo.radioButton1_processValueChange}"/>
                                             </webuijsf:tableColumn>
                                             <webuijsf:tableColumn headerText="Nro Ot" id="tableColumn2" sort="numeroOrdenTrabajo" width="90">
                                                 <webuijsf:staticText id="staticText2" text="#{currentRow.value['codOrdenTrabjo']}"/>
@@ -415,7 +416,7 @@
                                                     <webuijsf:tableColumn headerText="Codigo" id="tableColumn18" sort="codTarea" width="113">
                                                         <webuijsf:staticText id="staticText11" text="#{currentRow.value['codTarea'].codTarea}"/>
                                                     </webuijsf:tableColumn>
-                                                    <webuijsf:tableColumn headerText="Tarea" id="tableColumn19" width="286">
+                                                    <webuijsf:tableColumn headerText="Tarea" id="tableColumn19" width="266">
                                                         <webuijsf:staticText id="staticText12" text="#{currentRow.value['codTarea']}"/>
                                                     </webuijsf:tableColumn>
                                                     <webuijsf:tableColumn align="center" headerText="Fin" id="tableColumn31">
@@ -426,6 +427,9 @@
                                                     </webuijsf:tableColumn>
                                                     <webuijsf:tableColumn headerText="Cant Prod" id="tableColumn29">
                                                         <webuijsf:staticText id="staticText20" text="#{currentRow.value['cantidadReal']}"/>
+                                                    </webuijsf:tableColumn>
+                                                    <webuijsf:tableColumn headerText="Cant Fall" id="tableColumn17">
+                                                        <webuijsf:staticText id="staticText36" text="#{currentRow.value['cantidadFallida']}"/>
                                                     </webuijsf:tableColumn>
                                                     <webuijsf:tableColumn align="center" binding="#{ABMOrdenesTrabajo.tableColumTareasEdit}"
                                                         id="tableColumTareasEdit" valign="top" width="36">
@@ -574,11 +578,8 @@
                                             <webuijsf:imageHyperlink actionExpression="#{ABMOrdenesTrabajo.uiDetCostoEditarGastoFijo}"
                                                 binding="#{ABMOrdenesTrabajo.uiDetCostoEditarGastoFijo}" id="uiDetCostoEditarGastoFijo"
                                                 imageURL="/resources/Images/edit_16x16.gif" text="">
-                                                <f:setPropertyActionListener target="#{ABMOrdenesTrabajo.itemDet}" value="#{currentRow.tableRow.rowId}"/>
+                                                <f:setPropertyActionListener target="#{ABMOrdenesTrabajo.itemDetGastoFijo}" value="#{currentRow.tableRow.rowId}"/>
                                             </webuijsf:imageHyperlink>
-                                        </webuijsf:tableColumn>
-                                        <webuijsf:tableColumn align="center" id="tableColumn41" width="23">
-                                            <webuijsf:imageHyperlink id="imageHyperlink2" imageURL="/resources/Images/delete.gif" text=""/>
                                         </webuijsf:tableColumn>
                                     </webuijsf:tableRowGroup>
                                 </webuijsf:table>

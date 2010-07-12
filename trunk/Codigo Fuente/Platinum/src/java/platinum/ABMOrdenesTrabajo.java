@@ -26,16 +26,21 @@ import com.sun.webui.jsf.component.TextArea;
 import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.convert.NumberConverter;
 import javax.faces.event.ValueChangeEvent;
+import javax.servlet.http.HttpServletResponse;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
@@ -1428,6 +1433,7 @@ private SolicitudInterna[] solicitudesAGenerarse;
     // *after* managed components are initialized
     // TODO - add your own initialization code here
 
+
     getSessionBean1().setTituloPagina("Registro de Ordenes de Trabajo");
     getSessionBean1().setDetallePagina("Seleccione la OT deseada");
 
@@ -1462,6 +1468,7 @@ private SolicitudInterna[] solicitudesAGenerarse;
     private boolean updateRequestOT = false;
     private boolean updateRequestOT2 = false;
     private boolean updateCostoOT = false;
+    private boolean updateGastoFijo = false;
 
     private boolean verDetalleSemiter = false;
     private boolean verDetalleCosto = false;
@@ -1480,6 +1487,28 @@ private SolicitudInterna[] solicitudesAGenerarse;
 
     @Override
     public void prerender() {
+
+         if (getSessionBean1().getUsuarioLogueado() == null)
+        {
+            HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
+                    try {
+                        response.sendRedirect("/Platinum/faces/Acceso.jsp");
+                        getFacesContext().responseComplete();
+                    } catch (IOException ex) {
+                        Logger.getLogger(cabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        }else if(!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("SUP_PRODUCCION")){
+            HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
+                    try {
+                        response.sendRedirect("/Platinum/faces/PermisoDenegado.jsp");
+                        getFacesContext().responseComplete();
+                    } catch (IOException ex) {
+                        Logger.getLogger(cabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+
+        }
+
 
         if (addRequestOT) {
 
@@ -2345,6 +2374,7 @@ this.uiSemiTerCabCantProd.setText("");
                    tareaAsignadaOt.setCodTarea(tarea);
                    tareaAsignadaOt.setCantidad(Long.valueOf(this.uiSemiTerDetCantTarea.getText().toString()));
                    tareaAsignadaOt.setCantidadReal(Long.valueOf("0"));
+                   tareaAsignadaOt.setCantidadFallida(Long.valueOf("0"));
                    tareaAsignadaOt.setCodTareaAsignada(idAuxiliar);
                    if (uiSemiTerDetFin.isChecked()) {
                        tareaAsignadaOt.setTareaFin("S");
@@ -2858,6 +2888,15 @@ public String uiButtonActivarOtDet_action() {
     public void setItemDet(String itemDet) {
         this.itemDet = itemDet;
     }
+    private String itemDetGastoFijo;
+
+    public String getItemDetGastoFijo() {
+        return itemDetGastoFijo;
+    }
+
+    public void setItemDetGastoFijo(String itemDetGastoFijo) {
+        this.itemDetGastoFijo = itemDetGastoFijo;
+    }
 
     private String itemDetalleOt;
 
@@ -3258,7 +3297,8 @@ private long idEditado;
                         BigDecimal cantHoras = BigDecimal.valueOf(cantHorasDouble);
                         otDetCostoH.setCantidadHoras(cantHoras);
 
-                        BigDecimal costoHoras = BigDecimal.valueOf(1);
+//                        BigDecimal costoHoras = BigDecimal.valueOf(1);
+                        BigDecimal costoHoras = BigDecimal.valueOf(empleado.getCostoHora().longValue());
                         otDetCostoH.setCostoHora(costoHoras);
 
 
@@ -3423,8 +3463,10 @@ private long idEditado;
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
 
+
+        updateGastoFijo = true;
         CostosFijos costoFijo = new CostosFijos();
-        costoFijo = costosFijosMostradoList.get(Integer.valueOf(itemDet).intValue());
+        costoFijo = costosFijosMostradoList.get(Integer.valueOf(itemDetGastoFijo).intValue());
 
         this.uiDetCostoFijoDescripcion.setText(costoFijo.getDescripcionGasto().toString());
         this.uiDetCostoFijoCantidad.setText(costoFijo.getCantidad().toString());
@@ -3433,6 +3475,145 @@ private long idEditado;
 
         return null;
     }
+
+      public String uiButtonInsertarGasto_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+
+        if (!updateGastoFijo) {
+
+                        errorValidacion = false;
+                        CostosFijos costo = new CostosFijos();
+                        if (this.uiDetCostoFijoDescripcion.getText() != null &&
+                                !this.uiDetCostoFijoDescripcion.getText().toString().equals("")   ){
+
+                            costo.setDescripcionGasto(this.uiDetCostoFijoDescripcion.getText().toString());
+                        }else{
+
+                            errorValidacion = true;
+                        }
+
+                        if (this.uiDetCostoFijoCantidad.getText() != null &&
+                                !this.uiDetCostoFijoCantidad.getText().toString().equals("")
+                                    && StringUtils.esNumero(this.uiDetCostoFijoCantidad.getText().toString())) {
+
+                            costo.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetCostoFijoCantidad.getText().toString())));
+                        }else{
+                            errorValidacion = true;
+
+                        }
+                        if (this.uiDetCostoFijoCostoUnit.getText() != null &&
+                                !this.uiDetCostoFijoCostoUnit.getText().toString().equals("")
+                                    && StringUtils.esNumero(this.uiDetCostoFijoCostoUnit.getText().toString())) {
+
+                            costo.setCostoUnitario(BigInteger.valueOf(Long.valueOf(this.uiDetCostoFijoCostoUnit.getText().toString())));
+                        }else{
+                            errorValidacion = true;
+
+                        }
+
+                        if (!errorValidacion) {
+                                    idAuxiliar++;
+                                    costo.setCodCostoFijo(idAuxiliar);
+                                    costo.setMonto(costo.getCostoUnitario().multiply(costo.getCantidad()));
+                                    costosFijosMostradoList.add(costo);
+
+                                    // ACTUALIZAR EL COSTO DE LA SUB OT
+                                    Long costoActual = detalleOrdenTrabajo.getCostoReal();
+                                    detalleOrdenTrabajo.setCostoReal(costoActual + costo.getMonto().longValue());
+                                    this.uiSemiTerCabCostoTotal.setText(detalleOrdenTrabajo.getCostoReal().toString());
+                                    /////////
+                                    //ACTUALIZAR EL COSTO TOTAL DE LA OT
+                                    Long costoRealAnterior = Long.valueOf(this.uiCostoReal.getText().toString());
+                                    Long costoRealNuevo = costoRealAnterior +  costo.getMonto().longValue();
+                                    this.uiCostoReal.setText(costoRealNuevo.toString());
+                                    //////////
+                                    detalleOrdenTrabajo.setCostosFijosCollectionFromList(costosFijosMostradoList);
+                                    costosFijosOt = (CostosFijos[])  costosFijosMostradoList.toArray(new CostosFijos[0]);
+
+                                    this.uiDetCostoFijoDescripcion.setText("");
+                                    this.uiDetCostoFijoMonto.setText("");
+
+
+                        }else{
+                            info("Verifique los datos del Gasto Fijo");
+                        }
+       }else{
+                        updateGastoFijo = false;
+                        CostosFijos costo = new CostosFijos();
+                        costo = costosFijosMostradoList.get(Integer.valueOf(itemDetGastoFijo).intValue());
+
+                        if (this.uiDetCostoFijoDescripcion.getText() != null &&
+                                !this.uiDetCostoFijoDescripcion.getText().toString().equals("")   ){
+
+                            costo.setDescripcionGasto(this.uiDetCostoFijoDescripcion.getText().toString());
+                        }else{
+
+                            errorValidacion = true;
+                        }
+
+                        if (this.uiDetCostoFijoCantidad.getText() != null &&
+                                !this.uiDetCostoFijoCantidad.getText().toString().equals("")
+                                    && StringUtils.esNumero(this.uiDetCostoFijoCantidad.getText().toString())) {
+
+                            costo.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetCostoFijoCantidad.getText().toString())));
+                        }else{
+                            errorValidacion = true;
+
+                        }
+                        if (this.uiDetCostoFijoCostoUnit.getText() != null &&
+                                !this.uiDetCostoFijoCostoUnit.getText().toString().equals("")
+                                    && StringUtils.esNumero(this.uiDetCostoFijoCostoUnit.getText().toString())) {
+
+                            costo.setCostoUnitario(BigInteger.valueOf(Long.valueOf(this.uiDetCostoFijoCostoUnit.getText().toString())));
+                        }else{
+                            errorValidacion = true;
+                        }
+
+                            long montoAnterior = costo.getMonto().longValue();
+                            long nuevoMonto = (costo.getCostoUnitario().multiply(costo.getCantidad()).longValue());
+                            costo.setMonto(BigInteger.valueOf(nuevoMonto));
+
+                                    Long costoActual = detalleOrdenTrabajo.getCostoReal();
+                                    if (nuevoMonto > montoAnterior) {
+                                        long diferencia = nuevoMonto - montoAnterior;
+
+                                    // ACTUALIZAR EL COSTO DE LA SUB OT
+                                    detalleOrdenTrabajo.setCostoReal(costoActual + diferencia);
+                                    this.uiSemiTerCabCostoTotal.setText(detalleOrdenTrabajo.getCostoReal().toString());
+                                    /////////
+                                    //ACTUALIZAR EL COSTO TOTAL DE LA OT
+                                    Long costoRealAnterior = Long.valueOf(this.uiCostoReal.getText().toString());
+                                    Long costoRealNuevo = costoRealAnterior +  diferencia;
+                                    this.uiCostoReal.setText(costoRealNuevo.toString());
+                                    //////////
+
+                                    }else if(montoAnterior > nuevoMonto ){
+                                        long diferencia = montoAnterior - nuevoMonto;
+
+                                    // ACTUALIZAR EL COSTO DE LA SUB OT
+                                    detalleOrdenTrabajo.setCostoReal(costoActual - diferencia);
+                                    this.uiSemiTerCabCostoTotal.setText(detalleOrdenTrabajo.getCostoReal().toString());
+                                    /////////
+                                    //ACTUALIZAR EL COSTO TOTAL DE LA OT
+                                    Long costoRealAnterior = Long.valueOf(this.uiCostoReal.getText().toString());
+                                    Long costoRealNuevo = costoRealAnterior -  diferencia;
+                                    this.uiCostoReal.setText(costoRealNuevo.toString());
+                                    //////////
+
+
+                                    }
+                                    detalleOrdenTrabajo.setCostosFijosCollectionFromList(costosFijosMostradoList);
+                                    costosFijosOt = (CostosFijos[])  costosFijosMostradoList.toArray(new CostosFijos[0]);
+
+                                    this.uiDetCostoFijoDescripcion.setText("");
+                                    this.uiDetCostoFijoMonto.setText("");
+
+       }
+        return null;
+    }
+
+
 
     public String uiButtonActualizarCostoHombre_action() {
         // TODO: Process the action. Return value is a navigation
@@ -3465,68 +3646,7 @@ private long idEditado;
         return null;
     }
 
-    public String uiButtonInsertarGasto_action() {
-        // TODO: Process the action. Return value is a navigation
-        // case name where null will return to the same page.
-        errorValidacion = false;
-        CostosFijos costo = new CostosFijos();
-        if (this.uiDetCostoFijoDescripcion.getText() != null &&
-                !this.uiDetCostoFijoDescripcion.getText().toString().equals("")   ){
-        
-            costo.setDescripcionGasto(this.uiDetCostoFijoDescripcion.getText().toString());
-        }else{
-        
-            errorValidacion = true;
-        }
-        
-        if (this.uiDetCostoFijoCantidad.getText() != null &&
-                !this.uiDetCostoFijoCantidad.getText().toString().equals("")
-                    && StringUtils.esNumero(this.uiDetCostoFijoCantidad.getText().toString())) {
-            
-            costo.setCantidad(BigInteger.valueOf(Long.valueOf(this.uiDetCostoFijoCantidad.getText().toString())));
-        }else{
-            errorValidacion = true;
-        
-        }
-        if (this.uiDetCostoFijoCostoUnit.getText() != null &&
-                !this.uiDetCostoFijoCostoUnit.getText().toString().equals("")
-                    && StringUtils.esNumero(this.uiDetCostoFijoCostoUnit.getText().toString())) {
-
-            costo.setCostoUnitario(BigInteger.valueOf(Long.valueOf(this.uiDetCostoFijoCostoUnit.getText().toString())));
-        }else{
-            errorValidacion = true;
-
-        }
-
-        if (!errorValidacion) {
-                    idAuxiliar++;
-                    costo.setCodCostoFijo(idAuxiliar);
-                    costo.setMonto(costo.getCostoUnitario().multiply(costo.getCantidad()));
-                    costosFijosMostradoList.add(costo);
-
-                    // ACTUALIZAR EL COSTO DE LA SUB OT
-                    Long costoActual = detalleOrdenTrabajo.getCostoReal();
-                    detalleOrdenTrabajo.setCostoReal(costoActual + costo.getMonto().longValue());
-                    this.uiSemiTerCabCostoTotal.setText(detalleOrdenTrabajo.getCostoReal().toString());
-                    /////////
-                    //ACTUALIZAR EL COSTO TOTAL DE LA OT
-                    Long costoRealAnterior = Long.valueOf(this.uiCostoReal.getText().toString());
-                    Long costoRealNuevo = costoRealAnterior +  costo.getMonto().longValue();
-                    this.uiCostoReal.setText(costoRealNuevo.toString());
-                    //////////
-                    detalleOrdenTrabajo.setCostosFijosCollectionFromList(costosFijosMostradoList);
-                    costosFijosOt = (CostosFijos[])  costosFijosMostradoList.toArray(new CostosFijos[0]);
-
-                    this.uiDetCostoFijoDescripcion.setText("");
-                    this.uiDetCostoFijoMonto.setText("");
-
-
-        }else{
-            info("Verifique los datos del Gasto Fijo");
-        }
-
-        return null;
-    }
+  
 
 public String uibuttonGuardarCostos_action() {
         // TODO: Process the action. Return value is a navigation
@@ -3602,6 +3722,12 @@ public String uibuttonGuardarCostos_action() {
         this.uiTodosFil.setSelected(true);
         this.uiEstadoFil.setSelected("X");
 
+        return null;
+    }
+
+    public String imageHyperlink2_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
         return null;
     }
 
