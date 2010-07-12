@@ -301,4 +301,49 @@ public class InventarioCabeceraController extends AbstractJpaDao <InventarioCabe
         }
     }
 
+
+     public ControllerResult anularCabDet(InventarioCabecera cab, InventarioDetalle[] det)  {
+        ControllerResult r = new ControllerResult();
+        EntityManager em = emf.createEntityManager();
+
+        InventarioDetalle[] detallesInventario = det;
+        InventarioCabecera InventarioCabecera = cab;
+
+        try {
+            em.getTransaction().begin();
+
+            //// ACTUALIZAR DETALLES
+            InventarioCabecera = cab;
+            for (int i = 0; i < detallesInventario.length; i++) {
+                 InventarioDetalle fdet = new InventarioDetalle();
+                 fdet = detallesInventario[i];
+                 fdet.setEstado("N");
+                 fdet.setFechaModif(new Date());
+                 em.merge(fdet);
+
+             }
+             //// FIN ACTUALIZAR DETALLES
+
+            ///// ACTUALIZAR CABECERA
+                cab.setEstado("N");
+                em.merge(cab);
+            ///// FIN ACTUALIZAR CABECERA
+            em.getTransaction().commit();
+            r.setCodRetorno(0);
+            r.setMsg("Registro actualizado correctamente");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            r.setCodRetorno(-1);
+            r.setMsg("Ha ocurrido un error al actualizar el registro ");
+            try {
+                em.getTransaction().rollback();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            em.close();
+            return r;
+        }
+    }
+
 }
