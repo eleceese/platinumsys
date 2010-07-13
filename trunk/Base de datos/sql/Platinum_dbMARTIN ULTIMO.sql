@@ -9,6 +9,7 @@ prompt
 prompt Creating table BANCO
 prompt ====================
 prompt
+
 create table PLATINUM.BANCO
 (
   COD_BANCO     NUMBER(15) not null,
