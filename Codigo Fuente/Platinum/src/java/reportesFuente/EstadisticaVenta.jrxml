@@ -31,16 +31,18 @@
 	<parameter name="fechaDesde" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="fechaHasta" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="producto" isForPrompting="false" class="java.lang.String"/>
-	<queryString><![CDATA[select p.cod_producto as cod_producto, p.descripcion as desc_producto, sum(d.cantidad) cantidad
+	<queryString><![CDATA[select p.cod_producto as cod_producto, p.descripcion as desc_producto, sum(d.cantidad) cantidad, 
+sum((d.precio_unitario * d.cantidad) - nvl(d.monto_descuento, 0) ) as total
   from factura_cabecera c, factura_detalle d, producto p
  where c.estado_factura != 'ANULADO'
    and d.cod_factura = c.cod_factura
-   and p.cod_producto= d.cod_producto $P!{parametros}
+   and p.cod_producto= d.cod_producto  $P!{parametros}
 group by p.cod_producto, p.descripcion]]></queryString>
 
 	<field name="COD_PRODUCTO" class="java.math.BigDecimal"/>
 	<field name="DESC_PRODUCTO" class="java.lang.String"/>
 	<field name="CANTIDAD" class="java.math.BigDecimal"/>
+	<field name="TOTAL" class="java.math.BigDecimal"/>
 
 	<variable name="V_TOTAL" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
 		<variableExpression><![CDATA[$F{CANTIDAD}]]></variableExpression>
@@ -166,7 +168,7 @@ group by p.cod_producto, p.descripcion]]></queryString>
 					<textElement textAlignment="Center">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
 					</textElement>
-				<text><![CDATA[Estadistica Venta ]]></text>
+				<text><![CDATA[Venta  Por Producto]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -206,7 +208,7 @@ group by p.cod_producto, p.descripcion]]></queryString>
 					<reportElement
 						x="73"
 						y="24"
-						width="366"
+						width="275"
 						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -226,7 +228,7 @@ group by p.cod_producto, p.descripcion]]></queryString>
 						mode="Opaque"
 						x="72"
 						y="2"
-						width="367"
+						width="276"
 						height="17"
 						forecolor="#000000"
 						backcolor="#CCCCCC"
@@ -245,9 +247,9 @@ group by p.cod_producto, p.descripcion]]></queryString>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="439"
+						x="348"
 						y="24"
-						width="96"
+						width="91"
 						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -265,9 +267,9 @@ group by p.cod_producto, p.descripcion]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="439"
+						x="349"
 						y="2"
-						width="95"
+						width="91"
 						height="17"
 						forecolor="#000000"
 						backcolor="#CCCCCC"
@@ -325,6 +327,47 @@ group by p.cod_producto, p.descripcion]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{COD_PRODUCTO}]]></textFieldExpression>
 				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="439"
+						y="24"
+						width="96"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-5"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right">
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TOTAL}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="440"
+						y="2"
+						width="95"
+						height="17"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-8"
+						positionType="Float"/>
+					<box>					<pen lineWidth="1.0" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Impote Total]]></text>
+				</staticText>
 			</band>
 		</detail>
 		<columnFooter>
