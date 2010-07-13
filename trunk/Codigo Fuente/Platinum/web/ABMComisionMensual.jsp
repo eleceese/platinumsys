@@ -95,7 +95,7 @@
                                             <webuijsf:staticText id="staticText1" text="#{currentRow.value['anio']}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Mes" id="tableColumn2" sort="mes" width="113">
-                                            <webuijsf:staticText id="staticText2" text="#{currentRow.value['mes']}"/>
+                                            <webuijsf:staticText id="staticText2" text="#{currentRow.value['mesLetra']}"/>
                                         </webuijsf:tableColumn>
                                         <webuijsf:tableColumn headerText="Estado" id="tableColumnEstado" sort="estado" width="110">
                                             <webuijsf:staticText id="staticText3" text="#{currentRow.value['estado']}"/>

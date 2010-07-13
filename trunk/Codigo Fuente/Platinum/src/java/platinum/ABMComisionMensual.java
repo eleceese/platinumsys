@@ -58,8 +58,8 @@ public class ABMComisionMensual extends AbstractPageBean {
     private void _init() throws Exception {
         numberConverter1.setPattern("#,##0");
         uiLstMesDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("01", "Enero"), new com.sun.webui.jsf.model.Option("02", "Febrero"), new com.sun.webui.jsf.model.Option("03", "Marzo"), new com.sun.webui.jsf.model.Option("04", "Abril"), new com.sun.webui.jsf.model.Option("05", "Mayo"), new com.sun.webui.jsf.model.Option("06", "Junio"), new com.sun.webui.jsf.model.Option("07", "Julio"), new com.sun.webui.jsf.model.Option("08", "Agosto"), new com.sun.webui.jsf.model.Option("09", "Setiembre"), new com.sun.webui.jsf.model.Option("10", "Octubre"), new com.sun.webui.jsf.model.Option("11", "Noviembre"), new com.sun.webui.jsf.model.Option("12", "Diciembre")});
-        uiLstFilEstadoComisionDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("PENDIENTE", "PENDIENTE"), new com.sun.webui.jsf.model.Option("GENERADO", "GENERADO"), new com.sun.webui.jsf.model.Option("CERRADO", "CERRADO"), new com.sun.webui.jsf.model.Option("ANULADO", "ANULADO")});
-        uiLstFilEstadoComisionDefaultOptions.setSelectedValue("PENDIENTE");
+        uiLstFilEstadoComisionDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("PENDIENTE", "PENDIENTE"), new com.sun.webui.jsf.model.Option("GENERADO", "GENERADO"), new com.sun.webui.jsf.model.Option("CERRADO", "CERRADO"), new com.sun.webui.jsf.model.Option("ANULADO", "ANULADO"),new com.sun.webui.jsf.model.Option("TODOS", "TODOS")});
+        uiLstFilEstadoComisionDefaultOptions.setSelectedValue("TODOS");
         numberConverter1.setMinIntegerDigits(1);
         numberConverter1.setMaxIntegerDigits(40);
         numberConverter1.setMaxFractionDigits(3);
@@ -515,19 +515,27 @@ public class ABMComisionMensual extends AbstractPageBean {
             VentaComisionMensual e = l[rowId];
 
             if (e.getEstado().toString().equals("PENDIENTE")) {
-                //Eliminados el registro
-                VentaComisionMensualController controller = new VentaComisionMensualController();
-                ControllerResult r = controller.generarComisiones(e, getSessionBean1().getUsuario());
 
-                //Mensaje
-                if (r.getCodRetorno() == -1) {
-                    this.pageAlert1.setType("error");
-                    this.pageAlert1.setTitle("Error al eliminar el Registro");
-                } else {
+                //Generamos la comision
+                VentaComisionMensualController controller = new VentaComisionMensualController();
+
+                if (controller.getVentaComisionMensual(e.getMes(), e.getAnio(), null).size() > 0) {
                     this.pageAlert1.setType("information");
-                    this.pageAlert1.setTitle(r.getMsg());
-                    e.setEstado(VentaComisionEstado.GENERADO.toString());
-                    controller.update(e);
+                    this.pageAlert1.setTitle("Para este periodo ya se generaron las comisiones, favor anular dichas comisiones para vovler a generar las comisiones");
+                }else{
+                    
+                    ControllerResult r = controller.generarComisiones(e, getSessionBean1().getUsuario());
+
+                    //Mensaje
+                    if (r.getCodRetorno() == -1) {
+                        this.pageAlert1.setType("error");
+                        this.pageAlert1.setTitle("Error al eliminar el Registro");
+                    } else {
+                        this.pageAlert1.setType("information");
+                        this.pageAlert1.setTitle(r.getMsg());
+                        e.setEstado(VentaComisionEstado.GENERADO.toString());
+                        controller.update(e);
+                    }
                 }
             }else{
                     this.pageAlert1.setType("information");
@@ -636,8 +644,14 @@ public class ABMComisionMensual extends AbstractPageBean {
             pAnio = this.uiTxtFilAnio.getText().toString();
         }
 
+        String estado = uiLstFilEstadoComisionDefaultOptions.getSelectedValue().toString();
+
+        if (estado.equals("TODOS")) {
+            estado = null;
+        }
+
         //Buscamos la lista de registros
-        VentaComisionMensual[] l = (VentaComisionMensual[]) c.getVentaComisionMensual(pMes, pAnio, uiLstFilEstadoComisionDefaultOptions.getSelectedValue().toString()).toArray(new VentaComisionMensual[0]);
+        VentaComisionMensual[] l = (VentaComisionMensual[]) c.getVentaComisionMensual(pMes, pAnio, estado).toArray(new VentaComisionMensual[0]);
 
         //Actualizamos la lista de empleados de la session
         getSessionBean1().setListaVentaComisionMensual(l);

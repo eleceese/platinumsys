@@ -517,6 +517,8 @@ public class ABMClientes extends AbstractPageBean {
         uiTxtApellido.setText(e.getApellidoCliente());
         uiLstCiudad.setSelected(e.getCodCiudad());
         uiTxtContacto1.setText(e.getContacto1Cliente());
+        uiTxtTelefono1.setText(e.getTelefono1Cliente());
+        uiTxtTelefono2.setText(e.getTelefono2Cliente());
         uiTxtContacto2.setText(e.getContacto2Cliente());
         uiTxtDireccion.setText(e.getDireccionCliente());
         uiLstTipoDoc.setSelected(e.getTipoDodCliente());
@@ -682,6 +684,13 @@ public class ABMClientes extends AbstractPageBean {
 
             if (uiTxtMail.getText() != null) {
                 r.setMailCliente((String) uiTxtMail.getText());
+            }
+            
+            if (uiTxtTelefono1.getText() != null) {
+                r.setTelefono1Cliente((String) uiTxtTelefono1.getText());
+            }
+            if (uiTxtTelefono2.getText() != null) {
+                r.setTelefono2Cliente((String) uiTxtTelefono2.getText());
             }
 
             r.setRucCliente(uiTxtNroRuc.getText().toString());
