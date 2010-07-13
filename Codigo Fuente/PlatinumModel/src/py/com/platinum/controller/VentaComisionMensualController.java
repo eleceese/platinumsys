@@ -5,6 +5,7 @@
 
 package py.com.platinum.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -86,6 +87,10 @@ public class VentaComisionMensualController extends AbstractJpaDao<VentaComision
         //Realizamos la busqueda
         List<VentaComisionMensual> entities = q.getResultList();
         em.close();
+
+        if (entities==null) {
+            entities = new ArrayList<VentaComisionMensual>();
+        }
 
         //retornamos la lista
         return entities;

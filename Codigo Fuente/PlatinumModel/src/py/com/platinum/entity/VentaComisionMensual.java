@@ -19,6 +19,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.utils.DateUtils;
 
 /**
  *
@@ -75,6 +76,10 @@ public class VentaComisionMensual implements Serializable {
 
     public void setMes(String mes) {
         this.mes = mes;
+    }
+
+    public String getMesLetra() {
+        return DateUtils.getMesLetra(Integer.valueOf(mes));
     }
 
     public String getAnio() {
