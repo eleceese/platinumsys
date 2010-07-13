@@ -101,15 +101,6 @@ public class RegistroProDiaria extends AbstractPageBean {
     public void setButtonsPanelAddUpdate(HtmlPanelGrid hpg) {
         this.buttonsPanelAddUpdate = hpg;
     }
-    private Button button2 = new Button();
-
-    public Button getButton2() {
-        return button2;
-    }
-
-    public void setButton2(Button b) {
-        this.button2 = b;
-    }
     private PageAlert pageAlert1 = new PageAlert();
 
     public PageAlert getPageAlert1() {

@@ -282,7 +282,7 @@ public class ABMUsuarios extends AbstractPageBean {
      * <p>Construct a new Page bean instance.</p>
      */
     public ABMUsuarios() {
-        uiRolDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("ADMINISTRADOR", "ADMINISTRADOR"), new com.sun.webui.jsf.model.Option("CAJERO", "CAJERO"), new com.sun.webui.jsf.model.Option("VENDEDOR", "VENDEDOR"), new com.sun.webui.jsf.model.Option("PRODUCCION", "PRODUCCION"), new com.sun.webui.jsf.model.Option("SUP_PRODUCCION", "SUP_PRODUCCION"), new com.sun.webui.jsf.model.Option("ADMINISTRACION", "ADMINISTRACION"), new com.sun.webui.jsf.model.Option("COMPRAS", "COMPRAS"), new com.sun.webui.jsf.model.Option("GERENCIA", "GERENCIA")});
+        uiRolDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("ADMINISTRADOR", "ADMINISTRADOR"), new com.sun.webui.jsf.model.Option("CAJERO", "CAJERO"), new com.sun.webui.jsf.model.Option("VENDEDOR", "VENDEDOR"), new com.sun.webui.jsf.model.Option("PRODUCCION", "EMP_PRODUCCION"), new com.sun.webui.jsf.model.Option("SUP_PRODUCCION", "SUP_PRODUCCION"), new com.sun.webui.jsf.model.Option("ADMINISTRACION", "ADMINISTRACION"), new com.sun.webui.jsf.model.Option("COMPRAS", "COMPRAS"), new com.sun.webui.jsf.model.Option("GERENCIA", "GERENCIA"),new com.sun.webui.jsf.model.Option("DEPOSITO", "DEPOSITO")});
         uiRolDefaultOptions.setSelectedValue("ADMINISTRADOR");
     
     }
