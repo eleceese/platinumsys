@@ -121,8 +121,6 @@
                                 <br/>
                                 <h:panelGrid binding="#{RegistroProDiaria.buttonsPanelAddUpdate}" columns="2" id="buttonsPanelAddUpdate" style="height: 24px" width="191">
                                     <webuijsf:button actionExpression="#{RegistroProDiaria.cancelar_action}" id="cancelar" style="font-size: 14px; height: 24px" text="Cancelar"/>
-                                    <webuijsf:button actionExpression="#{RegistroProDiaria.button2_action}" binding="#{RegistroProDiaria.button2}" id="button2"
-                                        style="font-size: 14px; height: 24px" text="Guardar"/>
                                 </h:panelGrid>
                                 <webuijsf:messageGroup id="messageGroup1"/>
                             </h:panelGrid>
