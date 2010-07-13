@@ -287,6 +287,68 @@ public class ProduccionDiariaController extends AbstractJpaDao <ProduccionDiaria
                 return entities;
         }
 
+      
+
+    @Override
+      public ControllerResult delete(ProduccionDiaria produccionDiaria) {
+        ControllerResult r = new ControllerResult();
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            TareaAsignada tareaAsignada = new TareaAsignada();
+            TareaAsignadaController tareaAsignadaController = new TareaAsignadaController();
+
+            ProduccionDiaria produccion = produccionDiaria;
+            tareaAsignada = tareaAsignadaController.findById(produccionDiaria.getCodTareaAsignada().getCodTareaAsignada());
+            tareaAsignada.setCantidadReal(tareaAsignada.getCantidadReal()- produccion.getCantidad());
+            /// actualizamos la cantidad producida de la tarea
+            em.merge(tareaAsignada);
+             /// actualizamos la cantidad producida de la tarea
+
+            /// si es una tarea de finalizacion, debemos reducir a la cantidad producida del semiterminado.
+            if (tareaAsignada.getTareaFin()!= null && tareaAsignada.getTareaFin().equals("S")) {
+                OrdenTrabajoDetalle otDet = new OrdenTrabajoDetalle();
+                OrdenTrabajoDetalleController ordenTrabajoDetalleController = new OrdenTrabajoDetalleController();
+                otDet = ordenTrabajoDetalleController.findById(tareaAsignada.getCodDetOrdenTrabaj().getCodOrdenTrabajoDet());
+                otDet.setCantidadReal(otDet.getCantidadReal()-produccion.getCantidad());
+
+                /// actualizamos la cantidad producida del semiterminado
+                em.merge(otDet);
+
+                /// si es un semiterminado de finalizacion, debemos sumar a la cantidad producida del producto final.
+                if (otDet.getSemiFin() != null && otDet.getSemiFin().equals("S")) {
+                    OrdenTrabajo ot = new OrdenTrabajo();
+                    OrdenTrabajoCabeceraController ordenTrabajoCabeceraController = new OrdenTrabajoCabeceraController();
+                    ot = ordenTrabajoCabeceraController.findById(otDet.getCodOrdenTrabajo().getCodOrdenTrabjo());
+
+                    long bCant;
+                    bCant = Long.valueOf(ot.getCantidadProducidaOt().toString()) - produccion.getCantidad();
+                    ot.setCantidadProducidaOt(BigInteger.valueOf(bCant));
+
+                    /// actualizamos la cantidad producida del producto final
+                    em.merge(ot);
+
+                }
+            }
+            /// eliminamos la produccion diaria
+            em.remove(em.merge(produccionDiaria));
+            em.getTransaction().commit();
+            r.setCodRetorno(0);
+            r.setMsg("Registro eliminado correctamente");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            r.setCodRetorno(-1);
+            r.setMsg("Ha ocurrido un error al eliminar el registro");
+            try {
+                em.getTransaction().rollback();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            em.close();
+            return r;
+        }
+    }
 
 
 
