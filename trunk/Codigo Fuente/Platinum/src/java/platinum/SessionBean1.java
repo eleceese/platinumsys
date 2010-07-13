@@ -769,7 +769,7 @@ public class SessionBean1 extends AbstractSessionBean {
         VentaComisionMensualController VentaComisionMensualController = new VentaComisionMensualController();
 
         //Obtenemos la lista de VentaComisionMensual ordenado por nombre del VentaComisionMensual
-        listaVentaComisionMensual = (VentaComisionMensual[]) VentaComisionMensualController.getAll("nombreVentaComisionMensual").toArray(new VentaComisionMensual[0]);
+        listaVentaComisionMensual = (VentaComisionMensual[]) VentaComisionMensualController.getAll("anio").toArray(new VentaComisionMensual[0]);
     }
 
     //Cargar lista FormaPago
