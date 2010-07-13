@@ -38,6 +38,23 @@ public class DateUtils {
         return ret;
     }
 
+    public static String getMesLetra(int mes) {
+        Map ret = new LinkedHashMap();
+        ret.put(1, "Enero");
+        ret.put(2, "Febrero");
+        ret.put(3, "Marzo");
+        ret.put(4, "Abril");
+        ret.put(5, "Mayo");
+        ret.put(6, "Junio");
+        ret.put(7, "Julio");
+        ret.put(8, "Agosto");
+        ret.put(9, "Setiembre");
+        ret.put(10, "Octubre");
+        ret.put(11, "Noviembre");
+        ret.put(12, "Diciembre");
+        return ret.get(mes).toString();
+    }
+
     /**
      * Validacion de String - Date, formato soportado:
      *  1. dd/MM/yyyy
@@ -396,6 +413,6 @@ public class DateUtils {
     }
 
 //    public static void main(String [] args){
-//        System.out.println(DateUtils.fechaMas(new Date(), 1));
+//        System.out.println(DateUtils.getMesLetra(4));
 //    }
 }
