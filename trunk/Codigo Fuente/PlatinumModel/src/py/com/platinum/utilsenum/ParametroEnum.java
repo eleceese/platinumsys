@@ -10,10 +10,10 @@ package py.com.platinum.utilsenum;
  */
 public enum ParametroEnum {
 
-    SERIE_RECIBO {
-        @Override
-        public String toString() {
-            return "SERIE_RECIBO";
-        }
-    }
+    SERIE_RECIBO { @Override public String toString() { return "SERIE_RECIBO";}},
+    COD_ESTABLECIMIENTO { @Override public String toString() { return "COD_ESTABLECIMIENTO";}},
+    COD_BOCA_EXPENDIO { @Override public String toString() { return "COD_BOCA_EXPENDIO";}},
+    NRO_TIMBRADO { @Override public String toString() { return "NRO_TIMBRADO";}},
+    VENCIMIENTO_TIMBRADO { @Override public String toString() { return "VENCIMIENTO_TIMBRADO";}}
+    
 }
