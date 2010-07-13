@@ -1,0 +1,49 @@
+alter table recibo_cabecera add fecha date;
+
+-- Add/modify columns 
+alter table MOVIMIENTO_CAJA_DETALLE rename column COD_MOVIMIENTO_CAJA to COD_RECIBO_CAB;
+-- Drop primary, unique and foreign key constraints 
+alter table MOVIMIENTO_CAJA_DETALLE
+  drop constraint MOV_CAJA_CAB_DET_FK;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table MOVIMIENTO_CAJA_DETALLE
+  add constraint MOVCAJA_RECIBO foreign key (COD_RECIBO_CAB)
+  references recibo_cabecera (COD_RECIBO);
+  
+--
+alter table factura_detalle add porc_comision NUMBER(15,2);
+
+
+CREATE TABLE VENTA_COMISION_MENSUAL
+(
+	COD_COMISION    NUMBER(15),                             
+	MES		        VARCHAR2(2),
+	ANIO	        VARCHAR2(4),
+	ESTADO          VARCHAR2(15),
+	USUARIO_ALTA    VARCHAR2(15),
+	USUARIO_MODIF   VARCHAR2(15),
+	FECHA_ALTA      DATE,
+	FECHA_MODIF     DATE,
+	CONSTRAINT PK_VENTA_COMISION_MENSUAL PRIMARY KEY (COD_COMISION) 
+)
+/
+
+alter table comision_mens_cab modify estado varchar2(15)
+/
+
+alter table comision_mens_cab add cod_comision number(15)
+/
+
+alter table comision_mens_cab add constraint 
+     fk_comision_mens_cab  foreign key (cod_comision) 
+	    references venta_comision_mensual(cod_comision)
+/
+
+create sequence SQ_VENTA_COMISION_MENSUAL
+minvalue 1
+maxvalue 999999999999999999999999999
+start with 1
+increment by 1
+cache 20
+/
+
