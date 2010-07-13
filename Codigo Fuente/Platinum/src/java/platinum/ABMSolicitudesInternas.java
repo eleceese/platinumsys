@@ -21,11 +21,16 @@ import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.event.ValueChangeEvent;
+import javax.servlet.http.HttpServletResponse;
 import py.com.platinum.controller.EmpleadoController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.SolicitudInternaController;
@@ -499,6 +504,30 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
      */
     @Override
     public void prerender() {
+         if (getSessionBean1().getUsuarioLogueado() == null)
+        {
+            HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
+                    try {
+                        response.sendRedirect("/Platinum/faces/Acceso.jsp");
+                        getFacesContext().responseComplete();
+                    } catch (IOException ex) {
+                        Logger.getLogger(cabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        }else if(!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("COMPRAS")
+                 &&!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("ADMINISTRADOR")){
+            HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
+                    try {
+                        response.sendRedirect("/Platinum/faces/PermisoDenegado.jsp");
+                        getFacesContext().responseComplete();
+                    } catch (IOException ex) {
+                        Logger.getLogger(cabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+
+        }
+
+
+
         uiBtnCancelar.setRendered(true);
         if (addRequest) {
             gridPanelBuscar.setRendered(false);

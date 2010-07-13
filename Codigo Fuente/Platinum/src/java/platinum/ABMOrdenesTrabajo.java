@@ -1497,7 +1497,8 @@ private SolicitudInterna[] solicitudesAGenerarse;
                     } catch (IOException ex) {
                         Logger.getLogger(cabecera.class.getName()).log(Level.SEVERE, null, ex);
                     }
-        }else if(!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("SUP_PRODUCCION")){
+        }else if(!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("SUP_PRODUCCION")
+                 &&!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("ADMINISTRADOR")){
             HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
                     try {
                         response.sendRedirect("/Platinum/faces/PermisoDenegado.jsp");

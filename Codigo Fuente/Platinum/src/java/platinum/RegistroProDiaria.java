@@ -21,14 +21,19 @@ import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
+import javax.servlet.http.HttpServletResponse;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
@@ -327,6 +332,18 @@ public class RegistroProDiaria extends AbstractPageBean {
     cargarListaTodosOTCab();
     }
 
+
+
+
+    private String itemDet;
+
+    public String getItemDet() {
+        return itemDet;
+    }
+
+    public void setItemDet(String itemDet) {
+        this.itemDet = itemDet;
+    }
     /**
      * <p>Callback method that is called whenever a page is navigated to,
      * either directly via a URL, or indirectly via page navigation.
@@ -424,11 +441,36 @@ public class RegistroProDiaria extends AbstractPageBean {
 
     @Override
     public void prerender() {
+    if (getSessionBean1().getUsuarioLogueado() == null)
+        {
+            HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
+                    try {
+                        response.sendRedirect("/Platinum/faces/Acceso.jsp");
+                        getFacesContext().responseComplete();
+                    } catch (IOException ex) {
+                        Logger.getLogger(cabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        }else if(!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("SUP_PRODUCCION")
+                 &&!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("EMP_PRODUCCION")
+                 &&!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("ADMINISTRADOR")){
+            HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
+                    try {
+                        response.sendRedirect("/Platinum/faces/PermisoDenegado.jsp");
+                        getFacesContext().responseComplete();
+                    } catch (IOException ex) {
+                        Logger.getLogger(cabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+
+        }
+
+
 
         if (addRequest) {
             this.gridPanelCabecera.setRendered(true);
             this.gridPannelDetalle.setRendered(true);
             this.gridPanelBusqueda.setRendered(false);
+            this.uiEmpleado.setSelected(getSessionBean1().getUsuarioLogueado().getCodEmpleado().getCodEmpleado().toString());
         } else if (updateRequest) {
             this.gridPanelCabecera.setRendered(true);
             this.gridPannelDetalle.setRendered(true);
@@ -938,6 +980,42 @@ private boolean validarCampos(){
         // case name where null will return to the same page.
         return null;
     }
+
+    public String imageHyperlink2_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+         ProduccionDiaria proDiaria  = produccionesDiarias.get(Integer.valueOf(itemDet).intValue());
+         ProduccionDiariaController pController = new ProduccionDiariaController();
+         ControllerResult controllerResult = new ControllerResult();
+         produccionesDiarias.remove(Integer.valueOf(itemDet).intValue());
+         produccionesDiariasArray = (ProduccionDiaria[]) produccionesDiarias.toArray(new ProduccionDiaria[0]);
+         controllerResult = pController.delete(proDiaria);
+
+                         if (controllerResult.getCodRetorno() ==-1) {
+                                        this.pageAlert1.setType("error");
+                                    } else {
+                                        this.pageAlert1.setType("information");
+                                        limpiarDetalle();
+                                        // Actualizar las Tareas
+                                            getSessionBean1().setIdOTProdDiaria(id);
+                                            TareaAsignadaController taController = new TareaAsignadaController();
+                                            tareasAsignadas = taController.getAllFilteredOT(id, null, null);
+                                            tareasAsignadasArray = (TareaAsignada[]) tareasAsignadas.toArray(new TareaAsignada[0]);
+                                            getSessionBean1().setTareasAsignadasArray(tareasAsignadasArray);
+                         }
+
+                            this.pageAlert1.setTitle(controllerResult.getMsg());
+                            this.pageAlert1.setSummary("");
+                            this.pageAlert1.setDetail("");
+                            this.pageAlert1.setRendered(true);
+
+
+
+        return null;
+    }
+
+
+
 
 
 
