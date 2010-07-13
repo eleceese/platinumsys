@@ -14,6 +14,8 @@ import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.NotaCreditoCliCabecera;
 import py.com.platinum.entity.NotaCreditoCliDetalle;
+import py.com.platinum.utilsenum.FacturaVentaEstado;
+import py.com.platinum.utilsenum.NotaCreditoEstado;
 
 /**
  *
@@ -186,5 +188,41 @@ public class NotaCreditoClienteCabController extends AbstractJpaDao<NotaCreditoC
 
         //result
         return r.longValue() + 1;
+    }
+
+    public Long getTotalNotaPorFactura(Long codFactura) {
+        //Variables
+        BigInteger  r;
+        String SQL;
+
+        //Inicializamos
+        r = BigInteger.valueOf(Long.valueOf("0"));
+
+        //Armamos el SQL
+        SQL = " SELECT SUM(o.totalNotaCredito)               " +
+              "   FROM NotaCreditoCliCabecera o              " +
+              "  WHERE o.codFactura.codFactura = :codFactura " +
+              "    and o.estado != :estado     ";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Seteamos los parametros
+        q.setParameter("estado", NotaCreditoEstado.ANULADO );
+        q.setParameter("codFactura", codFactura );
+
+
+        //Realizamos la busqueda
+        r = (BigInteger) q.getSingleResult();
+
+        if (r == null) {
+            r = BigInteger.valueOf(Long.valueOf("0"));
+        }
+
+        //Cerar campos el entity manager
+        em.close();
+
+        //result
+        return r.longValue();
     }
 }   

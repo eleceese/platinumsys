@@ -29,6 +29,7 @@ import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.ClienteController;
 import py.com.platinum.controller.NotaCreditoClienteCabController;
 import py.com.platinum.controller.FacturaCabeceraController;
+import py.com.platinum.controller.ParametroController;
 import py.com.platinum.controller.SaldoClienteController;
 import py.com.platinum.controller.TipoComprobanteController;
 import py.com.platinum.controllerUtil.ControllerResult;
@@ -44,6 +45,7 @@ import py.com.platinum.utilsenum.FacturaVentaEstado;
 import py.com.platinum.utilsenum.ModelUtil;
 import py.com.platinum.utilsenum.ModuloEnum;
 import py.com.platinum.utilsenum.NotaCreditoEstado;
+import py.com.platinum.utilsenum.ParametroEnum;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -548,19 +550,19 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
         //Estados de la factura
         NotaCreditoEstado[] lstEstado = NotaCreditoEstado.values();
         Option[] lstEstadoOp = new Option[lstEstado.length];
-        
+
         Option o = new Option();
         for (int i = 0; i < lstEstado.length; i++) {
             //Obtenemos el estado
             NotaCreditoEstado p = lstEstado[i];
-            
+
             //Seteamos el value y el label del option
             o.setValue(p.toString());
             o.setLabel(p.toString());
-            
+
             //Agregamos a la lista
             lstEstadoOp[i] = o;
-            
+
             //Cerar
             o = new Option();
         }
@@ -675,7 +677,6 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
 
     }
 
-
     /**
      * Limpiar campos
      */
@@ -760,7 +761,6 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
         RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
         return tablePhaseListener.isSelected(rowKey);
     }
-    
     private boolean addRequest = false;
     private boolean updateRequest = false;
     private boolean updateDetRequest = false;
@@ -773,28 +773,39 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
      * @return refrescamos la pagina
      */
     public String addButton_action() {
-        //Inicializamos las variables
-        lstDetalleLIST = new ArrayList();
-        lstDetalle = (NotaCreditoCliDetalle[]) lstDetalleLIST.toArray(new NotaCreditoCliDetalle[0]);
-        addRequest = true;
-        updateDetRequest = true;
-        itemDet = null;
-        factura = null;
-        tipoComprobante = null;
-        cliente = null;
-        producto = null;
+        if (!ModelUtil.periodoAbierto()) {
+            this.pageAlert1.setType("information");
+            this.pageAlert1.setTitle("Periodo Actual esta cerrado no se puede realizar movimeintos");
+            ParametroController dao = new ParametroController();
+            String fDesde = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_DESDE.toString()).getValorTexto();
+            String fHasta = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_HASTA.toString()).getValorTexto();
+            this.pageAlert1.setSummary("Periodo Actual " + fDesde + " - " + fHasta);
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
 
-        //Cargar tablas realcionadas
-        cargarRelaciones();
+        } else {
+            //Inicializamos las variables
+            lstDetalleLIST = new ArrayList();
+            lstDetalle = (NotaCreditoCliDetalle[]) lstDetalleLIST.toArray(new NotaCreditoCliDetalle[0]);
+            addRequest = true;
+            updateDetRequest = true;
+            itemDet = null;
+            factura = null;
+            tipoComprobante = null;
+            cliente = null;
+            producto = null;
 
-        //Actualizamos le titulo de la pagina
-        getSessionBean1().setTituloPagina("Nueva Nota Credito Cliente");
-        getSessionBean1().setDetallePagina("Nota Credito - Cliente");
-        gridPanelDetLin1.setRendered(true);
-        gridPanelDetLin2.setRendered(true);
-        tableColumnEditarDet.setRendered(true);
-        tableColumnEliminarDet.setRendered(true);
+            //Cargar tablas realcionadas
+            cargarRelaciones();
 
+            //Actualizamos le titulo de la pagina
+            getSessionBean1().setTituloPagina("Nueva Nota Credito Cliente");
+            getSessionBean1().setDetallePagina("Nota Credito - Cliente");
+            gridPanelDetLin1.setRendered(true);
+            gridPanelDetLin2.setRendered(true);
+            tableColumnEditarDet.setRendered(true);
+            tableColumnEliminarDet.setRendered(true);
+        }
 
         //result
         return null;
@@ -823,7 +834,7 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
         gridPanelDetLin2.setRendered(false);
         tableColumnEditarDet.setRendered(false);
         tableColumnEliminarDet.setRendered(false);
-        
+
         //ocultamos el pageAlert
         this.pageAlert1.setRendered(false);
 
@@ -845,7 +856,7 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
             lstDetalleEliminar = new ArrayList();
 
             //Obetenemos los atributos de la cabecera
-            uiTxtNroNotaCredito.setText(cabecera.getEstablecimiento() + "-"  + cabecera.getBocaExpendio() + "-" + cabecera.getNumNotaCredtoCliente().toString());
+            uiTxtNroNotaCredito.setText(cabecera.getEstablecimiento() + "-" + cabecera.getBocaExpendio() + "-" + cabecera.getNumNotaCredtoCliente().toString());
             uiTxtCodCliente.setText(cabecera.getCodCliente().getCodCliente());
             uiTxtNombreCliente.setText(cabecera.getCodCliente().getNombreCliente());
             uiLstEstado.setSelected(cabecera.getEstado());
@@ -885,7 +896,7 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
             cabecera.setEstablecimiento(getSessionBean1().getEstablecimiento());
             cabecera.setBocaExpendio(getSessionBean1().getBocaExpendio());
             cabecera.setCodDeposito(getSessionBean1().getCodDeposito());
-            
+
             //Tipo de comprobante
             cabecera.setTipoFactura(tipoComprobante);
             cabecera.setTotalIva(BigInteger.valueOf(Long.valueOf(uiTxtTotalIva.getText().toString())));
@@ -909,7 +920,7 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
             }
 
             this.pageAlert1.setTitle(cr.getMsg());
-            this.pageAlert1.setSummary("");   
+            this.pageAlert1.setSummary("");
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
         }
@@ -930,7 +941,7 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
         if (this.uiTxtCodCliente.getText() == null) {
             info("Cliente, campo obligatorio");
             this.errorValidacion = true;
-        }else{
+        } else {
             //Validamos el codigo del Cliente ingresado
             cliente = new ClienteController().findById(Long.valueOf(uiTxtCodCliente.getText().toString()));
 
@@ -944,7 +955,7 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
         if (this.uiLstTipoComprobante.getSelected() == null) {
             info("Tipo de Comprobante, campo obligatorio");
             this.errorValidacion = true;
-        }else{
+        } else {
             //Validamos el codigo del Cliente ingresado
             tipoComprobante = new TipoComprobanteController().findById(Long.valueOf(this.uiLstTipoComprobante.getSelected().toString()));
 
@@ -960,13 +971,13 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
             this.errorValidacion = true;
         }
 
-        if (uiTxtNroFactura.getText()!= null ){
+        if (uiTxtNroFactura.getText() != null) {
             factura = facturaController.findById(Long.valueOf(uiTxtNroFactura.getText().toString()));
 
             if (factura == null) {
                 errorValidacion = true;
                 info("Numero de factura ingresado incorrecto, favor verifique");
-            }else{
+            } else {
                 long totalNota = Long.valueOf(uiTxtTotal.getText().toString());
                 long saldoFactura = new SaldoClienteController().getSaldoCliente(factura.getTipoFactura().getCodTipo(), factura.getCodFactura());
 
@@ -979,43 +990,54 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
     }
 
     public String uiBtnGuardarEditar_action() {
-        //Inicializamos
-        errorValidacion = false;
-
-        //Verificamos el estado del comprobante
-        if (cabecera.getEstado().toString().equals(FacturaVentaEstado.ANULADO.toString())) {
-            info("La Factura ya fue Anulada");
-            errorValidacion = true;
-        } else if(cabecera.getEstado().toString().equals(FacturaVentaEstado.COBRADO.toString())){
-            info("La Factura no puede ser Anulada, por que ya fue Cobrada al Cliente");
-            errorValidacion = true;
-        }
-        
-        //Si no hay error de validacion insertamos el registro
-        if (!errorValidacion) {
-
-            cabecera.setEstado(NotaCreditoEstado.ANULADO);
-
-            //Insertamos la cebecera y del detalle
-            ControllerResult cr = new NotaCreditoClienteCabController().update(cabecera);
-
-            //Verificamos el tipo de mensaje
-            if (cr.getCodRetorno() == -1) {
-                this.pageAlert1.setType("error");
-                errorValidacion = true;
-            } else {
-                // Apagamos la bandera de Editar registro
-                this.updateRequest = false;
-                this.updateDetRequest = false;
-                this.pageAlert1.setType("information");
-            }
-
-            this.pageAlert1.setTitle(cr.getMsg());
-            this.pageAlert1.setSummary("");
+        if (!ModelUtil.periodoAbierto()) {
+            this.pageAlert1.setType("information");
+            this.pageAlert1.setTitle("Periodo Actual esta cerrado no se puede realizar movimeintos");
+            ParametroController dao = new ParametroController();
+            String fDesde = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_DESDE.toString()).getValorTexto();
+            String fHasta = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_HASTA.toString()).getValorTexto();
+            this.pageAlert1.setSummary("Periodo Actual " + fDesde + " - " + fHasta);
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
-        }
+        } else {
+            //Inicializamos
+            errorValidacion = false;
 
+            //Verificamos el estado del comprobante
+            if (cabecera.getEstado().toString().equals(FacturaVentaEstado.ANULADO.toString())) {
+                info("La Factura ya fue Anulada");
+                errorValidacion = true;
+            } else if (cabecera.getEstado().toString().equals(FacturaVentaEstado.COBRADO.toString())) {
+                info("La Factura no puede ser Anulada, por que ya fue Cobrada al Cliente");
+                errorValidacion = true;
+            }
+
+            //Si no hay error de validacion insertamos el registro
+            if (!errorValidacion) {
+
+                cabecera.setEstado(NotaCreditoEstado.ANULADO);
+
+                //Insertamos la cebecera y del detalle
+                ControllerResult cr = new NotaCreditoClienteCabController().update(cabecera);
+
+                //Verificamos el tipo de mensaje
+                if (cr.getCodRetorno() == -1) {
+                    this.pageAlert1.setType("error");
+                    errorValidacion = true;
+                } else {
+                    // Apagamos la bandera de Editar registro
+                    this.updateRequest = false;
+                    this.updateDetRequest = false;
+                    this.pageAlert1.setType("information");
+                }
+
+                this.pageAlert1.setTitle(cr.getMsg());
+                this.pageAlert1.setSummary("");
+                this.pageAlert1.setDetail("");
+                this.pageAlert1.setRendered(true);
+            }
+        }
+        
         //result
         return null;
     }
@@ -1246,7 +1268,6 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
         }
 
     }
-
     //Detalle selecciondo de la Grilla
     private String itemDet;
 
@@ -1323,7 +1344,7 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
         total = 0;
         totalIva = 0;
         totalDescuento = 0;
-        porcDescuento  = Double.valueOf(uiTxtPorcDescuento.getText().toString());
+        porcDescuento = Double.valueOf(uiTxtPorcDescuento.getText().toString());
 
         //Recorremos el detalle para recalcular los totales
         for (int i = 0; i < lstDetalleLIST.size(); i++) {
@@ -1400,18 +1421,18 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
         //Inicializamos
         errorValidacion = false;
 
-        if (uiTxtNroFactura.getText()== null && uiTxtNroFactura.getText().toString().trim().equals("")){
+        if (uiTxtNroFactura.getText() == null && uiTxtNroFactura.getText().toString().trim().equals("")) {
             errorValidacion = true;
             info("Debe Seleccionar una Factura para poder cargar datos de un Pedido");
-        }else{
-            
+        } else {
+
 
             factura = facturaController.findById(Long.valueOf(uiTxtNroFactura.getText().toString()));
 
             if (factura == null) {
                 errorValidacion = true;
                 info("Numero de Factura ingresado incorrecto, favor verifique");
-            }else{
+            } else {
                 /* Cargamos los datos de la factura */
 
                 //Cabecera
@@ -1427,7 +1448,7 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
                 List<FacturaDetalle> detalleFactura = factura.getFacturaDetalleList();
 
                 lstDetalleLIST = new ArrayList<NotaCreditoCliDetalle>();
-                
+
                 //Recorremos la lista de detalle del pedido
                 for (int i = 0; i < detalleFactura.size(); i++) {
                     //Obtenemos el detalle

@@ -32,6 +32,14 @@
                             }
                         }
                     </script>
+
+                    <script>
+                        function tieneSolicitud() {
+                            if(!document.getElementById('form1:uiTxtNroSolicitud_field').value == '') {
+                                document.getElementById('form1:uiBtnCancelar').focus(); return false;
+                            }
+                        }
+                    </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                 </webuijsf:head>
                 <webuijsf:body id="body1" style="-rave-layout: grid">
@@ -45,7 +53,7 @@
                         <div style="height: 219px; width: 1032px">
                             <h:panelGrid binding="#{ABMComprasProveedor.mainContainer}" id="mainContainer"
                                 style="height: 96px; left: 288px; top: 216px; position: absolute" width="768">
-                                <h:panelGrid binding="#{ABMComprasProveedor.gridPanelBuscar}" columns="3" id="gridPanelBuscar">
+                                <h:panelGrid binding="#{ABMComprasProveedor.gridPanelBuscar}" columns="5" id="gridPanelBuscar">
                                     <h:panelGrid columns="2" id="gridPanelNroFactura">
                                         <webuijsf:label id="lblNroProveedor" text="Nro. Factura"/>
                                         <webuijsf:textField binding="#{ABMComprasProveedor.uiFilTxtNroFactura}" id="uiFilTxtNroFactura"/>
@@ -58,6 +66,9 @@
                                         <webuijsf:label id="label3Filtro" text="Fecha Factura"/>
                                         <webuijsf:calendar binding="#{ABMComprasProveedor.uiFilCalFechaFactura}" columns="15" id="uiFilCalFechaFactura"/>
                                     </h:panelGrid>
+                                    <webuijsf:label id="label3FiltroEstado" text="Estado"/>
+                                    <webuijsf:dropDown binding="#{ABMComprasProveedor.uiLstFilEstado}" id="uiLstFilEstado"
+                                        items="#{ABMComprasProveedor.uiLstFilEstadoDefaultOptions.options}" selected="#{ABMComprasProveedor.uiLstFilEstadoDefaultOptions.selectedValue}"/>
                                 </h:panelGrid>
                                 <h:panelGrid binding="#{ABMComprasProveedor.gridPanelBtnBuscar}" columns="2" id="gridPanelBtnBuscar" style="height: 100%" width="191">
                                     <webuijsf:button actionExpression="#{ABMComprasProveedor.uiBtnBuscar_action}" binding="#{ABMComprasProveedor.uiBtnBuscar}"
@@ -116,12 +127,14 @@
                                             onClick="doPopup('form1:uiTxtCodProveedor_field', 'form1:uiTxtNombreProveedor_field')" target="popup"
                                             text="Proveedor" url="/faces/popup/popupProveedores.jsp"/>
                                         <h:panelGrid columns="2" id="gridPanelProveedor" width="335">
-                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtCodProveedor}" columns="10" id="uiTxtCodProveedor" maxLength="15"/>
+                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtCodProveedor}" columns="10"
+                                                converter="#{ABMComprasProveedor.numberConverter1}" id="uiTxtCodProveedor" maxLength="15"/>
                                             <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtNombreProveedor}" columns="50" id="uiTxtNombreProveedor" valueChangeListenerExpression="#{ABMComprasProveedor.uiTxtNombreProveedor_processValueChange}"/>
                                         </h:panelGrid>
                                         <h:panelGrid columns="2" id="panelGridCabCompra3" style="text-align: right" width="200">
                                             <webuijsf:label id="lblSubTotal" text="SUB-TOTAL"/>
-                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtSubTotal}" columns="20" id="uiTxtSubTotal"
+                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtSubTotal}" columns="20"
+                                                converter="#{ABMComprasProveedor.numberConverter1}" id="uiTxtSubTotal"
                                                 onFocus="document.getElementById('form1:uiBtnCancelar').focus(); return false;" style="text-align: right"/>
                                         </h:panelGrid>
                                         <webuijsf:label id="lblFecha" text="Fecha"/>
@@ -129,14 +142,16 @@
                                             id="uiCalFecha" style="margin-left: -9px"/>
                                         <h:panelGrid columns="2" id="panelGridCabCompra4" style="text-align: right" width="200">
                                             <webuijsf:label id="lblTotalIva" text="TOTAL IVA"/>
-                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtTotalIva}" columns="20" id="uiTxtTotalIva"
+                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtTotalIva}" columns="20"
+                                                converter="#{ABMComprasProveedor.numberConverter1}" id="uiTxtTotalIva"
                                                 onFocus="document.getElementById('form1:uiBtnCancelar').focus(); return false;" style="text-align: right"/>
                                         </h:panelGrid>
                                         <h:panelGrid columns="2" id="gridPanelaux1" style="height: 24px; width: 96px"/>
                                         <h:panelGrid columns="2" id="gridPanelaux2" style="height: 24px" width="335"/>
                                         <h:panelGrid columns="2" id="panelGridCabCompra5" style="text-align: right" width="200">
                                             <webuijsf:label id="lblTotal" text="TOTAL"/>
-                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtTotal}" columns="20" id="uiTxtTotal"
+                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtTotal}" columns="20"
+                                                converter="#{ABMComprasProveedor.numberConverter1}" id="uiTxtTotal"
                                                 onFocus="document.getElementById('form1:uiBtnCancelar').focus(); return false;" style="text-align: right"/>
                                         </h:panelGrid>
                                     </h:panelGrid>
@@ -157,13 +172,15 @@
                                         <h:panelGrid binding="#{ABMComprasProveedor.gridPanelDetLin1}" columns="7" id="gridPanelDetLin1" style="height: 24px" width="743">
                                             <webuijsf:hyperlink id="hyperlink2"
                                                 onClick="doPopup('form1:uiTxtCodProducto_field', 'form1:uiTxtDescProducto_field')" target="popup"
-                                                text="Producto" url="/faces/popup/popupProductosTerInsMat.jsp"/>
-                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtCodProducto}" columns="10" id="uiTxtCodProducto"/>
+                                                text="Producto" url="/faces/popup/popupProductosCompra.jsp"/>
+                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtCodProducto}" columns="10"
+                                                converter="#{ABMComprasProveedor.numberConverter1}" id="uiTxtCodProducto"/>
                                             <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtDescProducto}" columns="30" id="uiTxtDescProducto" onFocus="document.getElementById('form1:uiTxtNroSolicitud_field').focus(); return false;"/>
                                             <webuijsf:hyperlink id="hyperlink3"
                                                 onClick="doPopup('form1:uiTxtCodProducto_field', 'form1:uiTxtDescProducto_field', 'form1:uiTxtCantidad_field', 'form1:uiTxtNroSolicitud_field','form1:uiLstUnidadMedida_list' )"
                                                 target="popup" text="Nro. Solicitud" url="/faces/popup/popupSolicitudes.jsp"/>
-                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtNroSolicitud}" columns="10" id="uiTxtNroSolicitud"/>
+                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtNroSolicitud}" columns="10"
+                                                converter="#{ABMComprasProveedor.numberConverter1}" id="uiTxtNroSolicitud"/>
                                             <webuijsf:label id="lblUnidadMedida" text="Unidad Medida"/>
                                             <webuijsf:dropDown binding="#{ABMComprasProveedor.uiLstUnidadMedida}" id="uiLstUnidadMedida"
                                                 items="#{SessionBean1.listaUnidadMedidasOp}"
@@ -172,10 +189,12 @@
                                         </h:panelGrid>
                                         <h:panelGrid binding="#{ABMComprasProveedor.gridPanelDetLin2}" columns="10" id="gridPanelDetLin2" style="height: 24px" width="719">
                                             <webuijsf:label id="lblPrecio" text="Precio"/>
-                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtPrecioUnitario}" columns="12" id="uiTxtPrecioUnitario"
+                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtPrecioUnitario}" columns="12"
+                                                converter="#{ABMComprasProveedor.numberConverter1}" id="uiTxtPrecioUnitario"
                                                 onChange="calcularMonto5('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )" style="margin-left: -20px; text-align: left"/>
                                             <webuijsf:label id="lblCantida" text="Cantidad"/>
-                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtCantidad}" columns="10" id="uiTxtCantidad"
+                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtCantidad}" columns="10"
+                                                converter="#{ABMComprasProveedor.numberConverter1}" id="uiTxtCantidad"
                                                 onChange="calcularMonto5('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )" style="text-align: right"/>
                                             <webuijsf:label id="lblPorcIVA" text="Tipo de Impuesto"/>
                                             <webuijsf:dropDown binding="#{ABMComprasProveedor.uiLstIva}" id="uiLstIva"
@@ -183,10 +202,12 @@
                                                 onChange="calcularMonto5('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )"
                                                 selected="#{ABMComprasProveedor.uiLstIvaDefaultOptions.selectedValue}" width="60"/>
                                             <webuijsf:label id="lblMontoIva" text="Monto IVA"/>
-                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtMontoIva}" columns="12" id="uiTxtMontoIva"
+                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtMontoIva}" columns="12"
+                                                converter="#{ABMComprasProveedor.numberConverter1}" id="uiTxtMontoIva"
                                                 onFocus="document.getElementById('form1:uiBtnAgregarDet').focus(); return false;" style="text-align: right"/>
                                             <webuijsf:label id="lblMontoTotal" text="Monto Total"/>
-                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtMontoTotal}" columns="15" id="uiTxtMontoTotal"
+                                            <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtMontoTotal}" columns="15"
+                                                converter="#{ABMComprasProveedor.numberConverter1}" id="uiTxtMontoTotal"
                                                 onFocus="document.getElementById('form1:uiBtnAgregarDet').focus(); return false;" style="text-align: right"/>
                                             <webuijsf:button actionExpression="#{ABMComprasProveedor.uiBtnAgregarDet_action}" id="uiBtnAgregarDet" text="Agregar"/>
                                             <webuijsf:button actionExpression="#{ABMComprasProveedor.uiBtnCancelarDetalle_action}" id="uiBtnCancelarDetalle" text="Cancelar"/>

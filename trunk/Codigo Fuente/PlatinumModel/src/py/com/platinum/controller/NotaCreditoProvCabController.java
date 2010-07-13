@@ -4,6 +4,7 @@
  */
 package py.com.platinum.controller;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -13,6 +14,7 @@ import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.controllerUtil.ControllerResult;
 import py.com.platinum.entity.NotaCreditoProvCab;
 import py.com.platinum.entity.NotaCreditoProvDet;
+import py.com.platinum.utilsenum.FacturaVentaEstado;
 import py.com.platinum.utilsenum.NotaCreditoEstado;
 
 /**
@@ -154,11 +156,11 @@ public class NotaCreditoProvCabController extends AbstractJpaDao<NotaCreditoProv
         boolean r = false;
 
         //Armamos el sql String
-        String SQL = " SELECT o " +
-                     "   FROM NotaCreditoProvCab o " +
-                     "  WHERE o.nroNotaCredito = :nroFactura " +
-                     "    AND o.codProveedor.codProveedor = :codProveedor " +
-                     "    AND o.estado != :estado ";
+        String SQL = " SELECT o "
+                + "   FROM NotaCreditoProvCab o "
+                + "  WHERE o.nroNotaCredito = :nroFactura "
+                + "    AND o.codProveedor.codProveedor = :codProveedor "
+                + "    AND o.estado != :estado ";
 
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
@@ -167,7 +169,7 @@ public class NotaCreditoProvCabController extends AbstractJpaDao<NotaCreditoProv
         q.setParameter("nroFactura", nroNota);
         q.setParameter("codProveedor", codProveedor);
         q.setParameter("estado", NotaCreditoEstado.ANULADO);
-        
+
         //Realizamos la busqueda
         List<NotaCreditoProvCab> entities = q.getResultList();
         em.close();
@@ -180,5 +182,41 @@ public class NotaCreditoProvCabController extends AbstractJpaDao<NotaCreditoProv
         //retornamos la lista
         return r;
 
+    }
+
+    public Long getTotalNotaPorFactura(Long codFactura) {
+        //Variables
+        BigInteger r;
+        String SQL;
+
+        //Inicializamos
+        r = BigInteger.valueOf(Long.valueOf("0"));
+
+        //Armamos el SQL
+        SQL = " SELECT SUM(o.total)               "
+                + "   FROM NotaCreditoProvCab o              "
+                + "  WHERE o.FacturaCompraCab.codFacComCab = :codFactura "
+                + "    and o.estado != :estado     ";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Seteamos los parametros
+        q.setParameter("estado", NotaCreditoEstado.ANULADO);
+        q.setParameter("codFactura", codFactura);
+
+
+        //Realizamos la busqueda
+        r = (BigInteger) q.getSingleResult();
+
+        if (r == null) {
+            r = BigInteger.valueOf(Long.valueOf("0"));
+        }
+
+        //Cerar campos el entity manager
+        em.close();
+
+        //result
+        return r.longValue();
     }
 }   

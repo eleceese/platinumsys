@@ -120,10 +120,6 @@ values (8, 8, 5, 'Francisco', 'Pereira', 'CI', 'C', 'M', 'Paraguaya', to_date('0
 
 --Tipo Producto
 insert into TIPO_PRODUCTO (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF)
-values (5, 'Terminado', 'N', null, null, null, null);
-insert into TIPO_PRODUCTO (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF)
-values (6, 'Acabado', 'S', null, null, to_date('11-07-2010 10:37:38', 'dd-mm-yyyy hh24:mi:ss'), null);
-insert into TIPO_PRODUCTO (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF)
 values (1, 'ProductoGenerico', 'S', null, null, null, null);
 insert into TIPO_PRODUCTO (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF)
 values (2, 'SemiTerminado', 'S', null, null, null, null);
@@ -131,6 +127,22 @@ insert into TIPO_PRODUCTO (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA,
 values (3, 'Insumo', 'N', null, null, null, null);
 insert into TIPO_PRODUCTO (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF)
 values (4, 'MateriaPrima', 'N', null, null, null, null);
+insert into TIPO_PRODUCTO (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF)
+values (5, 'Terminado', 'N', null, null, null, null);
+insert into TIPO_PRODUCTO (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF)
+values (6, 'Acabado', 'S', null, null, to_date('11-07-2010 10:37:38', 'dd-mm-yyyy hh24:mi:ss'), null);
+insert into TIPO_PRODUCTO (COD_TIPO_PRODUCTO, DESCRIPCION, TAREAS, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF)
+values (7, 'Servicio', 'N', null, null, to_date('11-07-2010 10:37:38', 'dd-mm-yyyy hh24:mi:ss'), null);
+
+/*
+		C -- compra
+		V -- venta
+		A -- Ambos
+		N -- Ninguno
+*/
+update tipo_producto set compra_venta = 'C' where cod_tipo_producto in (2,3,4,7);
+update tipo_producto set compra_venta = 'A' where cod_tipo_producto in (5);
+update tipo_producto set compra_venta = 'N' where cod_tipo_producto in (1, 6);
 
 --Unidad Medida
 insert into UNIDAD_MEDIDA (COD_UNIDAD_MEDIDA, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF)
@@ -147,7 +159,7 @@ insert into UNIDAD_MEDIDA (COD_UNIDAD_MEDIDA, DESCRIPCION, USUARIO_ALTA, USUARIO
 values (6, 'Metros Cuadros', null, null, null, null);
 
 --Presentacion FALTA DEFINIR!!!
-insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (1, 'Caja', '', '', null, null);
+insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (1, 'Sin Presentacion', '', '', null, null);
 insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (2, 'Botella', '', '', null, null);
 insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (3, 'Bolsa', '', '', null, null);
 
@@ -228,6 +240,8 @@ insert into parametros (cod_parametro, descripcion, valor_numero, valor_texto) v
 insert into parametros (cod_parametro, descripcion, valor_numero, valor_texto) values (3, 'COD_BOCA_EXPENDIO', null, '001');
 insert into parametros (cod_parametro, descripcion, valor_numero, valor_texto) values (4, 'NRO_TIMBRADO', null, '847586345204');
 insert into parametros (cod_parametro, descripcion, valor_numero, valor_texto) values (5, 'VENCIMIENTO_TIMBRADO', null, '30 DE OCTUBRE DE 2010');
+insert into parametros (cod_parametro, descripcion, valor_numero, valor_texto) values (6, 'PERIODO_ABIERTO_DESDE', null, '01/01/2010');
+insert into parametros (cod_parametro, descripcion, valor_numero, valor_texto) values (7, 'PERIODO_ABIERTO_HASTA', null, '31/01/2010');
 
 --Parametros - FERNANDO
 insert into PARAMETROS (COD_PARAMETRO, DESCRIPCION, VALOR_NUMERO, VALOR_TEXTO)

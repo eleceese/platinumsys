@@ -6,9 +6,7 @@
 package py.com.platinum.entity;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -41,6 +38,8 @@ public class TipoProducto implements Serializable {
     @Basic(optional = false)
     @Column(name = "TAREAS")
     private String tareas;
+    @Column(name = "COMPRA_VENTA")
+    private String compraVenta;
    
     public TipoProducto() {
     }
@@ -77,6 +76,14 @@ public class TipoProducto implements Serializable {
 
     public void setTareas(String tareas) {
         this.tareas = tareas;
+    }
+
+    public String getCompraVenta() {
+        return compraVenta;
+    }
+
+    public void setCompraVenta(String compraVenta) {
+        this.compraVenta = compraVenta;
     }
 
     @Override

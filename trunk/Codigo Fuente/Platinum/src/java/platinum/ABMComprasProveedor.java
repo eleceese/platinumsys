@@ -5,6 +5,7 @@
 package platinum;
 
 import com.sun.data.provider.RowKey;
+import com.sun.rave.faces.converter.CalendarConverter;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.Calendar;
@@ -23,8 +24,10 @@ import java.util.List;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.convert.CharacterConverter;
+import javax.faces.convert.NumberConverter;
 import py.com.platinum.controller.EquivalenciaController;
 import py.com.platinum.controller.FacturaCompraCabController;
+import py.com.platinum.controller.ParametroController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.ProveedorController;
 import py.com.platinum.controller.SolicitudInternaController;
@@ -38,7 +41,9 @@ import py.com.platinum.entity.Proveedor;
 import py.com.platinum.entity.SolicitudInterna;
 import py.com.platinum.entity.TipoComprobante;
 import py.com.platinum.utils.StringUtils;
+import py.com.platinum.utilsenum.ModelUtil;
 import py.com.platinum.utilsenum.ModuloEnum;
+import py.com.platinum.utilsenum.ParametroEnum;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -493,6 +498,42 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setBtnConfirmar(Button b) {
         this.btnConfirmar = b;
     }
+    private NumberConverter numberConverter1 = new NumberConverter();
+
+    public NumberConverter getNumberConverter1() {
+        return numberConverter1;
+    }
+
+    public void setNumberConverter1(NumberConverter nc) {
+        this.numberConverter1 = nc;
+    }
+    private CalendarConverter calendarConverter1 = new CalendarConverter();
+
+    public CalendarConverter getCalendarConverter1() {
+        return calendarConverter1;
+    }
+
+    public void setCalendarConverter1(CalendarConverter cc) {
+        this.calendarConverter1 = cc;
+    }
+    private SingleSelectOptionsList uiLstFilEstadoDefaultOptions = new SingleSelectOptionsList();
+
+    public SingleSelectOptionsList getUiLstFilEstadoDefaultOptions() {
+        return uiLstFilEstadoDefaultOptions;
+    }
+
+    public void setUiLstFilEstadoDefaultOptions(SingleSelectOptionsList ssol) {
+        this.uiLstFilEstadoDefaultOptions = ssol;
+    }
+    private DropDown uiLstFilEstado = new DropDown();
+
+    public DropDown getUiLstFilEstado() {
+        return uiLstFilEstado;
+    }
+
+    public void setUiLstFilEstado(DropDown dd) {
+        this.uiLstFilEstado = dd;
+    }
 
     // </editor-fold>
     /**
@@ -500,14 +541,23 @@ public class ABMComprasProveedor extends AbstractPageBean {
      */
     public ABMComprasProveedor() {
 
+        numberConverter1.setPattern("#,##0");
+        numberConverter1.setMinIntegerDigits(1);
+        numberConverter1.setMaxIntegerDigits(40);
+        numberConverter1.setMaxFractionDigits(3);
+        calendarConverter1.setTimeZone(null);
+        calendarConverter1.setPattern("dd/MM/yyyy");
+        uiLstFilEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("N", "PENDIENTE"), new com.sun.webui.jsf.model.Option("C", "CONFIRMADO"), new com.sun.webui.jsf.model.Option("A", "ANULADO"), new com.sun.webui.jsf.model.Option("T", "TODOS")});
+        uiLstFilEstadoDefaultOptions.setSelectedValue("T");
+
         //Tipos de IVa
         uiLstIvaDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("0", "Exento"), new com.sun.webui.jsf.model.Option("5", "IVA 5%"), new com.sun.webui.jsf.model.Option("10", "IVA 10%")});
         uiLstIvaDefaultOptions.setSelectedValue("0");
 
         //Estados de la factura
-        uiLstEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("C", "Confirmado"), new com.sun.webui.jsf.model.Option("A", "Anulado"),new com.sun.webui.jsf.model.Option("N", "Nuevo")});
+        uiLstEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("C", "Confirmado"), new com.sun.webui.jsf.model.Option("A", "Anulado"), new com.sun.webui.jsf.model.Option("N", "Nuevo")});
         uiLstEstadoDefaultOptions.setSelectedValue("N");
-        
+
         //Cargamos a las tablas relacionadas
         cargarRelaciones();
     }
@@ -695,7 +745,6 @@ public class ABMComprasProveedor extends AbstractPageBean {
         RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
         return tablePhaseListener.isSelected(rowKey);
     }
-    
     private boolean addRequest = false;
     private boolean updateRequest = false;
     private boolean updateDetRequest = false;
@@ -708,28 +757,43 @@ public class ABMComprasProveedor extends AbstractPageBean {
      * @return refrescamos la pagina
      */
     public String addButton_action() {
-        //Inicializamos las variables
-        lstDetalleLIST = new ArrayList();
-        lstDetalle = (FacturaCompraDet[]) lstDetalleLIST.toArray(new FacturaCompraDet[0]);
 
-        addRequest = true;
-        updateDetRequest = true;
-        itemDet = null;
+        if (!ModelUtil.periodoAbierto()) {
+            this.pageAlert1.setType("information");
+            this.pageAlert1.setTitle("Periodo Actual esta cerrado no se puede realizar movimeintos");
+            ParametroController dao = new ParametroController();
+            String fDesde = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_DESDE.toString()).getValorTexto();
+            String fHasta = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_HASTA.toString()).getValorTexto();
+            this.pageAlert1.setSummary("Periodo Actual " + fDesde + " - " + fHasta);
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+
+        } else {
+            //Inicializamos las variables
+            lstDetalleLIST = new ArrayList();
+            lstDetalle = (FacturaCompraDet[]) lstDetalleLIST.toArray(new FacturaCompraDet[0]);
+
+            addRequest = true;
+            updateDetRequest = true;
+            itemDet = null;
 
 
-        this.btnConfirmar.setRendered(false);
-        gridPanelDetLin1.setRendered(true);
-        gridPanelDetLin2.setRendered(true);
-        tableColumnEditarDet.setRendered(true);
-        tableColumnEliminarDet.setRendered(true);
-        uiLstEstado.setReadOnly(true);
+            this.btnConfirmar.setRendered(false);
+            gridPanelDetLin1.setRendered(true);
+            gridPanelDetLin2.setRendered(true);
+            tableColumnEditarDet.setRendered(true);
+            tableColumnEliminarDet.setRendered(true);
+            uiLstEstado.setReadOnly(true);
 
-        //Cargar tablas realcionadas
-        cargarRelaciones();
+            //Cargar tablas realcionadas
+            cargarRelaciones();
 
-        //Actualizamos le titulo de la pagina
-        getSessionBean1().setTituloPagina("Nueva Factura Compra");
-        getSessionBean1().setDetallePagina("Registro de Facturas - Proveedor");
+            //Actualizamos le titulo de la pagina
+            getSessionBean1().setTituloPagina("Nueva Factura Compra");
+            getSessionBean1().setDetallePagina("Registro de Facturas - Proveedor");
+        }
+
+
 
         //result
         return null;
@@ -783,12 +847,12 @@ public class ABMComprasProveedor extends AbstractPageBean {
             uiTxtCodProveedor.setText(cabecera.getCodProveedor().getCodProveedor());
             uiTxtNombreProveedor.setText(cabecera.getCodProveedor().getNombreProveedor());
             uiLstEstado.setSelected(cabecera.getEstado());
-                if (cabecera.getEstado().equals("N")) {
-                    this.btnConfirmar.setRendered(true);
-                }else{
-                    this.btnConfirmar.setRendered(false);
-                }
-            
+            if (cabecera.getEstado().equals("N")) {
+                this.btnConfirmar.setRendered(true);
+            } else {
+                this.btnConfirmar.setRendered(false);
+            }
+
             uiLstTipoComprobante.setSelected(cabecera.getTipo().getCodTipo().toString());
             uiCalFecha.setSelectedDate(cabecera.getFecha());
             uiTxtSubTotal.setText(String.valueOf(cabecera.getSubTotal()));
@@ -850,9 +914,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
             //Set de los artributos
             cabecera.setCodProveedor(proveedor);
             cabecera.setEstado("N");
-//            cabecera.setEstado(uiLstEstado.getSelected().toString());
             cabecera.setFecha(uiCalFecha.getSelectedDate());
-            cabecera.setFechaAlta(new Date());
             cabecera.setNroFactura(uiTxtNroFac.getText().toString());
             cabecera.setCodDeposito(getSessionBean1().getCodDeposito());
             //Tipo de comprobante
@@ -860,6 +922,8 @@ public class ABMComprasProveedor extends AbstractPageBean {
             cabecera.setTotaIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
             cabecera.setSubTotal(Long.valueOf(uiTxtSubTotal.getText().toString()));
             cabecera.setTotal(Long.valueOf(uiTxtTotal.getText().toString()));
+            cabecera.setUsuarioAlta(getSessionBean1().getUsuarioLogueado().getUsuario());
+            cabecera.setFechaAlta(new Date());
 
             //Insertamos la cebecera y del detalle
             ControllerResult cr = new FacturaCompraCabController().crear(cabecera, lstDetalleLIST);
@@ -904,7 +968,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
         if (this.uiTxtCodProveedor.getText() == null) {
             info("Proveedor, campo obligatorio");
             this.errorValidacion = true;
-        }else{
+        } else {
             //Validamos el codigo del proveedor ingresado
             proveedor = new ProveedorController().findById(Long.valueOf(uiTxtCodProveedor.getText().toString()));
 
@@ -915,14 +979,14 @@ public class ABMComprasProveedor extends AbstractPageBean {
         }
 
         //Verificamos si el numero de factura ya existe
-        if(this.uiTxtNroFac.getText() != null && proveedor != null){
+        if (this.uiTxtNroFac.getText() != null && proveedor != null) {
             FacturaCompraCabController c = new FacturaCompraCabController();
             //Realizamos la busqueda
             boolean existe = c.existeNumeroFactura(this.uiTxtNroFac.getText().toString(), proveedor.getCodProveedor());
-            
+
             if (existe) {
                 info("Numero de Factura ya existe para el proveedor ingresado, favor verifique");
-                this.errorValidacion = true;    
+                this.errorValidacion = true;
             }
 
         }
@@ -931,7 +995,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
         if (this.uiLstTipoComprobante.getSelected() == null) {
             info("Tipo de Comprobante, campo obligatorio");
             this.errorValidacion = true;
-        }else{
+        } else {
             //Validamos el codigo del proveedor ingresado
             tipoComprobante = new TipoComprobanteController().findById(Long.valueOf(this.uiLstTipoComprobante.getSelected().toString()));
 
@@ -950,42 +1014,47 @@ public class ABMComprasProveedor extends AbstractPageBean {
     }
 
     public String uiBtnGuardarEditar_action() {
-        //Validamos los campos
-        validarCabecera();
 
-        //Si no hay error de validacion insertamos el registro
-        if (!errorValidacion) {
-
-            //Set de los artributos
-//            cabecera.setCodProveedor(proveedor);
-            cabecera.setEstado("A");
-//            cabecera.setEstado(uiLstEstado.getSelected().toString());
-//            cabecera.setFecha(uiCalFecha.getSelectedDate());
-//            cabecera.setNroFactura(uiTxtNroFac.getText().toString());
-//            //Tipo de comprobante
-//            cabecera.setTipo(tipoComprobante);
-//            cabecera.setTotaIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
-//            cabecera.setSubTotal(Long.valueOf(uiTxtSubTotal.getText().toString()));
-//            cabecera.setTotal(Long.valueOf(uiTxtTotal.getText().toString()));
-
-            //Insertamos la cebecera y del detalle
-            ControllerResult cr = new FacturaCompraCabController().actualizar(cabecera, lstDetalleLIST, lstDetalleEliminar);
-
-            //Verificamos el tipo de mensaje
-            if (cr.getCodRetorno() == -1) {
-                this.pageAlert1.setType("error");
-                errorValidacion = true;
-            } else {
-                // Apagamos la bandera de Editar registro
-                this.updateRequest = false;
-                this.updateDetRequest = false;
-                this.pageAlert1.setType("information");
-            }
-
-            this.pageAlert1.setTitle(cr.getMsg());
-            this.pageAlert1.setSummary("");
+        if (!ModelUtil.periodoAbierto()) {
+            this.pageAlert1.setType("information");
+            this.pageAlert1.setTitle("Periodo Actual esta cerrado no se puede realizar movimeintos");
+            ParametroController dao = new ParametroController();
+            String fDesde = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_DESDE.toString()).getValorTexto();
+            String fHasta = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_HASTA.toString()).getValorTexto();
+            this.pageAlert1.setSummary("Periodo Actual " + fDesde + " - " + fHasta);
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
+
+        } else {
+            if (!errorValidacion) {
+                //Validamos los campos
+                validarCabecera();
+
+                //Si no hay error de validacion insertamos el registro
+                //Set de los artributos
+                cabecera.setEstado("A");
+                cabecera.setUsuarioModif(getSessionBean1().getUsuarioLogueado().getUsuario());
+                cabecera.setFechaModif(new Date());
+
+                //Insertamos la cebecera y del detalle
+                ControllerResult cr = new FacturaCompraCabController().actualizar(cabecera, lstDetalleLIST, lstDetalleEliminar);
+
+                //Verificamos el tipo de mensaje
+                if (cr.getCodRetorno() == -1) {
+                    this.pageAlert1.setType("error");
+                    errorValidacion = true;
+                } else {
+                    // Apagamos la bandera de Editar registro
+                    this.updateRequest = false;
+                    this.updateDetRequest = false;
+                    this.pageAlert1.setType("information");
+                }
+
+                this.pageAlert1.setTitle(cr.getMsg());
+                this.pageAlert1.setSummary("");
+                this.pageAlert1.setDetail("");
+                this.pageAlert1.setRendered(true);
+            }
         }
 
         //result
@@ -1073,7 +1142,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
         //Verificamos el contenido de los campos de busqueda
         FacturaCompraCabController c = new FacturaCompraCabController();
         Date pFechaFactura = null;
-        String pNroFactura = null, pProveedor = null;
+        String pNroFactura = null, pProveedor = null, pEstado = null;
 
 
         //Nro. Factura
@@ -1091,8 +1160,13 @@ public class ABMComprasProveedor extends AbstractPageBean {
             pFechaFactura = this.uiFilCalFechaFactura.getSelectedDate();
         }
 
+        //Estado
+        if (this.uiLstEstado.getSelected() != null) {
+            pEstado = this.uiLstEstado.getSelected().toString();
+        }
+
         //Buscamos la lista de registros
-        lstCabecera = (FacturaCompraCab[]) c.getFacturaCompraCab(pNroFactura, pProveedor, pFechaFactura).toArray(new FacturaCompraCab[0]);
+        lstCabecera = (FacturaCompraCab[]) c.getFacturaCompraCab(pNroFactura, pProveedor, pFechaFactura, pEstado).toArray(new FacturaCompraCab[0]);
 
     }
 
@@ -1135,7 +1209,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
             detalle.setTotal(Long.valueOf(uiTxtMontoTotal.getText().toString()));
 
             //Nro de solicitud
-            if (uiTxtNroSolicitud.getText() != null ) {
+            if (uiTxtNroSolicitud.getText() != null) {
                 detalle.setNroSolicitud(solicitud);
             }
 
@@ -1168,7 +1242,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
     private void validarDetalle() {
         //Apagamos la bandera de error
         this.errorValidacion = false;
-        Producto p=null;
+        Producto p = null;
         //Producto
         if (this.uiTxtCodProducto.getText() == null || this.uiTxtCodProducto.getText().equals("")) {
             info("Codigo Producto obligatorio, ingrese un valor");
@@ -1179,7 +1253,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
             if (producto == null) {
                 info("Producto no existe, ingrese un codigo de producto correcto");
                 errorValidacion = true;
-            }else{
+            } else {
                 p = new ProductoController().findById(Long.valueOf(uiTxtCodProducto.getText().toString()));
             }
         }
@@ -1196,7 +1270,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
             if (!StringUtils.esNumero(cantidad) || !StringUtils.esNumeroDecimal(cantidad)) {
                 info("Cantidad del Producto,debe se Numero");
                 errorValidacion = true;
-            }else{
+            } else {
                 cant = Long.valueOf(cantidad);
             }
         }
@@ -1234,40 +1308,39 @@ public class ABMComprasProveedor extends AbstractPageBean {
             if (solicitud == null) {
                 info("Nro. de Solicitud Interna ingresado es incorrecto, favor ingrese un valor correcto");
                 errorValidacion = true;
-            }else{
+            } else {
                 SolicitudInterna sol = new SolicitudInternaController().findById(Long.valueOf(uiTxtNroSolicitud.getText().toString()));
                 if (sol.getEstado().equals("A")) {
                     ////// VALIDACION DEL PRODUCTO ELEGIDO Y LA CANTIDAD
 
                     if (sol != null && p != null && cant != null) {
 
-                                SolicitudInterna solIn = new SolicitudInterna();
-                                SolicitudInternaController sController = new SolicitudInternaController();
-                                solIn = sController.getSolicitudPorEquiv(sol.getCodSolicitud(),p.getCodProducto());
-                                if (solIn == null) {
-                                    this.errorValidacion= true;
-                                    info("El producto ingresado no corresponde a la Solicitud");
-                                }else{
-                                            Equivalencia eq = new EquivalenciaController().getEqPorProductos(solIn.getCodProducto().getCodProducto(), p.getCodProducto());
-                                            double relacion = eq.getRelacion().doubleValue();
-                                            double retirado = relacion * cant;
-                                            if (solIn.getCantidadCompra() + retirado > solIn.getCantidadAprobada()) {
-                                                this.errorValidacion= true;
-                                                info("Se ha superado la cantidad aprobada para la Solicitud");
-                                            }
-                                }
-                    ////// FIN VALIDACION DEL PRODUCTO ELEGIDO Y LA CANTIDAD
+                        SolicitudInterna solIn = new SolicitudInterna();
+                        SolicitudInternaController sController = new SolicitudInternaController();
+                        solIn = sController.getSolicitudPorEquiv(sol.getCodSolicitud(), p.getCodProducto());
+                        if (solIn == null) {
+                            this.errorValidacion = true;
+                            info("El producto ingresado no corresponde a la Solicitud");
+                        } else {
+                            Equivalencia eq = new EquivalenciaController().getEqPorProductos(solIn.getCodProducto().getCodProducto(), p.getCodProducto());
+                            double relacion = eq.getRelacion().doubleValue();
+                            double retirado = relacion * cant;
+                            if (solIn.getCantidadCompra() + retirado > solIn.getCantidadAprobada()) {
+                                this.errorValidacion = true;
+                                info("Se ha superado la cantidad aprobada para la Solicitud");
+                            }
+                        }
+                        ////// FIN VALIDACION DEL PRODUCTO ELEGIDO Y LA CANTIDAD
                     }
-                }else{
-                        this.errorValidacion= true;
-                        info("La solicitud no ha sido aprobada");
+                } else {
+                    this.errorValidacion = true;
+                    info("La solicitud no ha sido aprobada");
 
                 }
             }
 
         }
- }
-
+    }
     //Detalle selecciondo de la Grilla
     private String itemDet;
 
@@ -1414,11 +1487,10 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public String btnConfirmar_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
-
         cabecera.setEstado("C");
-
+        cabecera.setUsuarioModif(getSessionBean1().getUsuarioLogueado().getUsuario());
+        cabecera.setFechaModif(new Date());
         FacturaCompraCabController c = new FacturaCompraCabController();
-
         c.actualizar(cabecera, lstDetalleLIST, lstDetalleEliminar);
 
         info("Factura Confirmada");

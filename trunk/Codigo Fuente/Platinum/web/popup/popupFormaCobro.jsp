@@ -16,17 +16,17 @@
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
                         <webuijsf:table augmentTitle="false" id="table1" paginateButton="true" paginationControls="true"
-                            style="height: 77px; left: 0px; top: 0px; position: absolute" title="Seleccione Forma Cobro..." width="620">
+                            style="height: 77px; left: 0px; top: 0px; position: absolute" title="Seleccione Forma Cobro..." width="467">
                             <f:facet name="actionsTop"/>
                             <webuijsf:tableRowGroup id="tableRowGroup1" rows="20" sourceData="#{SessionBean1.listaFormaPago}" sourceVar="currentRow">
-                                <webuijsf:tableColumn headerText="Formas Cobro" id="tableColumn1" sort="nombreFormaPago" width="233">
+                                <webuijsf:tableColumn headerText="Formas Cobro" id="tableColumn1" sort="nombreFormaPago" width="209">
                                     <webuijsf:hyperlink id="hyperlink1"
-                                        onClick="doSave('#{currentRow.value['codFormaPago']}', '#{currentRow.value['nombreFormaPago']}')" text="#{currentRow.value['nombreFormaPago']}"/>
+                                        onClick="doSave('#{currentRow.value['codFormaPago']}', '#{currentRow.value['nombreFormaPago']}', '#{currentRow.value['codBanco'].nombreBanco}')" text="#{currentRow.value['nombreFormaPago']}"/>
                                 </webuijsf:tableColumn>
-                                <webuijsf:tableColumn headerText="Banco" id="tableColumnBanco" width="152">
+                                <webuijsf:tableColumn headerText="Banco" id="tableColumnBanco" width="79">
                                     <webuijsf:staticText id="staticTextBanco" text="#{currentRow.value['codBanco'].nombreBanco}"/>
                                 </webuijsf:tableColumn>
-                                <webuijsf:tableColumn headerText="Codigo" id="tableColumn2" width="163">
+                                <webuijsf:tableColumn headerText="Codigo" id="tableColumn2" width="50">
                                     <webuijsf:staticText id="staticText1" text="#{currentRow.value['codFormaPago']}"/>
                                 </webuijsf:tableColumn>
                             </webuijsf:tableRowGroup>
