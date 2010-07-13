@@ -20,12 +20,17 @@ import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.logging.Level;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
+import javax.servlet.http.HttpServletResponse;
 import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
@@ -331,6 +336,29 @@ public class ABMEquivalencia extends AbstractPageBean {
 
     @Override
     public void prerender() {
+         if (getSessionBean1().getUsuarioLogueado() == null)
+        {
+            HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
+                    try {
+                        response.sendRedirect("/Platinum/faces/Acceso.jsp");
+                        getFacesContext().responseComplete();
+                    } catch (IOException ex) {
+                        Logger.getLogger(cabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        }else if(!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("SUP_PRODUCCION")
+                 &&!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("DEPOSITO")
+                 &&!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("ADMINISTRADOR")){
+            HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
+                    try {
+                        response.sendRedirect("/Platinum/faces/PermisoDenegado.jsp");
+                        getFacesContext().responseComplete();
+                    } catch (IOException ex) {
+                        Logger.getLogger(cabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+
+        }
+
 
         if (addRequest) {
             this.gridPanelTabla.setRendered(true);

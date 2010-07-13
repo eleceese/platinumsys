@@ -120,7 +120,7 @@
                                 </h:panelGrid>
                                 <br/>
                                 <h:panelGrid binding="#{RegistroProDiaria.buttonsPanelAddUpdate}" columns="2" id="buttonsPanelAddUpdate" style="height: 24px" width="191">
-                                    <webuijsf:button actionExpression="#{RegistroProDiaria.cancelar_action}" id="cancelar" style="font-size: 14px; height: 24px" text="Cancelar"/>
+                                    <webuijsf:button actionExpression="#{RegistroProDiaria.cancelar_action}" id="cancelar" style="font-size: 14px; height: 24px" text="Volver"/>
                                 </h:panelGrid>
                                 <webuijsf:messageGroup id="messageGroup1"/>
                             </h:panelGrid>
@@ -170,11 +170,11 @@
                                             <webuijsf:tableColumn headerText="Tiempo Min" id="tableColumn6" width="15">
                                                 <webuijsf:staticText id="staticText6" text="#{currentRow.value['tiempoInvertido']}"/>
                                             </webuijsf:tableColumn>
-                                            <webuijsf:tableColumn id="tableColumn7" width="10">
-                                                <webuijsf:imageHyperlink id="uiDetEdit" imageURL="/resources/Images/edit_16x16.gif" text=""/>
-                                            </webuijsf:tableColumn>
                                             <webuijsf:tableColumn id="tableColumn8" width="10">
-                                                <webuijsf:imageHyperlink id="imageHyperlink2" imageURL="/resources/Images/delete.gif" text=""/>
+                                                <webuijsf:imageHyperlink actionExpression="#{RegistroProDiaria.imageHyperlink2_action}" id="imageHyperlink2"
+                                                    imageURL="/resources/Images/delete.gif" text="">
+                                                    <f:setPropertyActionListener target="#{RegistroProDiaria.itemDet}" value="#{currentRow.tableRow.rowId}"/>
+                                                </webuijsf:imageHyperlink>
                                             </webuijsf:tableColumn>
                                         </webuijsf:tableRowGroup>
                                     </webuijsf:table>
