@@ -23,6 +23,7 @@ import py.com.platinum.entity.FacturaCompraDet;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.Existencia;
 import py.com.platinum.entity.SolicitudInterna;
+import py.com.platinum.entity.Usuarios;
 import py.com.platinum.utilsenum.FacturaCompraEstado;
 
 /**
@@ -53,7 +54,7 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
      *
      * @return lista de FacturaCompraCabs que cumplen con la condicion de busqueda
      */
-    public List<FacturaCompraCab> getFacturaCompraCab(String nroFactura, String proveedor, Date fechaFactura) {
+    public List<FacturaCompraCab> getFacturaCompraCab(String nroFactura, String proveedor, Date fechaFactura, String estado) {
         //Armamos el sql String
         String SQL = "SELECT o FROM FacturaCompraCab o WHERE o.codFacComCab = o.codFacComCab ";
 
@@ -67,6 +68,10 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
 
         if (fechaFactura != null) {
             SQL = SQL + " and o.fecha = :fechaFactura ";
+        }
+
+        if (estado != null && !estado.equals("T")) {
+            SQL = SQL + " and o.estado = :estado ";
         }
 
         //Order By
@@ -86,6 +91,10 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
 
         if (fechaFactura != null) {
             q.setParameter("fechaFactura", fechaFactura);
+        }
+
+        if (estado != null && !estado.equals("T")) {
+            q.setParameter("estado", estado);
         }
 
         //Realizamos la busqueda
@@ -125,9 +134,7 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
                     //Persistimos
                     em.persist(det);
 
-
                     ///// Actualizacion de la utilizacion a traves de la equivalencia
-
                                 Producto p = null;
                                 SolicitudInterna solIn = null;
                                 p = det.getCodProducto();
@@ -150,19 +157,6 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
                                             sol.setCantidadCompra(sol.getCantidadCompra() + Math.round(retirado));
                                             em.merge(sol);
                                      }
-
-                    //////////////////
-
-
-
-
-
-
-
-
-
-
-
                 }
             }
 
@@ -200,32 +194,47 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
         ControllerResult r = new ControllerResult();
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
+        EntradaSalidaCabecera entSalCab = new EntradaSalidaCabecera();
+        
         try {
             //Iniciamos la transaccion
             tx.begin();
 
             //Actualizamos la Cabecera
             em.merge(cabecera);
+            Deposito d = new DepositoController().findById(cabecera.getCodDeposito().getCodDeposito());
+            
+            /* Controlamos que existan productos que mejen existencia en el detalle
+             * y que tambien el estado de la factura sea igual a confirmad(C)
+             */
+            if (hayProductoControlaExistencia(detalle) && cabecera.getEstado().equals("C")) {
+                /*  Creacion de la Cabecera Movimiento en Deposito
+                 * Obtenemos el empleado por medio del usuario que realizada la confirmacion */
+                Usuarios usuModif = new UsuarioController().getUsuario(cabecera.getUsuarioModif());
+                Empleado emp = new Empleado();
 
-                            // Creacion de la Cabecera Movimiento en Deposito
+                //Obtenemos el empleado
+                if (usuModif != null) {
+                    emp = usuModif.getCodEmpleado();
+                }
 
-                            Deposito d = new DepositoController().findById(cabecera.getCodDeposito().getCodDeposito());
-                            Empleado emp = new EmpleadoController().findById(Long.valueOf("1"));
-                            String textoCabecera;
-                            textoCabecera = "Movimiento en Deposito generado por la Factura Proveedor Nro: "+cabecera.getNroFactura().toString();
+                //Texto para la entrada salida, cabecera
+                String textoCabecera;
+                textoCabecera = "Movimiento en Deposito generado por la Factura Proveedor Nro: "+cabecera.getNroFactura().toString();
 
-                            EntradaSalidaCabecera entSalCab = new EntradaSalidaCabecera();
+                //Creamos el Objeto Entrada Salida Cabecera
+                entSalCab.setCodDeposito(d);
+                entSalCab.setCodEmpleado(emp);
+                entSalCab.setCodEncargado(emp);
+                entSalCab.setFechaEntradaSalida(cabecera.getFecha());
+                entSalCab.setNroComprobante(cabecera.getCodFacComCab());
+                entSalCab.setTipoComprobante(cabecera.getTipo().getCodTipo());
+                entSalCab.setObservacion(textoCabecera);
+                entSalCab.setFechaAlta(new Date());
 
-
-                            entSalCab.setCodDeposito(d);
-                            entSalCab.setCodEmpleado(emp);
-                            entSalCab.setCodEncargado(emp);
-                            entSalCab.setFechaEntradaSalida(cabecera.getFecha());
-                            entSalCab.setNroComprobante(cabecera.getCodFacComCab());
-                            entSalCab.setTipoComprobante(cabecera.getTipo().getCodTipo());
-                            entSalCab.setObservacion(textoCabecera);
-                            entSalCab.setFechaAlta(new Date());
-                            em.persist(entSalCab);
+                //Persistimos la cabecera de la entrada salida
+                em.persist(entSalCab);
+            }
 
             //Actualizamos el detalle
             if (detalle != null) {
@@ -241,32 +250,30 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
                         //Persistir
                         em.persist(det);
 
-
-
                     } else {
                         //Actualizamos
                         em.merge(det);
 
-                        // Creacion de los detalles Movimiento en Deposito
+                        //Verificamos si el producto maneja existencia
+                        if (det.getCodProducto().getControlaExistencia() != null && det.getCodProducto().getControlaExistencia().equals("S")){
+                            // Creacion de los detalles Movimiento en Deposito
                             EntradaSalidaDetalle entSalDet = new EntradaSalidaDetalle();
                             Producto p = new ProductoController().findById(det.getCodProducto().getCodProducto().longValue());
                             Existencia ex = new ExistenciaController().getExistencia(null, p.getCodProducto(), d.getCodDeposito());
                             Double cantidadExistencia = ex.getCantidadExistencia().doubleValue();
 
-
+                            //Creamos el objeto detalle de la entrada-salida
                             entSalDet.setCodEntradaSalida(entSalCab);
                             entSalDet.setCodProducto(p);
                             entSalDet.setTipoEntradaSalida("E");
                             entSalDet.setCantidadEntSal(BigInteger.valueOf(det.getCantidad()));
-                                cantidadExistencia = cantidadExistencia + det.getCantidad();
+                            cantidadExistencia = cantidadExistencia + det.getCantidad();
                             entSalDet.setExistencia(BigDecimal.valueOf(cantidadExistencia));
                             entSalDet.setFechaAlta(cabecera.getFecha());
+
+                            //Persistimos el objeto detalle de la entrada-salida
                             em.persist(entSalDet);
-                        //
-
-
-
-
+                        }
                     }
 
                 }
@@ -433,5 +440,33 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
         //retornamos la lista
         return entities;
 
+    }
+
+    /*
+     * Controla si hay almenos un detalle con producto que maneje existencia
+     */
+    private boolean hayProductoControlaExistencia(List<FacturaCompraDet> detalle) {
+        //Variables
+        boolean r;
+
+        //Inicializamos
+        r = false;
+
+        //Recorremos el detalle
+        if (detalle != null) {
+            for (int i = 0; i < detalle.size(); i++) {
+                FacturaCompraDet det = detalle.get(i);
+
+                //Verificamos si el producto maneja existencia
+                if (det.getCodProducto().getControlaExistencia() != null && det.getCodProducto().getControlaExistencia().equals("S")){
+                    r = !r;
+                    break;
+                }
+
+            }
+        }
+
+        //Resutlt
+        return r;
     }
 }   

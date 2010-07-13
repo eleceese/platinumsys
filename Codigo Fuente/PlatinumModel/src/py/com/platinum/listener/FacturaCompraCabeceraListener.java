@@ -33,7 +33,6 @@ public class FacturaCompraCabeceraListener {
         //Si la factura fue anulada
         if (cab.getEstado().toString().equals("A")) {
 
-
             //Actualizamos el detalle
             List<FacturaCompraDet> lstDet = cab.getFacturaCompraDetList();
 
@@ -42,25 +41,30 @@ public class FacturaCompraCabeceraListener {
                 //Obtenemos el detalle
                 FacturaCompraDet det = lstDet.get(i);
 
-                //Actualizamos la existencia
-                existencia = existenciaController.getExistencia(null, det.getCodProducto().getCodProducto(), det.getCodFacComCab().getCodDeposito().getCodDeposito());
+                //Verificamos si el producto maneja existencia
+                if (det.getCodProducto().getControlaExistencia() != null && det.getCodProducto().getControlaExistencia().equals("S")){
+                    //Actualizamos la existencia
+                    existencia = existenciaController.getExistencia(null, det.getCodProducto().getCodProducto(), det.getCodFacComCab().getCodDeposito().getCodDeposito());
 
-                //Obtenemos la cantidad en deposito
-                BigInteger cantidad = existencia.getCantidadExistencia();
+                    //Obtenemos la cantidad en deposito
+                    BigInteger cantidad = existencia.getCantidadExistencia();
 
-                //Reponemos la cantidad vendida
-                cantidad = BigInteger.valueOf(cantidad.longValue() - det.getCantidad());
+                    //Reponemos la cantidad vendida
+                    cantidad = BigInteger.valueOf(cantidad.longValue() - det.getCantidad());
 
-                //Asignamos la cantidad nueva
-                existencia.setCantidadExistencia(cantidad);
+                    //Asignamos la cantidad nueva
+                    existencia.setCantidadExistencia(cantidad);
 
-                //Actualizamos
-                existenciaController.update(existencia);
+                    //Actualizamos
+                    existenciaController.update(existencia);
+                }
+                
             }
 
         }
-        if (cab.getEstado().toString().equals("C")) {
 
+        //Si Confirmamos
+        if (cab.getEstado().toString().equals("C")) {
 
             //Actualizamos el detalle
             List<FacturaCompraDet> lstDet = cab.getFacturaCompraDetList();
@@ -70,23 +74,26 @@ public class FacturaCompraCabeceraListener {
                 //Obtenemos el detalle
                 FacturaCompraDet det = lstDet.get(i);
 
-                //Actualizamos la existencia
-                existencia = existenciaController.getExistencia(null, det.getCodProducto().getCodProducto(), det.getCodFacComCab().getCodDeposito().getCodDeposito());
+                //Verificamos si el producto maneja existencia
+                if (det.getCodProducto().getControlaExistencia() != null && det.getCodProducto().getControlaExistencia().equals("S")){
+                    //Actualizamos la existencia
+                    existencia = existenciaController.getExistencia(null, det.getCodProducto().getCodProducto(), det.getCodFacComCab().getCodDeposito().getCodDeposito());
 
-                //Obtenemos la cantidad en deposito
-                BigInteger cantidad = existencia.getCantidadExistencia();
+                    //Obtenemos la cantidad en deposito
+                    BigInteger cantidad = existencia.getCantidadExistencia();
 
-                //Reponemos la cantidad vendida
-                cantidad = BigInteger.valueOf(cantidad.longValue() + det.getCantidad());
+                    //Reponemos la cantidad vendida
+                    cantidad = BigInteger.valueOf(cantidad.longValue() + det.getCantidad());
 
-                //Asignamos la cantidad nueva
-                existencia.setCantidadExistencia(cantidad);
+                    //Asignamos la cantidad nueva
+                    existencia.setCantidadExistencia(cantidad);
 
-                //Actualizamos
-                existenciaController.update(existencia);
+                    //Actualizamos
+                    existenciaController.update(existencia);
 
-                //Calculamos historico de costo
-                new HistoricoCostoController().calcularCostoPromedio(det.getCodProducto().getCodProducto(), BigInteger.valueOf(det.getPrecioUni()), BigDecimal.valueOf(det.getCantidad()));
+                    //Calculamos historico de costo
+                    new HistoricoCostoController().calcularCostoPromedio(det.getCodProducto().getCodProducto(), BigInteger.valueOf(det.getPrecioUni()), BigDecimal.valueOf(det.getCantidad()));
+                }
             }
 
         }

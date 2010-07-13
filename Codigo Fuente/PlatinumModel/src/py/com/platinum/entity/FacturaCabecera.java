@@ -27,8 +27,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.controller.NotaCreditoClienteCabController;
 import py.com.platinum.listener.FacturaVentaCabeceraListener;
-import py.com.platinum.utils.DateUtils;
 import py.com.platinum.utils.StringUtils;
 import py.com.platinum.utilsenum.FacturaVentaEstado;
 
@@ -171,6 +171,12 @@ public class FacturaCabecera implements Serializable {
 
     public void setTotalIvaFactura(Long totalIvaFactura) {
         this.totalIvaFactura = totalIvaFactura;
+    }
+
+    public Long getTotalNotaCreditoAplicada() {
+        NotaCreditoClienteCabController dao = new NotaCreditoClienteCabController();
+        Long totalNota = dao.getTotalNotaPorFactura(codFactura);
+        return totalNota;
     }
 
     public Long getTotalFactura() {

@@ -26,7 +26,7 @@ import py.com.platinum.entity.Producto;
  *
  * @author Martin Jara
  */
-public class popupProductoVenta extends AbstractPageBean {
+public class popupProductosCompra extends AbstractPageBean {
     // <editor-fold defaultstate="collapsed" desc="Managed Component Definition">
     /**
      * <p>Automatically managed component initialization.  <strong>WARNING:</strong>
@@ -85,7 +85,7 @@ public class popupProductoVenta extends AbstractPageBean {
     /**
      * <p>Construct a new Page bean instance.</p>
      */
-    public popupProductoVenta() {
+    public popupProductosCompra() {
     }
 
     /**
@@ -202,7 +202,7 @@ public class popupProductoVenta extends AbstractPageBean {
         } 
 
         //Obetenmos la lista
-        Producto[] l = (Producto[]) new ProductoController().getProductoVenta(param).toArray(new Producto[0]);
+        Producto[] l = (Producto[]) new ProductoController().getProductoCompra(param).toArray(new Producto[0]);
 
         //Actualizamos la lista de la session
         getSessionBean1().setListaProductos(l);
@@ -213,7 +213,7 @@ public class popupProductoVenta extends AbstractPageBean {
 
     public String uiBtnTodos_action() {
         //Obetenmos la lista
-        Producto[] l = (Producto[]) new ProductoController().getProductoVenta(null).toArray(new Producto[0]);
+        Producto[] l = (Producto[]) new ProductoController().getProductoCompra(null).toArray(new Producto[0]);
 
         //actializamos la lista en la session
         getSessionBean1().setListaProductos(l);
@@ -221,5 +221,6 @@ public class popupProductoVenta extends AbstractPageBean {
         //refrecamos la pagina
         return null;
     }
+
 }
 

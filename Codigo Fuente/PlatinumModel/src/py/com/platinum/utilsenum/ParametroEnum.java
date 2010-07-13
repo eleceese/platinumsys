@@ -14,6 +14,8 @@ public enum ParametroEnum {
     COD_ESTABLECIMIENTO { @Override public String toString() { return "COD_ESTABLECIMIENTO";}},
     COD_BOCA_EXPENDIO { @Override public String toString() { return "COD_BOCA_EXPENDIO";}},
     NRO_TIMBRADO { @Override public String toString() { return "NRO_TIMBRADO";}},
-    VENCIMIENTO_TIMBRADO { @Override public String toString() { return "VENCIMIENTO_TIMBRADO";}}
+    VENCIMIENTO_TIMBRADO { @Override public String toString() { return "VENCIMIENTO_TIMBRADO";}},
+    PERIODO_ABIERTO_DESDE { @Override public String toString() { return "PERIODO_ABIERTO_DESDE";}},
+    PERIODO_ABIERTO_HASTA { @Override public String toString() { return "PERIODO_ABIERTO_HASTA";}}
     
 }

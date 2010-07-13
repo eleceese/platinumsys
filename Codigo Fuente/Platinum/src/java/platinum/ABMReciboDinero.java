@@ -46,6 +46,7 @@ import py.com.platinum.entity.FormaPago;
 import py.com.platinum.entity.MovimientoCajaDetalle;
 import py.com.platinum.entity.SaldoCliente;
 import py.com.platinum.utils.StringUtils;
+import py.com.platinum.utilsenum.ModelUtil;
 import py.com.platinum.utilsenum.ParametroEnum;
 import py.com.platinum.utilsenum.ReciboEstado;
 import py.com.platinum.view.VClientesSaldos;
@@ -608,7 +609,6 @@ public class ABMReciboDinero extends AbstractPageBean {
     public void setUiBtnAgregarDetFC(Button b) {
         this.uiBtnAgregarDetFC = b;
     }
-
     private TextField uiTxtNroFormaCobro = new TextField();
 
     public TextField getUiTxtNroFormaCobro() {
@@ -636,23 +636,23 @@ public class ABMReciboDinero extends AbstractPageBean {
     public void setUiTxtCodFormaCobro(TextField tf) {
         this.uiTxtCodFormaCobro = tf;
     }
-    private ImageHyperlink uilnkEditarDetalleFC = new ImageHyperlink();
+    private ImageHyperlink uilnkEditardetalleFC = new ImageHyperlink();
 
-    public ImageHyperlink getUilnkEditarDetalleFC() {
-        return uilnkEditarDetalleFC;
+    public ImageHyperlink getUilnkEditardetalleFC() {
+        return uilnkEditardetalleFC;
     }
 
-    public void setUilnkEditarDetalleFC(ImageHyperlink ih) {
-        this.uilnkEditarDetalleFC = ih;
+    public void setUilnkEditardetalleFC(ImageHyperlink ih) {
+        this.uilnkEditardetalleFC = ih;
     }
-    private ImageHyperlink uilnkEliminarDetalleFC = new ImageHyperlink();
+    private ImageHyperlink uilnkEliminardetalleFC = new ImageHyperlink();
 
-    public ImageHyperlink getUilnkEliminarDetalleFC() {
-        return uilnkEliminarDetalleFC;
+    public ImageHyperlink getUilnkEliminardetalleFC() {
+        return uilnkEliminardetalleFC;
     }
 
-    public void setUilnkEliminarDetalleFC(ImageHyperlink ih) {
-        this.uilnkEliminarDetalleFC = ih;
+    public void setUilnkEliminardetalleFC(ImageHyperlink ih) {
+        this.uilnkEliminardetalleFC = ih;
     }
     private TextField uiTxtSerieFormaCobro = new TextField();
 
@@ -663,9 +663,17 @@ public class ABMReciboDinero extends AbstractPageBean {
     public void setUiTxtSerieFormaCobro(TextField tf) {
         this.uiTxtSerieFormaCobro = tf;
     }
+    private TextField uiTxtBanco = new TextField();
+
+    public TextField getUiTxtBanco() {
+        return uiTxtBanco;
+    }
+
+    public void setUiTxtBanco(TextField tf) {
+        this.uiTxtBanco = tf;
+    }
 
     // </editor-fold>
-
     /**
      * <p>Construct a new Page bean instance.</p>
      */
@@ -674,19 +682,19 @@ public class ABMReciboDinero extends AbstractPageBean {
         //Estados de la factura
         ReciboEstado[] lstEstado = ReciboEstado.values();
         Option[] lstEstadoOp = new Option[lstEstado.length];
-        
+
         Option o = new Option();
         for (int i = 0; i < lstEstado.length; i++) {
             //Obtenemos el estado
             ReciboEstado p = lstEstado[i];
-            
+
             //Seteamos el value y el label del option
             o.setValue(p.toString());
             o.setLabel(p.toString());
-            
+
             //Agregamos a la lista
             lstEstadoOp[i] = o;
-            
+
             //Cerar
             o = new Option();
         }
@@ -812,9 +820,8 @@ public class ABMReciboDinero extends AbstractPageBean {
 
         //Actualizamos la lista de la session
         lstSaldosList = l;
-        lstSaldos = (VClientesSaldos[])lstSaldosList.toArray(new VClientesSaldos[0]);
+        lstSaldos = (VClientesSaldos[]) lstSaldosList.toArray(new VClientesSaldos[0]);
     }
-
 
     /**
      * Limpiar campos
@@ -894,7 +901,6 @@ public class ABMReciboDinero extends AbstractPageBean {
         RowKey rowKey = (RowKey) getValue("#{currentRow.tableRow}");
         return tablePhaseListener.isSelected(rowKey);
     }
-    
     private boolean addRequest = false;
     private boolean updateRequest = false;
     private boolean updateDetRequest = false;
@@ -907,39 +913,49 @@ public class ABMReciboDinero extends AbstractPageBean {
      * @return refrescamos la pagina
      */
     public String addButton_action() {
-        //Inicializamos las variables
-        lstDetalleLIST = new ArrayList();
-        lstDetalle = (ReciboDetalle[]) lstDetalleLIST.toArray(new ReciboDetalle[0]);
-        lstDetalleLISTFC = new ArrayList();
-        lstDetalleFC = (MovimientoCajaDetalle[]) lstDetalleLISTFC.toArray(new MovimientoCajaDetalle[0]);
-        addRequest = true;
-        updateDetRequest = true;
-        itemDet = null;
-        cliente = null;
+        if (!ModelUtil.periodoAbierto()) {
+            this.pageAlert1.setType("information");
+            this.pageAlert1.setTitle("Periodo Actual esta cerrado no se puede realizar movimeintos");
+            ParametroController dao = new ParametroController();
+            String fDesde = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_DESDE.toString()).getValorTexto();
+            String fHasta = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_HASTA.toString()).getValorTexto();
+            this.pageAlert1.setSummary("Periodo Actual " + fDesde + " - " + fHasta);
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+        } else {
+            //Inicializamos las variables
+            lstDetalleLIST = new ArrayList();
+            lstDetalle = (ReciboDetalle[]) lstDetalleLIST.toArray(new ReciboDetalle[0]);
+            lstDetalleLISTFC = new ArrayList();
+            lstdetalleFC = (MovimientoCajaDetalle[]) lstDetalleLISTFC.toArray(new MovimientoCajaDetalle[0]);
+            addRequest = true;
+            updateDetRequest = true;
+            itemDet = null;
+            cliente = null;
 
-        //Cargar tablas realcionadas
-        cargarRelaciones();
+            //Cargar tablas realcionadas
+            cargarRelaciones();
 
-        //Actualizamos le titulo de la pagina
-        getSessionBean1().setTituloPagina("Nuevo Recibo de Dinero");
-        getSessionBean1().setDetallePagina("Cobro a Cliente - Cobranza");
-        gridPanelDetLin1.setRendered(true);
-        gridPanelDetLin2.setRendered(true);
-        tableColumnEditarDet.setRendered(true);
-        tableColumnEliminarDet.setRendered(true);
+            //Actualizamos le titulo de la pagina
+            getSessionBean1().setTituloPagina("Nuevo Recibo de Dinero");
+            getSessionBean1().setDetallePagina("Cobro a Cliente - Cobranza");
+            gridPanelDetLin1.setRendered(true);
+            gridPanelDetLin2.setRendered(true);
+            tableColumnEditarDet.setRendered(true);
+            tableColumnEliminarDet.setRendered(true);
 
-        //Obtenemos la serie del recibo
-        String ser = "A";
-        Parametros p = new ParametroController().getParametro(ParametroEnum.SERIE_RECIBO.toString());
+            //Obtenemos la serie del recibo
+            String ser = "A";
+            Parametros p = new ParametroController().getParametro(ParametroEnum.SERIE_RECIBO.toString());
 
-        if (p != null) {
-            ser = p.getValorTexto();
+            if (p != null) {
+                ser = p.getValorTexto();
+            }
+
+            uiTxtSerie.setText(ser);
+            uiTxtNroRecibo.setText(controller.getNroRecibo(ser));
+            uiBtnImprimir.setDisabled(true);
         }
-
-        uiTxtSerie.setText(ser);
-        uiTxtNroRecibo.setText(controller.getNroRecibo(ser));
-        uiBtnImprimir.setDisabled(true);
-
         //result
         return null;
     }
@@ -967,7 +983,7 @@ public class ABMReciboDinero extends AbstractPageBean {
         gridPanelDetLin2.setRendered(false);
         tableColumnEditarDet.setRendered(false);
         tableColumnEliminarDet.setRendered(false);
-        
+
         //ocultamos el pageAlert
         this.pageAlert1.setRendered(false);
 
@@ -1117,7 +1133,7 @@ public class ABMReciboDinero extends AbstractPageBean {
         if (this.uiTxtCodCliente.getText() == null) {
             info("Cliente, campo obligatorio");
             this.errorValidacion = true;
-        }else{
+        } else {
             //Validamos el codigo del Cliente ingresado
             cliente = new ClienteController().findById(Long.valueOf(uiTxtCodCliente.getText().toString()));
 
@@ -1135,41 +1151,51 @@ public class ABMReciboDinero extends AbstractPageBean {
     }
 
     public String uiBtnGuardarEditar_action() {
-        //Inicializamos
-        errorValidacion = false;
-
-        //Verificamos el estado del comprobante
-        if (cabecera.getEstado().toString().equals(ReciboEstado.ANULADO.toString())) {
-            info("El Recibo ya fue Anulada");
-            errorValidacion = true;
-        }
-        
-        //Si no hay error de validacion insertamos el registro
-        if (!errorValidacion) {
-
-            cabecera.setEstado(ReciboEstado.ANULADO);
-
-            //Insertamos la cebecera y del detalle
-            ControllerResult cr = new ReciboCabeceraController().update(cabecera);
-
-            //Verificamos el tipo de mensaje
-            if (cr.getCodRetorno() == -1) {
-                this.pageAlert1.setType("error");
-                errorValidacion = true;
-            } else {
-                // Apagamos la bandera de Editar registro
-                this.updateRequest = false;
-                this.updateDetRequest = false;
-                this.addRequest = false;
-                this.pageAlert1.setType("information");
-            }
-
-            this.pageAlert1.setTitle(cr.getMsg());
-            this.pageAlert1.setSummary("");
+        if (!ModelUtil.periodoAbierto()) {
+            this.pageAlert1.setType("information");
+            this.pageAlert1.setTitle("Periodo Actual esta cerrado no se puede realizar movimeintos");
+            ParametroController dao = new ParametroController();
+            String fDesde = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_DESDE.toString()).getValorTexto();
+            String fHasta = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_HASTA.toString()).getValorTexto();
+            this.pageAlert1.setSummary("Periodo Actual " + fDesde + " - " + fHasta);
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
-        }
+        } else {
+            //Inicializamos
+            errorValidacion = false;
 
+            //Verificamos el estado del comprobante
+            if (cabecera.getEstado().toString().equals(ReciboEstado.ANULADO.toString())) {
+                info("El Recibo ya fue Anulada");
+                errorValidacion = true;
+            }
+
+            //Si no hay error de validacion insertamos el registro
+            if (!errorValidacion) {
+
+                cabecera.setEstado(ReciboEstado.ANULADO);
+
+                //Insertamos la cebecera y del detalle
+                ControllerResult cr = new ReciboCabeceraController().update(cabecera);
+
+                //Verificamos el tipo de mensaje
+                if (cr.getCodRetorno() == -1) {
+                    this.pageAlert1.setType("error");
+                    errorValidacion = true;
+                } else {
+                    // Apagamos la bandera de Editar registro
+                    this.updateRequest = false;
+                    this.updateDetRequest = false;
+                    this.addRequest = false;
+                    this.pageAlert1.setType("information");
+                }
+
+                this.pageAlert1.setTitle(cr.getMsg());
+                this.pageAlert1.setSummary("");
+                this.pageAlert1.setDetail("");
+                this.pageAlert1.setRendered(true);
+            }
+        }
         //result
         return null;
     }
@@ -1202,18 +1228,17 @@ public class ABMReciboDinero extends AbstractPageBean {
     private ReciboDetalle[] lstDetalle;
     private FormaPago formaPago;
     private FormaPagoController formaPagoController;
-    private MovimientoCajaDetalle DetalleFC;
-    private MovimientoCajaDetalle[] lstDetalleFC;
+    private MovimientoCajaDetalle detalleFC;
+    private MovimientoCajaDetalle[] lstdetalleFC;
     private List<MovimientoCajaDetalle> lstDetalleLISTFC;
     private List<ReciboDetalle> lstDetalleLIST;
     private List<ReciboDetalle> lstDetalleEliminar;
     private Cliente cliente;
     private SaldoCliente saldo;
     private SaldoClienteController saldoController;
-    private Empleado codEmpleado  = new Empleado();
+    private Empleado codEmpleado = new Empleado();
     private VClientesSaldos[] lstSaldos;
     private List<VClientesSaldos> lstSaldosList = null;
-
 
     public ReciboCabecera getCabecera() {
         return cabecera;
@@ -1363,9 +1388,9 @@ public class ABMReciboDinero extends AbstractPageBean {
         if (this.uiTxtDescComprobante.getText() == null || this.uiTxtDescComprobante.getText().equals("")) {
             info("Seleccione un comprobante, Obligatrio");
             errorValidacion = true;
-        }else{
+        } else {
             String c = this.uiTxtDescComprobante.getText().toString();
-            c = c.substring(c.indexOf("-")+1);
+            c = c.substring(c.indexOf("-") + 1);
             Long cod = Long.valueOf(c);
             saldo = saldoController.findById(cod);
 
@@ -1390,7 +1415,6 @@ public class ABMReciboDinero extends AbstractPageBean {
         }
 
     }
-
     //Detalle selecciondo de la Grilla
     private String itemDet;
 
@@ -1480,7 +1504,7 @@ public class ABMReciboDinero extends AbstractPageBean {
         }
 
         //Aplicamos el descuento
-        
+
         uiTxtTotal1.setText(String.valueOf(total));
         uiTxtTotalComprobantes.setText(String.valueOf(total));
     }
@@ -1524,7 +1548,6 @@ public class ABMReciboDinero extends AbstractPageBean {
         getSessionBean1().cargarListaCliente();
 
     }
-
     private Long codClienteSeleccionado;
 
     public Long getCodClienteSeleccionado() {
@@ -1534,7 +1557,7 @@ public class ABMReciboDinero extends AbstractPageBean {
     public void setCodClienteSeleccionado(Long codClienteSeleccionado) {
         this.codClienteSeleccionado = codClienteSeleccionado;
     }
-    
+
     public VClientesSaldos[] getLstSaldos() {
         return lstSaldos;
     }
@@ -1554,19 +1577,19 @@ public class ABMReciboDinero extends AbstractPageBean {
 
     public String hyperlink2_action() {
 
-        
-            return null;
-       
+
+        return null;
+
     }
 
     public void uiTxtCodCliente_processValueChange(ValueChangeEvent event) {
 
-        if(uiTxtCodCliente.getText() != null){
+        if (uiTxtCodCliente.getText() != null) {
             actualizarListaComprobantes();
         }
 
     }
-    
+
     public String getNotINComprobantes() {
         //Variables
         String s;
@@ -1575,7 +1598,7 @@ public class ABMReciboDinero extends AbstractPageBean {
 
             for (int i = 0; i < lstDetalle.length; i++) {
                 ReciboDetalle d = lstDetalle[i];
-                if (i == (lstDetalle.length -1)) {
+                if (i == (lstDetalle.length - 1)) {
                     sb.append(d.getCodSaldoCliente().toString());
                 } else {
                     sb.append(d.getCodSaldoCliente().toString() + ", ");
@@ -1584,10 +1607,10 @@ public class ABMReciboDinero extends AbstractPageBean {
         }
 
         //Result
-        if (lstDetalle == null || lstDetalle.length == 0 ) {
+        if (lstDetalle == null || lstDetalle.length == 0) {
             s = null;
-        }else{
-            s = "( "+ sb.toString() +" )";
+        } else {
+            s = "( " + sb.toString() + " )";
         }
 
         //result
@@ -1595,12 +1618,12 @@ public class ABMReciboDinero extends AbstractPageBean {
 
     }
 
-    public MovimientoCajaDetalle[] getLstDetalleFC() {
-        return lstDetalleFC;
+    public MovimientoCajaDetalle[] getLstdetalleFC() {
+        return lstdetalleFC;
     }
 
-    public void setLstDetalleFC(MovimientoCajaDetalle[] lstDetalleFC) {
-        this.lstDetalleFC = lstDetalleFC;
+    public void setLstdetalleFC(MovimientoCajaDetalle[] lstdetalleFC) {
+        this.lstdetalleFC = lstdetalleFC;
     }
 
     public List<MovimientoCajaDetalle> getLstDetalleLISTFC() {
@@ -1611,32 +1634,87 @@ public class ABMReciboDinero extends AbstractPageBean {
         this.lstDetalleLISTFC = lstDetalleLISTFC;
     }
 
-    public String uilnkEditarDetalleFC_action() {
+    public String uilnkEditardetalleFC_action() {
         //Obtenemos el detalle seleccionado
-        this.DetalleFC = lstDetalleLISTFC.get(Integer.valueOf(itemDet).intValue());
-        
+        this.detalleFC = lstDetalleLISTFC.get(Integer.valueOf(itemDet).intValue());
+
         //Obtenemos los valores del detalle q ha sido seleccionado
-        uiTxtCodFormaCobro.setText(this.DetalleFC.getCodFormaPago().getCodFormaPago());
-        uiTxtDescFormaCobro.setText(this.DetalleFC.getCodFormaPago().getNombreFormaPago());
-        uiTxtSerieFormaCobro.setText(this.DetalleFC.getSerieCheque());
-        uiTxtNroFormaCobro.setText(this.DetalleFC.getNumeroCheque());
-        uiTxtMontoCobro.setText(this.DetalleFC.getMonto());
+        uiTxtCodFormaCobro.setText(this.detalleFC.getCodFormaPago().getCodFormaPago());
+        uiTxtDescFormaCobro.setText(this.detalleFC.getCodFormaPago().getNombreFormaPago());
+
+        if (this.detalleFC.getCodFormaPago().getCodBanco() != null) {
+            uiTxtBanco.setText(this.detalleFC.getCodFormaPago().getCodBanco().getNombreBanco());
+        }
         
+        uiTxtSerieFormaCobro.setText(this.detalleFC.getSerieCheque());
+        uiTxtNroFormaCobro.setText(this.detalleFC.getNumeroCheque());
+        uiTxtMontoCobro.setText(this.detalleFC.getMonto());
+
         //result
         return null;
     }
 
-    public String uilnkEliminarDetalleFC_action() {
+    public String uilnkEliminardetalleFC_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         return null;
     }
 
     public String uiBtnAgregarDetFC_action() {
+        //Validamos el detalle
+        validardetalleFC();
+
+        //Sino hubo error de validacion
+        if (!errorValidacion) {
+
+            /* Si itemDet es null, en ese caso es un nuevo detalle */
+
+            //Controlamos si es Nuevo Detalle
+            if (itemDet == null) {
+                detalleFC = new MovimientoCajaDetalle();
+            }
+
+            //Obtenemos los datos ingresados
+            detalleFC.setCodFormaPago(formaPago);
+            detalleFC.setCodRecibo(cabecera);
+            detalleFC.setFechaAlta(new Date());
+            //detalleFC.getMonto()
+            detalleFC.setNumeroCheque(itemDet);
+            detalleFC.setSerieCheque(itemDet);
+            detalleFC.setUsuarioAlta(getSessionBean1().getUsuarioLogueado().getUsuario());
+
+
+            //Agregamos a la lista
+            if (itemDet == null) {
+                lstDetalleLIST.add(detalle);
+            }
+
+            //Actualizamos la grilla
+            lstDetalle = (ReciboDetalle[]) lstDetalleLIST.toArray(new ReciboDetalle[0]);
+
+            //Ceramos el item seleccionado
+            itemDet = null;
+
+            //Ceramos los campos del detalle
+            limpiarCamposDetalle();
+
+            //Calculamos los totales
+            calcularTotales();
+
+            actualizarListaComprobantes();
+        }
+
+        //result
+        return null;
+    }
+
+    public String uiBtnCancelardetalleFC_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         return null;
     }
 
-    
+    private void validardetalleFC() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 }

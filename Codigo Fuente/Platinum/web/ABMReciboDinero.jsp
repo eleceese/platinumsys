@@ -41,6 +41,13 @@
                         }
                     </script>
                     <script>
+                        function tieneBanco(){
+                            if(document.getElementById('form1:uiTxtBanco_field').value == ''){
+                                document.getElementById('form1:uiTxtMontoFormaCobro_field').focus();
+                            }
+                        }
+                    </script>
+                    <script>
                         var delSelect;
                         function confirmar() {
                             if (delSelect!=null){
@@ -249,19 +256,25 @@
                                     <!-- INICIO FORMA COBRO DETALLE-->
                                     <h:panelGrid id="gridPanelFormaCobro" style="width: 100%; height: 100%;">
                                         <webuijsf:label id="uiLblTituloDetalle1" style="font-size: 16px" text="Detalle Recibo - Forma Cobro"/>
-                                        <h:panelGrid columns="11" id="gridPanelDetLin1" style="height: 24px" width="887">
-                                            <webuijsf:hyperlink id="linkFormaCobro" target="popup" text="Forma Cobro" url="/faces/popup/popupFormaCobro.jsp"/>
+                                        <h:panelGrid columns="11" id="gridPanelDetLin1" style="height: 72px" width="887">
+                                            <webuijsf:hyperlink id="linkFormaCobro"
+                                                onClick="doPopup('form1:uiTxtCodFormaCobro_field', 'form1:uiTxtDescFormaCobro_field', 'form1:uiTxtBanco_field' )"
+                                                target="popup" text="Forma Cobro" url="/faces/popup/popupFormaCobro.jsp"/>
                                             <webuijsf:textField binding="#{ABMReciboDinero.uiTxtCodFormaCobro}" columns="5" id="uiTxtCodFormaCobro"/>
-                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtDescFormaCobro}" id="uiTxtDescFormaCobro" onFocus="document.getElementById('form1:uiTxtMontoCobro_field').focus(); return false;"/>
+                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtDescFormaCobro}" columns="18" id="uiTxtDescFormaCobro" onFocus="document.getElementById('form1:uiTxtMontoFormaCobro_field').focus(); return false;"/>
+                                            <webuijsf:label id="lblFCBanco" text="Banco"/>
+                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtBanco}" id="uiTxtBanco" onFocus="document.getElementById('form1:uiTxtMontoFormaCobro_field').focus(); return false;"/>
                                             <webuijsf:label id="lblMontoTotal" text="Serie"/>
-                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtSerieFormaCobro}" columns="5" id="uiTxtSerieFormaCobro" style="text-align: right"/>
+                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtSerieFormaCobro}" columns="8" id="uiTxtSerieFormaCobro"
+                                                onFocus="tieneBanco()" style="text-align: right"/>
                                             <webuijsf:label id="lblMontoTotal" text="Nro. Documento"/>
-                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtNroFormaCobro}" columns="15" id="uiTxtNroFormaCobro" style="text-align: right"/>
+                                            <webuijsf:textField binding="#{ABMReciboDinero.uiTxtNroFormaCobro}" columns="17" id="uiTxtNroFormaCobro"
+                                                onFocus="tieneBanco()" style="text-align: right"/>
                                             <webuijsf:label id="lblMontoTotal" text="Monto Cobro"/>
                                             <webuijsf:textField columns="15" converter="#{ABMReciboDinero.numberConverter1}" id="uiTxtMontoFormaCobro" style="text-align: right"/>
                                             <webuijsf:button actionExpression="#{ABMReciboDinero.uiBtnAgregarDetFC_action}"
                                                 binding="#{ABMReciboDinero.uiBtnAgregarDetFC}" id="uiBtnAgregarDetFC" text="Agregar"/>
-                                            <webuijsf:button id="uiBtnCancelarDetalleFC" text="Cancelar"/>
+                                            <webuijsf:button actionExpression="#{ABMReciboDinero.uiBtnCancelarDetalleFC_action}" id="uiBtnCancelarDetalleFC" text="Cancelar"/>
                                         </h:panelGrid>
                                         <webuijsf:table augmentTitle="false" id="tableDetalleFC" title="Detalle Forma Cobro" width="863">
                                             <webuijsf:tableRowGroup id="tableRowGroup2FC" rows="5" sourceData="#{ABMReciboDinero.lstDetalleFC}" sourceVar="currentRow">
@@ -271,7 +284,7 @@
                                                 <webuijsf:tableColumn headerText="Forma Cobro" id="tableColumnDescProductoFC">
                                                     <webuijsf:staticText id="staticTextDescProductoFC" text="#{currentRow.value['codFormaPago'].nombreFormaPago}"/>
                                                 </webuijsf:tableColumn>
-                                                <webuijsf:tableColumn headerText="Serie" id="tableColumn6FC">
+                                                <webuijsf:tableColumn headerText="Serie" id="tableColumn6FC" width="96">
                                                     <webuijsf:staticText id="staticText5FC" text="#{currentRow.value['serieCheque']}"/>
                                                 </webuijsf:tableColumn>
                                                 <webuijsf:tableColumn align="right" headerText="Nro" id="tableColumn7FC">

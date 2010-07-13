@@ -26,6 +26,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.controller.NotaCreditoClienteCabController;
+import py.com.platinum.controller.NotaCreditoProvCabController;
 import py.com.platinum.listener.FacturaCompraCabeceraListener;
 
 /**
@@ -160,6 +162,12 @@ public class FacturaCompraCab implements Serializable {
         return total;
     }
 
+    public long getTotalNotaCreditoAplicadas() {
+        NotaCreditoProvCabController dao = new NotaCreditoProvCabController();
+        Long totalNota = dao.getTotalNotaPorFactura(codFacComCab);
+        return totalNota;
+    }
+
     public void setTotal(long total) {
         this.total = total;
     }
@@ -231,7 +239,29 @@ public class FacturaCompraCab implements Serializable {
     public void setCodProveedor(Proveedor codProveedor) {
         this.codProveedor = codProveedor;
     }
-//////////
+
+    public String getEstadoDesc() {
+        String e;
+        
+        if (estado == null ) {
+            e = "SIN ESTADO";
+        }else if (estado.equals("N") ) {
+            e = "PENDIENTE";
+        }else if (estado.equals("C") ) {
+            e = "CONFIRMADO";
+        }else if (estado == null || estado.equals("A") ) {
+            e = "ANULADO";
+        }else{
+            e = "SIN ESTADO";
+        }
+
+        //return
+        return e;
+
+    }
+
+
+    //////////
 //    public Set<NotaCreditoProvCab> getNotaCreditoProvCab() {
 //        return notaCreditoProvCab;
 //    }

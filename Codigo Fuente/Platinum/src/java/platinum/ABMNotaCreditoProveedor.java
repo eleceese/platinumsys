@@ -26,6 +26,7 @@ import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.convert.CharacterConverter;
 import py.com.platinum.controller.FacturaCompraCabController;
 import py.com.platinum.controller.NotaCreditoProvCabController;
+import py.com.platinum.controller.ParametroController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.ProveedorController;
 import py.com.platinum.controller.TipoComprobanteController;
@@ -41,6 +42,7 @@ import py.com.platinum.utils.StringUtils;
 import py.com.platinum.utilsenum.ModelUtil;
 import py.com.platinum.utilsenum.ModuloEnum;
 import py.com.platinum.utilsenum.NotaCreditoEstado;
+import py.com.platinum.utilsenum.ParametroEnum;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -718,24 +720,35 @@ public class ABMNotaCreditoProveedor extends AbstractPageBean {
      * @return refrescamos la pagina
      */
     public String addButton_action() {
-        //Inicializamos las variables
-        lstDetalleLIST = new ArrayList();
-        addRequest = true;
-        updateDetRequest = true;
-        itemDet = null;
+        if (!ModelUtil.periodoAbierto()) {
+            this.pageAlert1.setType("information");
+            this.pageAlert1.setTitle("Periodo Actual esta cerrado no se puede realizar movimeintos");
+            ParametroController dao = new ParametroController();
+            String fDesde = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_DESDE.toString()).getValorTexto();
+            String fHasta = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_HASTA.toString()).getValorTexto();
+            this.pageAlert1.setSummary("Periodo Actual " + fDesde + " - " + fHasta);
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
 
-        gridPanelDetLin1.setRendered(true);
-        gridPanelDetLin2.setRendered(true);
-        tableColumnEditarDet.setRendered(true);
-        tableColumnEliminarDet.setRendered(true);
+        } else {
+            //Inicializamos las variables
+            lstDetalleLIST = new ArrayList();
+            addRequest = true;
+            updateDetRequest = true;
+            itemDet = null;
 
-        //Cargar tablas realcionadas
-        cargarRelaciones();
+            gridPanelDetLin1.setRendered(true);
+            gridPanelDetLin2.setRendered(true);
+            tableColumnEditarDet.setRendered(true);
+            tableColumnEliminarDet.setRendered(true);
 
-        //Actualizamos le titulo de la pagina
-        getSessionBean1().setTituloPagina("Nueva Nota Credito Proveedor");
-        getSessionBean1().setDetallePagina("Registro de Nota Credito - Proveedor");
+            //Cargar tablas realcionadas
+            cargarRelaciones();
 
+            //Actualizamos le titulo de la pagina
+            getSessionBean1().setTituloPagina("Nueva Nota Credito Proveedor");
+            getSessionBean1().setDetallePagina("Registro de Nota Credito - Proveedor");
+        }
         //result
         return null;
     }
@@ -820,7 +833,7 @@ public class ABMNotaCreditoProveedor extends AbstractPageBean {
             cabecera.setEstablecimiento(getSessionBean1().getEstablecimiento());
             cabecera.setBocaExpendio(getSessionBean1().getBocaExpendio());
             cabecera.setCodDeposito(facturaCompraCab.getCodDeposito());
-            
+
             //Tipo de comprobante
             cabecera.setTipo(tipoComprobante);
             cabecera.setTotalIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
@@ -861,9 +874,30 @@ public class ABMNotaCreditoProveedor extends AbstractPageBean {
         this.errorValidacion = false;
 
         //Nro. Factura
-        if (this.uiTxtNroFac.getText() == null) {
-            info("Nro. de Nota Credito, campo obligatorio");
+        if (this.uiTxtNroFactura.getText() == null) {
+            info("Nro. de Factura, campo obligatorio");
             this.errorValidacion = true;
+        }else{
+            //Obtenemos la Factura
+            facturaCompraCab = facturaCompraCabController.findById(Long.valueOf(uiTxtNroFactura.getText().toString()));
+
+            if (facturaCompraCab == null) {
+                info("Nro. de Factura ingresado no existe, campo obligatorio");
+                this.errorValidacion = true;
+            }else{
+                long totalNota = Long.valueOf("0");
+                if (uiTxtTotal.getText() != null) {
+                    totalNota = Long.valueOf(uiTxtTotal.getText().toString());
+                }
+
+                if (facturaCompraCab.getTotal() < totalNota){
+                    info("El Importe de la Nota de Credito no puede ser mayor al importe de la Factura");
+                    this.errorValidacion = true;
+                }else if ((facturaCompraCab.getTotal()-facturaCompraCab.getTotalNotaCreditoAplicadas()) < totalNota){
+                    info("La Factura ya posee Notas de Creditos Aplicadas, que a sumar con la Actual superan el Importe de la Factura");
+                    this.errorValidacion = true;
+                }
+            }
         }
 
         //Proveedor
@@ -911,33 +945,48 @@ public class ABMNotaCreditoProveedor extends AbstractPageBean {
         if (this.uiCalFecha.getSelectedDate() == null) {
             info("Fecha Nota Credito, campo obligatorio");
             this.errorValidacion = true;
-        }
+        } else {
+            Date fecMovimiento = this.uiCalFecha.getSelectedDate();
 
+            if (fecMovimiento.before(fecMovimiento)) {
+            }
+        }
     }
 
     public String uiBtnGuardarEditar_action() {
-        //Set de los artributos
-        cabecera.setEstado(NotaCreditoEstado.ANULADO);
-
-        //Insertamos la cebecera y del detalle
-        ControllerResult cr = new NotaCreditoProvCabController().update(cabecera);
-
-        //Verificamos el tipo de mensaje
-        if (cr.getCodRetorno() == -1) {
-            this.pageAlert1.setType("error");
-            errorValidacion = true;
-        } else {
-            // Apagamos la bandera de Editar registro
-            this.updateRequest = false;
-            this.updateDetRequest = false;
+        if (!ModelUtil.periodoAbierto()) {
             this.pageAlert1.setType("information");
+            this.pageAlert1.setTitle("Periodo Actual esta cerrado no se puede realizar movimeintos");
+            ParametroController dao = new ParametroController();
+            String fDesde = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_DESDE.toString()).getValorTexto();
+            String fHasta = dao.getParametro(ParametroEnum.PERIODO_ABIERTO_HASTA.toString()).getValorTexto();
+            this.pageAlert1.setSummary("Periodo Actual " + fDesde + " - " + fHasta);
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
+
+        } else {
+            //Set de los artributos
+            cabecera.setEstado(NotaCreditoEstado.ANULADO);
+
+            //Insertamos la cebecera y del detalle
+            ControllerResult cr = new NotaCreditoProvCabController().update(cabecera);
+
+            //Verificamos el tipo de mensaje
+            if (cr.getCodRetorno() == -1) {
+                this.pageAlert1.setType("error");
+                errorValidacion = true;
+            } else {
+                // Apagamos la bandera de Editar registro
+                this.updateRequest = false;
+                this.updateDetRequest = false;
+                this.pageAlert1.setType("information");
+            }
+
+            this.pageAlert1.setTitle(cr.getMsg());
+            this.pageAlert1.setSummary("");
+            this.pageAlert1.setDetail("");
+            this.pageAlert1.setRendered(true);
         }
-
-        this.pageAlert1.setTitle(cr.getMsg());
-        this.pageAlert1.setSummary("");
-        this.pageAlert1.setDetail("");
-        this.pageAlert1.setRendered(true);
-
         //result
         return null;
     }
@@ -1168,7 +1217,6 @@ public class ABMNotaCreditoProveedor extends AbstractPageBean {
             errorValidacion = true;
         }
     }
-
     //Detalle selecciondo de la Grilla
     private String itemDet;
 
@@ -1314,10 +1362,10 @@ public class ABMNotaCreditoProveedor extends AbstractPageBean {
         //Inicializamos
         errorValidacion = false;
         updateDetRequest = true;
-        if (uiTxtNroFactura.getText()== null && uiTxtNroFactura.getText().toString().trim().equals("")){
+        if (uiTxtNroFactura.getText() == null && uiTxtNroFactura.getText().toString().trim().equals("")) {
             errorValidacion = true;
             info("Debe Seleccionar una Factura para poder cargar datos");
-        }else{
+        } else {
             //Inicializamos el controller
             facturaCompraCabController = new FacturaCompraCabController();
 
@@ -1327,7 +1375,7 @@ public class ABMNotaCreditoProveedor extends AbstractPageBean {
             if (facturaCompraCab == null) {
                 errorValidacion = true;
                 info("Numero de Factura ingresado incorrecto, favor verifique");
-            }else{
+            } else {
                 /* Cargamos los datos del pedido */
 
                 //Cabecera

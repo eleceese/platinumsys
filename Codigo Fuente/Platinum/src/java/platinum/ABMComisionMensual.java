@@ -474,7 +474,7 @@ public class ABMComisionMensual extends AbstractPageBean {
             //Elemento seleccionado
             VentaComisionMensual e = l[rowId];
 
-            if (e.getEstado().equals(VentaComisionEstado.PENDIENTE)) {
+            if (e.getEstado().equals(VentaComisionEstado.PENDIENTE.toString())) {
                 //Guardamos el id del VentaComisionMensual en la session
                 getSessionBean1().setId(e.getCodComision());
                 this.updateRequest=true;
@@ -487,10 +487,8 @@ public class ABMComisionMensual extends AbstractPageBean {
                 this.pageAlert1.setDetail("");
                 this.pageAlert1.setRendered(true);
             }
-            
         }
-        
-        
+       
         //Result
         return null;
 

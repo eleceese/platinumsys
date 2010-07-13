@@ -506,13 +506,52 @@ public class ProductoController extends AbstractJpaDao <Producto> {
         }
    
 
-    public static void main(String[] args) {
-      Long resultado =  new ProductoController().calcularMovimientos(Long.valueOf("1170"), new Date(), new Date(), Long.valueOf("1"));
-      System.out.println("********");
-      System.out.println(resultado);
+    public List<Producto> getProductoCompra(String descripcion) {
+        //emf.createEntityManager Levanta el contexto del JPA
+        String SQL = "SELECT o FROM Producto o " +
+                     " WHERE UPPER(o.codTipoProducto.compraVenta) = 'C' ";
+
+        if (descripcion != null && !descripcion.equals("")) {
+            SQL = SQL + " and UPPER(o.descripcion) like upper(:descripcion)";
+        }
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        if (descripcion != null && !descripcion.equals("")) {
+            q.setParameter("descripcion", "%"+descripcion+"%");
+        }
+
+        List<Producto> entities = q.getResultList();
+        em.close();
+
+        return entities;
+
+      }
 
 
-    }
+    public List<Producto> getProductoVenta(String descripcion) {
+        //emf.createEntityManager Levanta el contexto del JPA
+        String SQL = "SELECT o FROM Producto o " +
+                     " WHERE UPPER(o.codTipoProducto.compraVenta) in ( 'V', 'A' ) ";
+
+        if (descripcion != null && !descripcion.equals("")) {
+            SQL = SQL + " and UPPER(o.descripcion) like upper(:descripcion)";
+        }
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        if (descripcion != null && !descripcion.equals("")) {
+            q.setParameter("descripcion", "%"+descripcion+"%");
+        }
+
+        List<Producto> entities = q.getResultList();
+        em.close();
+
+        return entities;
+
+      }
 
 
 }
