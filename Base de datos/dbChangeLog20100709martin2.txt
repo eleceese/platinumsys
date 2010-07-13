@@ -1,0 +1,69 @@
+create or replace view v_clientes_saldos as
+select "ORDEN","COD_CLIENTE","DESC_TIPO_COMPROBANTE","NRO_COMPROBANTE","COD_COMPROBANTE","NRO_CUOTA","FEC_VENCIMIENTO","TOTAL_COMPROBANTE","SALDO_COMPROBANTE"
+from (
+ /*Facturas*/
+select 0 as orden,
+     c.cod_cliente as cod_cliente,
+     t.desc_tipo_abreviado  as desc_tipo_comprobante,
+     f.establecimiento      ||'-'||
+     f.boca_expendio        ||'-'||
+     lpad(to_char(f.numero_factura), 10, '0') as nro_comprobante,
+     f.numero_factura    as cod_comprobante,
+     s.nro_cuota         as nro_cuota,
+     s.fecha_vencimiento as fec_vencimiento,
+     s.monto_cuota       as total_comprobante,
+     s.saldo_cuota       as saldo_comprobante
+ from saldo_cliente s, factura_cabecera f, cliente c, tipo_comprobante t
+where f.tipo_factura = s.tipo_comprobante
+ and f.estado_factura != 'ANULADO'
+ and s.saldo_cuota > 0
+ and f.cod_factura  = s.nro_comprobante
+ and c.cod_cliente = s.cod_cliente
+ and t.cod_tipo = s.tipo_comprobante
+group by 0,
+       c.cod_cliente,
+       t.desc_tipo_abreviado,
+       f.establecimiento||'-'||f.boca_expendio||'-'||lpad(to_char(f.numero_factura), 10, '0'),
+       f.numero_factura,
+       s.nro_cuota,
+       s.fecha_vencimiento,
+       s.monto_cuota,
+       s.saldo_cuota
+ union all
+ /*Notas de credito aun no aplicadas a ninguna factura o aplicadas parcialmente*/
+select 1 as orden,
+     c.cod_cliente,
+     t.desc_tipo_abreviado as desc_tipo_comprobante,
+     n.establecimiento||'-'||n.boca_expendio||'-'||lpad(to_char(n.num_nota_credto_cliente), 10, '0') as nro_comprobante,
+     n.num_nota_credto_cliente,
+     s.nro_cuota,
+     s.fecha_vencimiento,
+     s.monto_cuota,
+     s.saldo_cuota
+ from saldo_cliente s, nota_credito_cli_cabecera n, cliente c, tipo_comprobante t
+where s.saldo_cuota < 0
+ and n.estado != 'ANULADO'
+ and n.tipo = s.tipo_comprobante
+ and n.cod_nota_credito_cliente  = s.nro_comprobante
+ and c.cod_cliente = s.cod_cliente
+ and t.cod_tipo = s.tipo_comprobante
+group by 1,
+       c.cod_cliente,
+       t.desc_tipo_abreviado,
+       n.establecimiento||'-'||n.boca_expendio||'-'||lpad(to_char(n.num_nota_credto_cliente), 10, '0'),
+       n.num_nota_credto_cliente,
+       s.nro_cuota,
+       s.fecha_vencimiento,
+       s.monto_cuota,
+       s.saldo_cuota
+ ) aux
+
+order by aux.cod_cliente,
+         aux.orden,
+        aux.desc_tipo_comprobante,
+        aux.nro_comprobante,
+        aux.nro_cuota,
+        aux.fec_vencimiento,
+        aux.nro_comprobante,
+        aux.orden asc
+/

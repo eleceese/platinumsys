@@ -180,5 +180,4 @@ ELSE Decimales := 'CON ' ||
 END IF;
 --Une los decimales al valor de retorno de la funcion.
 Letras := Letras || Decimales;
-
 RETURN Letras; EXCEPTION WHEN OTHERS THEN RETURN 'NO CONVERTIDO'; END;
