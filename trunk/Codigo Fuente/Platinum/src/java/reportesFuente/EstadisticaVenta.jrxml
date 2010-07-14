@@ -28,14 +28,14 @@
 	</parameter>
 	<parameter name="parametros" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="logo_path" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="fechaDesde" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="anio" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="fechaHasta" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="periodo" isForPrompting="false" class="java.lang.String"/>
 	<queryString><![CDATA[select m.desc_mes as mes, 
        nvl((select sum(c.total_factura)  
              from factura_cabecera c 
              where c.estado_factura != 'ANULADO' 
-              and to_char(c.fecha_factura, 'MM') = m.CodText), 0) as total
+              and to_char(c.fecha_factura, 'MM') = m.CodText $P!{parametros} ), 0) as total
   from  v_meses m    ]]></queryString>
 
 	<field name="MES" class="java.lang.String"/>
@@ -165,7 +165,7 @@
 					<textElement>
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaDesde}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{anio}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
