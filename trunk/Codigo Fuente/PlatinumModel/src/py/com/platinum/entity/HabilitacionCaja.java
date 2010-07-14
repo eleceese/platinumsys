@@ -8,21 +8,16 @@ package py.com.platinum.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -32,13 +27,15 @@ import javax.persistence.TemporalType;
  * @author Martin
  */
 @Entity
+@SequenceGenerator(name="HABCAJ_SEQUENCE", sequenceName="SQ_CAB_HAB_CAJA", initialValue=1, allocationSize=1)
 @Table(name = "HABILITACION_CAJA")
 public class HabilitacionCaja implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "COD_HABILITACION_CAJA")
-    private BigDecimal codHabilitacionCaja;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="HABCAJ_SEQUENCE")
+    private Long codHabilitacionCaja;
     @Column(name = "FECHA_HAB_CAJA")
     @Temporal(TemporalType.DATE)
     private Date fechaHabCaja;
@@ -84,23 +81,19 @@ public class HabilitacionCaja implements Serializable {
     @JoinColumn(name = "COD_EMPLEADO", referencedColumnName = "COD_EMPLEADO")
     @ManyToOne(optional = false)
     private Empleado codEmpleado;
-//    @OneToMany(mappedBy = "codHabilitacionCaja", fetch=FetchType.EAGER)
-//    private Set<MovimientoCajaCabecera> movimientoCajaCabecera;
-//    @OneToMany(mappedBy = "codHabilitacionCaja", fetch=FetchType.EAGER)
-//    private Set<Gasto> gasto;
 
     public HabilitacionCaja() {
     }
 
-    public HabilitacionCaja(BigDecimal codHabilitacionCaja) {
+    public HabilitacionCaja(Long codHabilitacionCaja) {
         this.codHabilitacionCaja = codHabilitacionCaja;
     }
 
-    public BigDecimal getCodHabilitacionCaja() {
+    public Long getCodHabilitacionCaja() {
         return codHabilitacionCaja;
     }
 
-    public void setCodHabilitacionCaja(BigDecimal codHabilitacionCaja) {
+    public void setCodHabilitacionCaja(Long codHabilitacionCaja) {
         this.codHabilitacionCaja = codHabilitacionCaja;
     }
 

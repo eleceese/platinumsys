@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package py.com.platinum.controller;
 
 import java.math.BigInteger;
@@ -28,17 +27,15 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
         super();
     }
 
-
     @Override
     public ReciboCabecera findById(Long id) {
-                return (ReciboCabecera) this.findById(ReciboCabecera.class, id);
+        return (ReciboCabecera) this.findById(ReciboCabecera.class, id);
     }
 
-       @Override
+    @Override
     public List<ReciboCabecera> getAll(String orderBy) {
         return this.getAll(ReciboCabecera.class, orderBy);
-     }
-
+    }
 
     /**
      * Este metodo realiza la consulta de acuerdo a los campos de filtro, la
@@ -77,7 +74,7 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
         }
 
         if (fecha != null) {
-            q.setParameter("fecha", fecha );
+            q.setParameter("fecha", fecha);
         }
 
         //Realizamos la busqueda
@@ -87,7 +84,7 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
         //retornamos la lista
         return entities;
 
-      }
+    }
 
     /**
      * Este metodo recibe como parametro un Entity para insertar o persistir
@@ -103,7 +100,7 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
             tx.begin();
 
             //Obtenemos el numero de la factura
-            Long nro= getNroRecibo(cabecera.getSerieRecibo());
+            Long nro = getNroRecibo(cabecera.getSerieRecibo());
             cabecera.setNumeroRecibo(new BigInteger(nro.toString()));
 
             //Persistimos la Cabecera
@@ -297,7 +294,7 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
      * @param bocaExpendio
      * @return Numero de Factura
      */
-    public synchronized  Long getNroRecibo(String serie) {
+    public synchronized Long getNroRecibo(String serie) {
         //Variables
         BigInteger r;
         String SQL;
@@ -306,15 +303,15 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
         r = new BigInteger("0");
 
         //Armamos el SQL
-        SQL = " SELECT MAX(o.numeroRecibo)      " +
-              "   FROM ReciboCabecera o         " +
-              "  WHERE o.serieRecibo = :serie   " ;
+        SQL = " SELECT MAX(o.numeroRecibo)      "
+                + "   FROM ReciboCabecera o         "
+                + "  WHERE o.serieRecibo = :serie   ";
 
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
 
         //Seteamos los parametros
-        q.setParameter("serie", serie );
+        q.setParameter("serie", serie);
 
         //Realizamos la busqueda
         r = (BigInteger) q.getSingleResult();
@@ -338,12 +335,12 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
      * @param estado
      * @return lista de recibos que cumplan la condicion
      */
-     public List<ReciboCabecera> getRecibo(String cliente, ReciboEstado estado) {
+    public List<ReciboCabecera> getRecibo(String cliente, ReciboEstado estado) {
         //Armamos el sql String
         String SQL =
-                     " select r                      "
-                    +"   from ReciboCabecera r       "
-                    +"  where r.estado = :estado     ";
+                " select r                      "
+                + "   from ReciboCabecera r       "
+                + "  where r.estado = :estado     ";
 
         if (cliente != null && !cliente.equals("")) {
             SQL = SQL + "    and UPPER( CONCAT(CONCAT(r.codCliente.apellidoCliente, '%'), r.codCliente.nombreCliente)) like UPPER(:cliente)  ";
@@ -356,7 +353,7 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
         Query q = em.createQuery(SQL);
 
         q.setParameter("estado", estado);
-        
+
         if (cliente != null && !cliente.equals("")) {
             q.setParameter("cliente", "%" + cliente + "%");
         }
@@ -367,6 +364,62 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
 
         //retornamos la lista
         return entities;
+
+    }
+
+    /**
+     * Este metodo realiza la consulta de acuerdo a los campos de filtro, la
+     * busqueda se realiza en forma aproximada con el uso del operador like
+     * @param codigo
+     * @param descripcion
+     *
+     * @return lista de ReciboDetalles que cumplen con la condicion de busqueda
+     */
+    public boolean existeCheque(String serie, String numero, Long codBanco) {
+        //Var
+        boolean r = true;
+        //Armamos el sql String
+        String SQL = "SELECT o FROM MovimientoCajaDetalle o WHERE o.codFormaPago.codBanco is not null ";
+
+        if (serie != null && !serie.equals("")) {
+            SQL = SQL + " and UPPER(o.serieCheque) = UPPER(:serie)";
+        }
+
+        if (numero != null && !numero.equals("")) {
+            SQL = SQL + " and UPPER(o.numeroCheque) = UPPER(:numero)";
+        }
+
+        if (codBanco != null) {
+            SQL = SQL + " and o.codFormaPago.codBanco = :codBanco  ";
+        }
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Seteamos los parametros
+        if (serie != null && !serie.equals("")) {
+            q.setParameter("serie", "%" + serie + "%");
+        }
+
+        if (numero != null && !numero.equals("")) {
+            q.setParameter("numero", "%" + numero + "%");
+        }
+
+        if (codBanco != null) {
+            q.setParameter("codBanco", codBanco);
+        }
+
+        //Realizamos la busqueda
+        List<ReciboDetalle> entities = q.getResultList();
+
+        if (entities == null || entities.size() == 0) {
+            r = !r;
+        }
+
+        em.close();
+
+        //retornamos la lista
+        return r;
 
     }
 }   

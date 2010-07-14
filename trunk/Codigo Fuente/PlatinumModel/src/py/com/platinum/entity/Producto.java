@@ -23,6 +23,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.controller.ExistenciaController;
 
 /**
  *
@@ -283,6 +284,16 @@ public class Producto implements Serializable {
     @Override
     public String toString() {
         return descripcion;
+    }
+
+    public Long getExistenciaTotal() {
+        Long t = Long.valueOf("0");
+
+        if (codProducto != null) {
+            t = new ExistenciaController().getCantidadExistencia(codProducto).longValue();
+        }
+        
+        return t;
     }
 
 }

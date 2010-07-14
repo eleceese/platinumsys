@@ -74,4 +74,38 @@ public class CajaController extends AbstractJpaDao<Caja> {
 
       }
 
+    public List<Caja> getCajasAbiertas() {
+        //Armamos el sql String
+        String SQL = " SELECT o         " +
+                     "   FROM Caja o    " +
+                     "  WHERE o.codCaja in (select DISTINCT h.codCaja.codCaja from HabilitacionCaja h where h.estado = 'A' )";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Realizamos la busqueda
+        List<Caja> entities = q.getResultList();
+        em.close();
+
+        //retornamos la lista
+        return entities;
+    }
+
+    public List<Caja> getCajasCerradas() {
+        //Armamos el sql String
+        String SQL = " SELECT o         " +
+                     "   FROM Caja o    " +
+                     "  WHERE o.codCaja not in (select DISTINCT h.codCaja.codCaja from HabilitacionCaja h where h.estado = 'A' )";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        //Realizamos la busqueda
+        List<Caja> entities = q.getResultList();
+        em.close();
+
+        //retornamos la lista
+        return entities;
+    }
+
 }   
