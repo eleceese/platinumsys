@@ -679,6 +679,11 @@
         <managed-bean-class>platinum.LSTResumenTareasFallidasEmpleado</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>LSTEstadisticaDeVenta_1</managed-bean-name>
+        <managed-bean-class>platinum.LSTEstadisticaDeVenta_1</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 </faces-config>
 
 

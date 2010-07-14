@@ -54,7 +54,7 @@
                 <br/>
                 <webuijsf:hyperlink id="repLibroIvaVenta" style="margin-left: 20px" text="Libro IVA Venta" url="/faces/LSTLibroIVAVenta.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="repEstaditricVentaProducto" style="margin-left: 20px" text="Estadistica de Venta" url="/faces/LSTEstadisticaDeVenta.jsp"/>
+                <webuijsf:hyperlink id="repEstaditricVentaProducto" style="margin-left: 20px" text="Estadistica de Venta" url="/faces/LSTEstadisticaDeVenta_1.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="repRankingVenta" style="margin-left: 20px" text="Ranking" url="/faces/LSTRanking.jsp"/>
             </webuijsf:accordionTab>
