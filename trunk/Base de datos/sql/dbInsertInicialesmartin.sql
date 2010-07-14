@@ -141,7 +141,7 @@ values (7, 'Servicio', 'N', null, null, to_date('11-07-2010 10:37:38', 'dd-mm-yy
 		N -- Ninguno
 */
 update tipo_producto set compra_venta = 'C' where cod_tipo_producto in (2,3,4,7);
-update tipo_producto set compra_venta = 'A' where cod_tipo_producto in (5);
+update tipo_producto set compra_venta = 'V' where cod_tipo_producto in (5);
 update tipo_producto set compra_venta = 'N' where cod_tipo_producto in (1, 6);
 
 --Unidad Medida
@@ -158,10 +158,16 @@ values (5, 'Metros', null, null, null, null);
 insert into UNIDAD_MEDIDA (COD_UNIDAD_MEDIDA, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF)
 values (6, 'Metros Cuadros', null, null, null, null);
 
---Presentacion FALTA DEFINIR!!!
+--Presentacion 
 insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (1, 'Sin Presentacion', '', '', null, null);
-insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (2, 'Botella', '', '', null, null);
-insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (3, 'Bolsa', '', '', null, null);
+insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (2, 'Botella Vidrio', '', '', null, null);
+insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (3, 'Botella Plastico', '', '', null, null);
+insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (4, 'Caja Carton', '', '', null, null);
+insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (5, 'Caja Hierro', '', '', null, null);
+insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (6, 'Unidades', '', '', null, null);
+insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (7, 'Sobres', '', '', null, null);
+insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (8, 'Cajon', '', '', null, null);
+insert into presentacion (COD_PRESENTACION, DESCRIPCION, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF) values (9, 'Bolsa', '', '', null, null);
 
 --Marcas
 insert into MARCA (COD_MARCA, NOMBRE, USUARIO_ALTA, USUARIO_MODIF, FECHA_ALTA, FECHA_MODIF)
@@ -344,3 +350,10 @@ values ('LSANTACRUZ', 'platinum2010', 'GERENCIA', 7, 1, 'A');
 insert into USUARIOS (USUARIO, PASSWORD, ROL, COD_EMPLEADO, COD_DEPOSITO, ESTADO)
 values ('FPEREIRA', 'platinum2010', 'COMPRAS', 8, 1, 'A');
 
+--Formas de pago
+insert into forma_pago (cod_forma_pago, nombre_forma_pago, cod_banco) values (1, 'Efectivo', null); 
+insert into forma_pago (cod_forma_pago, nombre_forma_pago, cod_banco) values (2, 'Cheque', 1); 
+insert into forma_pago (cod_forma_pago, nombre_forma_pago, cod_banco) values (3, 'Cheque', 2); 
+insert into forma_pago (cod_forma_pago, nombre_forma_pago, cod_banco) values (4, 'Cheque', 3); 
+insert into forma_pago (cod_forma_pago, nombre_forma_pago, cod_banco) values (5, 'Cheque', 4);
+insert into forma_pago (cod_forma_pago, nombre_forma_pago, cod_banco) values (6, 'Cheque', 5);

@@ -53,7 +53,7 @@ public class FormaPagoController extends AbstractJpaDao<FormaPago> {
             SQL = SQL + " and UPPER(o.nombreFormaPago) like UPPER(:descripcion)";
         }
 
-        SQL = SQL + " order by o.nombreFormaPago asc ";
+        SQL = SQL + " order by o.nombreFormaPago desc, o.codBanco.nombreBanco asc ";
 
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
