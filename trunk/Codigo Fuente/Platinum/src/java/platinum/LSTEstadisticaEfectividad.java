@@ -53,7 +53,7 @@ public class LSTEstadisticaEfectividad extends AbstractPageBean {
      * here is subject to being replaced.</p>
      */
     private void _init() throws Exception {
-        uiRadioAnalisisDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("G", "General"), new com.sun.webui.jsf.model.Option("E", "Empleado"), new com.sun.webui.jsf.model.Option("T", "Tarea")});
+        uiRadioAnalisisDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("G", "General"), new com.sun.webui.jsf.model.Option("TUE", "Tiempo Util Empleado"), new com.sun.webui.jsf.model.Option("TUT", "Tiempo Util Tarea"),new com.sun.webui.jsf.model.Option("ET", "Efectividad Tareas")});
         uiRadioAnalisisDefaultOptions.setSelectedValue("G");
     }
     private DropDown uiEmpleado = new DropDown();
@@ -109,15 +109,6 @@ public class LSTEstadisticaEfectividad extends AbstractPageBean {
 
     public void setUiAnio(TextField tf) {
         this.uiAnio = tf;
-    }
-    private Checkbox uiCheckAnual = new Checkbox();
-
-    public Checkbox getUiCheckAnual() {
-        return uiCheckAnual;
-    }
-
-    public void setUiCheckAnual(Checkbox c) {
-        this.uiCheckAnual = c;
     }
 
     // </editor-fold>
@@ -396,58 +387,34 @@ public class LSTEstadisticaEfectividad extends AbstractPageBean {
                 try{
 
                
-                if (!uiEmpleado.getSelected().toString().equals("-1")){
-                    sEmpleado = " and te.cod_empleado = "+uiEmpleado.getSelected().toString();
-                    sE = new EmpleadoController().findById(Long.valueOf(this.uiEmpleado.getSelected().toString())).getApellidoEmpleado().toString();
-                }else{
-                    sE="Todos";
-                }
-
-                            
-                    if (this.uiCheckAnual.isChecked()) {
-                        if (this.uiAnio.getText() == null
-                                ||this.uiAnio.getText().toString().equals("")||
-                                !StringUtils.esNumero(this.uiAnio.getText().toString())) {
-                            info("Favor ingrese correctamente el ano");
-                        }else if(Long.valueOf(this.uiAnio.getText().toString()).longValue() < 2000){
-                            info("Favor ingrese correctamente el ano");
-                        }else{
-                            String ano = this.uiAnio.getText().toString();
-                            sAno = " and to_char(tt.fecha,'YYYY') = '"+ano;
-                            sAF = ano;
-
-                       }
+             
+                     if (!uiEmpleado.getSelected().toString().equals("-1")){
+                        sEmpleado = " and te.cod_empleado = "+uiEmpleado.getSelected().toString();
+                        sE = new EmpleadoController().findById(Long.valueOf(this.uiEmpleado.getSelected().toString())).getApellidoEmpleado().toString();
                     }else{
-
-
-                                  if (uiFechaDesde.getSelectedDate() != null){
-
-                                    String simpleFecha = DateUtils.toString(uiFechaDesde.getSelectedDate(), "dd/MM/yyyy");
-                                    sFecha = " and te.fecha >= to_date('"+simpleFecha+"','dd/mm/yyyy')";
-                                    sF = simpleFecha;
-                                }else{
-                                    sF="Todos";
-                                }
-
-                                if (uiFechaHasta.getSelectedDate() != null){
-                                    String simpleFechaF = DateUtils.toString(uiFechaHasta.getSelectedDate(), "dd/MM/yyyy");
-                                    sFechaF = " and te.fecha <= to_date('"+simpleFechaF+"','dd/mm/yyyy')";
-                                    sFF = simpleFechaF;
-                                }else{
-                                    sFF="Todos";
-                                }
-
-                                if (uiRadioAnalisis.getSelected().toString().equals("E")) {
-
-
-                                }else if(uiRadioAnalisis.getSelected().toString().equals("T")){
-
-
-                                }else if(uiRadioAnalisis.getSelected().toString().equals("G")){
-
-
-                                }
+                        sE="Todos";
                     }
+
+
+                      if (uiFechaDesde.getSelectedDate() != null){
+
+                        String simpleFecha = DateUtils.toString(uiFechaDesde.getSelectedDate(), "dd/MM/yyyy");
+                        sFecha = " and te.fecha >= to_date('"+simpleFecha+"','dd/mm/yyyy')";
+                        sF = simpleFecha;
+                    }else{
+                        sF="Todos";
+                    }
+
+                    if (uiFechaHasta.getSelectedDate() != null){
+                        String simpleFechaF = DateUtils.toString(uiFechaHasta.getSelectedDate(), "dd/MM/yyyy");
+                        sFechaF = " and te.fecha <= to_date('"+simpleFechaF+"','dd/mm/yyyy')";
+                        sFF = simpleFechaF;
+                    }else{
+                        sFF="Todos";
+                    }
+
+                  
+
                 sSql = sEmpleado+sFecha+sFechaF+sAno;
 
                 RptCreate rpt= new RptCreate();
@@ -466,8 +433,16 @@ public class LSTEstadisticaEfectividad extends AbstractPageBean {
                 sparamName[5] = "logo_path";
                 sparamValue[5] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
 
-                    if (this.uiCheckAnual.isChecked()) {
-                            rpt.getReport(conn, "EfectividadEstadisticaAnual.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+               if (uiRadioAnalisis.getSelected().toString().equals("T")) {
+
+                            rpt.getReport(conn, "EfectividadTareas.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+                    }else if(uiRadioAnalisis.getSelected().toString().equals("TUT")){
+                            rpt.getReport(conn, "EfectividadTareasTiempos.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+                    }else if(uiRadioAnalisis.getSelected().toString().equals("TUE")){
+                            rpt.getReport(conn, "EfectividadEmpleadosTiempos.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+
+                    }else if(uiRadioAnalisis.getSelected().toString().equals("G")){
+                            rpt.getReport(conn, "EfectividadTareasTiemposGeneral.jrxml", sparamName, sparamValue, theApplicationsServletContext);
 
                     }
 
@@ -516,6 +491,101 @@ public class LSTEstadisticaEfectividad extends AbstractPageBean {
     }
 
     public void uiCheckAnual_processValueChange(ValueChangeEvent event) {
+    }
+
+    public String button1_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+
+                String[] sparamName= new String[6];
+                String[] sparamValue= new String[6];
+                Connection conn= GetConnection.getSimpleConnection();
+                ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
+
+
+                String sEmpleado="";
+                String sE="";
+
+                String sFecha="";
+                String sF="";
+
+                String sFechaF="";
+                String sFF="";
+
+                String sAno="";
+                String sAF="";
+
+                String sSql="";
+
+                Formated f= new Formated();
+                f.setDatePattern("yyyy/dd/MM");
+
+
+                  if (!uiEmpleado.getSelected().toString().equals("-1")){
+                    sEmpleado = " and tt.cod_empleado = "+uiEmpleado.getSelected().toString();
+                        Empleado emp = new EmpleadoController().findById(Long.valueOf(this.uiEmpleado.getSelected().toString()));
+                    sE = emp.getApellidoEmpleado()+" "+emp.getNombreEmpleado();
+                 }else{
+                    sE="Todos";
+                 }
+
+                 boolean error1 = false;
+                if (this.uiAnio.getText() == null
+                        ||this.uiAnio.getText().toString().equals("")||
+                        !StringUtils.esNumero(this.uiAnio.getText().toString())) {
+                    info("Favor ingrese correctamente el ano");
+                }else if(Long.valueOf(this.uiAnio.getText().toString()).longValue() < 2000){
+                    info("Favor ingrese correctamente el ano");
+                }else{
+                    String ano = this.uiAnio.getText().toString();
+                    sAno = " and to_char(tt.fecha,'YYYY') = '"+ano+"'";
+                    sAF = ano;
+                    error1= true;
+                  }
+
+                  if (error1) {
+
+
+                                              try{
+                                             sSql = sEmpleado+sFecha+sFechaF+sAno;
+
+                                            RptCreate rpt= new RptCreate();
+
+
+                                            sparamName[0]="parametros";
+                                            sparamValue[0]= sSql;
+                                            sparamName[1]="codEmpleado";
+                                            sparamValue[1]= sE;
+                                            sparamName[2]="fechaIni";
+                                            sparamValue[2]= sF;
+                                            sparamName[3]="fechaFin";
+                                            sparamValue[3]= sFF;
+                                            sparamName[4]="ano";
+                                            sparamValue[4]= sAF;
+                                            sparamName[5] = "logo_path";
+                                            sparamValue[5] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
+
+
+                                            rpt.getReport(conn, "EfectividadEstadisticaAnual.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+
+
+
+                            //                rpt.getReport(conn, "EfectividadTareas.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+
+                                            }catch(Exception e){
+                                            error("Error al generar el reporte ");
+                                            error(" " + e);
+                                            }finally{
+                                            try{
+                                            if(conn != null && !conn.isClosed())
+                                            conn.close();
+                                            }catch(SQLException sqle){
+                                            error("Error al intentar cerrar la conexion"+ sqle);
+                                            }
+                                            }
+
+                }
+        return null;
     }
 
 

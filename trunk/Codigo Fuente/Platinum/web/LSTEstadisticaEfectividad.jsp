@@ -38,24 +38,24 @@
                                 <h:panelGrid id="gridPanel6" style="height: 29px" width="167">
                                     <webuijsf:label id="label1" text="Analisis Por"/>
                                 </h:panelGrid>
-                                <webuijsf:radioButtonGroup binding="#{LSTEstadisticaEfectividad.uiRadioAnalisis}" columns="3" id="uiRadioAnalisis"
+                                <webuijsf:radioButtonGroup binding="#{LSTEstadisticaEfectividad.uiRadioAnalisis}" columns="2" id="uiRadioAnalisis"
                                     items="#{LSTEstadisticaEfectividad.uiRadioAnalisisDefaultOptions.options}"
-                                    selected="#{LSTEstadisticaEfectividad.uiRadioAnalisisDefaultOptions.selectedValue}" style="width: 231px" valueChangeListenerExpression="#{LSTEstadisticaEfectividad.uiRadioAnalisis_processValueChange}"/>
-                                <h:panelGrid id="gridPanel7" style="height: 29px; width: 100%">
-                                    <webuijsf:checkbox binding="#{LSTEstadisticaEfectividad.uiCheckAnual}" id="uiCheckAnual" label="Checkbox"
-                                        onChange="DynaFaces.Tx.fire(&quot;ajaxAnual&quot;,&quot;uiCheckAnual&quot;)"
-                                        onClick="DynaFaces.Tx.fire(&quot;ajaxAnual&quot;,&quot;uiCheckAnual&quot;)"
-                                        validatorExpression="#{LSTEstadisticaEfectividad.uiCheckAnual_validate}" valueChangeListenerExpression="#{LSTEstadisticaEfectividad.uiCheckAnual_processValueChange}"/>
-                                </h:panelGrid>
-                                <h:panelGrid columns="2" id="gridPanel8" style="height: 29px; width: 100%">
-                                    <webuijsf:label id="label3" text="Año"/>
-                                    <webuijsf:textField binding="#{LSTEstadisticaEfectividad.uiAnio}" id="uiAnio"/>
-                                </h:panelGrid>
+                                    selected="#{LSTEstadisticaEfectividad.uiRadioAnalisisDefaultOptions.selectedValue}" style="width: 278px" valueChangeListenerExpression="#{LSTEstadisticaEfectividad.uiRadioAnalisis_processValueChange}"/>
                                 <h:panelGrid columns="2" id="gridPanel5" style="height: 35px" width="191">
                                     <webuijsf:button actionExpression="#{LSTEstadisticaEfectividad.uiButtonEjecutar_action}" id="uiButtonEjecutar" text="Ejecutar"/>
                                     <webuijsf:button id="uiButtonCancelar" text="Cancelar"/>
                                 </h:panelGrid>
                                 <webuijsf:messageGroup id="messageGroup1"/>
+                                <h:panelGrid id="gridPanel10" style="height: 50px; width: 100%"/>
+                                <h:panelGrid id="gridPanel9" style="height: 48px; width: 100%"/>
+                                <h:panelGrid columns="2" id="gridPanel7" style="height: 29px; width: 100%">
+                                    <webuijsf:label id="label7" text="Analisis por Ano"/>
+                                    <webuijsf:button actionExpression="#{LSTEstadisticaEfectividad.button1_action}" id="button1" text="Generar"/>
+                                </h:panelGrid>
+                                <h:panelGrid columns="2" id="gridPanel8" style="height: 29px; width: 100%">
+                                    <webuijsf:label id="label3" text="Año"/>
+                                    <webuijsf:textField binding="#{LSTEstadisticaEfectividad.uiAnio}" id="uiAnio"/>
+                                </h:panelGrid>
                             </h:panelGrid>
                         </div>
                     </webuijsf:form>
