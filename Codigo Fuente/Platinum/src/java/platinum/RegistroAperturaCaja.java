@@ -47,7 +47,6 @@ public class RegistroAperturaCaja extends AbstractPageBean {
         tipoDoc1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Cedula de Identidad"), new com.sun.webui.jsf.model.Option("2", "DNI"), new com.sun.webui.jsf.model.Option("3", "Pasaporte")});
         radioButtonGroup1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("e", "Entrada"), new com.sun.webui.jsf.model.Option("s", "Salida")});
         referencia1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Orden de Trabajo"), new com.sun.webui.jsf.model.Option("2", "Venta"), new com.sun.webui.jsf.model.Option("3", "Trabajo Diario")});
-        estadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Abierto"), new com.sun.webui.jsf.model.Option("2", "Cerrado")});
     }
     private HtmlPanelGrid buttonsPanelAddUpdate = new HtmlPanelGrid();
 
@@ -102,15 +101,6 @@ public class RegistroAperturaCaja extends AbstractPageBean {
 
     public void setReferencia1DefaultOptions(SingleSelectOptionsList ssol) {
         this.referencia1DefaultOptions = ssol;
-    }
-    private SingleSelectOptionsList estadoDefaultOptions = new SingleSelectOptionsList();
-
-    public SingleSelectOptionsList getEstadoDefaultOptions() {
-        return estadoDefaultOptions;
-    }
-
-    public void setEstadoDefaultOptions(SingleSelectOptionsList ssol) {
-        this.estadoDefaultOptions = ssol;
     }
 
     // </editor-fold>

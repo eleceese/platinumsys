@@ -16,10 +16,10 @@ public enum ReciboEstado {
             return "PENDIENTE";
         }
     },
-    PAGADO {
+    COBRADO {
         @Override
         public String toString() {
-            return "PAGADO";
+            return "COBRADO";
         }
     },
     ANULADO {

@@ -1285,6 +1285,19 @@ public class ABMFacturaVenta extends AbstractPageBean {
             if (!StringUtils.esNumero(cantidad) || !StringUtils.esNumeroDecimal(cantidad)) {
                 info("Cantidad del Producto,debe se Numero");
                 errorValidacion = true;
+            }else if(producto != null && producto.getControlaExistencia() != null && producto.getControlaExistencia().equals("S")){
+
+                Long cant = Long.valueOf(cantidad);
+                Long cantDet = obtenerCantidadEnDetalleActual(producto.getCodProducto());
+
+                if (itemDet == null) {
+                    cantDet = cantDet + cant;
+                }
+
+                if (producto.getExistenciaTotal() < cantDet) {
+                    info("Cantidad del Producto no disponible en existencia, Total Factura = " + cantDet +"Total Existencia = " + producto.getExistenciaTotal());
+                    errorValidacion = true;
+                }
             }
         }
 
@@ -1523,5 +1536,22 @@ public class ABMFacturaVenta extends AbstractPageBean {
 
         //result
         return null;
+    }
+
+    private Long obtenerCantidadEnDetalleActual(Long codProducto) {
+        Long sum = Long.valueOf("0");
+        
+        for (int i = 0; i < lstDetalle.length; i++) {
+            FacturaDetalle d = lstDetalle[i];
+            if (d.getCodProducto().getCodProducto() == codProducto) {
+                sum = sum + d.getCantidad();
+            }
+        }
+
+        if (itemDet != null) {
+            sum = sum  - Long.valueOf(uiTxtCantidad.getText().toString());
+        }
+
+        return sum;
     }
 }

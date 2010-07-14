@@ -5,6 +5,7 @@
 package platinum;
 
 import com.sun.data.provider.RowKey;
+import com.sun.org.apache.bcel.internal.generic.F2I;
 import com.sun.rave.faces.converter.CalendarConverter;
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
@@ -1109,7 +1110,7 @@ public class ABMReciboDinero extends AbstractPageBean {
             cabecera.setSerieRecibo(uiTxtSerie.getText().toString());
             cabecera.setCodCliente(cliente);
             cabecera.setFecha(uiCalFecha.getSelectedDate());
-            cabecera.setEstado(ReciboEstado.PAGADO);
+            cabecera.setEstado(ReciboEstado.COBRADO);
             cabecera.setFechaAlta(new Date());
             cabecera.setMontoTotal(BigInteger.valueOf(Long.valueOf(uiTxtTotal1.getText().toString())));
 
@@ -1840,6 +1841,34 @@ public class ABMReciboDinero extends AbstractPageBean {
                 if (uiTxtNroFormaCobro.getText() == null || uiTxtNroFormaCobro.getText().equals("")) {
                     info("Forma de pago tiene un Banco Relacionado, debe ingreser Numero del cheque");
                     errorValidacion = true;
+                }
+
+                if (uiTxtSerieFormaCobro.getText() != null && uiTxtNroFormaCobro.getText() != null) {
+
+                    //Verificamos que el cheque ingresado no sea haya ingreaso anteriormente
+                    if (controller.existeCheque(uiTxtSerieFormaCobro.getText().toString(),
+                                                uiTxtNroFormaCobro.getText().toString(),
+                                                formaPago.getCodBanco().getCodBanco())) {
+
+                        info("Serie y Numero de cheque ingresao, ya existen favor verificar");
+                        errorValidacion = true;
+                    }else{
+                        //Buscamos en el detalle de forma de cobro
+                        for (int i = 0; i < lstDetalleFC.length; i++) {
+                            MovimientoCajaDetalle m = lstDetalleFC[i];
+
+                            if (m.getCodFormaPago().getCodBanco() != null) {
+                                if (m.getSerieCheque().equals(uiTxtSerieFormaCobro.getText().toString()) &&
+                                    m.getNumeroCheque().equals(uiTxtNroFormaCobro.getText().toString())) {
+                                    info("Serie y Numero de cheque ingresao en este Recibo, favor verificar");
+                                    errorValidacion = true;
+                                    break;
+                                }
+                            }
+
+                        }
+                    }
+
                 }
             }
         }

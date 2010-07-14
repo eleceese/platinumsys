@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package py.com.platinum.listener;
 
 import java.math.BigInteger;
@@ -30,46 +29,50 @@ public class FacturaVentaDetalleListener {
      * @param cab
      */
     @PostPersist
-    public void postInsert(FacturaDetalle det){
+    public void postInsert(FacturaDetalle det) {
 
         //Inicializamos el controller
-        existenciaController =  new ExistenciaController();
+        existenciaController = new ExistenciaController();
         pedidoDetalleController = new PedidoDetalleController();
 
-        /* Si el detalle esta relacionado a un detalle de pedido, actualizamos
-         * la cantidad entregada
-         */
-        if (det.getCodPedidoDetalle() != null && det.getCodPedidoDetalle().getCodPedidoDetalle() != null) {
-            //Obtenemos el codigo del detalle
-            Long codDetalle = det.getCodPedidoDetalle().getCodPedidoDetalle();
+        //Controlamos que le producto maneje existencia
+        if (det.getCodProducto().getControlaExistencia() != null && det.getCodProducto().getControlaExistencia().equals("S")) {
 
-            //Obtenemos el detalle
-            pedidoDetalle = pedidoDetalleController.findById(codDetalle);
+            /* Si el detalle esta relacionado a un detalle de pedido, actualizamos
+             * la cantidad entregada
+             */
+            if (det.getCodPedidoDetalle() != null && det.getCodPedidoDetalle().getCodPedidoDetalle() != null) {
+                //Obtenemos el codigo del detalle
+                Long codDetalle = det.getCodPedidoDetalle().getCodPedidoDetalle();
 
-            //Actualizamos la cantidad entregada
-            Long cantidad = pedidoDetalle.getCantidadEntregada();
-            cantidad = cantidad + det.getCantidad();
-            pedidoDetalle.setCantidadEntregada(cantidad);
+                //Obtenemos el detalle
+                pedidoDetalle = pedidoDetalleController.findById(codDetalle);
 
-            //Persistimos el cambio
-            pedidoDetalleController.update(pedidoDetalle);
+                //Actualizamos la cantidad entregada
+                Long cantidad = pedidoDetalle.getCantidadEntregada();
+                cantidad = cantidad + det.getCantidad();
+                pedidoDetalle.setCantidadEntregada(cantidad);
+
+                //Persistimos el cambio
+                pedidoDetalleController.update(pedidoDetalle);
+
+            }
+
+            //Actualizamos la existencia
+            existencia = existenciaController.getExistencia(null, det.getCodProducto().getCodProducto(), det.getCodFactura().getCodDeposito().getCodDeposito());
+
+            //Obtenemos la cantidad en deposito
+            BigInteger cantidad = existencia.getCantidadExistencia();
+
+            //descontamos la cantidad vendida
+            cantidad = BigInteger.valueOf(cantidad.longValue() - det.getCantidad().longValue());
+
+            //Asignamos la cantidad nueva
+            existencia.setCantidadExistencia(cantidad);
+
+            //Actualizamos
+            existenciaController.update(existencia);
 
         }
-
-        //Actualizamos la existencia
-        existencia = existenciaController.getExistencia(null, det.getCodProducto().getCodProducto(), det.getCodFactura().getCodDeposito().getCodDeposito());
-
-        //Obtenemos la cantidad en deposito
-        BigInteger cantidad = existencia.getCantidadExistencia();
-
-        //descontamos la cantidad vendida
-        cantidad = BigInteger.valueOf(cantidad.longValue() - det.getCantidad().longValue());
-
-        //Asignamos la cantidad nueva
-        existencia.setCantidadExistencia(cantidad);
-
-        //Actualizamos
-        existenciaController.update(existencia);
-
     }
 }

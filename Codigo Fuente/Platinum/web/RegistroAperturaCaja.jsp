@@ -45,16 +45,11 @@
                                 <h:panelGrid id="gridPanel3" style="height: 38px; width: 100%">
                                     <webuijsf:textArea columns="50" id="textArea1" rows="5"/>
                                 </h:panelGrid>
-                                <webuijsf:label id="estado2" style="width: 100%" text="Estado"/>
-                                <h:panelGrid id="gridPanel4" style="height: 24px; width: 100%">
-                                    <webuijsf:dropDown id="estado" items="#{RegistroAperturaCaja.estadoDefaultOptions.options}"/>
-                                </h:panelGrid>
                             </h:panelGrid>
                             <h:panelGrid binding="#{RegistroAperturaCaja.buttonsPanelAddUpdate}" columns="2" id="buttonsPanelAddUpdate"
                                 style="height: 24px; margin-left: 240px" width="191">
-                                <webuijsf:button actionExpression="#{RegistroAperturaCaja.cancelar_action}" id="cancelar" style="font-size: 14px; height: 24px" text="Cancelar"/>
                                 <webuijsf:button actionExpression="#{RegistroAperturaCaja.button2_action}" binding="#{RegistroAperturaCaja.button2}"
-                                    id="button2" style="font-size: 14px; height: 24px" text="Guardar"/>
+                                    id="button2" style="font-size: 14px; height: 24px; width: 119px" text="Apertura Caja"/>
                             </h:panelGrid>
                         </h:panelGrid>
                     </webuijsf:form>

@@ -74,4 +74,5 @@ public class ReciboDetalleController extends AbstractJpaDao<ReciboDetalle> {
 
       }
 
+
 }   
