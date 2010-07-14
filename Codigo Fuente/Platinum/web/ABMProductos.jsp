@@ -47,15 +47,14 @@
                             <webuijsf:pageAlert binding="#{ABMProductos.pageAlert1}" id="pageAlert1" rendered="false"/>
                             <h:panelGrid binding="#{ABMProductos.gridPanelBuscar}" columns="4" id="gridPanelBuscar" style="height: 72px" width="743">
                                 <webuijsf:label id="labelMarca" text="Marca"/>
-                                <webuijsf:dropDown binding="#{ABMProductos.uiMarcaFil}" id="uiMarcaFil" items="#{SessionBean1.listaMarcasOp}" width="150"/>
+                                <webuijsf:dropDown binding="#{ABMProductos.uiMarcaFil}" id="uiMarcaFil" items="#{ABMProductos.listaMarcasOp}" width="150"/>
                                 <webuijsf:label id="tipoProducto" text="Tipo Prod"/>
-                                <webuijsf:dropDown binding="#{ABMProductos.uiTipoProductoFil}" id="uiTipoProductoFil"
-                                    items="#{ABMProductos.uiTipoProductoFilDefaultOptions.options}" selected="#{ABMProductos.uiTipoProductoFilDefaultOptions.selectedValue}"/>
+                                <webuijsf:dropDown binding="#{ABMProductos.uiTipoProductoFil}" id="uiTipoProductoFil" items="#{ABMProductos.listaTipoProductosOp}"/>
                                 <webuijsf:label id="descripcion" text="Descripcion"/>
                                 <webuijsf:textArea binding="#{ABMProductos.uiDescripcionFil}" columns="40" id="uiDescripcionFil" rows="1"/>
                                 <webuijsf:label id="labelPresentacion" text="Presentacion"/>
                                 <webuijsf:dropDown binding="#{ABMProductos.uiPresentacionFil}" id="uiPresentacionFil"
-                                    items="#{SessionBean1.listaPresentacionsOp}" width="200"/>
+                                    items="#{ABMProductos.listaPresentacionOp}" width="200"/>
                                 <h:panelGrid columns="2" id="gridBotonesBuscar" style="height: 24px" width="143">
                                     <webuijsf:button actionExpression="#{ABMProductos.buscar_action}" id="buscar" text="Buscar"/>
                                     <webuijsf:button actionExpression="#{ABMProductos.todos_action}" id="todos" text="Todos"/>

@@ -172,8 +172,8 @@ public class LSTPerdidaListado extends AbstractPageBean {
      */
     @Override
     public void prerender() {
-        getSessionBean1().setTituloPagina("Listado de Movimientos en Déposito");
-        getSessionBean1().setDetallePagina("Detalle de los movimientos en Deposito, carge los parametros y ejecute el listado");
+        getSessionBean1().setTituloPagina("Reporte de Perdidas de Productos");
+        getSessionBean1().setDetallePagina("");
 
         uiProducto.setSelected("-1");
 

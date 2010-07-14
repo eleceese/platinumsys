@@ -14,7 +14,7 @@
 		 rightMargin="30"
 		 topMargin="20"
 		 bottomMargin="20"
-		 whenNoDataType="NoPages"
+		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<property name="ireport.scriptlethandling" value="0" />
@@ -28,6 +28,7 @@
 	<parameter name="fechaFin" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="producto" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="tipo" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="logo_path" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[select per.fecha_perdida as Fecha,
 e.nombre_empleado||' '||e.apellido_empleado as Empleado, 
 p.cod_producto as CodProducto, 
@@ -43,8 +44,7 @@ join marca m on p.cod_marca = m.cod_marca
 join tipo_producto t on t.cod_tipo_producto = p.cod_tipo_producto
 join empleado e on e.cod_empleado = per.cod_empleado
 where 1=1 $P!{parametros}
-order by t.descripcion, per.fecha_perdida
-]]></queryString>
+order by t.descripcion, per.fecha_perdida]]></queryString>
 
 	<field name="FECHA" class="java.sql.Timestamp"/>
 	<field name="EMPLEADO" class="java.lang.String"/>
@@ -331,7 +331,7 @@ order by t.descripcion, per.fecha_perdida
 				<line direction="TopDown">
 					<reportElement
 						x="0"
-						y="58"
+						y="68"
 						width="782"
 						height="0"
 						forecolor="#000000"
@@ -532,7 +532,7 @@ order by t.descripcion, per.fecha_perdida
 				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="326"
-						y="-2"
+						y="5"
 						width="161"
 						height="60"
 						key="image-1"/>

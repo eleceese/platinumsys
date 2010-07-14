@@ -433,7 +433,7 @@ public class LSTEstadisticaEfectividad extends AbstractPageBean {
                 sparamName[5] = "logo_path";
                 sparamValue[5] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
 
-               if (uiRadioAnalisis.getSelected().toString().equals("T")) {
+               if (uiRadioAnalisis.getSelected().toString().equals("ET")) {
 
                             rpt.getReport(conn, "EfectividadTareas.jrxml", sparamName, sparamValue, theApplicationsServletContext);
                     }else if(uiRadioAnalisis.getSelected().toString().equals("TUT")){
