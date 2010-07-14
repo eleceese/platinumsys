@@ -46,6 +46,7 @@ import py.com.platinum.utilsenum.FacturaVentaEstado;
 import py.com.platinum.utilsenum.ModelUtil;
 import py.com.platinum.utilsenum.ModuloEnum;
 import py.com.platinum.utilsenum.ParametroEnum;
+import py.com.platinum.utilsenum.PedidoVentaEstado;
 
 /**
  * <p>Page bean that corresponds to a similarly named JSP page.  This
@@ -782,6 +783,7 @@ public class ABMFacturaVenta extends AbstractPageBean {
             this.pageAlert1.setRendered(true);
 
         } else {
+            this.pageAlert1.setRendered(false);
             //Inicializamos las variables
             lstDetalleLIST = new ArrayList();
             lstDetalle = (FacturaDetalle[]) lstDetalleLIST.toArray(new FacturaDetalle[0]);
@@ -864,6 +866,12 @@ public class ABMFacturaVenta extends AbstractPageBean {
             uiTxtSubTotal.setText(String.valueOf(cabecera.getSubtotalFactura()));
             uiTxtTotal.setText(String.valueOf(cabecera.getTotalFactura()));
             uiTxtTotalIva.setText(String.valueOf(cabecera.getTotalIvaFactura()));
+            uiTxtMontoDescuento.setText(String.valueOf(cabecera.getMontoDescuento()));
+            uiTxtPorcDescuento.setText(String.valueOf(cabecera.getPorcDescuento()));
+            uiLstEstado.setSelected(cabecera.getEstadoFactura().toString());
+            if(cabecera.getCodPedido() != null){
+                uiTxtNroPedido.setText(cabecera.getCodPedido().getCodPedido());
+            }
         }
 
 
@@ -957,6 +965,11 @@ public class ABMFacturaVenta extends AbstractPageBean {
                 this.updateDetRequest = false;
                 this.pageAlert1.setType("information");
                 uiTxtNroFactura.setText(cabecera.getNumeroFactura());
+//                //Obetenmos la lista
+//                PedidoCabecera[] l = (PedidoCabecera[]) new PedidoCabeceraController().getPedidoCabecera(null, PedidoVentaEstado.PENDIENTE).toArray(new PedidoCabecera[0]);
+//
+//                //actializamos la lista en la session
+//                getSessionBean1().setListaPedidoVenta(l);
             }
 
             this.pageAlert1.setTitle(cr.getMsg());
@@ -1032,6 +1045,7 @@ public class ABMFacturaVenta extends AbstractPageBean {
             this.pageAlert1.setRendered(true);
 
         } else {
+            this.pageAlert1.setRendered(false);
             //Inicializamos
             errorValidacion = false;
 
@@ -1039,7 +1053,8 @@ public class ABMFacturaVenta extends AbstractPageBean {
             if (cabecera.getEstadoFactura().toString().equals(FacturaVentaEstado.ANULADO.toString())) {
                 info("La Factura ya fue Anulada");
                 errorValidacion = true;
-            } else if (cabecera.getEstadoFactura().toString().equals(FacturaVentaEstado.COBRADO.toString())) {
+            } else if (cabecera.getEstadoFactura().toString().equals(FacturaVentaEstado.COBRADO.toString()) &&
+                       cabecera.getTipoFactura().getCantCuota() > 0) {
                 info("La Factura no puede ser Anulada, por que ya fue Cobrada al Cliente");
                 errorValidacion = true;
             }

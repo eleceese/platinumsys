@@ -731,6 +731,7 @@ public class ABMNotaCreditoProveedor extends AbstractPageBean {
             this.pageAlert1.setRendered(true);
 
         } else {
+            this.pageAlert1.setRendered(false);
             //Inicializamos las variables
             lstDetalleLIST = new ArrayList();
             addRequest = true;
@@ -965,6 +966,7 @@ public class ABMNotaCreditoProveedor extends AbstractPageBean {
             this.pageAlert1.setRendered(true);
 
         } else {
+            this.pageAlert1.setRendered(false);
             //Set de los artributos
             cabecera.setEstado(NotaCreditoEstado.ANULADO);
 

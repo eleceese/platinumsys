@@ -130,6 +130,8 @@ public class FacturaVentaCabeceraListener {
         //Inicializamos
         existenciaController =  new ExistenciaController();
         saldoClienteController = new SaldoClienteController();
+        pedidoCabeceraController = new PedidoCabeceraController();
+
 
         //Si la factura fue anulada
         if (cab.getEstadoFactura().toString().equals(FacturaVentaEstado.ANULADO.toString())) {
