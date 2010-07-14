@@ -665,8 +665,22 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
+        <managed-bean-name>popup$popupCajasAbiertas</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupCajasAbiertas</managed-bean-class>
+
+        <managed-bean-scope>request</managed-bean-scope></managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupCajasCerradas</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupCajasCerradas</managed-bean-class>
+
+        <managed-bean-scope>request</managed-bean-scope></managed-bean>
+    <managed-bean>
         <managed-bean-name>LSTResumenTareasFallidasEmpleado</managed-bean-name>
         <managed-bean-class>platinum.LSTResumenTareasFallidasEmpleado</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 </faces-config>
+
+
+
+
