@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -28,6 +29,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import py.com.platinum.listener.ReciboCabeceraListener;
 import py.com.platinum.utils.StringUtils;
 import py.com.platinum.utilsenum.ReciboEstado;
 
@@ -38,6 +40,7 @@ import py.com.platinum.utilsenum.ReciboEstado;
 @Entity
 @Table(name = "RECIBO_CABECERA")
 @SequenceGenerator(name="RECIBO_CAB_SEQUENCE", sequenceName="SQ_CABECERA_RECIBO", initialValue=1, allocationSize=1)
+@EntityListeners(ReciboCabeceraListener.class)
 public class ReciboCabecera implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -171,10 +174,6 @@ public class ReciboCabecera implements Serializable {
         return reciboDetalle;
     }
 
-    public List<ReciboDetalle> getReciboDetalleList() {
-        return new ArrayList(Arrays.asList(reciboDetalle.toArray(new ReciboDetalle[0])));
-    }
-
     public void setReciboDetalle(Set<ReciboDetalle> reciboDetalle) {
         this.reciboDetalle = reciboDetalle;
     }
@@ -197,6 +196,11 @@ public class ReciboCabecera implements Serializable {
 
     public void setMovimientoCajaDetalle(Set<MovimientoCajaDetalle> movimientoCajaDetalle) {
         this.movimientoCajaDetalle = movimientoCajaDetalle;
+    }
+
+
+    public List<ReciboDetalle> getReciboDetalleList() {
+        return new ArrayList(Arrays.asList(reciboDetalle.toArray(new ReciboDetalle[0])));
     }
 
     @Override
