@@ -29,6 +29,7 @@
 	<parameter name="tarea" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="fechaIni" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="fechaFin" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="logo_path" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[select 
 e.nombre_empleado||' '||e.apellido_empleado as Empleado,
 ta.cod_tarea as CodTarea,
@@ -82,17 +83,6 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 					</textElement>
 				<text><![CDATA[Resumen de Tareas por Empleado]]></text>
 				</staticText>
-				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="201"
-						y="3"
-						width="129"
-						height="57"
-						key="image-1"/>
-					<box></box>
-					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["C:\\Users\\FerBoy\\Documents\\Facultad\\8vo Semestre\\Proyecto II\\Diseño Fisico Platinum\\logo_platinum.jpg"]]></imageExpression>
-				</image>
 				<line direction="TopDown">
 					<reportElement
 						x="2"
@@ -369,6 +359,17 @@ order by e.nombre_empleado||' '||e.apellido_empleado, ta.cod_tarea]]></queryStri
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaFin}]]></textFieldExpression>
 				</textField>
+				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="211"
+						y="3"
+						width="161"
+						height="56"
+						key="image-1"/>
+					<box></box>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo_path}]]></imageExpression>
+				</image>
 			</band>
 		</pageHeader>
 		<columnHeader>

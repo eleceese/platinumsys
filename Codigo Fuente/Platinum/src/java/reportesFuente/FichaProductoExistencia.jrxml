@@ -38,6 +38,7 @@
 	<parameter name="EXISTEN" isForPrompting="false" class="java.math.BigDecimal">
 		<defaultValueExpression ><![CDATA[new java.math.BigDecimal($P{cantidadInicial})]]></defaultValueExpression>
 	</parameter>
+	<parameter name="logo_path" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[select * from (
 select cab.fecha_alta as Fecha, 
   dep.nombre as Deposito, 
@@ -153,21 +154,10 @@ order by 2,1]]></queryString>
 					</textElement>
 				<text><![CDATA[Ficha de Existencia de Productos]]></text>
 				</staticText>
-				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="188"
-						y="3"
-						width="129"
-						height="57"
-						key="image-1"/>
-					<box></box>
-					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["C:\\Users\\FerBoy\\Documents\\Facultad\\8vo Semestre\\Proyecto II\\Diseño Fisico Platinum\\logo_platinum.jpg"]]></imageExpression>
-				</image>
 				<line direction="TopDown">
 					<reportElement
 						x="2"
-						y="60"
+						y="68"
 						width="536"
 						height="0"
 						forecolor="#000000"
@@ -260,9 +250,9 @@ order by 2,1]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="326"
+						x="366"
 						y="5"
-						width="170"
+						width="130"
 						height="19"
 						key="textField"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -437,6 +427,17 @@ order by 2,1]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{cantidadInicial}]]></textFieldExpression>
 				</textField>
+				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="197"
+						y="7"
+						width="161"
+						height="56"
+						key="image-1"/>
+					<box></box>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo_path}]]></imageExpression>
+				</image>
 			</band>
 		</pageHeader>
 		<columnHeader>

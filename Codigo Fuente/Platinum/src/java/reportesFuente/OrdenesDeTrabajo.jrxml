@@ -14,7 +14,7 @@
 		 rightMargin="30"
 		 topMargin="20"
 		 bottomMargin="20"
-		 whenNoDataType="NoPages"
+		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<property name="ireport.scriptlethandling" value="0" />
@@ -27,6 +27,7 @@
 	<parameter name="codOt" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="codProd" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="estado" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="logo_path" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[select 
 ot.cod_orden_trabjo as NroOT, 
 ot.descripcion as DescripcionOt, 
@@ -618,21 +619,10 @@ order by ot.cod_orden_trabjo, ot.cod_orden_trabjo, od.estado]]></queryString>
 		</title>
 		<pageHeader>
 			<band height="111"  isSplitAllowed="true" >
-				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="319"
-						y="2"
-						width="129"
-						height="57"
-						key="image-1"/>
-					<box></box>
-					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["C:\\Users\\FerBoy\\Documents\\Facultad\\8vo Semestre\\Proyecto II\\Diseño Fisico Platinum\\logo_platinum.jpg"]]></imageExpression>
-				</image>
 				<line direction="TopDown">
 					<reportElement
 						x="0"
-						y="60"
+						y="67"
 						width="781"
 						height="0"
 						forecolor="#000000"
@@ -849,6 +839,17 @@ order by ot.cod_orden_trabjo, ot.cod_orden_trabjo, od.estado]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Usuario: gonzalef"]]></textFieldExpression>
 				</textField>
+				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="293"
+						y="6"
+						width="161"
+						height="56"
+						key="image-1"/>
+					<box></box>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo_path}]]></imageExpression>
+				</image>
 			</band>
 		</pageHeader>
 		<columnHeader>

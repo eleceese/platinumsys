@@ -27,6 +27,7 @@
 	<parameter name="producto" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="deposito" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="marca" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="logo_path" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[select    e.cod_producto, 
           d.nombre as Deposito,
           p.descripcion as Producto,
@@ -165,11 +166,11 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 			</band>
 		</title>
 		<pageHeader>
-			<band height="124"  isSplitAllowed="true" >
+			<band height="128"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						x="61"
-						y="68"
+						y="74"
 						width="412"
 						height="17"
 						key="staticText-1"/>
@@ -181,23 +182,12 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 					<textElement textAlignment="Center">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
 					</textElement>
-				<text><![CDATA[Listado de Existencias en Deposito]]></text>
+				<text><![CDATA[Valores en Deposito]]></text>
 				</staticText>
-				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="199"
-						y="0"
-						width="129"
-						height="57"
-						key="image-1"/>
-					<box></box>
-					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["C:\\Users\\FerBoy\\Documents\\Facultad\\8vo Semestre\\Proyecto II\\Diseño Fisico Platinum\\logo_platinum.jpg"]]></imageExpression>
-				</image>
 				<line direction="TopDown">
 					<reportElement
 						x="-1"
-						y="57"
+						y="71"
 						width="536"
 						height="0"
 						forecolor="#000000"
@@ -219,7 +209,7 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="2"
-						y="91"
+						y="97"
 						width="58"
 						height="13"
 						forecolor="#000066"
@@ -237,7 +227,7 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="2"
-						y="107"
+						y="113"
 						width="58"
 						height="13"
 						forecolor="#000066"
@@ -255,7 +245,7 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="63"
-						y="91"
+						y="97"
 						width="220"
 						height="13"
 						forecolor="#000066"
@@ -273,7 +263,7 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="63"
-						y="107"
+						y="113"
 						width="220"
 						height="13"
 						forecolor="#000066"
@@ -291,7 +281,7 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="291"
-						y="91"
+						y="97"
 						width="58"
 						height="13"
 						forecolor="#000066"
@@ -309,7 +299,7 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="349"
-						y="91"
+						y="97"
 						width="177"
 						height="13"
 						forecolor="#000066"
@@ -377,6 +367,17 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
+				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="207"
+						y="3"
+						width="161"
+						height="68"
+						key="image-1"/>
+					<box></box>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo_path}]]></imageExpression>
+				</image>
 			</band>
 		</pageHeader>
 		<columnHeader>
@@ -413,9 +414,9 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="237"
+						x="306"
 						y="1"
-						width="65"
+						width="28"
 						height="16"
 						forecolor="#FFFFFF"
 						key="element-93"/>
@@ -449,9 +450,9 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="439"
+						x="461"
 						y="0"
-						width="92"
+						width="70"
 						height="16"
 						forecolor="#FFFFFF"
 						key="element-96"/>
@@ -467,9 +468,9 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="343"
+						x="393"
 						y="1"
-						width="92"
+						width="62"
 						height="16"
 						forecolor="#FFFFFF"
 						key="element-101"/>
@@ -489,9 +490,9 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 			<band height="15"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="234"
+						x="302"
 						y="2"
-						width="105"
+						width="79"
 						height="12"
 						key="textField"/>
 					<box leftPadding="2" rightPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -525,7 +526,7 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 					<reportElement
 						x="59"
 						y="1"
-						width="175"
+						width="243"
 						height="12"
 						key="textField"/>
 					<box leftPadding="2" rightPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -540,9 +541,9 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="343"
+						x="393"
 						y="2"
-						width="93"
+						width="63"
 						height="12"
 						forecolor="#FF0033"
 						key="textField-12"/>
@@ -558,9 +559,9 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="439"
+						x="461"
 						y="1"
-						width="96"
+						width="74"
 						height="14"
 						forecolor="#FF0000"
 						key="textField"/>

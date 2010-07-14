@@ -14,7 +14,7 @@
 		 rightMargin="30"
 		 topMargin="20"
 		 bottomMargin="20"
-		 whenNoDataType="NoPages"
+		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<property name="ireport.scriptlethandling" value="0" />
@@ -29,6 +29,7 @@
 	<parameter name="tarea" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="fechaIni" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="fechaFin" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="logo_path" isForPrompting="false" class="java.lang.String"/>
 	<queryString><![CDATA[select 
 pd.fecha as fecha,
 pd.cantidad as cantidad,
@@ -91,21 +92,10 @@ order by pd.fecha, ot.cod_orden_trabjo, od.cod_orden_trabajo_det, ta.cod_tarea_a
 					</textElement>
 				<text><![CDATA[Listado de Tareas en Produccion]]></text>
 				</staticText>
-				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="318"
-						y="1"
-						width="129"
-						height="57"
-						key="image-1"/>
-					<box></box>
-					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["C:\\Users\\FerBoy\\Documents\\Facultad\\8vo Semestre\\Proyecto II\\Diseño Fisico Platinum\\logo_platinum.jpg"]]></imageExpression>
-				</image>
 				<line direction="TopDown">
 					<reportElement
-						x="0"
-						y="57"
+						x="1"
+						y="66"
 						width="782"
 						height="0"
 						forecolor="#000000"
@@ -378,6 +368,17 @@ order by pd.fecha, ot.cod_orden_trabjo, od.cod_orden_trabajo_det, ta.cod_tarea_a
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaFin}]]></textFieldExpression>
 				</textField>
+				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="318"
+						y="4"
+						width="161"
+						height="56"
+						key="image-1"/>
+					<box></box>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo_path}]]></imageExpression>
+				</image>
 			</band>
 		</pageHeader>
 		<columnHeader>

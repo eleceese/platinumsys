@@ -14,7 +14,7 @@
 		 rightMargin="30"
 		 topMargin="20"
 		 bottomMargin="20"
-		 whenNoDataType="NoPages"
+		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<property name="ireport.scriptlethandling" value="0" />
@@ -97,7 +97,7 @@
 				<line direction="TopDown">
 					<reportElement
 						x="3"
-						y="61"
+						y="67"
 						width="533"
 						height="0"
 						forecolor="#000000"
@@ -300,8 +300,8 @@
 				</textField>
 				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="217"
-						y="2"
+						x="227"
+						y="4"
 						width="161"
 						height="60"
 						key="image-1"/>
