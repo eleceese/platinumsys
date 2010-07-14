@@ -522,12 +522,7 @@ public class ABMSolicitudesInternas extends AbstractPageBean {
                     } catch (IOException ex) {
                         Logger.getLogger(cabecera.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
-
         }
-
-
-
         uiBtnCancelar.setRendered(true);
         if (addRequest) {
             gridPanelBuscar.setRendered(false);

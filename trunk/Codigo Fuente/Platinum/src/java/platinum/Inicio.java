@@ -90,7 +90,7 @@ public class Inicio extends AbstractPageBean {
         }
 
     getSessionBean1().setTituloPagina("");
-    getSessionBean1().setDetallePagina("Menu Principal del Sistema");
+    getSessionBean1().setDetallePagina("");
     
     }
 
