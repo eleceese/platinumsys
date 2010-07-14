@@ -217,8 +217,8 @@ public class LSTExistenciaProducto extends AbstractPageBean {
     public String button1_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
-                String[] sparamName= new String[5];
-                String[] sparamValue= new String[5];
+                String[] sparamName= new String[6];
+                String[] sparamValue= new String[6];
                 Connection conn= GetConnection.getSimpleConnection();
                 ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
                 
@@ -286,6 +286,8 @@ public class LSTExistenciaProducto extends AbstractPageBean {
                 sparamValue[3]= sM;
                 sparamName[4]="tipo";
                 sparamValue[4]= sT;
+                sparamName[5] = "logo_path";
+                sparamValue[5] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
 
                 rpt.getReport(conn, "ExistenciasDeposito.jrxml", sparamName, sparamValue, theApplicationsServletContext);
 
@@ -330,7 +332,7 @@ public class LSTExistenciaProducto extends AbstractPageBean {
 
     public void cargarListaTodosProductos() {
         ProductoController productoController = new ProductoController();
-        listaProductos = (Producto[]) productoController.getInsumosMateriasFinalesSemiter(null, null, null).toArray(new Producto[0]);
+        listaProductos = (Producto[]) productoController.getAllFiltered(null, null,null, null).toArray(new Producto[0]);
         listaProductosOp = new Option[listaProductos.length+1];
         Option option;
         for (int i = 0; i < listaProductos.length; i++) {

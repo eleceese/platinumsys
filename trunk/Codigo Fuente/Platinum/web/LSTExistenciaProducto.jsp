@@ -21,7 +21,7 @@
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
                         <div>
-                            <h:panelGrid columns="2" id="mainContainer" style="height: 149px; left: 288px; top: 235px; position: absolute" width="456">
+                            <h:panelGrid columns="2" id="mainContainer" style="height: 149px; left: 288px; top: 240px; position: absolute" width="456">
                                 <webuijsf:label id="lblTipoProducto" text="Tipo Producto"/>
                                 <webuijsf:dropDown binding="#{LSTExistenciaProducto.uiTipoProd}" id="uiTipoProd" items="#{LSTExistenciaProducto.listaTipoProductosOp}"/>
                                 <webuijsf:label id="label1" text="Producto"/>

@@ -170,4 +170,20 @@ public class cabecera extends AbstractFragmentBean {
         return (SessionBean1) getBean("SessionBean1");
     }
 
+    public String hyp3_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+
+           HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
+                    try {
+                        response.sendRedirect("/Platinum/faces/Acceso.jsp");
+                        getFacesContext().responseComplete();
+                    } catch (IOException ex) {
+                        Logger.getLogger(cabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        getSessionBean1().setUsuario(null);
+        
+        return null;
+    }
+
 }

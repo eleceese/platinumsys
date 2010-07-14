@@ -114,6 +114,10 @@
                 <br/>
                 <webuijsf:hyperlink id="LSTResumenTareasEmpleado" style="margin-left: 20px" text="Resumen de Tareas" url="/faces/LSTResumenTareasEmpleado.jsp"/>
                 <br/>
+                <webuijsf:hyperlink id="LSTResumenTareasFallidasEmpleado" style="margin-left: 20px" text="Resumen de Tareas Fallidas" url="/faces/LSTResumenTareasEmpleado.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="LSTEstadisticaEfectividad" style="margin-left: 20px" text="Estadisticas de Efectividas" url="/faces/LSTEstadisticaEfectividad.jsp"/>
+                <br/>
            </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab5" title="Stock">
                 <h2>ABM</h2>
@@ -128,6 +132,8 @@
                 <webuijsf:hyperlink id="LSTExistenciaProducto" style="margin-left: 20px" text="Existencias en Deposito" url="/faces/LSTExistenciaProducto.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="LSTMovimientoDeposito" style="margin-left: 20px" text="Movimientos en Deposito" url="/faces/LSTMovimientoDeposito.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="LSTPerdidaListado" style="margin-left: 20px" text="Reporte de Perdidas" url="/faces/LSTPerdidaListado.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="LSTValoresEnDeposito" style="margin-left: 20px" text="Valores en Deposito" url="/faces/LSTValoresEnDeposito.jsp"/>
                 <br/>

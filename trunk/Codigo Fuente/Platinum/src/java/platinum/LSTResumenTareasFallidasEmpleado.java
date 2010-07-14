@@ -37,7 +37,7 @@ import reportes.RptCreate;
  * @author FerBoy
  */
 
-public class LSTResumenTareasEmpleado extends AbstractPageBean {
+public class LSTResumenTareasFallidasEmpleado extends AbstractPageBean {
     // <editor-fold defaultstate="collapsed" desc="Managed Component Definition">
 
     /**
@@ -98,7 +98,7 @@ public class LSTResumenTareasEmpleado extends AbstractPageBean {
     /**
      * <p>Construct a new Page bean instance.</p>
      */
-    public LSTResumenTareasEmpleado() {
+    public LSTResumenTareasFallidasEmpleado() {
     cargarListaTodosEmpleados();
     cargarListaTodosOTCab();
     cargarListaTodosTareas();
@@ -161,7 +161,7 @@ public class LSTResumenTareasEmpleado extends AbstractPageBean {
      */
     @Override
     public void prerender() {
-        getSessionBean1().setTituloPagina("Resumen de Tareas por Empleado");
+        getSessionBean1().setTituloPagina("Resumen de Tareas Fallidas por Empleado");
         getSessionBean1().setDetallePagina("Se ingresa los parámetros para generar el informe de tareas.");
 
         this.uiNroOt.setSelected("-1");
@@ -359,12 +359,7 @@ public class LSTResumenTareasEmpleado extends AbstractPageBean {
 
                 try{
 
-                if (!uiNroOt.getSelected().toString().equals("-1")){
-                    sOt = " and ot.cod_orden_trabjo = "+uiNroOt.getSelected().toString();
-                    sO = new OrdenTrabajoCabeceraController().findById(Long.valueOf(this.uiNroOt.getSelected().toString())).getDescripcion();
-                }else{
-                    sO="Todos";
-                }
+               
 
                 if (!uiEmpleado.getSelected().toString().equals("-1")){
                     sEmpleado = " and e.cod_empleado = "+uiEmpleado.getSelected().toString();
@@ -383,7 +378,7 @@ public class LSTResumenTareasEmpleado extends AbstractPageBean {
                 if (uiFechaDesde.getSelectedDate() != null){
 
                     String simpleFecha = DateUtils.toString(uiFechaDesde.getSelectedDate(), "dd/MM/yyyy");
-                    sFecha = " and pd.fecha >= to_date('"+simpleFecha+"','dd/mm/yyyy')";
+                    sFecha = " and tf.fecha >= to_date('"+simpleFecha+"','dd/mm/yyyy')";
                     sF = simpleFecha;
                 }else{
                     sF="Todos";
@@ -391,7 +386,7 @@ public class LSTResumenTareasEmpleado extends AbstractPageBean {
 
                 if (uiFechaHasta.getSelectedDate() != null){
                     String simpleFechaF = DateUtils.toString(uiFechaHasta.getSelectedDate(), "dd/MM/yyyy");
-                    sFechaF = " and pd.fecha <= to_date('"+simpleFechaF+"','dd/mm/yyyy')";
+                    sFechaF = " and tf.fecha <= to_date('"+simpleFechaF+"','dd/mm/yyyy')";
                     sFF = simpleFechaF;
                 }else{
                     sFF="Todos";
@@ -420,7 +415,7 @@ public class LSTResumenTareasEmpleado extends AbstractPageBean {
                 sparamValue[6] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
 
 
-                rpt.getReport(conn, "ResumenDeTareas.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+                rpt.getReport(conn, "ResumenTareasFallidas.jrxml", sparamName, sparamValue, theApplicationsServletContext);
 
                 }catch(Exception e){
                 error("Error al generar el reporte ");

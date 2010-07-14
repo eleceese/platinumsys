@@ -400,7 +400,7 @@ public class ABMProductos extends AbstractPageBean {
     public ABMProductos() {
         tipoProducto1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("t", "Terminado"), new com.sun.webui.jsf.model.Option("s", "SemiTerminado"), new com.sun.webui.jsf.model.Option("i", "Insumo"), new com.sun.webui.jsf.model.Option("g", "ProductoGenerico"),new com.sun.webui.jsf.model.Option("m", "Materias Primas")});
         tipo2DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("t", "Terminado"), new com.sun.webui.jsf.model.Option("s", "SemiTerminado"), new com.sun.webui.jsf.model.Option("m", "MateriaPrima"), new com.sun.webui.jsf.model.Option("g", "ProductoGenerico"), new com.sun.webui.jsf.model.Option("I", "Insumo")});
-        uiTipoProductoFilDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("Terminado", "Terminado"), new com.sun.webui.jsf.model.Option("SemiTerminado", "SemiTerminado"), new com.sun.webui.jsf.model.Option("Insumo", "Insumo"), new com.sun.webui.jsf.model.Option("MateriaPrima", "MateriaPrima"), new com.sun.webui.jsf.model.Option("Todos", "Todos")});
+        uiTipoProductoFilDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("Terminado", "Terminado"), new com.sun.webui.jsf.model.Option("SemiTerminado", "SemiTerminado"), new com.sun.webui.jsf.model.Option("Insumo", "Insumo"),new com.sun.webui.jsf.model.Option("ProductoGenerico", "ProductoGenerico"), new com.sun.webui.jsf.model.Option("MateriaPrima", "MateriaPrima"), new com.sun.webui.jsf.model.Option("Todos", "Todos")});
         uiTipoProductoFilDefaultOptions.setSelectedValue("Todos");
         uiMarcaFil.setSelected("99999");
         uiPresentacionFil.setSelected("99999");
@@ -575,6 +575,7 @@ public class ABMProductos extends AbstractPageBean {
    
     public void limpiarCamposNew(){
 
+            this.uiLstTipoProducto.setSelected("5");
             this.uiCodInterno.setText("");
             this.uiDescripcion.setText("");
             this.uiCostoActual.setText("");
@@ -623,8 +624,9 @@ public class ABMProductos extends AbstractPageBean {
 
 
                          if (tipoP.getDescripcion() != null
-                                 && (tipoP.getDescripcion().toString().equals("ProductoGenerico"))
-                                 ||tipoP.getDescripcion().toString().equals("Acabado")){
+                                 && (tipoP.getDescripcion().toString().equals("ProductoGenerico")
+                                 ||tipoP.getDescripcion().toString().equals("Acabado")
+                                 ||tipoP.getDescripcion().toString().equals("Servicio"))){
 
                             this.uiLstMarca.setDisabled(true);
                                 this.uiLstMarca.setSelected("1");
@@ -634,6 +636,10 @@ public class ABMProductos extends AbstractPageBean {
 
                                 this.uiPrecioActual.setDisabled(true);
                                 this.uiPrecioActual.setText("1");
+
+                                if (tipoP.getDescripcion().toString().equals("Servicio")) {
+                                 this.uiCostoActual.setDisabled(false);
+                                }
 
                                 this.uiControlExistencia.setSelected(false);
                                 this.uiControlExistencia.setDisabled(true);
@@ -1124,7 +1130,8 @@ public class ABMProductos extends AbstractPageBean {
             tipoProducto = new TipoProductoController().findById(Long.valueOf(value.toString()));
             if (tipoProducto.getDescripcion() != null 
                     && (tipoProducto.getDescripcion().toString().equals("ProductoGenerico")
-                     ||tipoProducto.getDescripcion().toString().equals("Acabado"))) {
+                     ||tipoProducto.getDescripcion().toString().equals("Acabado")
+                     ||tipoProducto.getDescripcion().toString().equals("Servicio"))) {
 
                     this.uiLstMarca.setDisabled(true);
                     this.uiLstMarca.setSelected("1");
@@ -1151,7 +1158,10 @@ public class ABMProductos extends AbstractPageBean {
 
                     this.uiPorcentajeCom.setText("0");
                     this.uiPorcentajeCom.setDisabled(true);
-                    
+
+                    if (tipoProducto.getDescripcion().toString().equals("Servicio")) {
+                            this.uiCostoActual.setDisabled(true);
+                         }
                     if (tipoProducto.getDescripcion().toString().equals("Acabado")) {
                         this.uiUnidadMedida.setSelected("1");
                         this.uiUnidadMedida.setDisabled(true);
