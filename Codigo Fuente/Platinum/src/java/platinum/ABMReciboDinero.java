@@ -672,6 +672,42 @@ public class ABMReciboDinero extends AbstractPageBean {
     public void setUiTxtBanco(TextField tf) {
         this.uiTxtBanco = tf;
     }
+    private TextField uiTxtMontoFormaCobro = new TextField();
+
+    public TextField getUiTxtMontoFormaCobro() {
+        return uiTxtMontoFormaCobro;
+    }
+
+    public void setUiTxtMontoFormaCobro(TextField tf) {
+        this.uiTxtMontoFormaCobro = tf;
+    }
+    private TextField uiTxtTotalComprobantesFC = new TextField();
+
+    public TextField getUiTxtTotalComprobantesFC() {
+        return uiTxtTotalComprobantesFC;
+    }
+
+    public void setUiTxtTotalComprobantesFC(TextField tf) {
+        this.uiTxtTotalComprobantesFC = tf;
+    }
+    private ImageHyperlink uilnkEliminarDetalleFC = new ImageHyperlink();
+
+    public ImageHyperlink getUilnkEliminarDetalleFC() {
+        return uilnkEliminarDetalleFC;
+    }
+
+    public void setUilnkEliminarDetalleFC(ImageHyperlink ih) {
+        this.uilnkEliminarDetalleFC = ih;
+    }
+    private ImageHyperlink uilnkEditarDetalleFC = new ImageHyperlink();
+
+    public ImageHyperlink getUilnkEditarDetalleFC() {
+        return uilnkEditarDetalleFC;
+    }
+
+    public void setUilnkEditarDetalleFC(ImageHyperlink ih) {
+        this.uilnkEditarDetalleFC = ih;
+    }
 
     // </editor-fold>
     /**
@@ -702,6 +738,7 @@ public class ABMReciboDinero extends AbstractPageBean {
         uiLstEstadoDefaultOptions.setOptions(lstEstadoOp);
         uiLstEstadoDefaultOptions.setSelectedValue(ReciboEstado.PENDIENTE.toString());
 
+        formaPagoController = new FormaPagoController();
         controller = new ReciboCabeceraController();
         saldoController = new SaldoClienteController();
 
@@ -924,10 +961,11 @@ public class ABMReciboDinero extends AbstractPageBean {
             this.pageAlert1.setRendered(true);
         } else {
             //Inicializamos las variables
+            this.pageAlert1.setRendered(false);
             lstDetalleLIST = new ArrayList();
             lstDetalle = (ReciboDetalle[]) lstDetalleLIST.toArray(new ReciboDetalle[0]);
             lstDetalleLISTFC = new ArrayList();
-            lstdetalleFC = (MovimientoCajaDetalle[]) lstDetalleLISTFC.toArray(new MovimientoCajaDetalle[0]);
+            lstDetalleFC = (MovimientoCajaDetalle[]) lstDetalleLISTFC.toArray(new MovimientoCajaDetalle[0]);
             addRequest = true;
             updateDetRequest = true;
             itemDet = null;
@@ -972,6 +1010,7 @@ public class ABMReciboDinero extends AbstractPageBean {
         updateDetRequest = true;
         itemDet = null;
         lstDetalleEliminar = new ArrayList<ReciboDetalle>();
+        lstDetalleEliminarFC = new ArrayList<MovimientoCajaDetalle>();
 
         //Cargamos los datos de las relaciones con esta entidad
         cargarRelaciones();
@@ -1003,6 +1042,7 @@ public class ABMReciboDinero extends AbstractPageBean {
 
             //Detalles a eliminar
             lstDetalleEliminar = new ArrayList();
+            lstDetalleEliminarFC = new ArrayList();
 
             //Obetenemos los atributos de la cabecera
             uiTxtNroRecibo.setText(cabecera.getNumeroRecibo());
@@ -1074,7 +1114,7 @@ public class ABMReciboDinero extends AbstractPageBean {
             cabecera.setMontoTotal(BigInteger.valueOf(Long.valueOf(uiTxtTotal1.getText().toString())));
 
             //Insertamos la cebecera y del detalle
-            ControllerResult cr = controller.crear(cabecera, lstDetalleLIST);
+            ControllerResult cr = controller.crear(cabecera, lstDetalleLIST, lstDetalleLISTFC);
 
             //Verificamos el tipo de mensaje
             if (cr.getCodRetorno() == -1) {
@@ -1147,6 +1187,27 @@ public class ABMReciboDinero extends AbstractPageBean {
         if (this.uiCalFecha.getSelectedDate() == null) {
             info("Fecha, campo obligatorio");
             this.errorValidacion = true;
+        }
+
+        //Fecha
+        if (this.uiTxtTotal1.getText() == null || this.uiTxtTotal1.getText().equals("") ) {
+            info("Monto Recibo no puede ser igual a Cero");
+            this.errorValidacion = true;
+        }else{
+            //Verificamos si la precio es un numero
+            String totRecibo = this.uiTxtTotal1.getText().toString();
+            String totFormaCobro = this.uiTxtTotalComprobantesFC.getText().toString();
+
+            if (!StringUtils.esNumero(totRecibo)) {
+                info("Total Recibo, debe se Numero");
+                errorValidacion = true;
+            }else if (!StringUtils.esNumero(totFormaCobro)) {
+                info("Total Forma Cobro, debe se Numero");
+                errorValidacion = true;
+            }else if (!totRecibo.equals(totFormaCobro)) {
+                info("Total Forma Cobro, debe ser igual al Importe total de los recibos");
+                errorValidacion = true;
+            }
         }
     }
 
@@ -1229,7 +1290,8 @@ public class ABMReciboDinero extends AbstractPageBean {
     private FormaPago formaPago;
     private FormaPagoController formaPagoController;
     private MovimientoCajaDetalle detalleFC;
-    private MovimientoCajaDetalle[] lstdetalleFC;
+    private MovimientoCajaDetalle[] lstDetalleFC;
+    private List<MovimientoCajaDetalle> lstDetalleEliminarFC;
     private List<MovimientoCajaDetalle> lstDetalleLISTFC;
     private List<ReciboDetalle> lstDetalleLIST;
     private List<ReciboDetalle> lstDetalleEliminar;
@@ -1510,6 +1572,30 @@ public class ABMReciboDinero extends AbstractPageBean {
     }
 
     /**
+     * Recorremos la lista de detalle y actualizamos los totales
+     */
+    private void calcularTotalesFC() {
+        //Variables
+        long total;
+
+        //Inicializamos
+        total = 0;
+
+        //Recorremos el detalle para recalcular los totales
+        for (int i = 0; i < lstDetalleLISTFC.size(); i++) {
+            //Obetenemos el detalle
+            MovimientoCajaDetalle det = lstDetalleLISTFC.get(i);
+
+            //Sumamos el monto total
+            total += det.getMonto().longValue();
+
+        }
+
+        //Aplicamos el descuent
+        uiTxtTotalComprobantesFC.setText(String.valueOf(total));
+    }
+
+    /**
      * Limpiamos los campos del detalle
      */
     private void limpiarCamposDetalle() {
@@ -1618,12 +1704,12 @@ public class ABMReciboDinero extends AbstractPageBean {
 
     }
 
-    public MovimientoCajaDetalle[] getLstdetalleFC() {
-        return lstdetalleFC;
+    public MovimientoCajaDetalle[] getLstDetalleFC() {
+        return lstDetalleFC;
     }
 
-    public void setLstdetalleFC(MovimientoCajaDetalle[] lstdetalleFC) {
-        this.lstdetalleFC = lstdetalleFC;
+    public void setLstDetalleFC(MovimientoCajaDetalle[] lstDetalleFC) {
+        this.lstDetalleFC = lstDetalleFC;
     }
 
     public List<MovimientoCajaDetalle> getLstDetalleLISTFC() {
@@ -1678,34 +1764,48 @@ public class ABMReciboDinero extends AbstractPageBean {
             detalleFC.setCodFormaPago(formaPago);
             detalleFC.setCodRecibo(cabecera);
             detalleFC.setFechaAlta(new Date());
-            //detalleFC.getMonto()
-            detalleFC.setNumeroCheque(itemDet);
-            detalleFC.setSerieCheque(itemDet);
+            detalleFC.setMonto(BigInteger.valueOf(Long.valueOf(uiTxtMontoFormaCobro.getText().toString())));
+            
+            if (uiTxtBanco.getText()!= null) {
+                detalleFC.setNumeroCheque(uiTxtNroFormaCobro.getText().toString());
+                detalleFC.setSerieCheque(uiTxtSerieFormaCobro.getText().toString());    
+            }
+
+
             detalleFC.setUsuarioAlta(getSessionBean1().getUsuarioLogueado().getUsuario());
 
 
             //Agregamos a la lista
             if (itemDet == null) {
-                lstDetalleLIST.add(detalle);
+                lstDetalleLISTFC.add(detalleFC);
             }
 
             //Actualizamos la grilla
-            lstDetalle = (ReciboDetalle[]) lstDetalleLIST.toArray(new ReciboDetalle[0]);
+            lstDetalleFC = (MovimientoCajaDetalle[]) lstDetalleLISTFC.toArray(new MovimientoCajaDetalle[0]);
 
             //Ceramos el item seleccionado
             itemDet = null;
 
             //Ceramos los campos del detalle
-            limpiarCamposDetalle();
+            limpiarCamposDetalleFC();
 
             //Calculamos los totales
-            calcularTotales();
+            calcularTotalesFC();
 
-            actualizarListaComprobantes();
         }
 
         //result
         return null;
+    }
+
+
+    private void limpiarCamposDetalleFC(){
+        uiTxtCodFormaCobro.setText(null);
+        uiTxtDescFormaCobro.setText(null);
+        uiTxtBanco.setText(null);
+        uiTxtSerieFormaCobro.setText(null);
+        uiTxtNroFormaCobro.setText(null);
+        uiTxtMontoFormaCobro.setText(null);
     }
 
     public String uiBtnCancelardetalleFC_action() {
@@ -1715,6 +1815,96 @@ public class ABMReciboDinero extends AbstractPageBean {
     }
 
     private void validardetalleFC() {
-        throw new UnsupportedOperationException("Not yet implemented");
+        //Apagamos la bandera de error
+        this.errorValidacion = false;
+
+        //Comprobante
+        if (this.uiTxtCodFormaCobro.getText() == null || this.uiTxtCodFormaCobro.getText().equals("")) {
+            info("Seleccione una Forma de cobro, Obligatrio");
+            errorValidacion = true;
+        } else {
+            String c = this.uiTxtCodFormaCobro.getText().toString();
+            Long cod = Long.valueOf(c);
+            formaPago = formaPagoController.findById(cod);
+
+            if (formaPago == null) {
+                info("Forma de pago ingresado no es valido, Obligatrio");
+                errorValidacion = true;
+            }else if (formaPago.getCodBanco() != null) {
+
+                if (uiTxtSerieFormaCobro.getText() == null || uiTxtSerieFormaCobro.getText().equals("")) {
+                    info("Forma de pago tiene un Banco Relacionado, debe ingreser Serie del cheque");
+                    errorValidacion = true;
+                }
+
+                if (uiTxtNroFormaCobro.getText() == null || uiTxtNroFormaCobro.getText().equals("")) {
+                    info("Forma de pago tiene un Banco Relacionado, debe ingreser Numero del cheque");
+                    errorValidacion = true;
+                }
+            }
+        }
+
+        //Monto Pago
+        if (this.uiTxtMontoFormaCobro.getText() == null || this.uiTxtMontoFormaCobro.getText().equals("")) {
+            info("Monto Forma Cobro  obligatorio, ingrese un valor");
+            errorValidacion = true;
+        } else {
+            //Verificamos si la precio es un numero
+            String cantidad = this.uiTxtMontoFormaCobro.getText().toString();
+
+            if (!StringUtils.esNumero(cantidad)) {
+                info("Monto Forma Cobro, debe se Numero");
+                errorValidacion = true;
+            }
+        }
+    }
+
+    public String uiBtnCancelarDetalleFC_action() {
+        //Limpiar campos
+        limpiarCamposDetalle();
+
+        //Result
+        return null;
+    }
+
+    public String uilnkEditarDetalleFC_action() {
+        //Obtenemos el detalle seleccionado
+        this.detalleFC = lstDetalleLISTFC.get(Integer.valueOf(itemDet).intValue());
+        
+        //Obtenemos los valores del detalle q ha sido seleccionado
+        uiTxtCodFormaCobro.setText(detalleFC.getCodFormaPago().getCodFormaPago());
+        uiTxtDescFormaCobro.setText(detalleFC.getCodFormaPago().getNombreFormaPago());
+        uiTxtBanco.setText(detalleFC.getCodFormaPago().getCodBanco().getNombreBanco());
+        uiTxtSerieFormaCobro.setText(detalleFC.getSerieCheque());
+        uiTxtNroFormaCobro.setText(detalleFC.getNumeroCheque());
+        uiTxtMontoFormaCobro.setText(detalleFC.getMonto());
+
+        //result
+        return null;
+    }
+
+    public String uilnkEliminarDetalleFC_action() {
+        //Obtenemos el detalle seleccionado
+        detalleFC = lstDetalleLISTFC.get(Integer.valueOf(itemDet).intValue());
+
+        //Argegamos el detalle, a la lista de detalle para eliminar
+        if (updateRequest) {
+            lstDetalleEliminarFC.add(detalleFC);
+        }
+
+        //Eliminamos de la lista temporal el detalle
+        lstDetalleLISTFC.remove(Integer.valueOf(itemDet).intValue());
+
+        //Actualizamos la grilla
+        lstDetalleFC = (MovimientoCajaDetalle[]) lstDetalleLISTFC.toArray(new MovimientoCajaDetalle[0]);
+
+        //Calculamos los totales
+        calcularTotalesFC();
+
+        //Ceramos el item seleccionado
+        itemDet = null;
+
+        //result
+        return null;
     }
 }

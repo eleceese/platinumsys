@@ -9,7 +9,6 @@ import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.component.PageAlert;
-import com.sun.webui.jsf.component.ProgressBar;
 import com.sun.webui.jsf.component.RadioButton;
 import com.sun.webui.jsf.component.StaticText;
 import com.sun.webui.jsf.component.Table;

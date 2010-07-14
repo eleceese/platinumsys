@@ -13,6 +13,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
 import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.MovimientoCajaDetalle;
 import py.com.platinum.entity.ReciboCabecera;
 import py.com.platinum.entity.ReciboDetalle;
 import py.com.platinum.utilsenum.ReciboEstado;
@@ -94,7 +95,7 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
      * @param entity
      * @return ControllerResult
      */
-    public ControllerResult crear(ReciboCabecera cabecera, List<ReciboDetalle> detalle) {
+    public ControllerResult crear(ReciboCabecera cabecera, List<ReciboDetalle> detalle, List<MovimientoCajaDetalle> detalleMov) {
         ControllerResult r = new ControllerResult();
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
@@ -119,6 +120,20 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
 
                     //Persistimos
                     em.persist(det);
+                }
+            }
+
+            //Persistimos el detalle Forma Cobro
+            if (detalleMov != null) {
+                for (int i = 0; i < detalleMov.size(); i++) {
+                    //Obtenemos el detalle a insertar
+                    MovimientoCajaDetalle detMov = detalleMov.get(i);
+
+                    //Asignamos la cabecera al detalle
+                    detMov.setCodRecibo(cabecera);
+
+                    //Persistimos
+                    em.persist(detMov);
                 }
             }
 

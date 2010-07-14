@@ -769,6 +769,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
             this.pageAlert1.setRendered(true);
 
         } else {
+            this.pageAlert1.setRendered(false);
             //Inicializamos las variables
             lstDetalleLIST = new ArrayList();
             lstDetalle = (FacturaCompraDet[]) lstDetalleLIST.toArray(new FacturaCompraDet[0]);
@@ -1026,6 +1027,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
             this.pageAlert1.setRendered(true);
 
         } else {
+            this.pageAlert1.setRendered(false);
             if (!errorValidacion) {
                 //Validamos los campos
                 validarCabecera();

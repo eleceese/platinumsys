@@ -12,9 +12,12 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,12 +28,14 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "MOVIMIENTO_CAJA_DETALLE")
+@SequenceGenerator(name="FC_SEQUENCE", sequenceName="SQ_DETALLE_MOVIMIENTO_CAJA", initialValue=1, allocationSize=1)
 public class MovimientoCajaDetalle implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "COD_MOVIMIENTO_CAJA_DET")
-    private BigDecimal codMovimientoCajaDet;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="FC_SEQUENCE")
+    private Long codMovimientoCajaDet;
     @Column(name = "SERIE_CHEQUE")
     private String serieCheque;
     @Column(name = "NUMERO_CHEQUE")
@@ -57,15 +62,15 @@ public class MovimientoCajaDetalle implements Serializable {
     public MovimientoCajaDetalle() {
     }
 
-    public MovimientoCajaDetalle(BigDecimal codMovimientoCajaDet) {
+    public MovimientoCajaDetalle(Long codMovimientoCajaDet) {
         this.codMovimientoCajaDet = codMovimientoCajaDet;
     }
 
-    public BigDecimal getCodMovimientoCajaDet() {
+    public Long getCodMovimientoCajaDet() {
         return codMovimientoCajaDet;
     }
 
-    public void setCodMovimientoCajaDet(BigDecimal codMovimientoCajaDet) {
+    public void setCodMovimientoCajaDet(Long codMovimientoCajaDet) {
         this.codMovimientoCajaDet = codMovimientoCajaDet;
     }
 

@@ -784,6 +784,7 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
             this.pageAlert1.setRendered(true);
 
         } else {
+            this.pageAlert1.setRendered(false);
             //Inicializamos las variables
             lstDetalleLIST = new ArrayList();
             lstDetalle = (NotaCreditoCliDetalle[]) lstDetalleLIST.toArray(new NotaCreditoCliDetalle[0]);
@@ -1000,6 +1001,7 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
         } else {
+            this.pageAlert1.setRendered(false);
             //Inicializamos
             errorValidacion = false;
 
