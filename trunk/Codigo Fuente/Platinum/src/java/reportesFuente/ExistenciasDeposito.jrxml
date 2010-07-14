@@ -28,6 +28,7 @@
 	<parameter name="deposito" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="tipo" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="marca" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="logo_path" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[select  e.cod_producto, d.nombre as Deposito, t.descripcion as Tipo, 
 	p.descripcion as Producto,m.nombre as Marca,p.costo_actual, e.cantidad_existencia,
 	p.Stock_Minimo
@@ -312,17 +313,6 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 					</textElement>
 				<text><![CDATA[Listado de Existencias en Deposito]]></text>
 				</staticText>
-				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="189"
-						y="1"
-						width="129"
-						height="57"
-						key="image-4"/>
-					<box></box>
-					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["C:\\Users\\FerBoy\\Documents\\Facultad\\8vo Semestre\\Proyecto II\\Diseño Fisico Platinum\\logo_platinum.jpg"]]></imageExpression>
-				</image>
 				<line direction="TopDown">
 					<reportElement
 						x="0"
@@ -491,9 +481,9 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="330"
+						x="355"
 						y="3"
-						width="183"
+						width="158"
 						height="19"
 						key="textField-23"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -560,6 +550,17 @@ order by d.nombre, t.descripcion, p.descripcion]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
+				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="181"
+						y="5"
+						width="161"
+						height="50"
+						key="image-4"/>
+					<box></box>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo_path}]]></imageExpression>
+				</image>
 			</band>
 		</pageHeader>
 		<columnHeader>

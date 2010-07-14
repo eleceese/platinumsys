@@ -14,7 +14,7 @@
 		 rightMargin="30"
 		 topMargin="20"
 		 bottomMargin="20"
-		 whenNoDataType="NoPages"
+		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<property name="ireport.scriptlethandling" value="0" />
@@ -88,7 +88,7 @@ select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion,
 				<line direction="TopDown">
 					<reportElement
 						x="2"
-						y="63"
+						y="70"
 						width="533"
 						height="0"
 						forecolor="#000000"
@@ -291,8 +291,8 @@ select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion,
 				</textField>
 				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="207"
-						y="4"
+						x="215"
+						y="8"
 						width="161"
 						height="60"
 						key="image-1"/>

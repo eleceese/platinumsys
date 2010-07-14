@@ -110,6 +110,8 @@
                 <br/>
                 <webuijsf:hyperlink id="LSTOrdenesDeTrabajoRecursos" style="margin-left: 20px" text="Estado de Recursos OT" url="/faces/LSTOrdenesDeTrabajoRecursos.jsp"/>
                 <br/>
+                <webuijsf:hyperlink id="LSTProduccion" style="margin-left: 20px" text="Cantidades Producidas" url="/faces/LSTProduccion.jsp"/>
+                <br/>
                 <webuijsf:hyperlink id="LSTTareasProduccion" style="margin-left: 20px" text="Listado de Tareas de Produccion" url="/faces/LSTTareasProduccion.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="LSTResumenTareasEmpleado" style="margin-left: 20px" text="Resumen de Tareas" url="/faces/LSTResumenTareasEmpleado.jsp"/>

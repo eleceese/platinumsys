@@ -268,6 +268,7 @@ public class ABMOrdenesTrabajo extends AbstractPageBean {
                         redondeado = Math.ceil(Long.valueOf(tareaFormula.getCantidadTarea().toString()) * multiplicador.doubleValue());
                         tareaAsignada.setCantidad(redondeado.longValue());
                         tareaAsignada.setCantidadReal(Long.valueOf("0"));
+                        tareaAsignada.setCantidadFallida(Long.valueOf("0"));
                         if (tareaFormula.getTareaFin() != null && tareaFormula.getTareaFin().equals("S")) {tareaAsignada.setTareaFin("S");}
                         tareaAsignada.setOrdenTarea(Long.valueOf(tareaFormula.getOrdenTarea().toString()));
                         detalleOrdenTrabajo.getTareaAsignadaCollection().add(tareaAsignada);

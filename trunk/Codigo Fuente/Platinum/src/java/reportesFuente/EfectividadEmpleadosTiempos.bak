@@ -14,7 +14,7 @@
 		 rightMargin="30"
 		 topMargin="20"
 		 bottomMargin="20"
-		 whenNoDataType="NoPages"
+		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<property name="ireport.scriptlethandling" value="0" />
@@ -23,42 +23,44 @@
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
 
+	<parameter name="parametros" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="fechaIni" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="fechaFin" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="logo_path" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[select t.cod_empleado as CodEmpleado,t.nombre_empleado||' '||t.apellido_empleado as Empleado, 
        nvl((select sum(te.tiempo) 
                from v_tareas_empleado te 
-               where te.cod_empleado = t.cod_empleado),0) as TiempoUtil , 
+               where te.cod_empleado = t.cod_empleado $P!{parametros}),0) as TiempoUtil , 
        
        nvl((select sum(te.tiempo) 
                from v_tareas_fallidas_empleado te 
-               where te.cod_empleado= t.cod_empleado),0) as TiempoFalla,
+               where te.cod_empleado= t.cod_empleado $P!{parametros}),0) as TiempoFalla,
                
        nvl((100 * (select sum(te.tiempo) 
                from v_tareas_empleado te 
-               		where te.cod_empleado = t.cod_empleado)/
+               		where te.cod_empleado = t.cod_empleado $P!{parametros})/
 		(nvl((select sum(te.tiempo) from v_tareas_empleado te 
-               		where te.cod_empleado = t.cod_empleado),0)+
+               		where te.cod_empleado = t.cod_empleado $P!{parametros}),0)+
        		nvl((select sum(te.tiempo) from v_tareas_fallidas_empleado te 
-               		where te.cod_empleado = t.cod_empleado),0))),0) as Efectividad,
+               		where te.cod_empleado = t.cod_empleado $P!{parametros}),0))),0) as Efectividad,
            
-           nvl((select sum(te.tiempo) from v_tareas_empleado te where te.cod_empleado = t.cod_empleado),0)
+           nvl((select sum(te.tiempo) from v_tareas_empleado te where te.cod_empleado = t.cod_empleado $P!{parametros}),0)
            +
-       		 nvl((select sum(te.tiempo) from v_tareas_fallidas_empleado te where te.cod_empleado = t.cod_empleado),0)
+       		 nvl((select sum(te.tiempo) from v_tareas_fallidas_empleado te where te.cod_empleado = t.cod_empleado $P!{parametros}),0)
            as suma       
                   
                   
         from empleado t
         order by nvl((100 * (select sum(te.tiempo) 
                from v_tareas_empleado te 
-               		where te.cod_empleado = t.cod_empleado)/
+               		where te.cod_empleado = t.cod_empleado $P!{parametros})/
 		(nvl((select sum(te.tiempo) from v_tareas_empleado te 
-               		where te.cod_empleado = t.cod_empleado),0)+
+               		where te.cod_empleado = t.cod_empleado $P!{parametros}),0)+
        		nvl((select sum(te.tiempo) from v_tareas_fallidas_empleado te 
-               		where te.cod_empleado = t.cod_empleado),0))),0) desc,
+               		where te.cod_empleado = t.cod_empleado $P!{parametros}),0))),0) desc,
 	nvl((select sum(te.tiempo) 
                from v_tareas_fallidas_empleado te 
-               where te.cod_empleado= t.cod_empleado),0) asc
-	
-]]></queryString>
+               where te.cod_empleado= t.cod_empleado $P!{parametros}),0) asc]]></queryString>
 
 	<field name="CODEMPLEADO" class="java.math.BigDecimal"/>
 	<field name="EMPLEADO" class="java.lang.String"/>
@@ -97,7 +99,7 @@
 				<line direction="TopDown">
 					<reportElement
 						x="2"
-						y="60"
+						y="67"
 						width="533"
 						height="0"
 						forecolor="#000000"
@@ -262,6 +264,17 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Fecha Ini: "]]></textFieldExpression>
 				</textField>
+				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="227"
+						y="4"
+						width="161"
+						height="60"
+						key="image-1"/>
+					<box></box>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo_path}]]></imageExpression>
+				</image>
 			</band>
 		</pageHeader>
 		<columnHeader>

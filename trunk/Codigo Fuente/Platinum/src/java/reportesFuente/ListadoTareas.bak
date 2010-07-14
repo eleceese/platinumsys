@@ -656,7 +656,7 @@ order by pd.fecha, ot.cod_orden_trabjo, od.cod_orden_trabajo_det, ta.cod_tarea_a
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{PRODOT}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0;#,##0-" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="657"
 						y="0"

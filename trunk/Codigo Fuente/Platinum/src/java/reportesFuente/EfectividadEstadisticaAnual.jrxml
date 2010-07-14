@@ -55,7 +55,7 @@ from v_meses mes]]></queryString>
 				<staticText>
 					<reportElement
 						x="0"
-						y="71"
+						y="79"
 						width="780"
 						height="17"
 						key="staticText-1"/>
@@ -71,8 +71,8 @@ from v_meses mes]]></queryString>
 				</staticText>
 				<line direction="TopDown">
 					<reportElement
-						x="2"
-						y="60"
+						x="0"
+						y="72"
 						width="779"
 						height="0"
 						forecolor="#000000"
@@ -193,7 +193,7 @@ from v_meses mes]]></queryString>
 				<staticText>
 					<reportElement
 						x="314"
-						y="88"
+						y="96"
 						width="128"
 						height="17"
 						key="staticText-2"/>
@@ -235,8 +235,8 @@ from v_meses mes]]></queryString>
 				</textField>
 				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="280"
-						y="0"
+						x="310"
+						y="7"
 						width="161"
 						height="60"
 						key="image-1"/>
@@ -539,7 +539,7 @@ from v_meses mes]]></queryString>
 							<seriesExpression><![CDATA["Tiempos Util (Min)"]]></seriesExpression>
 							<categoryExpression><![CDATA[$F{DESC_MES}]]></categoryExpression>
 							<valueExpression><![CDATA[$F{TIEMPOUTIL}]]></valueExpression>
-							<labelExpression><![CDATA["Meses" ]]></labelExpression>
+							<labelExpression><![CDATA["Meses"]]></labelExpression>
 				<itemHyperlink >
 				</itemHyperlink>
 						</categorySeries>

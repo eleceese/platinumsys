@@ -29,8 +29,7 @@
  join tarea_asignada ta on tf.cod_tarea_asignada = ta.cod_tarea_asignada
  join tarea t on ta.cod_tarea = t.cod_tarea
  group by e.nombre_empleado||' '||e.apellido_empleado, t.nombre_tarea
-order by e.nombre_empleado||' '||e.apellido_empleado
-]]></queryString>
+order by e.nombre_empleado||' '||e.apellido_empleado]]></queryString>
 
 	<field name="EMPLEADO" class="java.lang.String"/>
 	<field name="TAREA" class="java.lang.String"/>
