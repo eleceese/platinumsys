@@ -6,6 +6,7 @@ package py.com.platinum.controller;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -16,6 +17,7 @@ import py.com.platinum.entity.OrdenTrabajo;
 import py.com.platinum.entity.OrdenTrabajoDetalle;
 import py.com.platinum.entity.ProduccionDiaria;
 import py.com.platinum.entity.TareaAsignada;
+import py.com.platinum.entity.TareaFallida;
 import py.com.platinum.view.MaquinariaCantidadHora;
 import py.com.platinum.view.TareaEmpleadoCantidad;
 
@@ -289,8 +291,7 @@ public class ProduccionDiariaController extends AbstractJpaDao <ProduccionDiaria
 
       
 
-    @Override
-      public ControllerResult delete(ProduccionDiaria produccionDiaria) {
+      public ControllerResult deletePerd(ProduccionDiaria produccionDiaria, boolean fallida) {
         ControllerResult r = new ControllerResult();
         EntityManager em = emf.createEntityManager();
         try {
@@ -301,6 +302,10 @@ public class ProduccionDiariaController extends AbstractJpaDao <ProduccionDiaria
             ProduccionDiaria produccion = produccionDiaria;
             tareaAsignada = tareaAsignadaController.findById(produccionDiaria.getCodTareaAsignada().getCodTareaAsignada());
             tareaAsignada.setCantidadReal(tareaAsignada.getCantidadReal()- produccion.getCantidad());
+            if (fallida) {
+                 tareaAsignada.setCantidadFallida(tareaAsignada.getCantidadFallida() + produccion.getCantidad());
+            }
+
             /// actualizamos la cantidad producida de la tarea
             em.merge(tareaAsignada);
              /// actualizamos la cantidad producida de la tarea
@@ -328,8 +333,28 @@ public class ProduccionDiariaController extends AbstractJpaDao <ProduccionDiaria
                     /// actualizamos la cantidad producida del producto final
                     em.merge(ot);
 
+
+                   
+
                 }
             }
+             /// creamos el registro de tarea fallida
+                    if (fallida) {
+
+                            TareaFallida tareaFallida = new TareaFallida();
+                            TareaAsignadaController tareaAsi = new TareaAsignadaController();
+
+                            tareaFallida.setCodEmpleado(produccionDiaria.getCodEmpleado());
+                            tareaFallida.setCodTareaAsignada(produccionDiaria.getCodTareaAsignada());
+                            tareaFallida.setCantidad(produccionDiaria.getCantidad());
+                            tareaFallida.setFecha(produccionDiaria.getFecha());
+                            tareaFallida.setFechaAlta(new Date());
+                            tareaFallida.setUsuarioAlta(produccionDiaria.getUsuarioModif().toString());
+                            tareaFallida.setRehacer(produccion.getCodProduccionDiaria().longValue());
+                            tareaFallida.setTiempoInvertido(produccion.getTiempoInvertido());
+                            em.persist(tareaFallida);
+
+                    }
             /// eliminamos la produccion diaria
             em.remove(em.merge(produccionDiaria));
             em.getTransaction().commit();

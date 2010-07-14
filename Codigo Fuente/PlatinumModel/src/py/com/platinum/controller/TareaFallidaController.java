@@ -171,7 +171,7 @@ public class TareaFallidaController extends AbstractJpaDao<TareaFallida> {
                 TareaAsignada tas = tareaFallida.getCodTareaAsignada();
                     long tareasFallida = tareaFallida.getCantidad().longValue();
                     tas.setCantidadFallida(tas.getCantidadFallida().longValue() + tareasFallida);
-                    tas.setCantidadReal(tas.getCantidadReal().longValue() - tareasFallida);
+//                    tas.setCantidadReal(tas.getCantidadReal().longValue() - tareasFallida);
 
                     em.merge(tas);
             tx.commit();
@@ -233,7 +233,7 @@ public class TareaFallidaController extends AbstractJpaDao<TareaFallida> {
             TareaAsignada tas = tareFa.getCodTareaAsignada();
                     long tareasFallida = tareFa.getCantidad().longValue();
                     tas.setCantidadFallida(tas.getCantidadFallida().longValue() - tareasFallida);
-                    tas.setCantidadReal(tas.getCantidadReal().longValue() + tareasFallida);
+//                    tas.setCantidadReal(tas.getCantidadReal().longValue() + tareasFallida);
                     em.merge(tas);
 
             em.remove(em.merge(tareFa));
