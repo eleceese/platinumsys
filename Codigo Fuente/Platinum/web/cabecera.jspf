@@ -8,8 +8,8 @@
     <f:subview id="cabecera">
         <!-- Masthead with Attributes -->
         <webuijsf:masthead binding="#{cabecera.masthead}" brandImageDescription="Sistema de Gestión" dateTime="true" id="masthead"
-        productImageDescription="Descripcion" productImageURL="/resources/Images/logo_platinum.jpg" roleInfo="#{SessionBean1.usuarioLogueado.rol}"
-        roleInfoLabel="Rol:" serverInfo="Desarrollo" style="height: 142px" userInfo="#{SessionBean1.usuarioLogueado.usuario}">
+            productImageDescription="Descripcion" productImageURL="/resources/Images/logo_platinum.jpg" roleInfo="#{SessionBean1.usuarioLogueado.rol}"
+            roleInfoLabel="Rol:" serverInfo="Desarrollo" style="height: 142px" userInfo="#{SessionBean1.usuarioLogueado.usuario}">
             <!-- Utility Bar Facets -->
             <f:facet name="consoleLink">
                 <webuijsf:hyperlink id="hyp1" immediate="true" text="Acerca de la Aplicación"/>
@@ -20,7 +20,7 @@
                     text="Versión" toolTip="#{msgs.masthead_versionLink}"/>
             </f:facet>
             <f:facet name="logoutLink">
-                <webuijsf:hyperlink id="hyp3" immediate="true" text="Salir" toolTip="#{msgs.masthead_logoutLink}" url="/faces/login.jsp"/>
+                <webuijsf:hyperlink actionExpression="#{cabecera.hyp3_action}" id="hyp3" immediate="true" text="Salir" toolTip="#{msgs.masthead_logoutLink}" url="/faces/login.jsp"/>
             </f:facet>
             <f:facet name="cambiarPassLink">
                 <webuijsf:hyperlink id="hyp4" immediate="true" text="Cambiar Password" toolTip="#{msgs.masthead_logoutLink}" url="/faces/login.jsp"/>

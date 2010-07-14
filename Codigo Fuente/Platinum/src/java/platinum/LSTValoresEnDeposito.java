@@ -264,6 +264,9 @@ public class LSTValoresEnDeposito extends AbstractPageBean {
                 sparamValue[2]= sD;
                 sparamName[3]="marca";
                 sparamValue[3]= sM;
+                sparamName[4] = "logo_path";
+                sparamValue[4] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
+
                 
                 rpt.getReport(conn, "ValoresDeposito.jrxml", sparamName, sparamValue, theApplicationsServletContext);
 
@@ -308,7 +311,7 @@ public class LSTValoresEnDeposito extends AbstractPageBean {
 
     public void cargarListaTodosProductos() {
         ProductoController productoController = new ProductoController();
-        listaProductos = (Producto[]) productoController.getInsumosMateriasFinalesSemiter(null, null, null).toArray(new Producto[0]);
+        listaProductos = (Producto[]) productoController.getAllFiltered(null,null, null, null).toArray(new Producto[0]);
         listaProductosOp = new Option[listaProductos.length+1];
         Option option;
         for (int i = 0; i < listaProductos.length; i++) {

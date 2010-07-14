@@ -226,8 +226,8 @@ public class LSTTareasProduccion extends AbstractPageBean {
 
 
 
-                String[] sparamName= new String[6];
-                String[] sparamValue= new String[6];
+                String[] sparamName= new String[7];
+                String[] sparamValue= new String[7];
                 Connection conn= GetConnection.getSimpleConnection();
                 ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
 
@@ -312,6 +312,8 @@ public class LSTTareasProduccion extends AbstractPageBean {
                 sparamValue[4]= sF;
                 sparamName[5]="fechaFin";
                 sparamValue[5]= sFF;
+                sparamName[6] = "logo_path";
+                sparamValue[6] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
 
                 rpt.getReport(conn, "ListadoTareas.jrxml", sparamName, sparamValue, theApplicationsServletContext);
 

@@ -245,6 +245,8 @@ public class LSTEquivalenciaProductos extends AbstractPageBean {
                 sparamValue[1]= sP;
                 sparamName[2]="productoGen";
                 sparamValue[2]= sG;
+                sparamName[3] = "logo_path";
+                sparamValue[3] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
 
                 rpt.getReport(conn, "ListadoEquivalencias.jrxml", sparamName, sparamValue, theApplicationsServletContext);
 

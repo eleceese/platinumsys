@@ -277,6 +277,9 @@ public class LSTOrdenesDeTrabajoRecursos extends AbstractPageBean {
                 sparamValue[2]= sC;
                 sparamName[3]="estado";
                 sparamValue[3]= sE;
+                sparamName[3] = "logo_path";
+                sparamValue[3] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
+
 
                 rpt.getReport(conn, "OrdenesDeTrabajoRecursos.jrxml", sparamName, sparamValue, theApplicationsServletContext);
 
