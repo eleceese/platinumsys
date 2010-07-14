@@ -21,7 +21,7 @@
                             <jsp:directive.include file="Menu.jspf"/>
                         </div>
                         <div>
-                            <h:panelGrid columns="2" id="mainContainer" style="height: 125px; left: 288px; top: 235px; position: absolute" width="456">
+                            <h:panelGrid columns="2" id="mainContainer" style="height: 125px; left: 288px; top: 240px; position: absolute" width="456">
                                 <webuijsf:label id="label2" text="Deposito"/>
                                 <webuijsf:dropDown binding="#{LSTFichaProducto.uiDeposito}" id="uiDeposito" items="#{LSTFichaProducto.listaDepositosOp}"/>
                                 <webuijsf:label id="label4" text="Producto"/>
@@ -34,6 +34,9 @@
                                 <webuijsf:button actionExpression="#{LSTFichaProducto.button2_action}" id="button2" text="Cancelar"/>
                             </h:panelGrid>
                         </div>
+                        <h:panelGrid id="gridPanel1" style="height: 96px; left: 360px; top: 432px; position: absolute; width: 96px">
+                            <webuijsf:messageGroup id="messageGroup1" style="width: 191px"/>
+                        </h:panelGrid>
                     </webuijsf:form>
                 </webuijsf:body>
             </webuijsf:html>

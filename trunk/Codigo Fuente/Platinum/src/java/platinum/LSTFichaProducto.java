@@ -223,8 +223,8 @@ public class LSTFichaProducto extends AbstractPageBean {
     public String uiEjecutar_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
-                String[] sparamName= new String[8];
-                String[] sparamValue= new String[8];
+                String[] sparamName= new String[9];
+                String[] sparamValue= new String[9];
                 Connection conn= GetConnection.getSimpleConnection();
                 ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
                 String sProducto="";
@@ -251,7 +251,7 @@ public class LSTFichaProducto extends AbstractPageBean {
                 
                 
                 Producto p;
-
+                boolean error = false;
                 try{
 
                 if (!uiProducto.getSelected().toString().equals("-1")){
@@ -260,6 +260,8 @@ public class LSTFichaProducto extends AbstractPageBean {
                     codProd = new ProductoController().findById(Long.valueOf(this.uiProducto.getSelected().toString())).getCodProducto().toString();
 
                 }else{
+                    error = true;
+                    info("Favor Seleccione el Producto");
                     ps= "Todos";
                  }
 
@@ -269,6 +271,8 @@ public class LSTFichaProducto extends AbstractPageBean {
                         codDep = new DepositoController().findById(Long.valueOf(this.uiDeposito.getSelected().toString())).getCodDeposito().toString();
 
                 }else{
+                        error = true;
+                        info("Favor Seleccione el Deposito");
                         ds= "Todos";
                 }
 
@@ -279,6 +283,8 @@ public class LSTFichaProducto extends AbstractPageBean {
                     sFecha = " and cab.fecha_entrada_salida >= to_date('"+simpleFecha+"','dd/mm/yyyy')";
                     sF = "'"+simpleFecha+"'";
                 }else{
+                    error = true;
+                    info("Favor Seleccione seleccione la fecha inicial");
                     sF="Todos";
                 }
 
@@ -287,54 +293,67 @@ public class LSTFichaProducto extends AbstractPageBean {
                     sFechaF = " and cab.fecha_entrada_salida <= to_date('"+simpleFechaF+"','dd/mm/yyyy')";
                     sFF = "'"+simpleFechaF+"'";
                 }else{
+                    error = true;
+                    info("Favor Seleccione la fecha Final");
                     sFF="Todos";
                 }
 
                 //                if (calFecHasta.getValue()!=null)
 //                sFecHasta = " and TARJETAS.FECHA_ALTA <= convert(datetime,'"+f.getDateFormat((Date)calFecHasta.getValue())+"') ";
 
-                sSql = sProducto+sDeposito+sFecha+sFechaF;
-
-                Long movimientos = null;
-                movimientos = new ProductoController().calcularMovimientos(Long.valueOf(uiProducto.getSelected().toString()), this.uiFechaIni.getSelectedDate(), this.uiFechaFin.getSelectedDate(), Long.valueOf(uiDeposito.getSelected().toString()));
-                    if (movimientos != null) {
-                        cantidadInicial = movimientos.toString();
-                    }
-                
-                RptCreate rpt= new RptCreate();
-
-                sparamName[0]="parametros";
-                sparamValue[0]= sSql;
-                sparamName[1]="producto";
-                sparamValue[1]= ps;
-                sparamName[2]="deposito";
-                sparamValue[2]= ds;
-                sparamName[3]="fechaIni";
-                sparamValue[3]= sF;
-                sparamName[4]="fechaFin";
-                sparamValue[4]= sFF;
-                sparamName[5]="cantidadInicial";
-                sparamValue[5]= cantidadInicial;
-                sparamName[6]="codProd";
-                sparamValue[6]= codProd;
-                sparamName[7]="codDep";
-                sparamValue[7]= codDep;
-                
 
 
-                rpt.getReport(conn, "FichaProductoExistencia.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+                            sSql = sProducto+sDeposito+sFecha+sFechaF;
 
-                }catch(Exception e){
-                error("Error al generar el reporte ");
-                error(" " + e);
-                }finally{
-                try{
-                if(conn != null && !conn.isClosed())
-                conn.close();
-                }catch(SQLException sqle){
-                error("Error al intentar cerrar la conexion"+ sqle);
-                }
-                }
+                            if (!error) {
+                                    Long movimientos = null;
+                                    movimientos = new ProductoController().calcularMovimientos(Long.valueOf(uiProducto.getSelected().toString()), this.uiFechaIni.getSelectedDate(), this.uiFechaFin.getSelectedDate(), Long.valueOf(uiDeposito.getSelected().toString()));
+                                if (movimientos != null) {
+                                    cantidadInicial = movimientos.toString();
+                                }
+
+                            }
+
+                            RptCreate rpt= new RptCreate();
+
+                            sparamName[0]="parametros";
+                            sparamValue[0]= sSql;
+                            sparamName[1]="producto";
+                            sparamValue[1]= ps;
+                            sparamName[2]="deposito";
+                            sparamValue[2]= ds;
+                            sparamName[3]="fechaIni";
+                            sparamValue[3]= sF;
+                            sparamName[4]="fechaFin";
+                            sparamValue[4]= sFF;
+                            sparamName[5]="cantidadInicial";
+                            sparamValue[5]= cantidadInicial;
+                            sparamName[6]="codProd";
+                            sparamValue[6]= codProd;
+                            sparamName[7]="codDep";
+                            sparamValue[7]= codDep;
+                            sparamName[8] = "logo_path";
+                            sparamValue[8] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
+
+
+                            if (!error) {
+                            rpt.getReport(conn, "FichaProductoExistencia.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+                            }
+
+
+
+
+                            }catch(Exception e){
+                            error("Error al generar el reporte ");
+                            error(" " + e);
+                            }finally{
+                            try{
+                            if(conn != null && !conn.isClosed())
+                            conn.close();
+                            }catch(SQLException sqle){
+                            error("Error al intentar cerrar la conexion"+ sqle);
+                            }
+                            }
         return null;
     }
 
@@ -412,7 +431,7 @@ public class LSTFichaProducto extends AbstractPageBean {
         for (int i = 0; i < listaProductos.length; i++) {
             Producto p = listaProductos[i];
             option = new Option();
-            option.setLabel(p.getDescripcion()+" "+p.getCodMarca().getNombre().toString());
+            option.setLabel(p.getCodTipoProducto().toString()+" "+p.getDescripcion()+" "+p.getCodMarca().getNombre().toString());
             option.setValue(p.getCodProducto().toString());
             listaProductosOp[i] = option;
         }

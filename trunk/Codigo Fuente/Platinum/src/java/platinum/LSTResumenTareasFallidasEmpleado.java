@@ -415,7 +415,7 @@ public class LSTResumenTareasFallidasEmpleado extends AbstractPageBean {
                 sparamValue[6] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
 
 
-                rpt.getReport(conn, "ResumenTareasFallidas.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+                rpt.getReport(conn, "ResumenTareasFalllidas.jrxml", sparamName, sparamValue, theApplicationsServletContext);
 
                 }catch(Exception e){
                 error("Error al generar el reporte ");

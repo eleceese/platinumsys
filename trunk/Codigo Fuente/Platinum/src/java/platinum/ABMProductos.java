@@ -19,6 +19,7 @@ import com.sun.webui.jsf.component.TextArea;
 import com.sun.webui.jsf.component.TextField;
 import com.sun.webui.jsf.event.TableSelectPhaseListener;
 import com.sun.webui.jsf.model.DefaultTableDataProvider;
+import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -38,9 +39,11 @@ import platinum.ApplicationBean1;
 import platinum.RequestBean1;
 import platinum.SessionBean1;
 import py.com.platinum.controller.MarcaController;
+import py.com.platinum.controller.PresentacionController;
 import py.com.platinum.controller.ProductoController;
 import py.com.platinum.controller.TipoProductoController;
 import py.com.platinum.controllerUtil.ControllerResult;
+import py.com.platinum.entity.Marca;
 import py.com.platinum.entity.Presentacion;
 import py.com.platinum.entity.Producto;
 import py.com.platinum.entity.TipoProducto;
@@ -193,15 +196,6 @@ public class ABMProductos extends AbstractPageBean {
 
     public void setUiDescripcionFil(TextArea ta) {
         this.uiDescripcionFil = ta;
-    }
-    private SingleSelectOptionsList uiTipoProductoFilDefaultOptions = new SingleSelectOptionsList();
-
-    public SingleSelectOptionsList getUiTipoProductoFilDefaultOptions() {
-        return uiTipoProductoFilDefaultOptions;
-    }
-
-    public void setUiTipoProductoFilDefaultOptions(SingleSelectOptionsList ssol) {
-        this.uiTipoProductoFilDefaultOptions = ssol;
     }
     private DropDown uiTipoProductoFil = new DropDown();
 
@@ -400,8 +394,6 @@ public class ABMProductos extends AbstractPageBean {
     public ABMProductos() {
         tipoProducto1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("t", "Terminado"), new com.sun.webui.jsf.model.Option("s", "SemiTerminado"), new com.sun.webui.jsf.model.Option("i", "Insumo"), new com.sun.webui.jsf.model.Option("g", "ProductoGenerico"),new com.sun.webui.jsf.model.Option("m", "Materias Primas")});
         tipo2DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("t", "Terminado"), new com.sun.webui.jsf.model.Option("s", "SemiTerminado"), new com.sun.webui.jsf.model.Option("m", "MateriaPrima"), new com.sun.webui.jsf.model.Option("g", "ProductoGenerico"), new com.sun.webui.jsf.model.Option("I", "Insumo")});
-        uiTipoProductoFilDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("Terminado", "Terminado"), new com.sun.webui.jsf.model.Option("SemiTerminado", "SemiTerminado"), new com.sun.webui.jsf.model.Option("Insumo", "Insumo"),new com.sun.webui.jsf.model.Option("ProductoGenerico", "ProductoGenerico"), new com.sun.webui.jsf.model.Option("MateriaPrima", "MateriaPrima"), new com.sun.webui.jsf.model.Option("Todos", "Todos")});
-        uiTipoProductoFilDefaultOptions.setSelectedValue("Todos");
         uiMarcaFil.setSelected("99999");
         uiPresentacionFil.setSelected("99999");
 
@@ -442,9 +434,15 @@ public class ABMProductos extends AbstractPageBean {
     // *after* managed components are initialized
     // TODO - add your own initialization code here
 
+        cargarListaTodosMarcas();
+        cargarListaTodosPresentacion();
+        cargarListaTodosTipoProductos();
     getSessionBean1().setTituloPagina("Registro de Productos");
     getSessionBean1().setDetallePagina("Seleccione el Registro");
-
+        this.uiDescripcionFil.setText("");
+        this.uiMarcaFil.setSelected("-1");
+        this.uiPresentacionFil.setSelected("-1");
+        this.uiTipoProductoFil.setSelected("-1");
 
     }
 
@@ -497,6 +495,10 @@ public class ABMProductos extends AbstractPageBean {
         }
 
 
+
+         cargarListaTodosMarcas();
+        cargarListaTodosPresentacion();
+        cargarListaTodosTipoProductos();
         if (addRequest) {
                 getSessionBean1().setTituloPagina("Productos");
                 getSessionBean1().setDetallePagina("Insertar nuevo Registro");
@@ -888,9 +890,9 @@ public class ABMProductos extends AbstractPageBean {
         this.pageAlert1.setRendered(false);
         getSessionBean1().cargarListaTodosProductos();
         this.uiDescripcionFil.setText("");
-        this.uiMarcaFil.setSelected("99999");
-        this.uiPresentacionFil.setSelected("99999");
-        this.uiTipoProductoFil.setSelected("");
+        this.uiMarcaFil.setSelected("-1");
+        this.uiPresentacionFil.setSelected("-1");
+        this.uiTipoProductoFil.setSelected("-1");
 
         return null;
     }
@@ -909,7 +911,7 @@ public class ABMProductos extends AbstractPageBean {
 
         String pMarca=null, pDesc=null, pPres=null, pTipo=null;
 
-        if (this.uiMarcaFil.getSelected()!=null) {
+        if (this.uiMarcaFil.getSelected()!=null && !this.uiMarcaFil.getSelected().toString().equals("-1")) {
             pMarca = this.uiMarcaFil.getSelected().toString();
         }
 
@@ -917,11 +919,11 @@ public class ABMProductos extends AbstractPageBean {
             pDesc = this.uiDescripcionFil.getText().toString();
         }
 
-        if (this.uiPresentacionFil.getSelected()!=null) {
+        if (this.uiPresentacionFil.getSelected()!=null && !this.uiPresentacionFil.getSelected().toString().equals("-1")) {
             pPres = this.uiPresentacionFil.getSelected().toString();
         }
 
-        if (this.uiTipoProductoFil.getSelected()!=null) {
+        if (this.uiTipoProductoFil.getSelected()!=null && !this.uiTipoProductoFil.getSelected().toString().equals("-1")) {
             pTipo = this.uiTipoProductoFil.getSelected().toString();
         }
 
@@ -1206,6 +1208,133 @@ public class ABMProductos extends AbstractPageBean {
         }
 }
 
-   
+   ////// CARGA DE COMBO BOX MARCAS
+//////     import com.sun.webui.jsf.model.Option;
+    Marca[] listaMarcas;
+    Option[] listaMarcasOp;
+
+    public Option[] getListaMarcasOp() {
+        return listaMarcasOp;
+    }
+
+    public void setListaMarcasOp(Option[] listaMarcasOp) {
+        this.listaMarcasOp = listaMarcasOp;
+    }
+
+    public Marca[] getListaMarcas() {
+        return listaMarcas;
+    }
+
+    public void setListaMarcas(Marca[] listaMarcas) {
+        this.listaMarcas = listaMarcas;
+    }
+
+    public void cargarListaTodosMarcas() {
+        MarcaController MarcaController = new MarcaController();
+        listaMarcas = (Marca[]) MarcaController.getAll("nombre").toArray(new Marca[0]);
+        listaMarcasOp = new Option[listaMarcas.length+1];
+        Option option;
+        for (int i = 0; i < listaMarcas.length; i++) {
+            Marca m = listaMarcas[i];
+            option = new Option();
+            option.setLabel(m.getNombre());
+            option.setValue(m.getCodMarca().toString());
+            listaMarcasOp[i] = option;
+        }
+          option = new Option();
+            option.setLabel("Todos");
+            option.setValue("-1");
+            listaMarcasOp[listaMarcas.length] = option;
+
+    }
+////// FIN CARGA DE COMBO BOX MARCAS
+
+
+////// CARGA DE COMBO BOX TipoProductoS
+//////     import com.sun.webui.jsf.model.Option;
+    TipoProducto[] listaTipoProductos;
+    Option[] listaTipoProductosOp;
+
+    public Option[] getListaTipoProductosOp() {
+        return listaTipoProductosOp;
+    }
+
+    public void setListaTipoProductosOp(Option[] listaTipoProductosOp) {
+        this.listaTipoProductosOp = listaTipoProductosOp;
+    }
+
+    public TipoProducto[] getListaTipoProductos() {
+        return listaTipoProductos;
+    }
+
+    public void setListaTipoProductos(TipoProducto[] listaTipoProductos) {
+        this.listaTipoProductos = listaTipoProductos;
+    }
+
+    public void cargarListaTodosTipoProductos() {
+        TipoProductoController TipoProductoController = new TipoProductoController();
+        listaTipoProductos = (TipoProducto[]) TipoProductoController.getAll("descripcion").toArray(new TipoProducto[0]);
+        listaTipoProductosOp = new Option[listaTipoProductos.length+1];
+        Option option;
+        for (int i = 0; i < listaTipoProductos.length; i++) {
+            TipoProducto tp = listaTipoProductos[i];
+            option = new Option();
+            option.setLabel(tp.getDescripcion());
+            option.setValue(tp.getCodTipoProducto().toString());
+            listaTipoProductosOp[i] = option;
+        }
+
+            option = new Option();
+            option.setLabel("Todos");
+            option.setValue("-1");
+            listaTipoProductosOp[listaTipoProductos.length] = option;
+
+    }
+////// FIN CARGA DE COMBO BOX TipoProductoS
+
+////// CARGA DE COMBO BOX TipoProductoS
+//////     import com.sun.webui.jsf.model.Option;
+    Presentacion[] listaPresentacion;
+    Option[] listaPresentacionOp;
+
+    public Option[] getListaPresentacionOp() {
+        return listaTipoProductosOp;
+    }
+
+    public void setListaPresentacionOp(Option[] listaPresentacionOp) {
+        this.listaPresentacionOp = listaPresentacionOp;
+    }
+
+    public Presentacion[] getListaPresentacion() {
+        return listaPresentacion;
+    }
+
+    public void setListaPresentacion(Presentacion[] listaPresentacion) {
+        this.listaPresentacion = listaPresentacion;
+    }
+
+    public void cargarListaTodosPresentacion() {
+        PresentacionController presentacionController = new PresentacionController();
+        listaPresentacion = (Presentacion[]) presentacionController.getAll("descripcion").toArray(new Presentacion[0]);
+        listaPresentacionOp = new Option[listaPresentacion.length+1];
+        Option option;
+        for (int i = 0; i < listaPresentacion.length; i++) {
+            Presentacion tp = listaPresentacion[i];
+            option = new Option();
+            option.setLabel(tp.getDescripcion());
+            option.setValue(tp.getCodPresentacion().toString());
+            listaPresentacionOp[i] = option;
+        }
+
+            option = new Option();
+            option.setLabel("Todos");
+            option.setValue("-1");
+            listaPresentacionOp[listaPresentacion.length] = option;
+
+    }
+////// FIN CARGA DE COMBO BOX TipoProductoS
+
+
+
 }
 

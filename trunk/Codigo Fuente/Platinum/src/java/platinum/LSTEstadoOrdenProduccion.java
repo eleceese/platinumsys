@@ -253,14 +253,14 @@ public class LSTEstadoOrdenProduccion extends AbstractPageBean {
 
 
                 if (!uiProducto.getSelected().toString().equals("-1")){
-                    sProducto = " and ot.cod_Producto = "+uiProducto.getSelected().toString();
+                    sProducto = " and ot.cod_Producto_ot = "+uiProducto.getSelected().toString();
                     sP = new ProductoController().findById(Long.valueOf(this.uiProducto.getSelected().toString())).getDescripcion();
                 }else{
                     sP="Todos";
                 }
 
                 if (!uiCodOt.getSelected().toString().equals("-1")){
-                    sCodOt = " and ot.Cod_Orden_Trabjo_ot = "+uiCodOt.getSelected().toString();
+                    sCodOt = " and ot.Cod_Orden_Trabjo = "+uiCodOt.getSelected().toString();
                     sC = new OrdenTrabajoCabeceraController().findById(Long.valueOf(this.uiCodOt.getSelected().toString())).getDescripcion().toString();
                 }else{
                     sC="Todos";
@@ -288,6 +288,9 @@ public class LSTEstadoOrdenProduccion extends AbstractPageBean {
                 sparamValue[2]= sC;
                 sparamName[3]="estado";
                 sparamValue[3]= sE;
+                sparamName[4] = "logo_path";
+                sparamValue[4] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
+
 
                 rpt.getReport(conn, "OrdenesDeTrabajo.jrxml", sparamName, sparamValue, theApplicationsServletContext);
 
