@@ -644,4 +644,19 @@
         <managed-bean-class>platinum.popup.popupFormaCobro</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>LSTEfectividadPorTarea</managed-bean-name>
+        <managed-bean-class>platinum.LSTEfectividadPorTarea</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>LSTEstadisticaEfectividad</managed-bean-name>
+        <managed-bean-class>platinum.LSTEstadisticaEfectividad</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>popup$popupProductosCompra</managed-bean-name>
+        <managed-bean-class>platinum.popup.popupProductosCompra</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 </faces-config>

@@ -27,32 +27,34 @@
 	<parameter name="fechaFin" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="codEmpleado" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="parametros" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion, 
+	<parameter name="logo_path" isForPrompting="true" class="java.lang.String"/>
+	<queryString><![CDATA[select * from (
+select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion, 
        nvl((select sum(te.cantidad) 
                from v_tareas_empleado te 
-               where te.cod_tarea = t.cod_tarea $P!{parametros}),0) as CantidadTotal , 
+               where te.cod_tarea = t.cod_tarea $P!{parametros}),0) as CantidadCorrecta , 
        
        nvl((select sum(te.cantidad) 
                from v_tareas_fallidas_empleado te 
                where te.cod_tarea = t.cod_tarea $P!{parametros}),0) as CantidadFallida,
                
-       nvl((100 * ((select sum(te.cantidad) 
+       nvl((100 * (select sum(te.cantidad) 
                from v_tareas_empleado te 
-               where te.cod_tarea = t.cod_tarea $P!{parametros})-
-       (select sum(te.cantidad) 
-               from v_tareas_fallidas_empleado te 
-               where te.cod_tarea = t.cod_tarea $P!{parametros}))/(select sum(te.cantidad) 
-               from v_tareas_empleado te 
-               where te.cod_tarea = t.cod_tarea $P!{parametros})),0) as Efectividad
-      
+               		where te.cod_tarea = t.cod_tarea $P!{parametros})
+		/
+		(nvl((select sum(te.cantidad) from v_tareas_empleado te 
+               		where te.cod_tarea = t.cod_tarea $P!{parametros}),0)+
+       		nvl((select sum(te.cantidad) from v_tareas_fallidas_empleado te 
+               		where te.cod_tarea = t.cod_tarea $P!{parametros}),0))),0) as Efectividad
+ 
+     
        from tarea t
 
-       
-       order by t.nombre_tarea]]></queryString>
+      ) order by 5 desc]]></queryString>
 
 	<field name="CODTAREA" class="java.math.BigDecimal"/>
 	<field name="DESCRIPCION" class="java.lang.String"/>
-	<field name="CANTIDADTOTAL" class="java.math.BigDecimal"/>
+	<field name="CANTIDADCORRECTA" class="java.math.BigDecimal"/>
 	<field name="CANTIDADFALLIDA" class="java.math.BigDecimal"/>
 	<field name="EFECTIVIDAD" class="java.math.BigDecimal"/>
 
@@ -65,7 +67,7 @@
 			</band>
 		</title>
 		<pageHeader>
-			<band height="127"  isSplitAllowed="true" >
+			<band height="135"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						x="0"
@@ -83,17 +85,6 @@
 					</textElement>
 				<text><![CDATA[Analisis de Efectividad por Tareas]]></text>
 				</staticText>
-				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="201"
-						y="5"
-						width="129"
-						height="57"
-						key="image-1"/>
-					<box></box>
-					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["C:\\Users\\FerBoy\\Documents\\Facultad\\8vo Semestre\\Proyecto II\\Diseño Fisico Platinum\\logo_platinum.jpg"]]></imageExpression>
-				</image>
 				<line direction="TopDown">
 					<reportElement
 						x="2"
@@ -301,7 +292,7 @@
 			</band>
 		</pageHeader>
 		<columnHeader>
-			<band height="18"  isSplitAllowed="true" >
+			<band height="17"  isSplitAllowed="true" >
 				<rectangle>
 					<reportElement
 						mode="Opaque"
@@ -352,9 +343,9 @@
 				</staticText>
 				<staticText>
 					<reportElement
-						x="265"
+						x="243"
 						y="0"
-						width="82"
+						width="104"
 						height="17"
 						forecolor="#FFFFFF"
 						key="staticText-4"/>
@@ -366,7 +357,7 @@
 					<textElement textAlignment="Right">
 						<font size="12"/>
 					</textElement>
-				<text><![CDATA[Cantidad Total]]></text>
+				<text><![CDATA[Cantidad Correcta]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -424,7 +415,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="0"
-						y="1"
+						y="-1"
 						width="59"
 						height="13"
 						key="textField"/>
@@ -441,7 +432,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="80"
-						y="1"
+						y="-1"
 						width="177"
 						height="13"
 						key="textField"/>
@@ -458,7 +449,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="266"
-						y="1"
+						y="-1"
 						width="82"
 						height="13"
 						key="textField"/>
@@ -470,12 +461,12 @@
 					<textElement textAlignment="Right">
 						<font fontName="Times-Roman" size="10"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CANTIDADTOTAL}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CANTIDADCORRECTA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="358"
-						y="1"
+						y="-1"
 						width="88"
 						height="13"
 						key="textField"/>
@@ -492,7 +483,7 @@
 				<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="477"
-						y="1"
+						y="-1"
 						width="58"
 						height="13"
 						forecolor="#FF0033"

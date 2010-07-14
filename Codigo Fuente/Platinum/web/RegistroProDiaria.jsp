@@ -23,33 +23,37 @@
                     <script>
                         var delSelect;
                         function confirmar() {
-                            if (delSelect!=null){
                                 if(!confirm("¿Está seguro de eliminar el Registro?")) {
                                     return false;
                                 }else{
                                     return true;
                                 }
-                            }
+                            
+                        }
+                        function confirmarRechazo() {
+                                if(!confirm("¿Está seguro de Rechazar el Registro?")) {
+                                    return false;
+                                }else{
+                                    return true;
+                                }
                         }
                     </script>
                     <script>
                         var insertSelect;
                         function confirmarInsertar() {
-                            if (delSelect!=null){
-                                if(!confirm("¿Está seguro insertar el Registro?")) {
+                            if(!confirm("¿Está seguro insertar el Registro?")) {
                                     return false;
                                 }else{
                                     return true;
                                 }
                             }
-                        }
                     </script>
                     <!-- \ FIN SCRIPT PARA REFRESCAR EL RADIO BUTTON-->
                     <!-- \ SCRIPT PARA MANEJAR EL DETALLE-->
                     <script>
-                        function ABMPresentacion() {
+                        function initAllRows() {
                             var table = document.getElementById("form1:tableDetalleFormula");
-                            table.ABMPresentacion();}
+                            table.initAllRows();}
                     </script>
                     <!-- \ SCRIPT PARA MANEJAR EL DETALLE-->
                     <webuijsf:script id="scriptPopUp" type="text/javascript" url="/js/utilJS.js"/>
@@ -145,7 +149,7 @@
                                                 <webuijsf:label id="tiempoInv" text="Tiempo(min)"/>
                                                 <webuijsf:textField binding="#{RegistroProDiaria.uiDetTiempo}" columns="5" id="uiDetTiempo"/>
                                                 <webuijsf:button actionExpression="#{RegistroProDiaria.uiButtonAgregarTarea_action}" id="uiButtonAgregarTarea"
-                                                    onClick="javascript:return confirmar()" text="Agregar"/>
+                                                    onClick="javascript:return confirmarInsertar()" text="Agregar"/>
                                             </h:panelGrid>
                                         </webuijsf:panelLayout>
                                     </webuijsf:tab>
@@ -172,9 +176,15 @@
                                             </webuijsf:tableColumn>
                                             <webuijsf:tableColumn id="tableColumn8" width="10">
                                                 <webuijsf:imageHyperlink actionExpression="#{RegistroProDiaria.imageHyperlink2_action}" id="imageHyperlink2"
-                                                    imageURL="/resources/Images/delete.gif" text="">
+                                                    imageURL="/resources/Images/delete.gif" text="" onClick="javascript:return confirmar()">
                                                     <f:setPropertyActionListener target="#{RegistroProDiaria.itemDet}" value="#{currentRow.tableRow.rowId}"/>
                                                 </webuijsf:imageHyperlink>
+                                            </webuijsf:tableColumn>
+                                            <webuijsf:tableColumn align="center" binding="#{RegistroProDiaria.tableColumn7}" id="tableColumn7" width="83">
+                                                <webuijsf:hyperlink actionExpression="#{RegistroProDiaria.uiLinkRechazo_action}"
+                                                    binding="#{RegistroProDiaria.uiLinkRechazo}" id="uiLinkRechazo" text="Rechazar" onClick="javascript:return confirmarRechazo()">
+                                                    <f:setPropertyActionListener target="#{RegistroProDiaria.itemDet}" value="#{currentRow.tableRow.rowId}"/>
+                                                </webuijsf:hyperlink>
                                             </webuijsf:tableColumn>
                                         </webuijsf:tableRowGroup>
                                     </webuijsf:table>

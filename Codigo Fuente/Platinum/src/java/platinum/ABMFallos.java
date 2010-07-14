@@ -334,6 +334,15 @@ public class ABMFallos extends AbstractPageBean {
     public void setTableColumn11(TableColumn tc) {
         this.tableColumn11 = tc;
     }
+    private TextField uiTiempo = new TextField();
+
+    public TextField getUiTiempo() {
+        return uiTiempo;
+    }
+
+    public void setUiTiempo(TextField tf) {
+        this.uiTiempo = tf;
+    }
 
     // </editor-fold>
 
@@ -543,6 +552,8 @@ public class ABMFallos extends AbstractPageBean {
                             tareaFallida.setCodEmpleado(empleadoController.findById(Long.valueOf(this.uiResponsableCod.getText().toString())));
                             tareaFallida.setCodTareaAsignada(tareaAsignadaController.findById(Long.valueOf(this.uiTareaAsignada.getText().toString())));
                             tareaFallida.setCantidad(Long.valueOf(this.uiCantidad.getText().toString()));
+                            tareaFallida.setTiempoInvertido(Long.valueOf(this.uiTiempo.getText().toString()));
+                            tareaFallida.setRehacer(Long.valueOf("0"));
                             tareaFallida.setFecha(this.uiFecha.getSelectedDate());
                             tareaFallida.setFechaAlta(this.uiFecha.getSelectedDate());
 
@@ -804,8 +815,13 @@ public class ABMFallos extends AbstractPageBean {
                 detallesPerdida = (Perdida[]) detallePerdidaList.toArray(new Perdida[0]);
 
                 ControllerResult controllerResult = new ControllerResult();
-                controllerResult = tareaFallidaController.deleteTareaPerdida(tareaFallida,detallesPerdida);
 
+             if (tareaFallida.getRehacer().longValue() ==0) {
+                 controllerResult = tareaFallidaController.deleteTareaPerdida(tareaFallida,detallesPerdida);
+             } else{
+                controllerResult.setCodRetorno(-1);
+                controllerResult.setMsg("No se puede Anular una tarea fallida generada por un Rechazo de Tarea Efectuada");
+             }
 
 
             if (controllerResult.getCodRetorno() ==-1) {
@@ -864,7 +880,7 @@ public class ABMFallos extends AbstractPageBean {
             this.uiResponsableNombre.setText("");
             this.uiTareaAsignada.setText("");
             this.uiCantidad.setText("");
-            this.uiRehacer.setText("");
+//            this.uiRehacer.setText("");
             this.uiFecha.setSelectedDate(new Date());
 
     }
@@ -939,8 +955,8 @@ private void validarCampos(){
                 }else{
                     if (this.uiCantidad.getText() != null && StringUtils.esNumero(this.uiCantidad.getText().toString())) {
                         if (Long.valueOf(p.getCantidadReal().longValue()) < Long.valueOf(this.uiCantidad.getText().toString())) {
-                                this.errorValidacion= true;
-                                info("La cantidad fallida no puede superar la cantidad efectuada");
+                               // this.errorValidacion= true;
+                               // info("La cantidad fallida no puede superar la cantidad efectuada");
                         }
                     }
 
@@ -956,22 +972,19 @@ private void validarCampos(){
        }
 
 
-        if (this.uiRehacer.getText() == null) {
-            info("Cantidad a Rehacer es un campo obligatorio, ingrese un valor");
+        if (this.uiTiempo.getText() == null) {
+            info("Tiempo es un campo obligatorio, ingrese un valor");
             errorValidacion = true;
-        } else if (!StringUtils.esNumero(this.uiRehacer.getText().toString())) {
-            info("Valor incorrecto para Cantidad a rehacer, debe ser un numero");
+        } else if (!StringUtils.esNumero(this.uiTiempo.getText().toString())) {
+            info("Valor incorrecto para tiempo, debe ser numerico");
             errorValidacion = true;
+        } else if(Long.valueOf(this.uiTiempo.getText().toString()).longValue() < 1){
+            info("Valor incorrecto para tiempo, debe ser mayor a 0");
+            errorValidacion = true;
+
         }
-        
-        if (this.uiRehacer.getText() != null && !StringUtils.esNumero(this.uiRehacer.getText().toString())
-            &&(this.uiCantidad.getText() == null && StringUtils.esNumero(this.uiCantidad.getText().toString())) ) {
-                if (Long.valueOf(uiRehacer.getText().toString()) > Long.valueOf(uiCantidad.getText().toString())) {
-                info("La cantidad a rehacer debe ser menor o igual a la cantidad producida");
-                errorValidacion = true;
-            }
-                
-        }
+
+       
 
 
 

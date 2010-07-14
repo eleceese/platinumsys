@@ -1120,6 +1120,7 @@ public class ABMProductos extends AbstractPageBean {
 
     public void uiLstTipoProducto_validate(FacesContext context, UIComponent component, Object value) {
             TipoProducto tipoProducto = new TipoProducto();
+
             tipoProducto = new TipoProductoController().findById(Long.valueOf(value.toString()));
             if (tipoProducto.getDescripcion() != null 
                     && (tipoProducto.getDescripcion().toString().equals("ProductoGenerico")

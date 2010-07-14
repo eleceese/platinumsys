@@ -9,6 +9,7 @@ import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
 import com.sun.webui.jsf.component.Calendar;
 import com.sun.webui.jsf.component.DropDown;
+import com.sun.webui.jsf.component.Hyperlink;
 import com.sun.webui.jsf.component.PageAlert;
 import com.sun.webui.jsf.component.RadioButton;
 import com.sun.webui.jsf.component.StaticText;
@@ -321,6 +322,24 @@ public class RegistroProDiaria extends AbstractPageBean {
 
     public void setUiNroOTFil(TextField tf) {
         this.uiNroOTFil = tf;
+    }
+    private Hyperlink uiLinkRechazo = new Hyperlink();
+
+    public Hyperlink getUiLinkRechazo() {
+        return uiLinkRechazo;
+    }
+
+    public void setUiLinkRechazo(Hyperlink h) {
+        this.uiLinkRechazo = h;
+    }
+    private TableColumn tableColumn7 = new TableColumn();
+
+    public TableColumn getTableColumn7() {
+        return tableColumn7;
+    }
+
+    public void setTableColumn7(TableColumn tc) {
+        this.tableColumn7 = tc;
     }
 
     // </editor-fold>
@@ -989,7 +1008,8 @@ private boolean validarCampos(){
          ControllerResult controllerResult = new ControllerResult();
          produccionesDiarias.remove(Integer.valueOf(itemDet).intValue());
          produccionesDiariasArray = (ProduccionDiaria[]) produccionesDiarias.toArray(new ProduccionDiaria[0]);
-         controllerResult = pController.delete(proDiaria);
+         
+         controllerResult = pController.deletePerd(proDiaria,false);
 
                          if (controllerResult.getCodRetorno() ==-1) {
                                         this.pageAlert1.setType("error");
@@ -1009,6 +1029,39 @@ private boolean validarCampos(){
                             this.pageAlert1.setDetail("");
                             this.pageAlert1.setRendered(true);
 
+
+
+        return null;
+    }
+
+    public String uiLinkRechazo_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+         ProduccionDiaria proDiaria  = produccionesDiarias.get(Integer.valueOf(itemDet).intValue());
+         proDiaria.setUsuarioModif(getSessionBean1().getUsuario().toString());
+         ProduccionDiariaController pController = new ProduccionDiariaController();
+         ControllerResult controllerResult = new ControllerResult();
+         produccionesDiarias.remove(Integer.valueOf(itemDet).intValue());
+         produccionesDiariasArray = (ProduccionDiaria[]) produccionesDiarias.toArray(new ProduccionDiaria[0]);
+         controllerResult = pController.deletePerd(proDiaria,true);
+
+                         if (controllerResult.getCodRetorno() ==-1) {
+                                        this.pageAlert1.setType("error");
+                                    } else {
+                                        this.pageAlert1.setType("information");
+                                        limpiarDetalle();
+                                        // Actualizar las Tareas
+                                            getSessionBean1().setIdOTProdDiaria(id);
+                                            TareaAsignadaController taController = new TareaAsignadaController();
+                                            tareasAsignadas = taController.getAllFilteredOT(id, null, null);
+                                            tareasAsignadasArray = (TareaAsignada[]) tareasAsignadas.toArray(new TareaAsignada[0]);
+                                            getSessionBean1().setTareasAsignadasArray(tareasAsignadasArray);
+                         }
+
+                            this.pageAlert1.setTitle(controllerResult.getMsg());
+                            this.pageAlert1.setSummary("");
+                            this.pageAlert1.setDetail("");
+                            this.pageAlert1.setRendered(true);
 
 
         return null;

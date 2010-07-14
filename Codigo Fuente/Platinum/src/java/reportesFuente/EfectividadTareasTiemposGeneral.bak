@@ -23,58 +23,49 @@
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
 
-	<parameter name="fechaIni" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="fechaFin" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="codEmpleado" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="parametros" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="logo_path" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[select * from (
-select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion, 
-       nvl((select sum(te.cantidad) 
-               from v_tareas_empleado te 
-               where te.cod_tarea = t.cod_tarea $P!{parametros}),0) as CantidadCorrecta , 
+	<parameter name="fechaIni" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="fechaFin" isForPrompting="true" class="java.lang.String"/>
+	<queryString><![CDATA[select nvl((select sum(te.tiempo) 
+               from v_tareas_empleado te),0) as TiempoUtil, 
        
-       nvl((select sum(te.cantidad) 
-               from v_tareas_fallidas_empleado te 
-               where te.cod_tarea = t.cod_tarea $P!{parametros}),0) as CantidadFallida,
+       nvl((select sum(te.tiempo) 
+               from v_tareas_fallidas_empleado te),0) as TiempoFalla,
                
-       nvl((100 * (select sum(te.cantidad) 
-               from v_tareas_empleado te 
-               		where te.cod_tarea = t.cod_tarea $P!{parametros})
-		/
-		(nvl((select sum(te.cantidad) from v_tareas_empleado te 
-               		where te.cod_tarea = t.cod_tarea $P!{parametros}),0)+
-       		nvl((select sum(te.cantidad) from v_tareas_fallidas_empleado te 
-               		where te.cod_tarea = t.cod_tarea $P!{parametros}),0))),0) as Efectividad
- 
-     
-       from tarea t
+       nvl((100 * (select sum(te.tiempo) 
+               from v_tareas_empleado te)/
+		(nvl((select sum(te.tiempo) from v_tareas_empleado te),0)+
+       		nvl((select sum(te.tiempo) from v_tareas_fallidas_empleado te),0))),0) as Efectividad,
+           
+           nvl((select sum(te.tiempo) from v_tareas_empleado te),0)
+           +
+       		 nvl((select sum(te.tiempo) from v_tareas_fallidas_empleado te),0)
+           as suma       
+           from dual]]></queryString>
 
-      ) order by 5 desc]]></queryString>
-
-	<field name="CODTAREA" class="java.math.BigDecimal"/>
-	<field name="DESCRIPCION" class="java.lang.String"/>
-	<field name="CANTIDADCORRECTA" class="java.math.BigDecimal"/>
-	<field name="CANTIDADFALLIDA" class="java.math.BigDecimal"/>
+	<field name="TIEMPOUTIL" class="java.math.BigDecimal"/>
+	<field name="TIEMPOFALLA" class="java.math.BigDecimal"/>
 	<field name="EFECTIVIDAD" class="java.math.BigDecimal"/>
+	<field name="SUMA" class="java.math.BigDecimal"/>
 
 		<background>
 			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</background>
 		<title>
-			<band height="0"  isSplitAllowed="true" >
+			<band height="50"  isSplitAllowed="true" >
 			</band>
 		</title>
 		<pageHeader>
-			<band height="135"  isSplitAllowed="true" >
+			<band height="91"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						x="0"
-						y="74"
+						y="72"
 						width="534"
 						height="17"
-						key="staticText-1"/>
+						key="staticText-6"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
@@ -83,23 +74,12 @@ select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion,
 					<textElement textAlignment="Center">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
 					</textElement>
-				<text><![CDATA[Analisis de Efectividad por Tareas]]></text>
+				<text><![CDATA[Analisis de Tiempos en Produccion General]]></text>
 				</staticText>
 				<line direction="TopDown">
 					<reportElement
-						x="2"
-						y="63"
-						width="533"
-						height="0"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="line-1"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
 						x="3"
-						y="4"
+						y="2"
 						width="533"
 						height="0"
 						forecolor="#000000"
@@ -107,50 +87,14 @@ select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion,
 						key="line-2"/>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="4"
-						y="98"
-						width="55"
-						height="13"
-						forecolor="#000066"
-						key="textField-2"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Left">
-						<font fontName="Helvetica" size="10"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["Empleado: "]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="65"
-						y="98"
-						width="103"
-						height="13"
-						forecolor="#000066"
-						key="textField-4"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Left">
-						<font fontName="Helvetica" size="10"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{codEmpleado}]]></textFieldExpression>
-				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="3"
-						y="8"
+						y="6"
 						width="183"
 						height="17"
 						forecolor="#000000"
-						key="textField-5"/>
+						key="textField-2"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
@@ -163,12 +107,12 @@ select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion,
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="431"
-						y="9"
+						x="430"
+						y="7"
 						width="75"
 						height="19"
 						forecolor="#000000"
-						key="textField-6"/>
+						key="textField-3"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
@@ -182,13 +126,13 @@ select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion,
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="512"
-						y="9"
+						x="511"
+						y="7"
 						width="23"
 						height="19"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
-						key="textField-7"/>
+						key="textField-4"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
@@ -202,11 +146,11 @@ select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion,
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="3"
-						y="27"
+						y="25"
 						width="161"
 						height="13"
 						forecolor="#000099"
-						key="textField-8"/>
+						key="textField-5"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
@@ -217,10 +161,163 @@ select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion,
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Usuario: gonzalef"]]></textFieldExpression>
 				</textField>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="61"
+						width="533"
+						height="0"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="line-3"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="72"  isSplitAllowed="true" >
+				<rectangle>
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="45"
+						width="535"
+						height="22"
+						forecolor="#000000"
+						backcolor="#808080"
+						key="rectangle-1"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<staticText>
+					<reportElement
+						x="0"
+						y="45"
+						width="116"
+						height="22"
+						forecolor="#FFFFFF"
+						key="staticText-1"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Tiempo Util(Min)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="116"
+						y="45"
+						width="122"
+						height="22"
+						forecolor="#FFFFFF"
+						key="staticText-3"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Tiempo Falla(Min)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="245"
+						y="45"
+						width="134"
+						height="22"
+						forecolor="#FFFFFF"
+						key="staticText-4"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Total]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="401"
+						y="46"
+						width="122"
+						height="22"
+						forecolor="#FFFFFF"
+						key="staticText-5"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
+					</textElement>
+				<text><![CDATA[% Util]]></text>
+				</staticText>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="4"
-						y="114"
+						x="153"
+						y="24"
+						width="105"
+						height="13"
+						forecolor="#000066"
+						key="textField-6"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left">
+						<font fontName="Helvetica" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaIni}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="295"
+						y="24"
+						width="58"
+						height="13"
+						forecolor="#000066"
+						key="textField-7"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left">
+						<font fontName="Helvetica" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Fecha Fin: "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="353"
+						y="24"
+						width="88"
+						height="13"
+						forecolor="#000066"
+						key="textField-8"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left">
+						<font fontName="Helvetica" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaFin}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="92"
+						y="24"
 						width="58"
 						height="13"
 						forecolor="#000066"
@@ -235,185 +332,14 @@ select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion,
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Fecha Ini: "]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="65"
-						y="114"
-						width="105"
-						height="13"
-						forecolor="#000066"
-						key="textField-10"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Left">
-						<font fontName="Helvetica" size="10"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaIni}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="207"
-						y="114"
-						width="58"
-						height="13"
-						forecolor="#000066"
-						key="textField-11"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Left">
-						<font fontName="Helvetica" size="10"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["Fecha Fin: "]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="265"
-						y="114"
-						width="88"
-						height="13"
-						forecolor="#000066"
-						key="textField-12"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Left">
-						<font fontName="Helvetica" size="10"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaFin}]]></textFieldExpression>
-				</textField>
-				<image  scaleImage="Clip" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="207"
-						y="4"
-						width="161"
-						height="60"
-						key="image-1"/>
-					<box></box>
-					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA[$P{logo_path}]]></imageExpression>
-				</image>
-			</band>
-		</pageHeader>
-		<columnHeader>
-			<band height="17"  isSplitAllowed="true" >
-				<rectangle>
-					<reportElement
-						mode="Opaque"
-						x="0"
-						y="0"
-						width="535"
-						height="15"
-						forecolor="#000000"
-						backcolor="#808080"
-						key="rectangle-1"/>
-					<graphicElement stretchType="NoStretch"/>
-				</rectangle>
-				<staticText>
-					<reportElement
-						x="0"
-						y="0"
-						width="86"
-						height="17"
-						forecolor="#FFFFFF"
-						key="staticText-2"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font size="12"/>
-					</textElement>
-				<text><![CDATA[CodTarea]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="79"
-						y="0"
-						width="184"
-						height="17"
-						forecolor="#FFFFFF"
-						key="staticText-3"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font size="12"/>
-					</textElement>
-				<text><![CDATA[Tarea]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="243"
-						y="0"
-						width="104"
-						height="17"
-						forecolor="#FFFFFF"
-						key="staticText-4"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right">
-						<font size="12"/>
-					</textElement>
-				<text><![CDATA[Cantidad Correcta]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="358"
-						y="0"
-						width="88"
-						height="17"
-						forecolor="#FFFFFF"
-						key="staticText-5"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right">
-						<font size="12"/>
-					</textElement>
-				<text><![CDATA[Cantidad Fallas]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="453"
-						y="0"
-						width="81"
-						height="17"
-						forecolor="#FFFFFF"
-						key="staticText-6"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right">
-						<font size="12"/>
-					</textElement>
-				<text><![CDATA[% Efectividad]]></text>
-				</staticText>
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="15"  isSplitAllowed="true" >
+			<band height="86"  isSplitAllowed="true" >
 				<line direction="TopDown">
 					<reportElement
 						x="0"
-						y="13"
+						y="17"
 						width="535"
 						height="0"
 						forecolor="#808080"
@@ -423,46 +349,12 @@ select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion,
 					<pen lineWidth="0.25" lineStyle="Solid"/>
 </graphicElement>
 				</line>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="0"
-						y="-1"
-						width="59"
-						height="13"
-						key="textField"/>
-					<box leftPadding="2" rightPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font fontName="Times-Roman" size="10"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CODTAREA}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="80"
-						y="-1"
-						width="177"
-						height="13"
-						key="textField"/>
-					<box leftPadding="2" rightPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font fontName="Times-Roman" size="10"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="266"
-						y="-1"
-						width="82"
-						height="13"
+						y="1"
+						width="98"
+						height="21"
 						key="textField"/>
 					<box leftPadding="2" rightPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -470,16 +362,16 @@ select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion,
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="Times-Roman" size="10"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CANTIDADCORRECTA}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TIEMPOUTIL}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="358"
-						y="-1"
-						width="88"
-						height="13"
+						x="98"
+						y="1"
+						width="140"
+						height="21"
 						key="textField"/>
 					<box leftPadding="2" rightPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -487,17 +379,16 @@ select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion,
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="Times-Roman" size="10"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CANTIDADFALLIDA}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TIEMPOFALLA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="477"
-						y="-1"
-						width="58"
-						height="13"
-						forecolor="#FF0033"
+						x="379"
+						y="1"
+						width="148"
+						height="21"
 						key="textField"/>
 					<box leftPadding="2" rightPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -505,9 +396,26 @@ select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion,
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="Times-Roman" size="10"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{EFECTIVIDAD}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="245"
+						y="1"
+						width="126"
+						height="21"
+						key="textField"/>
+					<box leftPadding="2" rightPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right">
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SUMA}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
@@ -517,7 +425,7 @@ select t.cod_tarea as CodTarea,t.nombre_tarea as Descripcion,
 		</columnFooter>
 		<pageFooter>
 			<band height="27"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="325"
 						y="4"

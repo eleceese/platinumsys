@@ -22,9 +22,9 @@
                     <!-- \SCRIPT PARA CONFIRMAR ELIMINACION-->
                     <script>
                         var delSelect;
-                        function ABMMaquinaria() {
+                        function confirmar() {
                             if (delSelect!=null){
-                                if(!confirm("¿Está seguro de eliminar el Registro seleccionado?")) {
+                                if(!confirm("¿Está seguro de Anular el Registro seleccionado?")) {
                                     return false;
                                 }else{
                                     return true;
@@ -101,7 +101,8 @@
                                     <h:panelGrid columns="3" id="gridPanel1">
                                         <webuijsf:button actionExpression="#{ABMFallos.uiBtnNuevo_action}" id="uiBtnNuevo" text="Nuevo"/>
                                         <webuijsf:button actionExpression="#{ABMFallos.uiBtnEditar_action}" id="uiBtnEditar" rendered="false" text="Editar"/>
-                                        <webuijsf:button actionExpression="#{ABMFallos.uiBtnEliminar_action}" id="uiBtnEliminar" text="Anular"/>
+                                        <webuijsf:button actionExpression="#{ABMFallos.uiBtnEliminar_action}" id="uiBtnEliminar"
+                                            onClick="javascript:return confirmar()" text="Anular"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
                                 <h:panelGrid binding="#{ABMFallos.gridPanelAddUpdate}" id="gridPanelAddUpdate">
@@ -129,8 +130,8 @@
                                         </h:panelGrid>
                                         <webuijsf:label id="label1" text="Cantidad"/>
                                         <webuijsf:textField binding="#{ABMFallos.uiCantidad}" columns="13" id="uiCantidad"/>
-                                        <webuijsf:label id="label2" text="Rehacer"/>
-                                        <webuijsf:textField binding="#{ABMFallos.uiRehacer}" columns="13" id="uiRehacer"/>
+                                        <webuijsf:label id="label2" text="Tiempo"/>
+                                        <webuijsf:textField binding="#{ABMFallos.uiTiempo}" columns="13" id="uiTiempo"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2" id="gridPanel6"
                                         style="direction: rtl; height: 48px; line-height: normal; margin-left: 460px; margin-top: 10px; text-align: right; vertical-align: middle" width="182">
