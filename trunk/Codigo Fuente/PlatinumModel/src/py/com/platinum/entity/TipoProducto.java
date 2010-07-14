@@ -35,12 +35,12 @@ public class TipoProducto implements Serializable {
     @Basic(optional = false)
     @Column(name = "DESCRIPCION")
     private String descripcion;
+    @Column(name = "COMPRA_VENTA")
+    private String compraVenta;
     @Basic(optional = false)
     @Column(name = "TAREAS")
     private String tareas;
-    @Column(name = "COMPRA_VENTA")
-    private String compraVenta;
-   
+ 
     public TipoProducto() {
     }
 
@@ -78,13 +78,7 @@ public class TipoProducto implements Serializable {
         this.tareas = tareas;
     }
 
-    public String getCompraVenta() {
-        return compraVenta;
-    }
 
-    public void setCompraVenta(String compraVenta) {
-        this.compraVenta = compraVenta;
-    }
 
     @Override
     public int hashCode() {
@@ -105,6 +99,15 @@ public class TipoProducto implements Serializable {
         }
         return true;
     }
+
+    public String getCompraVenta() {
+        return compraVenta;
+    }
+
+    public void setCompraVenta(String compraVenta) {
+        this.compraVenta = compraVenta;
+    }
+    
 
     @Override
     public String toString() {

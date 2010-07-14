@@ -59,6 +59,10 @@ public class TareaFallida implements Serializable {
     @JoinColumn(name = "COD_TAREA_ASIGNADA", referencedColumnName = "COD_TAREA_ASIGNADA")
     @ManyToOne(optional = false)
     private TareaAsignada codTareaAsignada;
+    @Column(name = "TIEMPO_INVERTIDO")
+    private long tiempoInvertido;
+
+
 
     public TareaFallida() {
     }
@@ -175,6 +179,14 @@ public class TareaFallida implements Serializable {
     @Override
     public String toString() {
         return codTareaFallida.toString();
+    }
+
+    public long getTiempoInvertido() {
+        return tiempoInvertido;
+    }
+
+    public void setTiempoInvertido(long tiempoInvertido) {
+        this.tiempoInvertido = tiempoInvertido;
     }
 
 }
