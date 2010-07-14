@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import py.com.platinum.controller.TipoComprobanteController;
+import py.com.platinum.listener.ReciboDetalleListener;
 
 /**
  *
@@ -28,6 +30,7 @@ import py.com.platinum.controller.TipoComprobanteController;
 @Entity
 @Table(name = "RECIBO_DETALLE")
 @SequenceGenerator(name="RECIBO_DET_SEQUENCE", sequenceName="SQ_DETALLE_RECIBO", initialValue=1, allocationSize=1)
+@EntityListeners(ReciboDetalleListener.class)
 public class ReciboDetalle implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

@@ -1852,21 +1852,6 @@ public class ABMReciboDinero extends AbstractPageBean {
 
                         info("Serie y Numero de cheque ingresao, ya existen favor verificar");
                         errorValidacion = true;
-                    }else{
-                        //Buscamos en el detalle de forma de cobro
-                        for (int i = 0; i < lstDetalleFC.length; i++) {
-                            MovimientoCajaDetalle m = lstDetalleFC[i];
-
-                            if (m.getCodFormaPago().getCodBanco() != null) {
-                                if (m.getSerieCheque().equals(uiTxtSerieFormaCobro.getText().toString()) &&
-                                    m.getNumeroCheque().equals(uiTxtNroFormaCobro.getText().toString())) {
-                                    info("Serie y Numero de cheque ingresao en este Recibo, favor verificar");
-                                    errorValidacion = true;
-                                    break;
-                                }
-                            }
-
-                        }
                     }
 
                 }

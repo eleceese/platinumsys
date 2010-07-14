@@ -379,7 +379,7 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
         //Var
         boolean r = true;
         //Armamos el sql String
-        String SQL = "SELECT o FROM MovimientoCajaDetalle o WHERE o.codFormaPago.codBanco is not null ";
+        String SQL = "SELECT o FROM MovimientoCajaDetalle o WHERE o.codFormaPago.codBanco.codBanco is not null ";
 
         if (serie != null && !serie.equals("")) {
             SQL = SQL + " and UPPER(o.serieCheque) = UPPER(:serie)";
@@ -390,7 +390,7 @@ public class ReciboCabeceraController extends AbstractJpaDao<ReciboCabecera> {
         }
 
         if (codBanco != null) {
-            SQL = SQL + " and o.codFormaPago.codBanco = :codBanco  ";
+            SQL = SQL + " and o.codFormaPago.codBanco.codBanco = :codBanco  ";
         }
 
         EntityManager em = emf.createEntityManager();
