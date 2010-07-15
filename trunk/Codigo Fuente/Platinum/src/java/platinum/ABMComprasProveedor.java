@@ -1030,7 +1030,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
             this.pageAlert1.setRendered(false);
             if (!errorValidacion) {
                 //Validamos los campos
-                validarCabecera();
+                //validarCabecera();
 
                 //Si no hay error de validacion insertamos el registro
                 //Set de los artributos
