@@ -25,8 +25,7 @@
 
 	<parameter name="parametros" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="caja" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="fechaDesde" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="fechaHasta" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="responsable" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="usuario" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="logo_path" isForPrompting="false" class="java.lang.String"/>
 	<queryString><![CDATA[select c.nombre_caja,
@@ -525,7 +524,7 @@
 				</image>
 				<staticText>
 					<reportElement
-						x="194"
+						x="158"
 						y="109"
 						width="70"
 						height="20"
@@ -534,20 +533,7 @@
 					<textElement verticalAlignment="Top">
 						<font/>
 					</textElement>
-				<text><![CDATA[Fecha Desde: ]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="370"
-						y="109"
-						width="63"
-						height="20"
-						key="staticText-10"/>
-					<box></box>
-					<textElement verticalAlignment="Top">
-						<font/>
-					</textElement>
-				<text><![CDATA[Fecha Hasta:]]></text>
+				<text><![CDATA[Responsable]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -564,33 +550,20 @@
 					<textElement textAlignment="Center">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
 					</textElement>
-				<text><![CDATA[Estado Habilitacion Caja]]></text>
+				<text><![CDATA[Estado Caja]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="264"
+						x="228"
 						y="109"
-						width="100"
+						width="252"
 						height="18"
 						key="textField-4"/>
 					<box></box>
 					<textElement>
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaDesde}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="433"
-						y="109"
-						width="100"
-						height="18"
-						key="textField-5"/>
-					<box></box>
-					<textElement>
-						<font/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaHasta}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{responsable}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement

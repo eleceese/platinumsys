@@ -390,15 +390,6 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setGridPanelBtnBuscar(HtmlPanelGrid hpg) {
         this.gridPanelBtnBuscar = hpg;
     }
-    private SingleSelectOptionsList uiLstIvaDefaultOptions = new SingleSelectOptionsList();
-
-    public SingleSelectOptionsList getUiLstIvaDefaultOptions() {
-        return uiLstIvaDefaultOptions;
-    }
-
-    public void setUiLstIvaDefaultOptions(SingleSelectOptionsList ssol) {
-        this.uiLstIvaDefaultOptions = ssol;
-    }
     private TextField uiTxtMontoIva = new TextField();
 
     public TextField getUiTxtMontoIva() {
@@ -416,24 +407,6 @@ public class ABMComprasProveedor extends AbstractPageBean {
 
     public void setUiTxtMontoTotal(TextField tf) {
         this.uiTxtMontoTotal = tf;
-    }
-    private DropDown uiLstIva = new DropDown();
-
-    public DropDown getUiLstIva() {
-        return uiLstIva;
-    }
-
-    public void setUiLstIva(DropDown dd) {
-        this.uiLstIva = dd;
-    }
-    private DropDown uiLstUnidadMedida = new DropDown();
-
-    public DropDown getUiLstUnidadMedida() {
-        return uiLstUnidadMedida;
-    }
-
-    public void setUiLstUnidadMedida(DropDown dd) {
-        this.uiLstUnidadMedida = dd;
     }
     private CharacterConverter characterConverter1 = new CharacterConverter();
 
@@ -534,6 +507,15 @@ public class ABMComprasProveedor extends AbstractPageBean {
     public void setUiLstFilEstado(DropDown dd) {
         this.uiLstFilEstado = dd;
     }
+    private TextField uiTxtIva = new TextField();
+
+    public TextField getUiTxtIva() {
+        return uiTxtIva;
+    }
+
+    public void setUiTxtIva(TextField tf) {
+        this.uiTxtIva = tf;
+    }
 
     // </editor-fold>
     /**
@@ -549,10 +531,6 @@ public class ABMComprasProveedor extends AbstractPageBean {
         calendarConverter1.setPattern("dd/MM/yyyy");
         uiLstFilEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("N", "PENDIENTE"), new com.sun.webui.jsf.model.Option("C", "CONFIRMADO"), new com.sun.webui.jsf.model.Option("A", "ANULADO"), new com.sun.webui.jsf.model.Option("T", "TODOS")});
         uiLstFilEstadoDefaultOptions.setSelectedValue("T");
-
-        //Tipos de IVa
-        uiLstIvaDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("0", "Exento"), new com.sun.webui.jsf.model.Option("5", "IVA 5%"), new com.sun.webui.jsf.model.Option("10", "IVA 10%")});
-        uiLstIvaDefaultOptions.setSelectedValue("0");
 
         //Estados de la factura
         uiLstEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("C", "Confirmado"), new com.sun.webui.jsf.model.Option("A", "Anulado"), new com.sun.webui.jsf.model.Option("N", "Nuevo")});
@@ -1010,6 +988,11 @@ public class ABMComprasProveedor extends AbstractPageBean {
         if (this.uiCalFecha.getSelectedDate() == null) {
             info("Fecha Pedido, campo obligatorio");
             this.errorValidacion = true;
+        }else{
+            if (uiCalFecha.getSelectedDate().after(new Date())) {
+                info("Fecha, no puede ser mayor a la actual");
+                this.errorValidacion = true;
+            }
         }
 
     }
@@ -1206,7 +1189,7 @@ public class ABMComprasProveedor extends AbstractPageBean {
             detalle.setCodProducto(producto);
             detalle.setCantidad(Long.valueOf(uiTxtCantidad.getText().toString()));
             detalle.setPrecioUni(Long.valueOf(uiTxtPrecioUnitario.getText().toString()));
-            detalle.setPorcIva(Double.valueOf(uiLstIva.getSelected().toString()));
+            detalle.setPorcIva(Double.valueOf(uiTxtIva.getText().toString()));
             detalle.setMontoIva(Long.valueOf(uiTxtMontoIva.getText().toString()));
             detalle.setTotal(Long.valueOf(uiTxtMontoTotal.getText().toString()));
 
@@ -1256,7 +1239,16 @@ public class ABMComprasProveedor extends AbstractPageBean {
                 info("Producto no existe, ingrese un codigo de producto correcto");
                 errorValidacion = true;
             } else {
-                p = new ProductoController().findById(Long.valueOf(uiTxtCodProducto.getText().toString()));
+                p = producto;
+
+                //Verificamos si el producto puede comprarse
+                if (producto.getCodTipoProducto().getCompraVenta() != null
+                        && !producto.getCodTipoProducto().getCompraVenta().equals("C")
+                        && !producto.getCodTipoProducto().getCompraVenta().equals("A")) {
+                    info("Producto ingresado es de tipo " + producto.getCodTipoProducto().getDescripcion()
+                            + ", y este tipo de producto no esta autorizado para la compra.");
+                    errorValidacion = true;
+                }
             }
         }
 
@@ -1291,14 +1283,8 @@ public class ABMComprasProveedor extends AbstractPageBean {
             }
         }
 
-        //Unidad medida
-        if (this.uiLstUnidadMedida.getSelected() == null) {
-            info("Unidad de medida, Campo obligatorio favor ingrese un valor");
-            errorValidacion = true;
-        }
-
         //Iva
-        if (this.uiLstIva.getSelected() == null) {
+        if (this.uiTxtIva.getText() == null) {
             info("Tipo de IVA, Campo obligatorio favor ingrese un valor");
             errorValidacion = true;
         }
@@ -1367,10 +1353,9 @@ public class ABMComprasProveedor extends AbstractPageBean {
         uiTxtCodProducto.setText(detalle.getCodProducto().getCodProducto());
         uiTxtDescProducto.setText(detalle.getCodProducto().getDescripcion());
         uiTxtNroSolicitud.setText(detalle.getNroSolicitud().getCodSolicitud());
-        uiLstUnidadMedida.setSelected(detalle.getCodProducto().getCodUnidadMedida().getCodUnidadMedida().toString());
         uiTxtPrecioUnitario.setText(detalle.getPrecioUni());
         uiTxtCantidad.setText(detalle.getCantidad());
-        uiLstIva.setSelected(String.valueOf(Double.valueOf(detalle.getPorcIva()).longValue()));
+        uiTxtIva.setText(String.valueOf(Double.valueOf(detalle.getPorcIva()).longValue()));
         uiTxtMontoIva.setText(detalle.getMontoIva());
         uiTxtMontoTotal.setText(detalle.getTotal());
 

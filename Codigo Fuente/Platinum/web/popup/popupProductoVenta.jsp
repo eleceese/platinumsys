@@ -18,16 +18,19 @@
                         <webuijsf:table augmentTitle="false" id="table1" paginateButton="true" paginationControls="true"
                             style="height: 77px; left: 0px; top: 0px; position: absolute" title="Seleccione un Producto..." width="442">
                             <f:facet name="actionsTop"/>
-                            <webuijsf:tableRowGroup id="tableRowGroup1" rows="20" sourceData="#{SessionBean1.listaProductos}" sourceVar="currentRow">
+                            <webuijsf:tableRowGroup id="tableRowGroup1" rows="20" sourceData="#{SessionBean1.listaProductosVenta}" sourceVar="currentRow">
                                 <webuijsf:tableColumn headerText="Producto" id="tableColumn1" sort="descripcion">
                                     <webuijsf:hyperlink id="hyperlink1"
-                                        onClick="doSave('#{currentRow.value['codProducto']}', '#{currentRow.value['descripcion']}', '#{currentRow.value['precioActual']}')" text="#{currentRow.value['descripcion']}"/>
+                                        onClick="doSave('#{currentRow.value['codProducto']}', '#{currentRow.value['descripcion']}', '#{currentRow.value['precioActual']}', '#{currentRow.value['porcentajeIva']}' )" text="#{currentRow.value['descripcion']}"/>
                                 </webuijsf:tableColumn>
                                 <webuijsf:tableColumn align="right" headerText="Precio" id="tableColumn2Precio">
                                     <webuijsf:staticText id="staticTextPrecio" text="#{currentRow.value['precioActual']}"/>
                                 </webuijsf:tableColumn>
                                 <webuijsf:tableColumn align="right" headerText="Codigo" id="tableColumn2">
                                     <webuijsf:staticText id="staticText2" text="#{currentRow.value['codigoInterno']}"/>
+                                </webuijsf:tableColumn>
+                                <webuijsf:tableColumn align="right" headerText="IVA %" id="tableColumnIVA">
+                                    <webuijsf:staticText id="staticTextIva" text="#{currentRow.value['porcentajeIva']}"/>
                                 </webuijsf:tableColumn>
                             </webuijsf:tableRowGroup>
                             <f:facet name="actionsTop">

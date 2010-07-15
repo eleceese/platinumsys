@@ -6,18 +6,19 @@ package platinum;
 
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
-import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.component.PageAlert;
-import com.sun.webui.jsf.component.StaticText;
-import com.sun.webui.jsf.component.TableColumn;
 import com.sun.webui.jsf.component.TextField;
-import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.math.BigInteger;
+import java.util.Date;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
-import platinum.ApplicationBean1;
-import platinum.RequestBean1;
-import platinum.SessionBean1;
+import py.com.platinum.controller.CajaController;
+import py.com.platinum.controller.EmpleadoController;
+import py.com.platinum.controller.HabilitacionCajaController;
+import py.com.platinum.entity.Caja;
+import py.com.platinum.entity.Empleado;
+import py.com.platinum.entity.HabilitacionCaja;
 
 
 
@@ -101,6 +102,33 @@ public class RegistroAperturaCaja extends AbstractPageBean {
 
     public void setReferencia1DefaultOptions(SingleSelectOptionsList ssol) {
         this.referencia1DefaultOptions = ssol;
+    }
+    private TextField codCaja = new TextField();
+
+    public TextField getCodCaja() {
+        return codCaja;
+    }
+
+    public void setCodCaja(TextField tf) {
+        this.codCaja = tf;
+    }
+    private TextField codEmpleado = new TextField();
+
+    public TextField getCodEmpleado() {
+        return codEmpleado;
+    }
+
+    public void setCodEmpleado(TextField tf) {
+        this.codEmpleado = tf;
+    }
+    private TextField saldo = new TextField();
+
+    public TextField getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(TextField tf) {
+        this.saldo = tf;
     }
 
     // </editor-fold>
@@ -269,13 +297,73 @@ public class RegistroAperturaCaja extends AbstractPageBean {
         // case name where null will return to the same page.
         this.addRequest=false;
         this.updateRequest=false;
-
-
-        this.errorValidacion=true;
-                      
-
+        this.errorValidacion=false;
+        Caja caja = null;
+        if (codCaja.getText() == null) {
             this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Error en la Validacion de los Campos, favor verificar y volver a intentar");
+            this.pageAlert1.setTitle("Caja ingresado incorrecto");
+            this.errorValidacion=true;
+        }else{
+            caja = new CajaController().findById(Long.valueOf(codCaja.getText().toString()));
+            if (caja == null) {
+                this.pageAlert1.setType("error");
+                this.pageAlert1.setTitle("Caja ingresado incorrecto");
+                this.errorValidacion=true;
+            }else{
+                Caja[] l = getSessionBean1().getListaCajaAbierta();
+                if (l == null) {
+                    l = new Caja[0];
+                }
+             for (int i = 0; i < l.length; i++) {
+                 Caja c = l[i];
+
+                 if (c.getCodCaja() == caja.getCodCaja()) {
+                     this.pageAlert1.setType("error");
+                        this.pageAlert1.setTitle("Caja ingresado Esta Abierta");
+                        this.errorValidacion=true;
+                 }
+
+             }
+            }
+        }
+        Empleado e = null;
+        if (codEmpleado.getText() == null) {
+            this.pageAlert1.setType("error");
+            this.pageAlert1.setTitle("Empleado ingresado incorrecto");
+            this.errorValidacion=true;
+        }else{
+            e = new EmpleadoController().findById(Long.valueOf(codEmpleado.getText().toString()));
+            if (e == null) {
+                this.pageAlert1.setType("error");
+                this.pageAlert1.setTitle("Empleado ingresado incorrecto");
+                this.errorValidacion=true;
+            }
+        }
+
+        
+         if (!errorValidacion) {
+            HabilitacionCaja h = new HabilitacionCaja();
+
+            h.setCodCaja(caja);
+            h.setCodEmpleado(e);
+            h.setCodReponsable(e);
+            h.setEstado("A");
+            Long s = Long.valueOf("0");
+             if (saldo.getText() != null) {
+                s = Long.valueOf(saldo.getText().toString());
+             }
+            h.setMontoInicial(BigInteger.valueOf(s));
+            h.setFechaAlta(new Date());
+            h.setUsuarioAlta(getSessionBean1().getUsuarioLogueado().getUsuario());
+            h.setFechaHabCaja(new Date());
+            new HabilitacionCajaController().create(h);
+
+            this.pageAlert1.setType("information");
+                this.pageAlert1.setTitle("Caja Habilitada");
+        }
+             
+
+            
             this.pageAlert1.setSummary("");
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);

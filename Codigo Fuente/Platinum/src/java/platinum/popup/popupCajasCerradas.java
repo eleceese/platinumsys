@@ -134,6 +134,12 @@ public class popupCajasCerradas extends AbstractPageBean {
     // Perform application initialization that must complete
     // *after* managed components are initialized
     // TODO - add your own initialization code here
+
+
+        Caja[] l = (Caja[]) new CajaController().getCajasCerradas().toArray(new Caja[0]);
+
+        //actializamos la lista en la session
+        getSessionBean1().setListaCajaCerradas(l);
     }
 
     /**
@@ -209,10 +215,10 @@ public class popupCajasCerradas extends AbstractPageBean {
         }
 
         //Obetenmos la lista
-        Caja[] l = (Caja[]) new CajaController().getCajasAbiertas().toArray(new Caja[0]);
+        Caja[] l = (Caja[]) new CajaController().getCajasCerradas().toArray(new Caja[0]);
 
         //Actualizamos la lista de la session
-        getSessionBean1().setListaCaja(l);
+        getSessionBean1().setListaCajaCerradas(l);
 
         //refrescamos la pagina
         return null;
@@ -220,10 +226,10 @@ public class popupCajasCerradas extends AbstractPageBean {
 
     public String uiBtnTodos_action() {
         //Obetenmos la lista
-        Caja[] l = (Caja[]) new CajaController().getCajasAbiertas().toArray(new Caja[0]);
+        Caja[] l = (Caja[]) new CajaController().getCajasCerradas().toArray(new Caja[0]);
 
         //actializamos la lista en la session
-        getSessionBean1().setListaCaja(l);
+        getSessionBean1().setListaCajaCerradas(l);
 
         //refrecamos la pagina
         return null;

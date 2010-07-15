@@ -21,7 +21,7 @@
                             <webuijsf:tableRowGroup id="tableRowGroup1" rows="20" sourceData="#{SessionBean1.listaProductosCompra}" sourceVar="currentRow">
                                 <webuijsf:tableColumn headerText="Producto" id="tableColumn1" sort="descripcion">
                                     <webuijsf:hyperlink id="hyperlink1"
-                                        onClick="doSave('#{currentRow.value['codProducto']}', '#{currentRow.value['descripcion']}')" text="#{currentRow.value['descripcion']}"/>
+                                        onClick="doSave('#{currentRow.value['codProducto']}', '#{currentRow.value['descripcion']}', '#{currentRow.value['porcentajeIva']}')" text="#{currentRow.value['descripcion']}"/>
                                 </webuijsf:tableColumn>
                                 <webuijsf:tableColumn headerText="Codigo Interno" id="tableColumn2" width="106">
                                     <webuijsf:staticText id="staticText2" text="#{currentRow.value['codigoInterno']}"/>
@@ -31,6 +31,9 @@
                                 </webuijsf:tableColumn>
                                 <webuijsf:tableColumn headerText="Tipo" id="tableColumnTipoProducto" width="114">
                                     <webuijsf:staticText id="staticTextTipoProducto" text="#{currentRow.value['codTipoProducto'].descripcion}"/>
+                                </webuijsf:tableColumn>
+                                <webuijsf:tableColumn align="right" headerText="IVA %" id="tableColumnIVA">
+                                    <webuijsf:staticText id="staticTextIva" text="#{currentRow.value['porcentajeIva']}"/>
                                 </webuijsf:tableColumn>
                             </webuijsf:tableRowGroup>
                             <f:facet name="actionsTop">

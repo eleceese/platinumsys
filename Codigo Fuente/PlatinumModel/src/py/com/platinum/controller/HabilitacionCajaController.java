@@ -7,8 +7,11 @@ package py.com.platinum.controller;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import py.com.platinum.controllerUtil.AbstractJpaDao;
+import py.com.platinum.entity.Caja;
+import py.com.platinum.entity.Empleado;
 import py.com.platinum.entity.HabilitacionCaja;
 
 /**
@@ -81,5 +84,51 @@ public class HabilitacionCajaController extends AbstractJpaDao<HabilitacionCaja>
         return entities;
 
       }
+
+    public HabilitacionCaja getGetHabilitacionPorEmpleado(Empleado codEmpleado) {
+        //Armamos el sql String
+        String SQL = "SELECT o FROM HabilitacionCaja o WHERE o.codEmpleado = :codEmpleado";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        q.setParameter("codEmpleado", codEmpleado);
+
+        //Realizamos la busqueda
+        HabilitacionCaja entities = null;
+        try {
+              entities = (HabilitacionCaja) q.getSingleResult();
+        } catch (NoResultException e) {
+            e.printStackTrace();
+        }
+
+        em.close();
+
+        //retornamos la lista
+        return entities;
+    }
+
+    public HabilitacionCaja getHabilitacionPorCaja(Caja caja) {
+//Armamos el sql String
+        String SQL = "SELECT o FROM HabilitacionCaja o WHERE o.codCaja = :codCaja and o.estado = 'A' ";
+
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery(SQL);
+
+        q.setParameter("codCaja", caja);
+
+        //Realizamos la busqueda
+        HabilitacionCaja entities = null;
+        try {
+              entities = (HabilitacionCaja) q.getSingleResult();
+        } catch (NoResultException e) {
+            e.printStackTrace();
+        }
+
+        em.close();
+
+        //retornamos la lista
+        return entities;
+    }
 
 }   

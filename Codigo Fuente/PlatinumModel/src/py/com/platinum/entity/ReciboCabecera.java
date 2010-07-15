@@ -55,6 +55,8 @@ public class ReciboCabecera implements Serializable {
     @Column(name = "ESTADO")
     @Enumerated(EnumType.STRING)
     private ReciboEstado estado;
+    @Column(name = "COD_HABILITACION_CAJA")
+    private Long codHabilitacionCaja;
     @Column(name = "SERIE_RECIBO")
     private String serieRecibo;
     @Column(name = "USUARIO_ALTA")
@@ -201,6 +203,14 @@ public class ReciboCabecera implements Serializable {
 
     public List<ReciboDetalle> getReciboDetalleList() {
         return new ArrayList(Arrays.asList(reciboDetalle.toArray(new ReciboDetalle[0])));
+    }
+
+    public Long getCodHabilitacionCaja() {
+        return codHabilitacionCaja;
+    }
+
+    public void setCodHabilitacionCaja(Long codHabilitacionCaja) {
+        this.codHabilitacionCaja = codHabilitacionCaja;
     }
 
     @Override
