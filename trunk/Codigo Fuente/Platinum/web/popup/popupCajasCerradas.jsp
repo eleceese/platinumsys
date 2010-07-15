@@ -18,7 +18,7 @@
                         <webuijsf:table augmentTitle="false" binding="#{popup$popupCajasCerradas.table1}" id="table1" paginationControls="true"
                             style="height: 77px; left: 0px; top: 0px; position: absolute" title="Seleccione un Caja..." width="442">
                             <f:facet name="actionsTop"/>
-                            <webuijsf:tableRowGroup id="tableRowGroup1" rows="20" sourceData="#{SessionBean1.listaCaja}" sourceVar="currentRow">
+                            <webuijsf:tableRowGroup id="tableRowGroup1" rows="20" sourceData="#{SessionBean1.listaCajaCerradas}" sourceVar="currentRow">
                                 <webuijsf:tableColumn headerText="Caja" id="tableColumn1" sort="nombreCaja" width="305">
                                     <webuijsf:hyperlink id="hyperlink1" onClick="doSave('#{currentRow.value['codCaja']}', '#{currentRow.value['nombreCaja']}')" text="#{currentRow.value['nombreCaja']}"/>
                                 </webuijsf:tableColumn>
@@ -27,8 +27,8 @@
                                 </webuijsf:tableColumn>
                             </webuijsf:tableRowGroup>
                             <f:facet name="actionsTop">
-                                <webuijsf:panelGroup binding="#{popup$popupCajas.groupPanel1}" id="groupPanel1" separator="&amp;nbsp;">
-                                    <webuijsf:button actionExpression="#{popup$popupCajas.uiBtnTodos_action}" binding="#{popup$popupCajas.uiBtnTodos}"
+                                <webuijsf:panelGroup binding="#{popup$popupCajasCerradas.groupPanel1}" id="groupPanel1" separator="&amp;nbsp;">
+                                    <webuijsf:button actionExpression="#{popup$popupCajasCerradas.uiBtnTodos_action}" binding="#{popup$popupCajasCerradas.uiBtnTodos}"
                                         id="uiBtnTodos" style="height: 24px; width: 143px" text="BUSCAR"/>
                                 </webuijsf:panelGroup>
                             </f:facet>

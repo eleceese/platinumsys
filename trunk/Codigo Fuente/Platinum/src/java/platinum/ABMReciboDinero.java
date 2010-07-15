@@ -34,6 +34,7 @@ import javax.faces.event.ValueChangeEvent;
 import py.com.platinum.controller.ReciboCabeceraController;
 import py.com.platinum.controller.ClienteController;
 import py.com.platinum.controller.FormaPagoController;
+import py.com.platinum.controller.HabilitacionCajaController;
 import py.com.platinum.controller.ParametroController;
 import py.com.platinum.controller.SaldoClienteController;
 import py.com.platinum.controller.TipoComprobanteController;
@@ -44,6 +45,7 @@ import py.com.platinum.entity.ReciboCabecera;
 import py.com.platinum.entity.ReciboDetalle;
 import py.com.platinum.entity.Cliente;
 import py.com.platinum.entity.FormaPago;
+import py.com.platinum.entity.HabilitacionCaja;
 import py.com.platinum.entity.MovimientoCajaDetalle;
 import py.com.platinum.entity.SaldoCliente;
 import py.com.platinum.utils.StringUtils;
@@ -961,40 +963,60 @@ public class ABMReciboDinero extends AbstractPageBean {
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);
         } else {
-            //Inicializamos las variables
-            this.pageAlert1.setRendered(false);
-            lstDetalleLIST = new ArrayList();
-            lstDetalle = (ReciboDetalle[]) lstDetalleLIST.toArray(new ReciboDetalle[0]);
-            lstDetalleLISTFC = new ArrayList();
-            lstDetalleFC = (MovimientoCajaDetalle[]) lstDetalleLISTFC.toArray(new MovimientoCajaDetalle[0]);
-            addRequest = true;
-            updateDetRequest = true;
-            itemDet = null;
-            cliente = null;
+            daoHabilitacionCaja = new HabilitacionCajaController();
+            habilitacion = daoHabilitacionCaja.getGetHabilitacionPorEmpleado(getSessionBean1().getUsuarioLogueado().getCodEmpleado());
+            if (habilitacion == null) {
+                this.pageAlert1.setType("information");
+                this.pageAlert1.setTitle("Usuario no tiene una habilitacion de Caja, ABIERTA");
+                this.pageAlert1.setSummary("");
+                this.pageAlert1.setDetail("");
+                this.pageAlert1.setRendered(true);
+            } else {
+                if (!habilitacion.getEstado().equals("A")) {
+                    this.pageAlert1.setType("information");
+                    this.pageAlert1.setTitle("Usuario no tiene una habilitacion de Caja, ABIERTA");
+                    this.pageAlert1.setSummary("");
+                    this.pageAlert1.setDetail("");
+                    this.pageAlert1.setRendered(true);
+                } else {
+                    //Inicializamos las variables
+                    this.pageAlert1.setRendered(false);
+                    lstDetalleLIST = new ArrayList();
+                    lstDetalle = (ReciboDetalle[]) lstDetalleLIST.toArray(new ReciboDetalle[0]);
+                    lstDetalleLISTFC = new ArrayList();
+                    lstDetalleFC = (MovimientoCajaDetalle[]) lstDetalleLISTFC.toArray(new MovimientoCajaDetalle[0]);
+                    addRequest = true;
+                    updateDetRequest = true;
+                    itemDet = null;
+                    cliente = null;
 
-            //Cargar tablas realcionadas
-            cargarRelaciones();
+                    //Cargar tablas realcionadas
+                    cargarRelaciones();
 
-            //Actualizamos le titulo de la pagina
-            getSessionBean1().setTituloPagina("Nuevo Recibo de Dinero");
-            getSessionBean1().setDetallePagina("Cobro a Cliente - Cobranza");
-            gridPanelDetLin1.setRendered(true);
-            gridPanelDetLin2.setRendered(true);
-            tableColumnEditarDet.setRendered(true);
-            tableColumnEliminarDet.setRendered(true);
+                    //Actualizamos le titulo de la pagina
+                    getSessionBean1().setTituloPagina("Nuevo Recibo de Dinero");
+                    getSessionBean1().setDetallePagina("Cobro a Cliente - Cobranza");
+                    gridPanelDetLin1.setRendered(true);
+                    gridPanelDetLin2.setRendered(true);
+                    tableColumnEditarDet.setRendered(true);
+                    tableColumnEliminarDet.setRendered(true);
 
-            //Obtenemos la serie del recibo
-            String ser = "A";
-            Parametros p = new ParametroController().getParametro(ParametroEnum.SERIE_RECIBO.toString());
+                    //Obtenemos la serie del recibo
+                    String ser = "A";
+                    Parametros p = new ParametroController().getParametro(ParametroEnum.SERIE_RECIBO.toString());
 
-            if (p != null) {
-                ser = p.getValorTexto();
+                    if (p != null) {
+                        ser = p.getValorTexto();
+                    }
+
+                    uiTxtSerie.setText(ser);
+                    uiTxtNroRecibo.setText(controller.getNroRecibo(ser));
+                    uiBtnImprimir.setDisabled(true);
+                }
+
             }
-
-            uiTxtSerie.setText(ser);
-            uiTxtNroRecibo.setText(controller.getNroRecibo(ser));
-            uiBtnImprimir.setDisabled(true);
         }
+
         //result
         return null;
     }
@@ -1112,8 +1134,10 @@ public class ABMReciboDinero extends AbstractPageBean {
             cabecera.setFecha(uiCalFecha.getSelectedDate());
             cabecera.setEstado(ReciboEstado.COBRADO);
             cabecera.setFechaAlta(new Date());
+            cabecera.setUsuarioAlta(getSessionBean1().getUsuarioLogueado().getUsuario());
             cabecera.setMontoTotal(BigInteger.valueOf(Long.valueOf(uiTxtTotal1.getText().toString())));
-
+            cabecera.setCodHabilitacionCaja(habilitacion.getCodHabilitacionCaja());
+            
             //Insertamos la cebecera y del detalle
             ControllerResult cr = controller.crear(cabecera, lstDetalleLIST, lstDetalleLISTFC);
 
@@ -1188,13 +1212,18 @@ public class ABMReciboDinero extends AbstractPageBean {
         if (this.uiCalFecha.getSelectedDate() == null) {
             info("Fecha, campo obligatorio");
             this.errorValidacion = true;
+        }else{
+            if (uiCalFecha.getSelectedDate().after(new Date())) {
+                info("Fecha, no puede ser mayor a la actual");
+                this.errorValidacion = true;
+            }
         }
 
         //Fecha
-        if (this.uiTxtTotal1.getText() == null || this.uiTxtTotal1.getText().equals("") ) {
+        if (this.uiTxtTotal1.getText() == null || this.uiTxtTotal1.getText().equals("")) {
             info("Monto Recibo no puede ser igual a Cero");
             this.errorValidacion = true;
-        }else{
+        } else {
             //Verificamos si la precio es un numero
             String totRecibo = this.uiTxtTotal1.getText().toString();
             String totFormaCobro = this.uiTxtTotalComprobantesFC.getText().toString();
@@ -1202,10 +1231,10 @@ public class ABMReciboDinero extends AbstractPageBean {
             if (!StringUtils.esNumero(totRecibo)) {
                 info("Total Recibo, debe se Numero");
                 errorValidacion = true;
-            }else if (!StringUtils.esNumero(totFormaCobro)) {
+            } else if (!StringUtils.esNumero(totFormaCobro)) {
                 info("Total Forma Cobro, debe se Numero");
                 errorValidacion = true;
-            }else if (!totRecibo.equals(totFormaCobro)) {
+            } else if (!totRecibo.equals(totFormaCobro)) {
                 info("Total Forma Cobro, debe ser igual al Importe total de los recibos");
                 errorValidacion = true;
             }
@@ -1234,7 +1263,8 @@ public class ABMReciboDinero extends AbstractPageBean {
 
             //Si no hay error de validacion insertamos el registro
             if (!errorValidacion) {
-
+                cabecera.setFechaModif(new Date());
+                cabecera.setUsuarioModif(getSessionBean1().getUsuarioLogueado().getUsuario());
                 cabecera.setEstado(ReciboEstado.ANULADO);
 
                 //Insertamos la cebecera y del detalle
@@ -1283,6 +1313,8 @@ public class ABMReciboDinero extends AbstractPageBean {
         //Result
         return null;
     }
+    private HabilitacionCajaController daoHabilitacionCaja;
+    private HabilitacionCaja habilitacion;
     private ReciboCabeceraController controller;
     private ReciboCabecera cabecera;
     private ReciboCabecera[] lstCabecera;
@@ -1732,7 +1764,7 @@ public class ABMReciboDinero extends AbstractPageBean {
         if (this.detalleFC.getCodFormaPago().getCodBanco() != null) {
             uiTxtBanco.setText(this.detalleFC.getCodFormaPago().getCodBanco().getNombreBanco());
         }
-        
+
         uiTxtSerieFormaCobro.setText(this.detalleFC.getSerieCheque());
         uiTxtNroFormaCobro.setText(this.detalleFC.getNumeroCheque());
         uiTxtMontoCobro.setText(this.detalleFC.getMonto());
@@ -1766,10 +1798,10 @@ public class ABMReciboDinero extends AbstractPageBean {
             detalleFC.setCodRecibo(cabecera);
             detalleFC.setFechaAlta(new Date());
             detalleFC.setMonto(BigInteger.valueOf(Long.valueOf(uiTxtMontoFormaCobro.getText().toString())));
-            
-            if (uiTxtBanco.getText()!= null) {
+
+            if (uiTxtBanco.getText() != null) {
                 detalleFC.setNumeroCheque(uiTxtNroFormaCobro.getText().toString());
-                detalleFC.setSerieCheque(uiTxtSerieFormaCobro.getText().toString());    
+                detalleFC.setSerieCheque(uiTxtSerieFormaCobro.getText().toString());
             }
 
 
@@ -1799,8 +1831,7 @@ public class ABMReciboDinero extends AbstractPageBean {
         return null;
     }
 
-
-    private void limpiarCamposDetalleFC(){
+    private void limpiarCamposDetalleFC() {
         uiTxtCodFormaCobro.setText(null);
         uiTxtDescFormaCobro.setText(null);
         uiTxtBanco.setText(null);
@@ -1831,7 +1862,7 @@ public class ABMReciboDinero extends AbstractPageBean {
             if (formaPago == null) {
                 info("Forma de pago ingresado no es valido, Obligatrio");
                 errorValidacion = true;
-            }else if (formaPago.getCodBanco() != null) {
+            } else if (formaPago.getCodBanco() != null) {
 
                 if (uiTxtSerieFormaCobro.getText() == null || uiTxtSerieFormaCobro.getText().equals("")) {
                     info("Forma de pago tiene un Banco Relacionado, debe ingreser Serie del cheque");
@@ -1847,8 +1878,8 @@ public class ABMReciboDinero extends AbstractPageBean {
 
                     //Verificamos que el cheque ingresado no sea haya ingreaso anteriormente
                     if (controller.existeCheque(uiTxtSerieFormaCobro.getText().toString(),
-                                                uiTxtNroFormaCobro.getText().toString(),
-                                                formaPago.getCodBanco().getCodBanco())) {
+                            uiTxtNroFormaCobro.getText().toString(),
+                            formaPago.getCodBanco().getCodBanco())) {
 
                         info("Serie y Numero de cheque ingresao, ya existen favor verificar");
                         errorValidacion = true;
@@ -1884,7 +1915,7 @@ public class ABMReciboDinero extends AbstractPageBean {
     public String uilnkEditarDetalleFC_action() {
         //Obtenemos el detalle seleccionado
         this.detalleFC = lstDetalleLISTFC.get(Integer.valueOf(itemDet).intValue());
-        
+
         //Obtenemos los valores del detalle q ha sido seleccionado
         uiTxtCodFormaCobro.setText(detalleFC.getCodFormaPago().getCodFormaPago());
         uiTxtDescFormaCobro.setText(detalleFC.getCodFormaPago().getNombreFormaPago());

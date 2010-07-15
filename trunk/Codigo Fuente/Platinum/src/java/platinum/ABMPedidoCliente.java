@@ -843,7 +843,9 @@ public class ABMPedidoCliente extends AbstractPageBean {
             cabecera.setTotalIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
             cabecera.setSubTotal(Long.valueOf(uiTxtSubTotal.getText().toString()));
             cabecera.setTotal(Long.valueOf(uiTxtTotal.getText().toString()));
-
+            cabecera.setFechaAlta(new Date());
+            cabecera.setUsuarioAlta(getSessionBean1().getUsuarioLogueado().getUsuario());
+            
             //Insertamos la cebecera y del detalle
             ControllerResult cr = new PedidoCabeceraController().crear(cabecera, lstDetalleLIST);
 
@@ -909,6 +911,11 @@ public class ABMPedidoCliente extends AbstractPageBean {
         if (this.uiCalFecha.getSelectedDate() == null) {
             info("Fecha Pedido, campo obligatorio");
             this.errorValidacion = true;
+        }else{
+            if (uiCalFecha.getSelectedDate().after(new Date())) {
+                info("Fecha, no puede ser mayor a la actual");
+                this.errorValidacion = true;
+            }
         }
 
     }
@@ -932,7 +939,8 @@ public class ABMPedidoCliente extends AbstractPageBean {
             cabecera.setTotal(Long.valueOf(uiTxtTotal.getText().toString()));
             cabecera.setPorcDescuento(Long.valueOf(uiTxtPorcDescuento.getText().toString()));
             cabecera.setMontoDescuento(Long.valueOf(uiTxtMontoDescuento.getText().toString()));
-
+            cabecera.setFechaModif(new Date());
+            cabecera.setUsuarioModif(getSessionBean1().getUsuarioLogueado().getUsuario());
             //Insertamos la cebecera y del detalle
             ControllerResult cr = new PedidoCabeceraController().actualizar(cabecera, lstDetalleLIST, lstDetalleEliminar);
 

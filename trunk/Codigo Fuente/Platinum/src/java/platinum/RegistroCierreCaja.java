@@ -6,18 +6,19 @@ package platinum;
 
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.Button;
-import com.sun.webui.jsf.component.DropDown;
 import com.sun.webui.jsf.component.PageAlert;
-import com.sun.webui.jsf.component.StaticText;
-import com.sun.webui.jsf.component.TableColumn;
 import com.sun.webui.jsf.component.TextField;
-import com.sun.webui.jsf.model.DefaultTableDataProvider;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
+import java.math.BigInteger;
+import java.util.Date;
 import javax.faces.FacesException;
 import javax.faces.component.html.HtmlPanelGrid;
-import platinum.ApplicationBean1;
-import platinum.RequestBean1;
-import platinum.SessionBean1;
+import py.com.platinum.controller.CajaController;
+import py.com.platinum.controller.EmpleadoController;
+import py.com.platinum.controller.HabilitacionCajaController;
+import py.com.platinum.entity.Caja;
+import py.com.platinum.entity.Empleado;
+import py.com.platinum.entity.HabilitacionCaja;
 
 
 
@@ -47,7 +48,6 @@ public class RegistroCierreCaja extends AbstractPageBean {
         tipoDoc1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Cedula de Identidad"), new com.sun.webui.jsf.model.Option("2", "DNI"), new com.sun.webui.jsf.model.Option("3", "Pasaporte")});
         radioButtonGroup1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("e", "Entrada"), new com.sun.webui.jsf.model.Option("s", "Salida")});
         referencia1DefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Orden de Trabajo"), new com.sun.webui.jsf.model.Option("2", "Venta"), new com.sun.webui.jsf.model.Option("3", "Trabajo Diario")});
-        estadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("1", "Abierto"), new com.sun.webui.jsf.model.Option("2", "Cerrado")});
     }
     private HtmlPanelGrid buttonsPanelAddUpdate = new HtmlPanelGrid();
 
@@ -103,14 +103,14 @@ public class RegistroCierreCaja extends AbstractPageBean {
     public void setReferencia1DefaultOptions(SingleSelectOptionsList ssol) {
         this.referencia1DefaultOptions = ssol;
     }
-    private SingleSelectOptionsList estadoDefaultOptions = new SingleSelectOptionsList();
+    private TextField codCaja = new TextField();
 
-    public SingleSelectOptionsList getEstadoDefaultOptions() {
-        return estadoDefaultOptions;
+    public TextField getCodCaja() {
+        return codCaja;
     }
 
-    public void setEstadoDefaultOptions(SingleSelectOptionsList ssol) {
-        this.estadoDefaultOptions = ssol;
+    public void setCodCaja(TextField tf) {
+        this.codCaja = tf;
     }
 
     // </editor-fold>
@@ -155,7 +155,7 @@ public class RegistroCierreCaja extends AbstractPageBean {
     // *after* managed components are initialized
     // TODO - add your own initialization code here
 
-    getSessionBean1().setTituloPagina("Registro de Cierre de CAJAS");
+    getSessionBean1().setTituloPagina("Registro de Apertura de CAJAS");
     getSessionBean1().setDetallePagina("Cobranzas");
 
 
@@ -279,13 +279,57 @@ public class RegistroCierreCaja extends AbstractPageBean {
         // case name where null will return to the same page.
         this.addRequest=false;
         this.updateRequest=false;
-
-
-        this.errorValidacion=true;
-                      
-
+        this.errorValidacion=false;
+        Caja caja = null;
+        if (codCaja.getText() == null) {
             this.pageAlert1.setType("error");
-            this.pageAlert1.setTitle("Error en la Validacion de los Campos, favor verificar y volver a intentar");
+            this.pageAlert1.setTitle("Caja ingresado incorrecto");
+            this.errorValidacion=true;
+        }else{
+            caja = new CajaController().findById(Long.valueOf(codCaja.getText().toString()));
+            if (caja == null) {
+                this.pageAlert1.setType("error");
+                this.pageAlert1.setTitle("Caja ingresado incorrecto");
+                this.errorValidacion=true;
+            }else{
+                Caja[] l = getSessionBean1().getListaCajaCerradas();
+                if (l == null) {
+                    l = new Caja[0];
+                }
+             for (int i = 0; i < l.length; i++) {
+                 Caja c = l[i];
+
+                 if (c.getCodCaja() == caja.getCodCaja()) {
+                     this.pageAlert1.setType("error");
+                        this.pageAlert1.setTitle("Caja ingresado Esta Abierta");
+                        this.errorValidacion=true;
+                 }
+
+             }
+            }
+        }
+
+        HabilitacionCaja h = new HabilitacionCajaController().getHabilitacionPorCaja(caja);
+
+        if (h == null) {
+            this.pageAlert1.setType("error");
+                  this.pageAlert1.setTitle("Caja ingresdo no posee ninguna habilitacion");
+                        this.errorValidacion=true;
+        }
+        
+         if (!errorValidacion) {
+            h.setEstado("C");
+            h.setFechaModif(new Date());
+            h.setUsuarioModif(getSessionBean1().getUsuarioLogueado().getUsuario());
+            h.setFechaCierre(new Date());
+            new HabilitacionCajaController().update(h);
+
+            this.pageAlert1.setType("information");
+                this.pageAlert1.setTitle("Caja Cerrada");
+        }
+             
+
+            
             this.pageAlert1.setSummary("");
             this.pageAlert1.setDetail("");
             this.pageAlert1.setRendered(true);

@@ -834,7 +834,9 @@ public class ABMNotaCreditoProveedor extends AbstractPageBean {
             cabecera.setEstablecimiento(getSessionBean1().getEstablecimiento());
             cabecera.setBocaExpendio(getSessionBean1().getBocaExpendio());
             cabecera.setCodDeposito(facturaCompraCab.getCodDeposito());
-
+            cabecera.setFechaAlta(new Date());
+            cabecera.setUsuarioAlta(getSessionBean1().getUsuarioLogueado().getUsuario());
+            
             //Tipo de comprobante
             cabecera.setTipo(tipoComprobante);
             cabecera.setTotalIva(Long.valueOf(uiTxtTotalIva.getText().toString()));
@@ -967,6 +969,8 @@ public class ABMNotaCreditoProveedor extends AbstractPageBean {
 
         } else {
             this.pageAlert1.setRendered(false);
+            cabecera.setFechaModif(new Date());
+            cabecera.setUsuarioModif(getSessionBean1().getUsuarioLogueado().getUsuario());
             //Set de los artributos
             cabecera.setEstado(NotaCreditoEstado.ANULADO);
 

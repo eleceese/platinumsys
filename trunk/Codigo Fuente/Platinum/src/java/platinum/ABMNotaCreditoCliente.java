@@ -903,6 +903,8 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
             cabecera.setTotalIva(BigInteger.valueOf(Long.valueOf(uiTxtTotalIva.getText().toString())));
             cabecera.setSubTotal(BigInteger.valueOf(Long.valueOf(uiTxtSubTotal.getText().toString())));
             cabecera.setTotalNotaCredito(BigInteger.valueOf(Long.valueOf(uiTxtTotal.getText().toString())));
+            cabecera.setFechaAlta(new Date());
+            cabecera.setUsuarioAlta(getSessionBean1().getUsuarioLogueado().getUsuario());
 
             //Insertamos la cebecera y del detalle
             ControllerResult cr = new NotaCreditoClienteCabController().crear(cabecera, lstDetalleLIST);
@@ -970,6 +972,11 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
         if (this.uiCalFecha.getSelectedDate() == null) {
             info("Fecha Nota Credito, campo obligatorio");
             this.errorValidacion = true;
+        }else{
+            if (uiCalFecha.getSelectedDate().after(new Date())) {
+                info("Fecha, no puede ser mayor a la actual");
+                this.errorValidacion = true;
+            }
         }
 
         if (uiTxtNroFactura.getText() != null) {
@@ -1018,7 +1025,8 @@ public class ABMNotaCreditoCliente extends AbstractPageBean {
             if (!errorValidacion) {
 
                 cabecera.setEstado(NotaCreditoEstado.ANULADO);
-
+                cabecera.setFechaModif(new Date());
+                cabecera.setUsuarioModif(getSessionBean1().getUsuarioLogueado().getUsuario());
                 //Insertamos la cebecera y del detalle
                 ControllerResult cr = new NotaCreditoClienteCabController().update(cabecera);
 

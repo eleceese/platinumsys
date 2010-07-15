@@ -67,6 +67,8 @@ public class FacturaCabecera implements Serializable {
     private Long porcDescuento;
     @Column(name = "MONTO_DESCUENTO")
     private Long montoDescuento;
+    @Column(name = "COD_HABILITACION_CAJA")
+    private Long codHabilitacionCaja;
     @Column(name = "ESTADO_FACTURA")
     @Enumerated(EnumType.STRING)
     private FacturaVentaEstado estadoFactura;
@@ -353,5 +355,15 @@ public class FacturaCabecera implements Serializable {
     public String toString() {
         return this.establecimiento + "-" + this.bocaExpendio + "-" + StringUtils.lpad(numeroFactura.toString(), 8, "0");
     }
+
+    public Long getCodHabilitacionCaja() {
+        return codHabilitacionCaja;
+    }
+
+    public void setCodHabilitacionCaja(Long codHabilitacionCaja) {
+        this.codHabilitacionCaja = codHabilitacionCaja;
+    }
+
+    
 
 }
