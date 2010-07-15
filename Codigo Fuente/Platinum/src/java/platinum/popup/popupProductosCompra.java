@@ -123,7 +123,7 @@ public class popupProductosCompra extends AbstractPageBean {
     // *after* managed components are initialized
     // TODO - add your own initialization code here
         //Obetenmos la lista
-        Producto[] l = (Producto[]) new ProductoController().getAllFiltered(null, null, null, null).toArray(new Producto[0]);
+        Producto[] l = (Producto[]) new ProductoController().getProductoCompra(null).toArray(new Producto[0]);
 
         //actializamos la lista en la session
         getSessionBean1().setListaProductos(l);
