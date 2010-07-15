@@ -912,19 +912,32 @@ public class ABMProductos extends AbstractPageBean {
         String pMarca=null, pDesc=null, pPres=null, pTipo=null;
 
         if (this.uiMarcaFil.getSelected()!=null && !this.uiMarcaFil.getSelected().toString().equals("-1")) {
-            pMarca = this.uiMarcaFil.getSelected().toString();
+            Marca mar = new MarcaController().findById(Long.valueOf(this.uiMarcaFil.getSelected().toString()));
+            if (mar != null) {
+                pMarca = mar.getNombre().toString();
+            }
+
         }
 
         if (this.uiDescripcionFil.getText()!=null) {
-            pDesc = this.uiDescripcionFil.getText().toString();
+                            pDesc = this.uiDescripcionFil.getText().toString();
+
         }
 
         if (this.uiPresentacionFil.getSelected()!=null && !this.uiPresentacionFil.getSelected().toString().equals("-1")) {
-            pPres = this.uiPresentacionFil.getSelected().toString();
+            Presentacion pres = new PresentacionController().findById(Long.valueOf(this.uiPresentacionFil.getSelected().toString()));
+            if (pres != null) {
+                pPres = pres.getDescripcion();
+            }
+
         }
 
         if (this.uiTipoProductoFil.getSelected()!=null && !this.uiTipoProductoFil.getSelected().toString().equals("-1")) {
-            pTipo = this.uiTipoProductoFil.getSelected().toString();
+            TipoProducto tipoP = new TipoProductoController().findById(Long.valueOf(this.uiTipoProductoFil.getSelected().toString()));
+            if (tipoP != null) {
+                pTipo = tipoP.getDescripcion();
+            }
+
         }
 
         listaProductos = (Producto[])  productoController.getAllFiltered(pMarca,
@@ -1298,7 +1311,7 @@ public class ABMProductos extends AbstractPageBean {
     Option[] listaPresentacionOp;
 
     public Option[] getListaPresentacionOp() {
-        return listaTipoProductosOp;
+        return listaPresentacionOp;
     }
 
     public void setListaPresentacionOp(Option[] listaPresentacionOp) {

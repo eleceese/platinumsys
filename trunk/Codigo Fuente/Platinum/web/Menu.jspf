@@ -118,9 +118,7 @@
                 <br/>
                 <webuijsf:hyperlink id="LSTResumenTareasFallidasEmpleado" style="margin-left: 20px" text="Resumen de Tareas Fallidas" url="/faces/LSTResumenTareasFallidasEmpleado.jsp"/>
                 <br/>
-                <webuijsf:hyperlink id="LSTEstadisticaEfectividad" style="margin-left: 20px" text="Estadisticas de Efectividad" url="/faces/LSTEstadisticaEfectividad.jsp"/>
-                <br/>
-           </webuijsf:accordionTab>
+            </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab5" title="Stock">
                 <h2>ABM</h2>
                 <webuijsf:hyperlink id="depositos" style="margin-left: 20px" text="Depositos" url="/faces/ABMDeposito.jsp"/>
@@ -144,7 +142,13 @@
                 <webuijsf:hyperlink id="LSTEquivalenciaProductos" style="margin-left: 20px" text="Listado de Equivalencias" url="/faces/LSTEquivalenciaProductos.jsp"/>
                 <br/>
             </webuijsf:accordionTab>
-            <webuijsf:accordionTab contentHeight="250px" id="tab7" title="Reportes"/>
-        </webuijsf:accordion>
+            <webuijsf:accordionTab contentHeight="250px" id="tab7" title="Reportes Estadisticos">
+                <br/>
+                <webuijsf:hyperlink id="LSTEstadisticaProduccionCompras" style="margin-left: 20px" text="Produccion y Compras" url="/faces/LSTEstadisticaProduccionCompras.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="LSTEstadisticaEfectividad" style="margin-left: 20px" text="Estadisticas de Efectividad" url="/faces/LSTEstadisticaEfectividad.jsp"/>
+                <br/>
+            </webuijsf:accordionTab>
+            </webuijsf:accordion>
     </f:subview>
 </div>
