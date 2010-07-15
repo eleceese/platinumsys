@@ -126,7 +126,7 @@ public class popupProductosCompra extends AbstractPageBean {
         Producto[] l = (Producto[]) new ProductoController().getProductoCompra(null).toArray(new Producto[0]);
 
         //actializamos la lista en la session
-        getSessionBean1().setListaProductos(l);
+        getSessionBean1().setListaProductosCompra(l);
     }
 
     /**
@@ -205,7 +205,7 @@ public class popupProductosCompra extends AbstractPageBean {
         Producto[] l = (Producto[]) new ProductoController().getProductoCompra(param).toArray(new Producto[0]);
 
         //Actualizamos la lista de la session
-        getSessionBean1().setListaProductos(l);
+        getSessionBean1().setListaProductosCompra(l);
 
         //refrescamos la pagina
         return null;
@@ -216,7 +216,7 @@ public class popupProductosCompra extends AbstractPageBean {
         Producto[] l = (Producto[]) new ProductoController().getProductoCompra(null).toArray(new Producto[0]);
 
         //actializamos la lista en la session
-        getSessionBean1().setListaProductos(l);
+        getSessionBean1().setListaProductosCompra(l);
 
         //refrecamos la pagina
         return null;

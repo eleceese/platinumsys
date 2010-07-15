@@ -1505,7 +1505,22 @@ public class SessionBean1 extends AbstractSessionBean {
     }
 
 
+    private Producto[] listaProductosCompra;
 
+    public Option[] getListaPUsuariosOp() {
+        return listaPUsuariosOp;
+    }
 
+    public void setListaPUsuariosOp(Option[] listaPUsuariosOp) {
+        this.listaPUsuariosOp = listaPUsuariosOp;
+    }
+
+    public Producto[] getListaProductosCompra() {
+        return listaProductosCompra;
+    }
+
+    public void setListaProductosCompra(Producto[] listaProductosCompra) {
+        this.listaProductosCompra = listaProductosCompra;
+    }
 
   }
