@@ -1210,6 +1210,8 @@ if (uiDetalleProdCod.getText() == null || uiDetalleProdCod.getText().equals("") 
          }else if(!p.getCodTipoProducto().getDescripcion().equals("Terminado")
              && !p.getCodTipoProducto().getDescripcion().equals("SemiTerminado")
              && !p.getCodTipoProducto().getDescripcion().equals("ProductoGenerico")
+             && !p.getCodTipoProducto().getDescripcion().equals("Acabado")
+             && !p.getCodTipoProducto().getDescripcion().equals("Servicio")
              && this.uiDetalleTipo.getSelected().toString().equals("E")
              && this.uiDetalleOTCod.getText() != null
              && !this.uiDetalleOTCod.getText().toString().equals("")){

@@ -22,6 +22,10 @@
                 <br/>
                 <webuijsf:hyperlink id="ciudades" text="Ciudades" url="/faces/ABMCiudades.jsp"/>
                 <br/>
+                <webuijsf:hyperlink id="parametros" text="Parametros" url="/faces/ABMParametros.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="usuarios" text="Usuarios" url="/faces/ABMUsuarios.jsp"/>
+                <br/>
             </webuijsf:accordionTab>
             <webuijsf:accordionTab contentHeight="250px" id="tab2" style="" title="Compras">
                 <h2>ABM</h2>
@@ -30,6 +34,8 @@
                 <webuijsf:hyperlink id="abmProveedores" style="margin-left: 20px" text="Proveedores" url="/faces/ABMProveedores.jsp"/>
                 <h2>Transacciones</h2>
                 <webuijsf:hyperlink id="abmFacturaProveedor" style="margin-left: 20px" text="Factura Proveedor" url="/faces/ABMComprasProveedor.jsp"/>
+                <br/>
+                <webuijsf:hyperlink id="abmSolicitudes" style="margin-left: 20px" text="Solicitudes Internas" url="/faces/ABMSolicitudesInternas.jsp"/>
                 <br/>
                 <webuijsf:hyperlink id="abmNotaCreditoProveedor" style="margin-left: 20px" text="Nota Crédito Proveedor" url="/faces/ABMNotaCreditoProveedor.jsp"/>
                 <h2>Reportes</h2>

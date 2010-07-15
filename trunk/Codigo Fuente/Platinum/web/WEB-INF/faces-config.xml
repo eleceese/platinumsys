@@ -694,6 +694,11 @@
         <managed-bean-class>platinum.LSTEstadisticaProduccionCompras</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>ABMParametros</managed-bean-name>
+        <managed-bean-class>platinum.ABMParametros</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 </faces-config>
 
 

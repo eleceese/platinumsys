@@ -156,5 +156,23 @@ public class Inicio extends AbstractPageBean {
         return (ApplicationBean1) getBean("ApplicationBean1");
     }
 
+    public String button1_action() {
+        // TODO: Replace with your code
+
+                HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
+                    try {
+                        response.sendRedirect("/Platinum/faces/Acceso.jsp");
+                        getFacesContext().responseComplete();
+                    } catch (IOException ex) {
+                        Logger.getLogger(cabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        getSessionBean1().setUsuario(null);
+
+        return null;
+    }
+
+
+
+
 }
 
