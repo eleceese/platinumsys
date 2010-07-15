@@ -807,6 +807,27 @@ public class SessionBean1 extends AbstractSessionBean {
     public void setListaCaja(Caja[] listaCaja) {
         this.listaCaja = listaCaja;
     }
+    //Cargar lista Caja
+    Caja[] listaCajaAbierta;
+    Caja[] listaCajaCerradas;
+
+    public Caja[] getListaCajaAbierta() {
+        return listaCajaAbierta;
+    }
+
+    public void setListaCajaAbierta(Caja[] listaCajaAbierta) {
+        this.listaCajaAbierta = listaCajaAbierta;
+    }
+
+    public Caja[] getListaCajaCerradas() {
+        return listaCajaCerradas;
+    }
+
+    public void setListaCajaCerradas(Caja[] listaCajaCerradas) {
+        this.listaCajaCerradas = listaCajaCerradas;
+    }
+
+    
 
     /**
      * Obtenemos la lista de Caja de la base de datos
@@ -1524,6 +1545,16 @@ public class SessionBean1 extends AbstractSessionBean {
 
     public void setListaProductosCompra(Producto[] listaProductosCompra) {
         this.listaProductosCompra = listaProductosCompra;
+    }
+
+    private Producto[] listaProductosVenta;
+
+    public Producto[] getListaProductosVenta() {
+        return listaProductosVenta;
+    }
+
+    public void setListaProductosVenta(Producto[] listaProductosVenta) {
+        this.listaProductosVenta = listaProductosVenta;
     }
 
     //Cargar lista Banco
