@@ -66,7 +66,7 @@ public class ProductoController extends AbstractJpaDao <Producto> {
         String SQL = "SELECT o FROM Producto o WHERE o.codProducto = o.codProducto";
 
         if (marca != null && !marca.equals("99999") && !marca.equals("")) {
-            SQL = SQL + " and UPPER(o.codMarca.codMarca) = upper(:marca)";
+            SQL = SQL + " and UPPER(o.codMarca.nombre) = upper(:marca)";
         }
 
         if (descripcion != null && !descripcion.equals("")) {
@@ -79,7 +79,7 @@ public class ProductoController extends AbstractJpaDao <Producto> {
 
 
         if (presentacion != null && !presentacion.equals("99999") && !presentacion.equals("")) {
-            SQL = SQL + " and UPPER(o.codPresentacion.codPresentacion) = upper(:presentacion)";
+            SQL = SQL + " and UPPER(o.codPresentacion.descripcion) like upper(:presentacion)";
         }
 
 
@@ -99,7 +99,7 @@ public class ProductoController extends AbstractJpaDao <Producto> {
         }
 
         if (presentacion != null && !presentacion.equals("99999") && !presentacion.equals("")) {
-            q.setParameter("presentacion", presentacion);
+            q.setParameter("presentacion", "%"+presentacion+"%");
         }
 
         List<Producto> entities = q.getResultList();

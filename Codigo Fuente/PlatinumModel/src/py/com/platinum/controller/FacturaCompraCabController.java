@@ -261,18 +261,19 @@ public class FacturaCompraCabController extends AbstractJpaDao<FacturaCompraCab>
                             Producto p = new ProductoController().findById(det.getCodProducto().getCodProducto().longValue());
                             Existencia ex = new ExistenciaController().getExistencia(null, p.getCodProducto(), d.getCodDeposito());
                             Double cantidadExistencia = ex.getCantidadExistencia().doubleValue();
+                            if (cabecera.getEstado().equals("C")) {
+                                //Creamos el objeto detalle de la entrada-salida
+                                        entSalDet.setCodEntradaSalida(entSalCab);
+                                        entSalDet.setCodProducto(p);
+                                        entSalDet.setTipoEntradaSalida("E");
+                                        entSalDet.setCantidadEntSal(BigInteger.valueOf(det.getCantidad()));
+                                        cantidadExistencia = cantidadExistencia + det.getCantidad();
+                                        entSalDet.setExistencia(BigDecimal.valueOf(cantidadExistencia));
+                                        entSalDet.setFechaAlta(cabecera.getFecha());
 
-                            //Creamos el objeto detalle de la entrada-salida
-                            entSalDet.setCodEntradaSalida(entSalCab);
-                            entSalDet.setCodProducto(p);
-                            entSalDet.setTipoEntradaSalida("E");
-                            entSalDet.setCantidadEntSal(BigInteger.valueOf(det.getCantidad()));
-                            cantidadExistencia = cantidadExistencia + det.getCantidad();
-                            entSalDet.setExistencia(BigDecimal.valueOf(cantidadExistencia));
-                            entSalDet.setFechaAlta(cabecera.getFecha());
-
-                            //Persistimos el objeto detalle de la entrada-salida
-                            em.persist(entSalDet);
+                                        //Persistimos el objeto detalle de la entrada-salida
+                                        em.persist(entSalDet);
+                            }
                         }
                     }
 
