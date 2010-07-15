@@ -1003,7 +1003,15 @@ private boolean validarCampos(){
     public String imageHyperlink2_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
-         ProduccionDiaria proDiaria  = produccionesDiarias.get(Integer.valueOf(itemDet).intValue());
+
+            if(!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("SUP_PRODUCCION")
+                &&!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("ADMINISTRADOR")){
+                this.info("Usted no posee permisos para esta accion");
+
+        }else{
+
+
+        ProduccionDiaria proDiaria  = produccionesDiarias.get(Integer.valueOf(itemDet).intValue());
          ProduccionDiariaController pController = new ProduccionDiariaController();
          ControllerResult controllerResult = new ControllerResult();
          produccionesDiarias.remove(Integer.valueOf(itemDet).intValue());
@@ -1030,14 +1038,20 @@ private boolean validarCampos(){
                             this.pageAlert1.setRendered(true);
 
 
-
+        }
         return null;
     }
 
     public String uiLinkRechazo_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
-         ProduccionDiaria proDiaria  = produccionesDiarias.get(Integer.valueOf(itemDet).intValue());
+
+        if(!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("SUP_PRODUCCION")
+                &&!getSessionBean1().getUsuarioLogueado().getRol().toString().equals("ADMINISTRADOR")){
+                this.info("Usted no posee permisos para esta accion");
+
+        }else{
+               ProduccionDiaria proDiaria  = produccionesDiarias.get(Integer.valueOf(itemDet).intValue());
          proDiaria.setUsuarioModif(getSessionBean1().getUsuario().toString());
          ProduccionDiariaController pController = new ProduccionDiariaController();
          ControllerResult controllerResult = new ControllerResult();
@@ -1062,6 +1076,9 @@ private boolean validarCampos(){
                             this.pageAlert1.setSummary("");
                             this.pageAlert1.setDetail("");
                             this.pageAlert1.setRendered(true);
+
+
+        }
 
 
         return null;

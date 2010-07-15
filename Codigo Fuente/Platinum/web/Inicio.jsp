@@ -22,6 +22,7 @@
                             <h:panelGrid id="mainContainer" style="height: 100%; text-align: center; width: 100%" width="100%">
                                 <webuijsf:image id="image1" url="/resources/Images/Logo.jpg"/>
                                 <webuijsf:image id="image2" url="/resources/Images/logo_platinum.jpg"/>
+                                <webuijsf:button actionExpression="#{Inicio.button1_action}" id="button1" text="Salir"/>
                             </h:panelGrid>
                         </div>
                     </webuijsf:form>

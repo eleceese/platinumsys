@@ -28,6 +28,7 @@ import py.com.platinum.controller.MaquinariaController;
 import py.com.platinum.controller.MarcaController;
 import py.com.platinum.controller.OrdenTrabajoCabeceraController;
 import py.com.platinum.controller.OrdenTrabajoDetalleController;
+import py.com.platinum.controller.ParametroController;
 import py.com.platinum.controller.PedidoCabeceraController;
 import py.com.platinum.controller.PresentacionController;
 import py.com.platinum.controller.ProductoController;
@@ -59,6 +60,7 @@ import py.com.platinum.entity.Maquinarias;
 import py.com.platinum.entity.Marca;
 import py.com.platinum.entity.OrdenTrabajo;
 import py.com.platinum.entity.OrdenTrabajoDetalle;
+import py.com.platinum.entity.Parametros;
 import py.com.platinum.entity.PedidoCabecera;
 import py.com.platinum.entity.Presentacion;
 import py.com.platinum.entity.Producto;
@@ -153,6 +155,7 @@ public class SessionBean1 extends AbstractSessionBean {
         codDeposito = new DepositoController().findById(Long.valueOf("1"));
 
         //El siguiente Metodo Carga la Grilla De Productos al cargar la pagina de productos.
+        cargarListalistaParametros();
         cargarListaTodosUsuarios();
         cargarListaTodosProductosSemiterminadosAcabados();
         cargarListaTodosProductosTerSemiInsMat();
@@ -1522,5 +1525,28 @@ public class SessionBean1 extends AbstractSessionBean {
     public void setListaProductosCompra(Producto[] listaProductosCompra) {
         this.listaProductosCompra = listaProductosCompra;
     }
+
+    //Cargar lista Banco
+    Parametros[] listaParametros;
+
+    public Parametros[] getlistaParametros() {
+        return listaParametros;
+    }
+
+    public void setlistaParametros(Parametros[] listalistaParametros) {
+        this.listaParametros = listalistaParametros;
+    }
+
+    /**
+     * Obtenemos la lista de Banco de la base de datos
+     */
+    public void cargarListalistaParametros() {
+        //Variables
+        ParametroController parametroController = new ParametroController();
+
+        //Obtenemos la lista de Banco ordenado por nombre del Banco
+        listaParametros = (Parametros[]) parametroController.getAll("descripcion").toArray(new Parametros[0]);
+    }
+
 
   }
