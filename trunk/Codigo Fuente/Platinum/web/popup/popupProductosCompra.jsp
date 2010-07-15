@@ -16,18 +16,21 @@
                 <webuijsf:body id="body1" style="-rave-layout: grid">
                     <webuijsf:form id="form1">
                         <webuijsf:table augmentTitle="false" id="table1" paginateButton="true" paginationControls="true"
-                            style="height: 77px; left: 0px; top: 0px; position: absolute" title="Seleccione un Producto..." width="442">
+                            style="height: 77px; left: 0px; top: 0px; position: absolute" title="Seleccione un Producto..." width="504">
                             <f:facet name="actionsTop"/>
                             <webuijsf:tableRowGroup id="tableRowGroup1" rows="20" sourceData="#{SessionBean1.listaProductos}" sourceVar="currentRow">
                                 <webuijsf:tableColumn headerText="Producto" id="tableColumn1" sort="descripcion">
                                     <webuijsf:hyperlink id="hyperlink1"
                                         onClick="doSave('#{currentRow.value['codProducto']}', '#{currentRow.value['descripcion']}')" text="#{currentRow.value['descripcion']}"/>
                                 </webuijsf:tableColumn>
-                                <webuijsf:tableColumn headerText="Codigo Interno" id="tableColumn2" sort="codigoInterno">
+                                <webuijsf:tableColumn headerText="Codigo Interno" id="tableColumn2" width="106">
                                     <webuijsf:staticText id="staticText2" text="#{currentRow.value['codigoInterno']}"/>
                                 </webuijsf:tableColumn>
-                                <webuijsf:tableColumn headerText="Cod Prod" id="tableColumn3" sort="codProducto">
+                                <webuijsf:tableColumn headerText="Cod Prod" id="tableColumn3">
                                     <webuijsf:staticText id="staticText1" text="#{currentRow.value['codProducto']}"/>
+                                </webuijsf:tableColumn>
+                                <webuijsf:tableColumn headerText="Tipo" id="tableColumnTipoProducto" width="114">
+                                    <webuijsf:staticText id="staticTextTipoProducto" text="#{currentRow.value['codTipoProducto'].descripcion}"/>
                                 </webuijsf:tableColumn>
                             </webuijsf:tableRowGroup>
                             <f:facet name="actionsTop">
