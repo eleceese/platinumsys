@@ -44,24 +44,17 @@ select 0 as orden,
        f.establecimiento  as cod_establecimiento, 
        f.boca_expendio    as cod_boca_expendio, 
        f.numero_factura   as cod_comprobante, 
-       f.fecha_factura    as fec_comprobante,
-       sum(s.monto_cuota) as total_comprobante, 
-       sum(s.saldo_cuota) as saldo_comprobante
+       s.fecha_vencimiento  as fec_comprobante,
+       s.nro_cuota        as nro_cuota,
+       t.cant_cuota  as cant_cuota,
+       s.monto_cuota as total_comprobante, 
+       s.saldo_cuota as saldo_comprobante
   from saldo_cliente s, factura_cabecera f, cliente c, tipo_comprobante t
  where f.tipo_factura = s.tipo_comprobante
    and f.estado_factura != 'ANULADO'
    and f.cod_factura  = s.nro_comprobante
    and c.cod_cliente = s.cod_cliente
    and t.cod_tipo = s.tipo_comprobante
-group by 0,
-         c.cod_cliente, 
-         c.apellido_cliente||', '||c.nombre_cliente,
-         t.DESC_TIPO_ABREVIADO,
-         f.establecimiento||'-'||f.boca_expendio||'-'||lpad(to_char(f.numero_factura), 10, '0'),
-         f.establecimiento, 
-         f.boca_expendio, 
-         f.numero_factura, 
-         f.fecha_factura
    union all
    --Notas de credito aun no aplicadas a ninguna factura o aplicadas parcialmente
 select 1 as orden, 
@@ -72,9 +65,11 @@ select 1 as orden,
        n.establecimiento, 
        n.boca_expendio, 
        n.num_nota_credto_cliente,
-       n.fecha_nota_credito,
-       sum(s.monto_cuota), 
-       sum(s.saldo_cuota)
+       s.fecha_vencimiento,
+       s.nro_cuota        as nro_cuota,
+       t.cant_cuota as cant_cuota,
+       s.monto_cuota, 
+       s.saldo_cuota
   from saldo_cliente s, nota_credito_cli_cabecera n, cliente c, tipo_comprobante t
  where s.saldo_cuota != 0
    and n.estado != 'ANULADO'
@@ -82,21 +77,12 @@ select 1 as orden,
    and n.cod_nota_credito_cliente  = s.nro_comprobante
    and c.cod_cliente = s.cod_cliente
    and t.cod_tipo = s.tipo_comprobante
-group by 1, 
-         c.cod_cliente, 
-         c.apellido_cliente||', '||c.nombre_cliente,
-         t.DESC_TIPO_ABREVIADO,
-         n.establecimiento||'-'||n.boca_expendio||'-'||lpad(to_char(n.num_nota_credto_cliente), 10, '0'), 
-         n.establecimiento, 
-         n.boca_expendio, 
-         n.num_nota_credto_cliente,
-         n.fecha_nota_credito
    ) aux
-where 1=1 $P!{parametros}
+where 1=1    
  order by aux.cliente, 
           aux.fec_comprobante, 
           aux.nro_comprobante,
-          aux.orden asc]]></queryString>
+          aux.nro_cuota asc]]></queryString>
 
 	<field name="ORDEN" class="java.math.BigDecimal"/>
 	<field name="COD_CLIENTE" class="java.math.BigDecimal"/>
@@ -107,6 +93,8 @@ where 1=1 $P!{parametros}
 	<field name="COD_BOCA_EXPENDIO" class="java.lang.String"/>
 	<field name="COD_COMPROBANTE" class="java.math.BigDecimal"/>
 	<field name="FEC_COMPROBANTE" class="java.sql.Timestamp"/>
+	<field name="NRO_CUOTA" class="java.math.BigDecimal"/>
+	<field name="CANT_CUOTA" class="java.math.BigDecimal"/>
 	<field name="TOTAL_COMPROBANTE" class="java.math.BigDecimal"/>
 	<field name="SALDO_COMPROBANTE" class="java.math.BigDecimal"/>
 
@@ -206,7 +194,7 @@ where 1=1 $P!{parametros}
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font fontName="" size="11"/>
+						<font fontName="" size="10"/>
 					</textElement>
 				<text><![CDATA[Tipo Comprobante]]></text>
 				</staticText>
@@ -224,7 +212,7 @@ where 1=1 $P!{parametros}
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font fontName="" size="11"/>
+						<font fontName="" size="10"/>
 					</textElement>
 				<text><![CDATA[Comprobante]]></text>
 				</staticText>
@@ -242,9 +230,9 @@ where 1=1 $P!{parametros}
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="" size="11"/>
+						<font fontName="" size="10"/>
 					</textElement>
-				<text><![CDATA[Fecha]]></text>
+				<text><![CDATA[Vencimiento]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -260,7 +248,7 @@ where 1=1 $P!{parametros}
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="" size="11"/>
+						<font fontName="" size="10"/>
 					</textElement>
 				<text><![CDATA[Importe]]></text>
 				</staticText>
@@ -278,7 +266,7 @@ where 1=1 $P!{parametros}
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="" size="11"/>
+						<font fontName="" size="10"/>
 					</textElement>
 				<text><![CDATA[Saldo]]></text>
 				</staticText>
@@ -299,6 +287,24 @@ where 1=1 $P!{parametros}
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{COD_CLIENTE}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement
+						x="239"
+						y="26"
+						width="56"
+						height="16"
+						forecolor="#FFFFFF"
+						key="element-91"/>
+					<box leftPadding="2" rightPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right">
+						<font fontName="" size="10"/>
+					</textElement>
+				<text><![CDATA[Nro. Cuota]]></text>
+				</staticText>
 			</band>
 			</groupHeader>
 			<groupFooter>
@@ -476,32 +482,6 @@ where 1=1 $P!{parametros}
 				</staticText>
 				<staticText>
 					<reportElement
-						x="280"
-						y="106"
-						width="69"
-						height="17"
-						key="staticText-3"/>
-					<box></box>
-					<textElement verticalAlignment="Top">
-						<font/>
-					</textElement>
-				<text><![CDATA[Fecha Desde:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="408"
-						y="106"
-						width="64"
-						height="17"
-						key="staticText-4"/>
-					<box></box>
-					<textElement verticalAlignment="Top">
-						<font/>
-					</textElement>
-				<text><![CDATA[Fecha Hasta:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
 						x="0"
 						y="77"
 						width="534"
@@ -517,32 +497,6 @@ where 1=1 $P!{parametros}
 					</textElement>
 				<text><![CDATA[Extracto Cuenta Cliente]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="347"
-						y="106"
-						width="63"
-						height="17"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaDesde}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="472"
-						y="106"
-						width="62"
-						height="17"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fechaHasta}]]></textFieldExpression>
-				</textField>
 			</band>
 		</pageHeader>
 		<columnHeader>
@@ -635,6 +589,19 @@ where 1=1 $P!{parametros}
 						<font fontName="Times-Roman" size="11"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SALDO_COMPROBANTE}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="239"
+						y="0"
+						width="56"
+						height="15"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NRO_CUOTA}.toString() + "/" + $F{CANT_CUOTA}.toString() ]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>

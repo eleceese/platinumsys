@@ -76,6 +76,15 @@ public class LSTExtractoCtaCliente extends AbstractPageBean {
     public void setUiTxtCliente(TextField tf) {
         this.uiTxtCliente = tf;
     }
+    private TextField uiTxtNombreCliente = new TextField();
+
+    public TextField getUiTxtNombreCliente() {
+        return uiTxtNombreCliente;
+    }
+
+    public void setUiTxtNombreCliente(TextField tf) {
+        this.uiTxtNombreCliente = tf;
+    }
 
     // </editor-fold>
 
@@ -203,12 +212,12 @@ public class LSTExtractoCtaCliente extends AbstractPageBean {
         ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
 
         //Array de Variables
-        String[] sparamName = new String[5];
-        String[] sparamValue = new String[5];
+        String[] sparamName = new String[3];
+        String[] sparamValue = new String[3];
 
         //Parametros
         String fechaDesde="", fechaHasta="", sql = "", cliente = "";
-
+/*
         if (uiCalDesde.getSelectedDate() != null) {
             fechaDesde = DateUtils.toString(uiCalDesde.getSelectedDate(), "dd/MM/yyyy");
             sql = " and aux.fec_comprobante >= to_date('" + fechaDesde + "','dd/mm/yyyy')";
@@ -222,34 +231,30 @@ public class LSTExtractoCtaCliente extends AbstractPageBean {
         } else {
             fechaHasta = "TODOS";
         }
-
+*/
         if (uiTxtCodCliente.getText() != null && !uiTxtCodCliente.getText().equals("")) {
             //Validamos el cliente
             Cliente cli = new ClienteController().findById(Long.valueOf(uiTxtCodCliente.getText().toString()));
 
             if (cli != null) {
                 cliente = cli.getCodCliente() + "-" + cli.getApellidoCliente() + ", " + cli.getNombreCliente();
-                sql = " and aux.cod_cliente = " + cli.getCodCliente();
+                sql = sql + " and aux.cod_cliente = " + cli.getCodCliente();
             }else{
                 error = true;
             }
             
         } else {
-            fechaDesde = "TODOS";
+            cliente = "TODOS";
         }
 
         RptCreate rpt = new RptCreate();
 
         sparamName[0] = "parametros";
         sparamValue[0] = sql;
-        sparamName[1] = "fechaDesde";
-        sparamValue[1] = fechaDesde;
-        sparamName[2] = "fechaHasta";
-        sparamValue[2] = fechaHasta;
-        sparamName[3] = "cliente";
-        sparamValue[3] = cliente;
-        sparamName[4] = "logo_path";
-        sparamValue[4] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
+        sparamName[1] = "cliente";
+        sparamValue[1] = cliente;
+        sparamName[2] = "logo_path";
+        sparamValue[2] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
 
         try {
             if (error) {
@@ -275,6 +280,12 @@ public class LSTExtractoCtaCliente extends AbstractPageBean {
     }
 
     public String button2_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+        return null;
+    }
+
+    public String button3424324_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
         return null;
