@@ -33,6 +33,8 @@
                                 <webuijsf:calendar columns="15" id="txtFecApertura"/>
                                 <webuijsf:label id="lblFecFin" text="Fecha Hasta"/>
                                 <webuijsf:calendar columns="15" id="txtFecAprobacion"/>
+                                <h:panelGrid id="gridPanel1" style="height: 21px; width: 100%"/>
+                                <webuijsf:radioButtonGroup binding="#{LSTEstadoOrdenProduccion.uiRadioTipo}" columns="2" id="uiRadioTipo" items="#{LSTEstadoOrdenProduccion.uiRadioTipoDefaultOptions.options}"/>
                                 <webuijsf:button actionExpression="#{LSTEstadoOrdenProduccion.button1_action}" id="button1" text="Ejecutar"/>
                                 <webuijsf:button actionExpression="#{LSTEstadoOrdenProduccion.button2_action}" id="button2" text="Cancelar"/>
                             </h:panelGrid>

@@ -764,7 +764,7 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
                             perdida.setObservacion(this.uiObservacion.getText().toString());
                             perdida.setCodDeposito(new DepositoController().findById(Long.valueOf(this.uiDeposito.getSelected().toString())));
                             perdida.setTaller(radioButtonGroup1.getSelected().toString());
-                            perdida.setPrecioUnit(BigInteger.valueOf(producto.getContenido().longValue()));
+                            perdida.setPrecioUnit(BigInteger.valueOf(producto.getPrecioActual().longValue()));
                             perdida.setTotal(BigInteger.valueOf(perdida.getCantidadPerdida() * perdida.getPrecioUnit().longValue()));
                             
                             PerdidaController perdidaController = new PerdidaController();
@@ -875,7 +875,7 @@ public class ABMPerdidasProduccion extends AbstractPageBean {
         this.errorValidacion = false;
 
 
-         if (this.uiNroOT.getText() != null && !StringUtils.esNumero(this.uiNroOT.getText().toString())) {
+         if (this.uiNroOT.getText() != null  && !this.uiNroOT.getText().equals("") && !StringUtils.esNumero(this.uiNroOT.getText().toString())) {
                 info("Valor incorrecto para Nro de Ot, debe ser un numero");
                 errorValidacion = true;
         }else if(this.uiNroOT.getText() != null){
