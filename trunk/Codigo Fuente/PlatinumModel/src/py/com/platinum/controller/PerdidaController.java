@@ -62,7 +62,7 @@ public class PerdidaController extends AbstractJpaDao <Perdida> {
             SQL = SQL + " and o.fechaPerdida >= :fecha1";
         }
 
-        if (fecha1 != null) {
+        if (fecha2 != null) {
             SQL = SQL + " and o.fechaPerdida <= :fecha2";
         }
 
@@ -190,7 +190,12 @@ public class PerdidaController extends AbstractJpaDao <Perdida> {
                             detallesOT = ot.getOrdenTrabajoDetalleListList();
                             for (int i = 0; i < detallesOT.size(); i++) {
                                 OrdenTrabajoDetalle ordenTrabajoDetalle = detallesOT.get(i);
-                                ordenTrabajoDetalle.setCantidadReal(ordenTrabajoDetalle.getCantidadReal().longValue() - perdida.getCantidadPerdida());
+                                if (ordenTrabajoDetalle.getCantidadReal().longValue() < perdida.getCantidadPerdida()) {
+                                   ordenTrabajoDetalle.setCantidadReal(Long.valueOf("0").longValue());
+                                }else{
+                                    ordenTrabajoDetalle.setCantidadReal(ordenTrabajoDetalle.getCantidadReal().longValue() - perdida.getCantidadPerdida());
+                                }
+
                                 ordenTrabajoDetalle.setFechaModif(new Date());
                                 em.merge(ordenTrabajoDetalle);
                             
@@ -199,7 +204,12 @@ public class PerdidaController extends AbstractJpaDao <Perdida> {
                                         tareas = ordenTrabajoDetalle.getTareaAsignadaListList();
                                         for (int j = 0; j < tareas.size(); j++) {
                                             TareaAsignada tareaAsignada = tareas.get(j);
-                                            tareaAsignada.setCantidad(tareaAsignada.getCantidad() - perdida.getCantidadPerdida());
+                                            if (tareaAsignada.getCantidadReal().longValue() < perdida.getCantidadPerdida()) {
+                                                tareaAsignada.setCantidadReal(Long.valueOf("0").longValue());
+                                            }else{
+                                                tareaAsignada.setCantidadReal(tareaAsignada.getCantidadReal().longValue() - perdida.getCantidadPerdida());
+                                            }
+                                            
                                             tareaAsignada.setFechaModif(new Date());   
                                             em.merge(tareaAsignada);
                                         }
@@ -216,14 +226,25 @@ public class PerdidaController extends AbstractJpaDao <Perdida> {
                                         ordenTrabajoDetalle = detalleOrdenTrabajoList.get(i);
                                             if (ordenTrabajoDetalle.getCodProducto().getCodProducto().longValue()
                                                 == perdida.getCodProducto().getCodProducto().longValue()) {
-                                                    ordenTrabajoDetalle.setCantidadReal(ordenTrabajoDetalle.getCantidadReal() - perdida.getCantidadPerdida());
+
+                                                    if (ordenTrabajoDetalle.getCantidadReal().longValue() < perdida.getCantidadPerdida()) {
+                                                        ordenTrabajoDetalle.setCantidadReal(Long.valueOf("0").longValue());
+                                                    }else{
+                                                        ordenTrabajoDetalle.setCantidadReal(ordenTrabajoDetalle.getCantidadReal().longValue() - perdida.getCantidadPerdida());
+                                                    }
+
                                                     em.merge(ordenTrabajoDetalle);
                                                     List<TareaAsignada> tareasAs = new ArrayList();
                                                     tareasAs = ordenTrabajoDetalle.getTareaAsignadaListList();
                                                     for (int j = 0; j < tareasAs.size(); j++) {
                                                             TareaAsignada tareaAsignada = tareasAs.get(j);
                                                             /// ACTUALIZAMOS LAS CANTIDADES EFECTUADAS DE LAS TAREAS
-                                                                tareaAsignada.setCantidad(tareaAsignada.getCantidad() - perdida.getCantidadPerdida());
+                                                                if (tareaAsignada.getCantidadReal().longValue() < perdida.getCantidadPerdida()) {
+                                                                    tareaAsignada.setCantidadReal(Long.valueOf("0").longValue());
+                                                                }else{
+                                                                    tareaAsignada.setCantidadReal(tareaAsignada.getCantidadReal() - perdida.getCantidadPerdida());
+                                                                }
+                                                                
                                                                 tareaAsignada.setFechaModif(new Date());   
                                                                 em.merge(tareaAsignada);
                                                     }
