@@ -186,7 +186,7 @@
                                         <h:panelGrid binding="#{ABMComprasProveedor.gridPanelDetLin2}" columns="10" id="gridPanelDetLin2" style="height: 24px" width="935">
                                             <webuijsf:label id="lblPrecio" text="Precio"/>
                                             <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtPrecioUnitario}" columns="12"
-                                                converter="#{ABMComprasProveedor.numberConverter1}" id="uiTxtPrecioUnitario" onChange="calcularMonto5('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiLstIva_list', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )"/>
+                                                converter="#{ABMComprasProveedor.numberConverter1}" id="uiTxtPrecioUnitario" onChange="calcularMonto5('form1:uiTxtPrecioUnitario_field', 'form1:uiTxtCantidad_field', 'form1:uiTxtIva_field', 'form1:uiTxtMontoIva_field', 'form1:uiTxtMontoTotal_field' )"/>
                                             <webuijsf:label id="lblCantida" text="Cantidad"/>
                                             <webuijsf:textField binding="#{ABMComprasProveedor.uiTxtCantidad}" columns="10"
                                                 converter="#{ABMComprasProveedor.numberConverter1}" id="uiTxtCantidad"
