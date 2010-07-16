@@ -87,7 +87,7 @@ public class HabilitacionCajaController extends AbstractJpaDao<HabilitacionCaja>
 
     public HabilitacionCaja getGetHabilitacionPorEmpleado(Empleado codEmpleado) {
         //Armamos el sql String
-        String SQL = "SELECT o FROM HabilitacionCaja o WHERE o.codEmpleado = :codEmpleado";
+        String SQL = "SELECT o FROM HabilitacionCaja o WHERE o.codEmpleado = :codEmpleado and o.estado = 'A' ";
 
         EntityManager em = emf.createEntityManager();
         Query q = em.createQuery(SQL);
