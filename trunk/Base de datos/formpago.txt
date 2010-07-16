@@ -1,0 +1,11 @@
+select t.nombre_forma_pago as desc_tipo,
+       b.nombre_banco,
+       d.serie_cheque,
+       d.numero_cheque,
+       d.monto 
+  from movimiento_caja_detalle d, 
+       forma_pago t ,
+        banco b 
+  where d.cod_recibo_cab = 1
+    and t.cod_forma_pago = d.cod_forma_pago
+    and b.cod_banco(+) = t.cod_banco
