@@ -7,6 +7,7 @@ package platinum;
 
 import com.sun.rave.web.ui.appbase.AbstractPageBean;
 import com.sun.webui.jsf.component.DropDown;
+import com.sun.webui.jsf.component.RadioButtonGroup;
 import com.sun.webui.jsf.model.Option;
 import com.sun.webui.jsf.model.SingleSelectOptionsList;
 import java.sql.Connection;
@@ -44,6 +45,7 @@ public class LSTEstadoOrdenProduccion extends AbstractPageBean {
     private void _init() throws Exception {
         uiEstadoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("T", "Todos"), new com.sun.webui.jsf.model.Option("A", "Abierto"), new com.sun.webui.jsf.model.Option("P", "En proceso"), new com.sun.webui.jsf.model.Option("T", "Terminado"),new com.sun.webui.jsf.model.Option("C", "Cerrado")});
         uiEstadoDefaultOptions.setSelectedValue("T");
+        uiRadioTipoDefaultOptions.setOptions(new com.sun.webui.jsf.model.Option[]{new com.sun.webui.jsf.model.Option("A", "Acances"), new com.sun.webui.jsf.model.Option("C", "Costos")});
     }
     private SingleSelectOptionsList uiEstadoDefaultOptions = new SingleSelectOptionsList();
 
@@ -80,6 +82,24 @@ public class LSTEstadoOrdenProduccion extends AbstractPageBean {
 
     public void setUiEstado(DropDown dd) {
         this.uiEstado = dd;
+    }
+    private SingleSelectOptionsList uiRadioTipoDefaultOptions = new SingleSelectOptionsList();
+
+    public SingleSelectOptionsList getUiRadioTipoDefaultOptions() {
+        return uiRadioTipoDefaultOptions;
+    }
+
+    public void setUiRadioTipoDefaultOptions(SingleSelectOptionsList ssol) {
+        this.uiRadioTipoDefaultOptions = ssol;
+    }
+    private RadioButtonGroup uiRadioTipo = new RadioButtonGroup();
+
+    public RadioButtonGroup getUiRadioTipo() {
+        return uiRadioTipo;
+    }
+
+    public void setUiRadioTipo(RadioButtonGroup rbg) {
+        this.uiRadioTipo = rbg;
     }
 
     // </editor-fold>
@@ -291,8 +311,18 @@ public class LSTEstadoOrdenProduccion extends AbstractPageBean {
                 sparamName[4] = "logo_path";
                 sparamValue[4] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
 
+                    if (uiRadioTipo.getSelected().toString().equals("A")) {
 
                 rpt.getReport(conn, "OrdenesDeTrabajo.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+
+                    }else{
+
+
+                rpt.getReport(conn, "OrdenesDeTrabajoCostos.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+
+                    }
+
+
 
                 }catch(Exception e){
                 error("Error al generar el reporte ");

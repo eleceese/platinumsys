@@ -214,6 +214,98 @@ public class LSTExistenciaProducto extends AbstractPageBean {
         return (SessionBean1) getBean("SessionBean1");
     }
 
+      public String button3_action() {
+        // TODO: Process the action. Return value is a navigation
+        // case name where null will return to the same page.
+           String[] sparamName= new String[6];
+                String[] sparamValue= new String[6];
+                Connection conn= GetConnection.getSimpleConnection();
+                ServletContext theApplicationsServletContext = (ServletContext) this.getExternalContext().getContext();
+
+                String sProducto="";
+                String sP="";
+
+                String sMarca="";
+                String sM="";
+
+                String sTipo="";
+                String sT="";
+
+                String sDeposito="";
+                String sD="";
+
+                String sSql="";
+                Formated f= new Formated();
+                f.setDatePattern("yyyy/dd/MM");
+
+                Producto p;
+
+                try{
+
+                if (!uiProducto.getSelected().toString().equals("-1")){
+                    sProducto = " and p.cod_Producto = "+uiProducto.getSelected().toString();
+                    sP = new ProductoController().findById(Long.valueOf(this.uiProducto.getSelected().toString())).getDescripcion();
+                }else{
+                    sP="Todos";
+                }
+
+                if (!uiDeposito.getSelected().toString().equals("-1")){
+                    sDeposito = " and d.cod_deposito = "+uiDeposito.getSelected().toString();
+                    sD = new DepositoController().findById(Long.valueOf(this.uiDeposito.getSelected().toString())).getNombre();
+                }else{
+                    sD="Todos";
+                }
+
+                if (!uiMarca.getSelected().toString().equals("-1")){
+                    sMarca = " and p.cod_marca = "+uiMarca.getSelected().toString();
+                    sM = new MarcaController().findById(Long.valueOf(this.uiMarca.getSelected().toString())).getNombre();
+                }else{
+                    sM="Todos";
+                }
+
+                if (!uiTipoProd.getSelected().toString().equals("-1")){
+                    sTipo = " and p.cod_tipo_producto = "+uiTipoProd.getSelected().toString();
+                    sT = new TipoProductoController().findById(Long.valueOf(this.uiTipoProd.getSelected().toString())).getDescripcion();
+                }else{
+                    sT="Todos";
+                }
+//                if (calFecHasta.getValue()!=null)
+//                sFecHasta = " and TARJETAS.FECHA_ALTA <= convert(datetime,'"+f.getDateFormat((Date)calFecHasta.getValue())+"') ";
+
+                sSql = sProducto+sMarca+sDeposito+sTipo;
+
+                RptCreate rpt= new RptCreate();
+
+                sparamName[0]="parametros";
+                sparamValue[0]= sSql;
+                sparamName[1]="producto";
+                sparamValue[1]= sP;
+                sparamName[2]="deposito";
+                sparamValue[2]= sD;
+                sparamName[3]="marca";
+                sparamValue[3]= sM;
+                sparamName[4]="tipo";
+                sparamValue[4]= sT;
+                sparamName[5] = "logo_path";
+                sparamValue[5] = theApplicationsServletContext.getRealPath("/WEB-INF/classes/reportesFuente/logo_platinum.jpg");
+
+                rpt.getReport(conn, "ExistenciasDepositoListadoPrecios.jrxml", sparamName, sparamValue, theApplicationsServletContext);
+
+                }catch(Exception e){
+                error("Error al generar el reporte ");
+                error(" " + e);
+                }finally{
+                try{
+                if(conn != null && !conn.isClosed())
+                conn.close();
+                }catch(SQLException sqle){
+                error("Error al intentar cerrar la conexion"+ sqle);
+                }
+                }
+
+          return null;
+    }
+
     public String button1_action() {
         // TODO: Process the action. Return value is a navigation
         // case name where null will return to the same page.
@@ -473,6 +565,8 @@ public class LSTExistenciaProducto extends AbstractPageBean {
             listaDepositosOp[listaDepositos.length] = option;
 
     }
+
+
 ////// FIN CARGA DE COMBO BOX
 
 

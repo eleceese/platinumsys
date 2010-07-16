@@ -30,8 +30,11 @@
                                 <webuijsf:dropDown binding="#{LSTExistenciaProducto.uiDeposito}" id="uiDeposito" items="#{LSTExistenciaProducto.listaDepositosOp}"/>
                                 <webuijsf:label id="label3" text="Marca"/>
                                 <webuijsf:dropDown binding="#{LSTExistenciaProducto.uiMarca}" id="uiMarca" items="#{LSTExistenciaProducto.listaMarcasOp}"/>
-                                <webuijsf:button actionExpression="#{LSTExistenciaProducto.button1_action}" id="button1" text="Ejecutar"/>
-                                <webuijsf:button actionExpression="#{LSTExistenciaProducto.button2_action}" id="button2" text="Cancelar"/>
+                                <h:panelGrid columns="2" id="gridPanel1" style="width: 100%; height: 100%;">
+                                    <webuijsf:button actionExpression="#{LSTExistenciaProducto.button1_action}" id="button1" text="Ejecutar"/>
+                                    <webuijsf:button actionExpression="#{LSTExistenciaProducto.button2_action}" id="button2" text="Cancelar"/>
+                                </h:panelGrid>
+                                <webuijsf:button actionExpression="#{LSTExistenciaProducto.button3_action}" id="button3" text="Consultar Listado de Precios"/>
                             </h:panelGrid>
                         </div>
                     </webuijsf:form>

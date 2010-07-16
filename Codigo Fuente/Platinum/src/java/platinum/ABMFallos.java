@@ -1063,10 +1063,10 @@ private long aux;
                 perdida.setCantidadPerdida(Long.valueOf(this.uiPerdidaCantidad.getText().toString()));
                 perdida.setFechaPerdida(new Date());
                 perdida.setFechaAlta(new Date());
-                perdida.setTaller("D");
+                perdida.setTaller("T");
                 perdida.setCodEmpleado(new EmpleadoController().findById(Long.valueOf(this.uiResponsableCod.getText().toString())));
                 perdida.setObservacion("Perdida Generada por fallo de tareas");
-                perdida.setPrecioUnit(BigInteger.valueOf(prod.getContenido().longValue()));
+                perdida.setPrecioUnit(BigInteger.valueOf(prod.getCostoActual().longValue()));
                 perdida.setTotal(BigInteger.valueOf(perdida.getCantidadPerdida() * perdida.getPrecioUnit().longValue()));
 
 
