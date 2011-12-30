@@ -6,6 +6,7 @@ package py.com.platinum.listener;
 
 import java.math.BigInteger;
 import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
 import py.com.platinum.controller.ExistenciaController;
 import py.com.platinum.entity.Existencia;
 import py.com.platinum.entity.NotaCreditoProvDet;
