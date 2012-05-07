@@ -3,18 +3,13 @@
  * and open the template in the editor.
  */
 
-package reportes;
+package sad.web.reportes;
 
-/**
- *
- * @author FerBoy
- */
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Clase que se encarga de cargar dar formatos
