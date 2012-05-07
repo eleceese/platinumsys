@@ -1,18 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-package reportes;
+package sad.web.reportes;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- *
- * @author FerBoy
- */
+
 public class GetConnection {
             /**
             * Provided by driver documentation. In this case, a MySql driver is
@@ -43,8 +36,8 @@ public class GetConnection {
             private static final String fDbName = "jdbc:oracle:thin:@localhost:1521:xe";
             /*private static final String fUserName = "pbflota_aplicacao";
             private static final String fPassword = "D8sdgter0p";*/
-            private static final String fUserName = "platinum";
-            private static final String fPassword = "platinum";
+            private static final String fUserName = "sad";
+            private static final String fPassword = "sad";
 
 
 }

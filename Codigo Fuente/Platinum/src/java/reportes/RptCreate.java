@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package reportes;
+package sad.web.reportes;
 /*
  * RptModulos.java
  *
@@ -29,10 +29,6 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
 
-/**
- *
- * @author Gustavo Cabello
- */
 public class RptCreate {
 
     public void getReport(Connection conn, String sNameReport, String[] sParametersNames, String[] sParametersValues, ServletContext sc) throws Exception{
