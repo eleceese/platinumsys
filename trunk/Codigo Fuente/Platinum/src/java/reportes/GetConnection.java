@@ -1,5 +1,5 @@
 
-package sad.web.reportes;
+package reportes;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
